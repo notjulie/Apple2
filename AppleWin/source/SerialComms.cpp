@@ -941,15 +941,15 @@ void CSuperSerialCard::CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 	const UINT SSC_SLOT_FW_SIZE = 256;
 	const UINT SSC_SLOT_FW_OFFSET = 7*256;
 
-	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_SSC_FW), "FIRMWARE");
+	HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_SSC_FW), "FIRMWARE");
 	if(hResInfo == NULL)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != SSC_FW_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 

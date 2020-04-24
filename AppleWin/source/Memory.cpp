@@ -1513,15 +1513,15 @@ void MemInitializeROM(void)
 	HRSRC hResInfo = NULL;
 	switch (g_Apple2Type)
 	{
-	case A2TYPE_APPLE2:         hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2_ROM          ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
-	case A2TYPE_APPLE2PLUS:     hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2_PLUS_ROM     ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
-	case A2TYPE_APPLE2JPLUS:    hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2_JPLUS_ROM    ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
-	case A2TYPE_APPLE2E:        hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2E_ROM         ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
-	case A2TYPE_APPLE2EENHANCED:hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2E_ENHANCED_ROM), "ROM"); ROM_SIZE = Apple2eRomSize; break;
-	case A2TYPE_PRAVETS82:      hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRAVETS_82_ROM      ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
-	case A2TYPE_PRAVETS8M:      hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRAVETS_8M_ROM      ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
-	case A2TYPE_PRAVETS8A:      hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRAVETS_8C_ROM      ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
-	case A2TYPE_TK30002E:       hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_TK3000_2E_ROM       ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
+	case A2TYPE_APPLE2:         hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2_ROM          ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
+	case A2TYPE_APPLE2PLUS:     hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2_PLUS_ROM     ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
+	case A2TYPE_APPLE2JPLUS:    hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2_JPLUS_ROM    ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
+	case A2TYPE_APPLE2E:        hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2E_ROM         ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
+	case A2TYPE_APPLE2EENHANCED:hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2E_ENHANCED_ROM), "ROM"); ROM_SIZE = Apple2eRomSize; break;
+	case A2TYPE_PRAVETS82:      hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_PRAVETS_82_ROM      ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
+	case A2TYPE_PRAVETS8M:      hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_PRAVETS_8M_ROM      ), "ROM"); ROM_SIZE = Apple2RomSize ; break;
+	case A2TYPE_PRAVETS8A:      hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_PRAVETS_8C_ROM      ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
+	case A2TYPE_TK30002E:       hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_TK3000_2E_ROM       ), "ROM"); ROM_SIZE = Apple2eRomSize; break;
 	}
 
 	if (hResInfo == NULL)
@@ -1559,11 +1559,11 @@ void MemInitializeROM(void)
 		ExitProcess(1);
 	}
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != ROM_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 
@@ -1594,15 +1594,15 @@ void MemInitializeCustomF8ROM(void)
 	{
 		try
 		{
-			HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2_PLUS_ROM), "ROM");
+			HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2_PLUS_ROM), "ROM");
 			if (hResInfo == NULL)
 				throw false;
 
-			DWORD dwResSize = SizeofResource(NULL, hResInfo);
+			DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 			if(dwResSize != Apple2RomSize)
 				throw false;
 
-			HGLOBAL hResData = LoadResource(NULL, hResInfo);
+			HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 			if(hResData == NULL)
 				throw false;
 
@@ -1647,9 +1647,9 @@ void MemInitializeCustomF8ROM(void)
 		HGLOBAL hResData = NULL;
 		BYTE* pData = NULL;
 
-		HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_FREEZES_F8_ROM), "ROM");
+		HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_FREEZES_F8_ROM), "ROM");
 
-		if (hResInfo && (SizeofResource(NULL, hResInfo) == 0x800) && (hResData = LoadResource(NULL, hResInfo)) && (pData = (BYTE*) LockResource(hResData)))
+		if (hResInfo && (SizeofAppleWinResource(hResInfo) == 0x800) && (hResData = LoadAppleWinResource(hResInfo)) && (pData = (BYTE*) LockResource(hResData)))
 		{
 			memcpy(memrom+Apple2RomSize-F8RomSize, pData, F8RomSize);
 		}

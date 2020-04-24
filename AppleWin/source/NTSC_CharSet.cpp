@@ -232,15 +232,15 @@ static void userVideoRomForIIPlus(void)
 
 static void VideoRomForIIJPlus(void)
 {
-	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_APPLE2_JPLUS_VIDEO_ROM), "ROM");
+	HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_APPLE2_JPLUS_VIDEO_ROM), "ROM");
 	if (hResInfo == NULL)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != kVideoRomSize2K)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 

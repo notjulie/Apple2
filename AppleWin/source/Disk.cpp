@@ -1719,15 +1719,15 @@ bool Disk2InterfaceCard::DriveSwap(void)
 
 bool Disk2InterfaceCard::GetFirmware(LPCSTR lpName, BYTE* pDst)
 {
-	HRSRC hResInfo = FindResource(NULL, lpName, "FIRMWARE");
+	HRSRC hResInfo = FindAppleWinResource(lpName, "FIRMWARE");
 	if(hResInfo == NULL)
 		return false;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != DISK2_FW_SIZE)
 		return false;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return false;
 

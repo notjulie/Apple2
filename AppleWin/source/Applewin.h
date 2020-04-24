@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef __CLR_VER
+
 #include "Card.h"
 #include "SaveState_Structs_common.h"
 #include "Common.h"
@@ -63,3 +65,30 @@ extern CSpeech g_Speech;
 #endif
 
 extern __interface IPropertySheet& sg_PropertySheet;
+
+#endif
+
+// ===================================================================
+//    RER -- my additions
+// ===================================================================
+
+/// <summary>
+/// A hook that calls the original WinMain, passing in this DLLs
+/// instance handle
+/// </summary>
+void AppleWinMain(void);
+
+/// <summary>
+/// Specialization of Win32's FindResource that looks for resources in our DLL
+/// </summary>
+HRSRC FindAppleWinResource(LPCSTR  lpName, LPCSTR  lpType);
+
+/// <summary>
+/// Specialization of Win32's SizeofResource that looks for resources in our DLL
+/// </summary>
+DWORD SizeofAppleWinResource(HRSRC hResInfo);
+
+/// <summary>
+/// Specialization of Win32's LoadResource that looks for resources in our DLL
+/// </summary>
+HGLOBAL LoadAppleWinResource(HRSRC hResInfo);

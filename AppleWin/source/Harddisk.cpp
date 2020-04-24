@@ -334,15 +334,15 @@ void HD_Load_Rom(const LPBYTE pCxRomPeripheral, const UINT uSlot)
 	if(!g_bHD_Enabled)
 		return;
 
-	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_HDDRVR_FW), "FIRMWARE");
+	HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_HDDRVR_FW), "FIRMWARE");
 	if(hResInfo == NULL)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != HDDRVR_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 

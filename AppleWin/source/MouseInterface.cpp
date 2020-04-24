@@ -41,6 +41,7 @@ Etc.
 
 
 #include "StdAfx.h"
+#include "Applewin.h"
 #include "SaveState_Structs_common.h"
 #include "Common.h"
 
@@ -157,15 +158,15 @@ void CMouseInterface::InitializeROM(void)
 
 	const UINT FW_SIZE = 2*1024;
 
-	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
+	HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
 	if(hResInfo == NULL)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != FW_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 

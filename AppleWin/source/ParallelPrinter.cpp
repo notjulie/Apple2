@@ -61,15 +61,15 @@ static BYTE __stdcall PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG);
 
 VOID PrintLoadRom(LPBYTE pCxRomPeripheral, const UINT uSlot)
 {
-	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
+	HRSRC hResInfo = FindAppleWinResource(MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
 	if(hResInfo == NULL)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofAppleWinResource(hResInfo);
 	if(dwResSize != PRINTDRVR_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
+	HGLOBAL hResData = LoadAppleWinResource(hResInfo);
 	if(hResData == NULL)
 		return;
 

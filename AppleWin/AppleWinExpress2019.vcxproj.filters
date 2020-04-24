@@ -199,6 +199,9 @@
     <ClCompile Include="source\Disk2CardManager.cpp">
       <Filter>Source Files\Disk</Filter>
     </ClCompile>
+    <ClCompile Include="Managed\AppleWinThread.cpp">
+      <Filter>Source Files\Managed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Applewin.h">
@@ -716,6 +719,9 @@
     </Filter>
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{15b450e4-f89f-4d80-9c44-48b32f33f3e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managed">
+      <UniqueIdentifier>{a55b3ae1-9d16-4ba9-9dcc-2548836eea7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
