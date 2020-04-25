@@ -24,9 +24,6 @@ namespace AppleDev
       {
          // normaal component initialization
          InitializeComponent();
-
-         // launch old school AppleWin
-         AppleWin.Managed.AppleWinThread.Run();
       }
    }
 }
