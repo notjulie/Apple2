@@ -202,6 +202,9 @@
     <ClCompile Include="Managed\AppleWinThread.cpp">
       <Filter>Source Files\Managed</Filter>
     </ClCompile>
+    <ClCompile Include="Managed\FrameEx.cpp">
+      <Filter>Source Files\Managed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Applewin.h">
@@ -488,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="source\Card.h">
       <Filter>Source Files\Emulator</Filter>
+    </ClInclude>
+    <ClInclude Include="Managed\FrameEx.h">
+      <Filter>Source Files\Managed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

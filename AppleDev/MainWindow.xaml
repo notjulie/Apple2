@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:AppleDev"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+   <DockPanel>
+      <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+         <MenuItem Name="windowMenu" Header="Window">
+            <MenuItem Name="emulatorItem" Header="Emulator"/>
+         </MenuItem>
+      </Menu>
+      <Grid/>
+   </DockPanel>
 </Window>

@@ -59,3 +59,4 @@
 	UINT Get3DBorderHeight(void);
 
 	void SetAltEnterToggleFullScreen(bool mode);
+

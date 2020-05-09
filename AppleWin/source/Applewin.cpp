@@ -1327,6 +1327,9 @@ int APIENTRY WinMain(HINSTANCE passinstance, HINSTANCE, LPSTR lpCmdLine, int)
 			EnterMessageLoop();
 			LogFileOutput("Main: LeaveMessageLoop()\n");
 
+			// RER -- destroy the Frame if it hasn't already been
+			DestroyWindow(g_hFrameWindow);
+
 			if (g_bRestart)
 			{
 				g_cmdLine.bSetFullScreen = g_bRestartFullScreen;

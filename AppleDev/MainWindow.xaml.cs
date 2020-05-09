@@ -22,8 +22,22 @@ namespace AppleDev
    {
       public MainWindow()
       {
-         // normaal component initialization
+         // normal component initialization
          InitializeComponent();
+
+         // event handlers
+         windowMenu.SubmenuOpened += WindowMenu_SubmenuOpened;
+         emulatorItem.Click += EmulatorItem_Click;
+      }
+
+      private void EmulatorItem_Click(object sender, RoutedEventArgs e)
+      {
+         AppleWin.Managed.AppleWinThread.Show(!emulatorItem.IsChecked);
+      }
+
+      private void WindowMenu_SubmenuOpened(object sender, RoutedEventArgs e)
+      {
+         emulatorItem.IsChecked = AppleWin.Managed.AppleWinThread.IsShowing();
       }
    }
 }

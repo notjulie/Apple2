@@ -1094,6 +1094,15 @@ LRESULT CALLBACK FrameWndProc (
 
     case WM_CLOSE:
       LogFileOutput("WM_CLOSE\n");
+
+		// RER -- if we are not restarting then this is a user request to close the window;
+		// instead of destroying it just hide it
+		if (!g_bRestart)
+		{
+			ShowWindow(window, SW_HIDE);
+			return 0;
+		}
+
       if (g_bIsFullScreen && g_bRestart)
 		  g_bRestartFullScreen = true;
       if (g_bIsFullScreen)
