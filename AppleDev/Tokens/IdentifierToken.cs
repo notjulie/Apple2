@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppleDev.Tokens
 {
-   class TokenizedModule
+   class IdentifierToken : Token
    {
-      public void Add(Token token)
+      public IdentifierToken(string identifier)
       {
          throw new NotImplementedException();
       }

@@ -89,6 +89,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="SourceModule.cs" />
+    <Compile Include="Tokens\IdentifierToken.cs" />
+    <Compile Include="Tokens\Keyword.cs" />
+    <Compile Include="Tokens\KeywordToken.cs" />
+    <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenizedModule.cs" />
     <Compile Include="Tokens\Tokenizer.cs" />
     <Page Include="MainWindow.xaml">

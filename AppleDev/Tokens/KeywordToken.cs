@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AppleDev.Tokens
 {
-   class TokenizedModule
+   class KeywordToken : Token
    {
-      public void Add(Token token)
+      public KeywordToken(Keyword keyword)
       {
          throw new NotImplementedException();
       }
