@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,9 +33,26 @@ namespace AppleDev
          windowMenu.SubmenuOpened += WindowMenu_SubmenuOpened;
          emulatorItem.Click += EmulatorItem_Click;
          programText.TextChanged += ProgramText_TextChanged;
+         compileItem.Click += CompileItem_Click;
 
          // grab the program text from the settings
          programText.Text = AppleDev.Properties.Settings.Default.ProgramText;
+      }
+
+      private void CompileItem_Click(object sender, RoutedEventArgs e)
+      {
+         try
+         {
+            // create a source module from the text
+            SourceModule sourceModule = new SourceModule(programText.Text);
+
+            Compiler compiler = new Compiler();
+            compiler.Compile(sourceModule);
+         }
+         catch (NotImplementedException niX)
+         {
+            MessageBox.Show("Feature not implemented: " + niX.Message);
+         }
       }
 
       private void ProgramText_TextChanged(object sender, TextChangedEventArgs e)

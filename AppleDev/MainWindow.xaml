@@ -8,12 +8,15 @@
         Title="MainWindow" Height="450" Width="800">
    <DockPanel>
       <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+         <MenuItem Name="fileMenu" Header="File">
+            <MenuItem Name="compileItem" Header="Compile"/>
+         </MenuItem>
          <MenuItem Name="windowMenu" Header="Window">
             <MenuItem Name="emulatorItem" Header="Emulator"/>
          </MenuItem>
       </Menu>
       <Grid>
-         <TextBox x:Name="programText" AcceptsReturn="True"/>
+         <TextBox x:Name="programText" AcceptsReturn="True" AcceptsTab="True"/>
       </Grid>
    </DockPanel>
 </Window>
