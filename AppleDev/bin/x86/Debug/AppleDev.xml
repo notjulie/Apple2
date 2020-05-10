@@ -4,6 +4,13 @@
         <name>AppleDev</name>
     </assembly>
     <members>
+        <member name="M:AppleDev.Tokens.Tokenizer.Tokenize(AppleDev.SourceModule)">
+            <summary>
+            Creates a TokenizedModule for the SourceModule
+            </summary>
+            <param name="sourceModule"></param>
+            <returns></returns>
+        </member>
         <member name="T:AppleDev.App">
             <summary>
             Interaction logic for App.xaml

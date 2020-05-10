@@ -16,3 +16,4 @@ C:\Users\Randy\Documents\Dev\Apple2\AppleDev\obj\x86\Debug\AppleDev.csproj.CoreC
 C:\Users\Randy\Documents\Dev\Apple2\AppleDev\obj\x86\Debug\AppleDev.csproj.CopyComplete
 C:\Users\Randy\Documents\Dev\Apple2\AppleDev\obj\x86\Debug\AppleDev.exe
 C:\Users\Randy\Documents\Dev\Apple2\AppleDev\obj\x86\Debug\AppleDev.pdb
+C:\Users\Randy\Documents\Dev\Apple2\AppleDev\obj\x86\Debug\AppleDev.csprojAssemblyReference.cache
