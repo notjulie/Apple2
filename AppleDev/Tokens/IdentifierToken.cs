@@ -10,7 +10,13 @@ namespace AppleDev.Tokens
    {
       public IdentifierToken(string identifier)
       {
-         throw new NotImplementedException();
+         this.Identifier = identifier;
+      }
+
+      public string Identifier
+      {
+         get;
+         private set;
       }
    }
 }

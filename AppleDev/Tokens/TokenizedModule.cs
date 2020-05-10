@@ -8,9 +8,11 @@ namespace AppleDev.Tokens
 {
    class TokenizedModule
    {
+      private List<Token> tokens = new List<Token>();
+
       public void Add(Token token)
       {
-         throw new NotImplementedException();
+         tokens.Add(token);
       }
    }
 }

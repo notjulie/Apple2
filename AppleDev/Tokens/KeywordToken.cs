@@ -10,7 +10,13 @@ namespace AppleDev.Tokens
    {
       public KeywordToken(Keyword keyword)
       {
-         throw new NotImplementedException();
+         this.Keyword = keyword;
+      }
+
+      public Keyword Keyword
+      {
+         get;
+         private set;
       }
    }
 }
