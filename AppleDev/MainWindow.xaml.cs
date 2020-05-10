@@ -31,6 +31,15 @@ namespace AppleDev
          // event handlers
          windowMenu.SubmenuOpened += WindowMenu_SubmenuOpened;
          emulatorItem.Click += EmulatorItem_Click;
+         programText.TextChanged += ProgramText_TextChanged;
+
+         // grab the program text from the settings
+         programText.Text = AppleDev.Properties.Settings.Default.ProgramText;
+      }
+
+      private void ProgramText_TextChanged(object sender, TextChangedEventArgs e)
+      {
+         AppleDev.Properties.Settings.Default.ProgramText = programText.Text;
       }
 
       private void EmulatorItem_Click(object sender, RoutedEventArgs e)

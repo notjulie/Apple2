@@ -12,6 +12,8 @@
             <MenuItem Name="emulatorItem" Header="Emulator"/>
          </MenuItem>
       </Menu>
-      <Grid/>
+      <Grid>
+         <TextBox x:Name="programText" AcceptsReturn="True"/>
+      </Grid>
    </DockPanel>
 </Window>

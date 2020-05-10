@@ -45,6 +45,9 @@ namespace AppleDev
          // tell AppleWin to shut down
          AppleWin.Managed.AppleWinThread.Shutdown();
          mainWindowThread.Join();
+
+         // save the default settings
+         AppleDev.Properties.Settings.Default.Save();
       }
    }
 }
