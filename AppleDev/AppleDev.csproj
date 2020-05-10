@@ -88,10 +88,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CompileException.cs" />
     <Compile Include="SourceModule.cs" />
     <Compile Include="Tokens\IdentifierToken.cs" />
     <Compile Include="Tokens\Keyword.cs" />
     <Compile Include="Tokens\KeywordToken.cs" />
+    <Compile Include="Tokens\Symbol.cs" />
+    <Compile Include="Tokens\SymbolToken.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenizedModule.cs" />
     <Compile Include="Tokens\Tokenizer.cs" />

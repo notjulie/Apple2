@@ -9,12 +9,6 @@ namespace AppleDev.Tokens
 {
    class Tokenizer
    {
-      #region Types / Constants
-
-      private static readonly char[] ValidWordCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
-
-      #endregion
-
       private TokenizedModule tokens;
 
       /// <summary>
@@ -53,6 +47,8 @@ namespace AppleDev.Tokens
             char firstCharacter = line[0];
             if (char.IsLetter(firstCharacter))
                tokens.Add(GetWordToken(ref line));
+            else if (SymbolToken.IsSymbolCharacter(firstCharacter))
+               tokens.Add(SymbolToken.GetSymbolToken(ref line));
             else
                throw new NotImplementedException("Invalid token start character: " + firstCharacter);
          }
@@ -67,7 +63,7 @@ namespace AppleDev.Tokens
          int endPosition = -1;
          for (int i=1; i<line.Length; ++i)
          {
-            if (!ValidWordCharacters.Contains(line[i]))
+            if (!IdentifierToken.IdentifierCharacters.Contains(line[i]))
             {
                endPosition = i;
                break;
