@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AppleDev</name>
+    </assembly>
+    <members>
+        <member name="T:AppleDev.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:AppleDev.App.OnStartup(System.Windows.StartupEventArgs)">
+            <summary>
+            Performs actions on application startup
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:AppleDev.App.OnExit(System.Windows.ExitEventArgs)">
+            <summary>
+            Performs actions on application exit
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:AppleDev.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:AppleDev.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:AppleDev.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:AppleDev.MainWindow.#ctor">
+            <summary>
+            Initializes a new instance of class MainWindow
+            </summary>
+        </member>
+        <member name="M:AppleDev.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AppleDev.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AppleDev.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AppleDev.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+    </members>
+</doc>
