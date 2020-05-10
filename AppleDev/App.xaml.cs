@@ -17,6 +17,10 @@ namespace AppleDev
    {
       private Thread mainWindowThread;
 
+      /// <summary>
+      /// Performs actions on application startup
+      /// </summary>
+      /// <param name="e"></param>
       protected override void OnStartup(StartupEventArgs e)
       {
          // call base class
@@ -29,6 +33,10 @@ namespace AppleDev
          mainWindowThread.Start();
       }
 
+      /// <summary>
+      /// Performs actions on application exit
+      /// </summary>
+      /// <param name="e"></param>
       protected override void OnExit(ExitEventArgs e)
       {
          // call the base class

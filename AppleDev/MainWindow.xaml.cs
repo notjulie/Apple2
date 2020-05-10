@@ -20,6 +20,9 @@ namespace AppleDev
    /// </summary>
    public partial class MainWindow : Window
    {
+      /// <summary>
+      /// Initializes a new instance of class MainWindow
+      /// </summary>
       public MainWindow()
       {
          // normal component initialization
