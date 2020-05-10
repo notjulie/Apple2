@@ -15,7 +15,7 @@ namespace AppleDev
          Tokenizer tokenizer = new Tokenizer();
          var tokenizedModule = tokenizer.Tokenize(sourceModule);
 
-         throw new NotImplementedException("Compiler.Compile: what to do with tokens?");
+         throw new NotImplementedException();
       }
    }
 }

@@ -33,7 +33,7 @@ namespace AppleDev.Tokens
 
       private void TokenizeLine(string line)
       {
-         throw new NotImplementedException("Tokenizer.TokenizeLine");
+         throw new NotImplementedException();
       }
    }
 }
