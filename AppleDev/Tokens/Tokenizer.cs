@@ -49,6 +49,8 @@ namespace AppleDev.Tokens
                tokens.Add(GetWordToken(ref line));
             else if (SymbolToken.IsSymbolCharacter(firstCharacter))
                tokens.Add(SymbolToken.GetSymbolToken(ref line));
+            else if (char.IsDigit(firstCharacter))
+               tokens.Add(NumericToken.GetNumericToken(ref line));
             else
                throw new NotImplementedException("Invalid token start character: " + firstCharacter);
          }

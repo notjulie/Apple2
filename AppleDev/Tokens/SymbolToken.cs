@@ -28,7 +28,9 @@ namespace AppleDev.Tokens
          new SymbolInfo(")", Symbol.RightParen),
          new SymbolInfo("{", Symbol.LeftCurlyBracket),
          new SymbolInfo("}", Symbol.RightCurlyBracket),
-         new SymbolInfo(";", Symbol.Semicolon)
+         new SymbolInfo(";", Symbol.Semicolon),
+         new SymbolInfo(",", Symbol.Comma),
+         new SymbolInfo(".", Symbol.Dot)
          };
 
       public SymbolToken(Symbol symbol)
@@ -44,7 +46,7 @@ namespace AppleDev.Tokens
 
       public static bool IsSymbolCharacter(char c)
       {
-         return "(){};".Contains(c);
+         return "(){};,.".Contains(c);
       }
 
       public static Token GetSymbolToken(ref string s)

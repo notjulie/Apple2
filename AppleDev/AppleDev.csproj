@@ -93,6 +93,7 @@
     <Compile Include="Tokens\IdentifierToken.cs" />
     <Compile Include="Tokens\Keyword.cs" />
     <Compile Include="Tokens\KeywordToken.cs" />
+    <Compile Include="Tokens\NumericToken.cs" />
     <Compile Include="Tokens\Symbol.cs" />
     <Compile Include="Tokens\SymbolToken.cs" />
     <Compile Include="Tokens\Token.cs" />

@@ -13,6 +13,8 @@ namespace AppleDev.Tokens
       RightParen,
       LeftCurlyBracket,
       RightCurlyBracket,
-      Semicolon
+      Semicolon,
+      Comma,
+      Dot
    }
 }
