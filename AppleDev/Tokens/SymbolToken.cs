@@ -33,7 +33,8 @@ namespace AppleDev.Tokens
          new SymbolInfo(".", Symbol.Dot)
          };
 
-      public SymbolToken(Symbol symbol)
+      public SymbolToken(TokenInfo info, Symbol symbol)
+         :base(info)
       {
          this.Symbol = symbol;
       }
@@ -53,10 +54,13 @@ namespace AppleDev.Tokens
       {
          foreach (var symbolInfo in symbols)
          {
-            if (s.IndexOf(symbolInfo.text, StringComparison.InvariantCulture) == 0)
+            if (s.StartsWith(symbolInfo.text, StringComparison.InvariantCulture))
             {
                s = s.Substring(symbolInfo.text.Length);
-               return new SymbolToken(symbolInfo.symbol);
+               return new SymbolToken(
+                  new TokenInfo(symbolInfo.text),
+                  symbolInfo.symbol
+                  );
             }
          }
 

@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace AppleDev.Tokens
 {
-   class KeywordToken : Token
+   struct TokenInfo
    {
-      public KeywordToken(Keyword keyword)
-         :base(new TokenInfo(keyword.ToString()))
+      public TokenInfo(string text)
       {
-         this.Keyword = keyword;
+         this.Text = text;
       }
 
-      public Keyword Keyword
+      public string Text
       {
          get;
          private set;

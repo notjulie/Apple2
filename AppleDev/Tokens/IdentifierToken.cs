@@ -11,6 +11,7 @@ namespace AppleDev.Tokens
       #region Constructor
 
       public IdentifierToken(string identifier)
+         :base(new TokenInfo(identifier))
       {
          this.Identifier = identifier;
       }

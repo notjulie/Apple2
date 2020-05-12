@@ -9,7 +9,8 @@ namespace AppleDev.Tokens
 {
    class NumericToken : Token
    {
-      public NumericToken(long number)
+      public NumericToken(TokenInfo info, long number)
+         :base(info)
       {
          this.Number = number;
       }
@@ -34,7 +35,10 @@ namespace AppleDev.Tokens
 
          // see what we have
          if (tokenText.StartsWith("0x", StringComparison.InvariantCulture))
-            return new NumericToken(long.Parse(tokenText.Substring(2), System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture));
+            return new NumericToken(
+               new TokenInfo(tokenText),
+               long.Parse(tokenText.Substring(2), System.Globalization.NumberStyles.HexNumber, CultureInfo.InvariantCulture)
+               );
          else
             throw new CompileException("Invalid numeric expression: " + tokenText);
       }
