@@ -27,6 +27,25 @@ namespace AppleDev.Tokens
       #region Public Properties
 
       /// <summary>
+      /// Gets a value indicating whether this token indicates the start of a blocks
+      /// </summary>
+      public override bool IsBlockStart
+      {
+         get
+         {
+            switch (Keyword)
+            {
+               case Keyword.function:
+               case Keyword.inline:
+                  return true;
+
+               default:
+                  return false;
+            }
+         }
+      }
+
+      /// <summary>
       /// Gets the keyword
       /// </summary>
       public Keyword Keyword
@@ -50,6 +69,9 @@ namespace AppleDev.Tokens
          {
             case Keyword.function:
                return new FunctionBlock(tokens);
+
+            case Keyword.inline:
+               return new InlineBlock(tokens);
 
             default:
                return base.CreateBlock(tokens);

@@ -8,6 +8,7 @@ namespace AppleDev.Tokens
 {
    enum Keyword
    {
-      function
+      function,
+      inline
    }
 }

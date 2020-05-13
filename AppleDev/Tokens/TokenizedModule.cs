@@ -28,7 +28,7 @@ namespace AppleDev.Tokens
 
       public IEnumerator<Token> GetEnumerator()
       {
-         throw new NotImplementedException();
+         return tokens.GetEnumerator();
       }
 
       IEnumerator IEnumerable.GetEnumerator()

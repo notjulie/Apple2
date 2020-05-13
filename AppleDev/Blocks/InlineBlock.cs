@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using AppleDev.Tokens;
+
 namespace AppleDev.Blocks
 {
-   class BlockifiedModule
+   class InlineBlock : Block
    {
-      private List<Block> blocks = new List<Block>();
-
-      public void Add(Block block)
+      public InlineBlock(Token[] tokens)
+         :base(tokens)
       {
-         blocks.Add(block);
       }
    }
 }
