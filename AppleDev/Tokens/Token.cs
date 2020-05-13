@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AppleDev.Blocks;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,8 @@ namespace AppleDev.Tokens
 
       private enum Error
       {
-         InternalErrorEmptyToken
+         InternalErrorEmptyToken,
+         InternalErrorInvalidBlockHeaderToken
       }
 
       #endregion
@@ -39,12 +41,37 @@ namespace AppleDev.Tokens
       #region Public Properties
 
       /// <summary>
+      /// Gets a value indicating whether the token is the start of a block
+      /// </summary>
+      virtual public bool IsBlockStart
+      {
+         get;
+      } = false;
+
+      /// <summary>
       /// Gets information about the token
       /// </summary>
       public TokenInfo TokenInfo
       {
          get;
          private set;
+      }
+
+      #endregion
+
+      #region Public Methods
+
+      /// <summary>
+      /// Creates a Block from the given list of tokens; this is called on the block-header
+      /// token (e.g. "function" keyword), so that the correct type of block can be created.
+      /// Blocks that are not block-start tokens should just call the base implementation,
+      /// i.e. they should throw the error that we throw below.
+      /// </summary>
+      /// <param name="tokens"></param>
+      /// <returns></returns>
+      public virtual Block CreateBlock(Token[] tokens)
+      {
+         throw new CompileException(Error.InternalErrorInvalidBlockHeaderToken);
       }
 
       #endregion

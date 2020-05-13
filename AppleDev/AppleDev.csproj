@@ -88,6 +88,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Blocks\Block.cs" />
+    <Compile Include="Blocks\BlockifiedModule.cs" />
+    <Compile Include="Blocks\FunctionBlock.cs" />
     <Compile Include="CompileException.cs" />
     <Compile Include="SourceModule.cs" />
     <Compile Include="Tokens\IdentifierToken.cs" />
