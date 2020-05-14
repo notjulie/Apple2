@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace Suna
    /// <summary>
    /// Compiler class
    /// </summary>
-   public class Compiler
+   public sealed class SunaCompiler
    {
       #region Types / Constants
 
@@ -24,12 +25,23 @@ namespace Suna
 
       #endregion
 
+      #region Private Fields
+
+      private Tokenizer tokenizer = new Tokenizer();
+
+      #endregion
+
       #region Public Methods
 
+      /// <summary>
+      /// Compiles the given module
+      /// </summary>
+      /// <param name="sourceModule"></param>
       public void Compile(SourceModule sourceModule)
       {
+         Contract.Requires(sourceModule != null);
+
          // tokenize
-         Tokenizer tokenizer = new Tokenizer();
          var tokenizedModule = tokenizer.Tokenize(sourceModule);
 
          // blockify

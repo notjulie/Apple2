@@ -48,7 +48,7 @@ namespace AppleDev
             // create a source module from the text
             SourceModule sourceModule = new SourceModule(programText.Text);
 
-            Compiler compiler = new Compiler();
+            SunaCompiler compiler = new SunaCompiler();
             compiler.Compile(sourceModule);
          }
          catch (NotImplementedException niX)

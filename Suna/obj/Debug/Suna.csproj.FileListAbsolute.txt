@@ -1,4 +1,4 @@
-C:\Users\Randy\Documents\Dev\Apple2\Suna\obj\Debug\Suna.csprojAssemblyReference.cache
+C:\Users\Randy\Documents\Dev\Apple2\Suna\bin\Debug\Suna.xml
 C:\Users\Randy\Documents\Dev\Apple2\Suna\obj\Debug\Suna.csproj.CoreCompileInputs.cache
 C:\Users\Randy\Documents\Dev\Apple2\Suna\bin\Debug\Suna.dll
 C:\Users\Randy\Documents\Dev\Apple2\Suna\bin\Debug\Suna.pdb
