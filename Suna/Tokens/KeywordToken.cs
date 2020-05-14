@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using AppleDev.Blocks;
+using Suna.Blocks;
 
-namespace AppleDev.Tokens
+namespace Suna.Tokens
 {
    class KeywordToken : Token
    {

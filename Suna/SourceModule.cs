@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppleDev
+namespace Suna
 {
-   class SourceModule
+   public class SourceModule
    {
       public SourceModule(string text)
       {

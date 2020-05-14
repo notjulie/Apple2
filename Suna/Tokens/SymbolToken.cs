@@ -4,10 +4,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media.Animation;
 using System.Xml.Xsl;
 
-namespace AppleDev.Tokens
+namespace Suna.Tokens
 {
    class SymbolToken : Token
    {

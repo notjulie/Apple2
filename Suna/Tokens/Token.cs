@@ -1,11 +1,11 @@
-﻿using AppleDev.Blocks;
+﻿using Suna.Blocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppleDev.Tokens
+namespace Suna.Tokens
 {
    /// <summary>
    /// Base class representing a token in the source

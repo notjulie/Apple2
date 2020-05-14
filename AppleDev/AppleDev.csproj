@@ -88,22 +88,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Blocks\Block.cs" />
-    <Compile Include="Blocks\BlockifiedModule.cs" />
-    <Compile Include="Blocks\FunctionBlock.cs" />
-    <Compile Include="Blocks\InlineBlock.cs" />
-    <Compile Include="CompileException.cs" />
-    <Compile Include="SourceModule.cs" />
-    <Compile Include="Tokens\IdentifierToken.cs" />
-    <Compile Include="Tokens\Keyword.cs" />
-    <Compile Include="Tokens\KeywordToken.cs" />
-    <Compile Include="Tokens\NumericToken.cs" />
-    <Compile Include="Tokens\Symbol.cs" />
-    <Compile Include="Tokens\SymbolToken.cs" />
-    <Compile Include="Tokens\Token.cs" />
-    <Compile Include="Tokens\TokenInfo.cs" />
-    <Compile Include="Tokens\TokenizedModule.cs" />
-    <Compile Include="Tokens\Tokenizer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,7 +96,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compiler.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -149,6 +132,10 @@
     <ProjectReference Include="..\AppleWin\AppleWinExpress2019.vcxproj">
       <Project>{0a960136-a00a-4d4b-805f-664d9950d2ca}</Project>
       <Name>AppleWin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Suna\Suna.csproj">
+      <Project>{e4ad2457-9abe-4ebb-91aa-524d32167434}</Project>
+      <Name>Suna</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

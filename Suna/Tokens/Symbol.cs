@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AppleDev.Tokens
+namespace Suna.Tokens
 {
    enum Symbol
    {

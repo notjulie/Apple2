@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using AppleDev.Tokens;
+using Suna.Tokens;
 
-namespace AppleDev.Blocks
+namespace Suna.Blocks
 {
-   class FunctionBlock : Block
+   class InlineBlock : Block
    {
-      public FunctionBlock(Token[] tokens)
+      public InlineBlock(Token[] tokens)
          :base(tokens)
       {
       }

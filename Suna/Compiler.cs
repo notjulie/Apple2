@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using AppleDev.Blocks;
-using AppleDev.Tokens;
+using Suna.Blocks;
+using Suna.Tokens;
 
-namespace AppleDev
+namespace Suna
 {
    /// <summary>
    /// Compiler class
    /// </summary>
-   class Compiler
+   public class Compiler
    {
       #region Types / Constants
 
