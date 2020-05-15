@@ -55,6 +55,7 @@
     <Compile Include="Blocks\BlockifiedModule.cs" />
     <Compile Include="Blocks\FunctionBlock.cs" />
     <Compile Include="Blocks\InlineBlock.cs" />
+    <Compile Include="Blocks\MainBlock.cs" />
     <Compile Include="CompileException.cs" />
     <Compile Include="SunaCompiler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

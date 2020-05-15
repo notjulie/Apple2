@@ -74,6 +74,9 @@ namespace Suna.Tokens
             case Keyword.inline:
                return new InlineBlock(tokens);
 
+            case Keyword.main:
+               return new MainBlock(tokens);
+
             default:
                return base.CreateBlock(tokens);
          }
