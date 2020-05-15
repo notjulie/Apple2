@@ -37,6 +37,7 @@ namespace Suna.Tokens
             {
                case Keyword.function:
                case Keyword.inline:
+               case Keyword.main:
                   return true;
 
                default:

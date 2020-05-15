@@ -55,6 +55,10 @@ namespace AppleDev
          {
             MessageBox.Show("Feature not implemented: " + niX.Message);
          }
+         catch (CompileException cX)
+         {
+            MessageBox.Show("Compile exception: " + cX.Message);
+         }
       }
 
       private void ProgramText_TextChanged(object sender, TextChangedEventArgs e)

@@ -9,6 +9,7 @@ namespace Suna.Tokens
    enum Keyword
    {
       function,
-      inline
+      inline,
+      main
    }
 }
