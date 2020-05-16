@@ -50,6 +50,12 @@ namespace Suna.Link
          if (main == null)
             throw new CompileException(Error.NoMain);
 
+         // create the base (global) context
+         LinkContext context = new LinkContext(result);
+
+         // let main compile itself in the global context
+         main.Compile(context);
+
          // now what?
          throw new NotImplementedException();
       }
