@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,8 @@ namespace Suna.Blocks
       /// <param name="linkContext"></param>
       public void Compile(LinkContext linkContext)
       {
+         Contract.Requires(linkContext != null);
+
          // get an enumerator and move to the first item
          var enumerator = this.Tokens.GetEnumerator();
 
@@ -38,7 +41,7 @@ namespace Suna.Blocks
 
          // groupify the contents of the block... the block's contents start immediately
          // after the main keyword
-         GroupedBlock groupedBlock = linkContext.Groupifier.GroupifyTokens(enumerator);
+         GroupItem groupedBlock = Groupifier.GroupifyTokens(enumerator);
 
          throw new NotImplementedException();
       }

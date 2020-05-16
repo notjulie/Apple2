@@ -19,6 +19,7 @@ namespace Suna.Tokens
 
       private enum Error
       {
+         MissingClosingSymbol,
          UnexpectedSymbol
       }
 
@@ -99,7 +100,7 @@ namespace Suna.Tokens
       /// </summary>
       /// <param name="enumerator"></param>
       /// <returns></returns>
-      public override Group ReadGroup(IEnumerator<Token> enumerator)
+      public override GroupItem ReadGroupItem(IEnumerator<Token> enumerator)
       {
          // we're currently pointing at our own position; move past it
 
@@ -116,7 +117,7 @@ namespace Suna.Tokens
                throw new CompileException(Error.UnexpectedSymbol);
 
             default:
-               return new Group(this);
+               return new GroupItem(this);
          }
       }
 
@@ -124,9 +125,29 @@ namespace Suna.Tokens
 
       #region Private Methods
 
-      public Group ReadGroupUntil(IEnumerator<Token> enumerator, Symbol closingSymbol)
+      public GroupItem ReadGroupUntil(IEnumerator<Token> enumerator, Symbol closingSymbol)
       {
-         throw new NotImplementedException();
+         List<GroupItem> groupItems = new List<GroupItem>();
+         groupItems.Add(new GroupItem(this));
+
+         for (; ; )
+         {
+            // move to the next token
+            if (!enumerator.MoveNext())
+               throw new CompileException(Error.MissingClosingSymbol);
+
+            // see if it's the closing symbol we need
+            SymbolToken symbolToken = enumerator.Current as SymbolToken;
+            if (symbolToken!=null && symbolToken.Symbol==closingSymbol)
+            {
+               groupItems.Add(new GroupItem(symbolToken));
+               return new GroupItem(groupItems);
+            }
+            else
+            {
+               groupItems.Add(Groupifier.GroupifyTokens(enumerator));
+            }
+         }
       }
 
       #endregion

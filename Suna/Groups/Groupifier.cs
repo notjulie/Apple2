@@ -8,25 +8,23 @@ using Suna.Tokens;
 
 namespace Suna.Groups
 {
-   class Groupifier
+   /// <summary>
+   /// Class that groupifies tokens
+   /// </summary>
+   static class Groupifier
    {
-      // dummy to prevent warnings for the moment
-      private IEnumerator<Token> lastTokens;
-
-      public GroupedBlock GroupifyTokens(IEnumerator<Token> tokens)
+      static public GroupItem GroupifyTokens(IEnumerator<Token> tokens)
       {
-         // dummy to prevent warnings for the moment
-         lastTokens = tokens;
+         List<GroupItem> groupItems = new List<GroupItem>();
 
-         GroupedBlock result = new GroupedBlock();
          for (; ;)
          {
             // if we're done, all good
             if (!tokens.MoveNext())
-               return result;
+               return new GroupItem(groupItems);
 
             // let the token itself build the group
-            result.Add(tokens.Current.ReadGroup(tokens));
+            groupItems.Add(tokens.Current.ReadGroupItem(tokens));
          }
 
          throw new NotImplementedException();

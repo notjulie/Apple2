@@ -15,11 +15,6 @@ namespace Suna.Link
          this.LinkedModule = module;
       }
 
-      public Groupifier Groupifier
-      {
-         get;
-      } = new Groupifier();
-
       public LinkedModule LinkedModule
       {
          get;

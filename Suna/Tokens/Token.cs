@@ -76,7 +76,7 @@ namespace Suna.Tokens
          throw new CompileException(Error.InternalErrorInvalidBlockHeaderToken);
       }
 
-      public virtual Group ReadGroup(IEnumerator<Token> enumerator)
+      public virtual GroupItem ReadGroupItem(IEnumerator<Token> enumerator)
       {
          throw new NotImplementedException();
       }
