@@ -6,25 +6,51 @@ using System.Threading.Tasks;
 
 namespace Suna.Blocks
 {
+   /// <summary>
+   /// A collection of blocks of code; a blockification is just a process of splitting a
+   /// source file into manageable sections; functions, inlines, etc.
+   /// </summary>
    class BlockifiedModule
    {
+      #region Types / Constants
+
       private enum Error
       {
          InternalErrorUnknownBlockType,
          MultipleMains
       }
 
-      private MainBlock main = null;
+      #endregion
+
+      #region Private Fields
+
       private List<Block> functions = new List<Block>();
       private List<Block> inlines = new List<Block>();
+
+      #endregion
+
+      #region Public Properties
+
+      /// <summary>
+      /// Gets the "main" block
+      /// </summary>
+      public MainBlock Main
+      {
+         get;
+         private set;
+      } = null;
+
+      #endregion
+
+      #region Public Methods
 
       public void Add(Block block)
       {
          if (block is MainBlock)
          {
-            if (main != null)
+            if (Main != null)
                throw new CompileException(Error.MultipleMains);
-            main = (MainBlock)block;
+            Main = (MainBlock)block;
          }
          else if (block is FunctionBlock)
          {
@@ -39,5 +65,7 @@ namespace Suna.Blocks
             throw new CompileException(Error.InternalErrorUnknownBlockType);
          }
       }
+
+      #endregion
    }
 }
