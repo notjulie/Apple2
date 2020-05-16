@@ -1,9 +1,11 @@
-﻿using Suna.Blocks;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using Suna.Blocks;
+using Suna.Groups;
 
 namespace Suna.Tokens
 {
@@ -72,6 +74,12 @@ namespace Suna.Tokens
       public virtual Block CreateBlock(Token[] tokens)
       {
          throw new CompileException(Error.InternalErrorInvalidBlockHeaderToken);
+      }
+
+      public virtual Group ReadGroup(IEnumerator<Token> enumerator)
+      {
+         Group group = new Group();
+         throw new NotImplementedException();
       }
 
       #endregion

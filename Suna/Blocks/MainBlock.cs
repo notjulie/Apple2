@@ -30,9 +30,15 @@ namespace Suna.Blocks
       /// <param name="linkContext"></param>
       public void Compile(LinkContext linkContext)
       {
+         // get an enumerator and move to the first item
+         var enumerator = this.Tokens.GetEnumerator();
+
+         // skip the "main" keyword
+         enumerator.MoveNext();
+
          // groupify the contents of the block... the block's contents start immediately
          // after the main keyword
-         GroupedBlock groupedBlock = linkContext.Groupifier.GroupifyTokens(this.GetTokenRange(1, TokenCount - 1));
+         GroupedBlock groupedBlock = linkContext.Groupifier.GroupifyTokens(enumerator);
 
          throw new NotImplementedException();
       }

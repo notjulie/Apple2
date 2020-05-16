@@ -6,13 +6,7 @@ using System.Threading.Tasks;
 
 namespace Suna.Groups
 {
-   class GroupedBlock
+   class Group
    {
-      private List<Group> groups = new List<Group>();
-
-      public void Add(Group group)
-      {
-         groups.Add(group);
-      }
    }
 }

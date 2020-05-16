@@ -11,14 +11,24 @@ namespace Suna.Groups
    class Groupifier
    {
       // dummy to prevent warnings for the moment
-      private Token[] lastTokens;
+      private IEnumerator<Token> lastTokens;
 
-      public GroupedBlock GroupifyTokens(Token[] tokens)
+      public GroupedBlock GroupifyTokens(IEnumerator<Token> tokens)
       {
          // dummy to prevent warnings for the moment
          lastTokens = tokens;
 
          GroupedBlock result = new GroupedBlock();
+         for (; ;)
+         {
+            // if we're done, all good
+            if (!tokens.MoveNext())
+               return result;
+
+            // let the token itself build the group
+            result.Add(tokens.Current.ReadGroup(tokens));
+         }
+
          throw new NotImplementedException();
       }
    }
