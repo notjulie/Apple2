@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Suna.Groups;
+
 namespace Suna.Link
 {
    class LinkContext
@@ -12,6 +14,11 @@ namespace Suna.Link
       {
          this.LinkedModule = module;
       }
+
+      public Groupifier Groupifier
+      {
+         get;
+      } = new Groupifier();
 
       public LinkedModule LinkedModule
       {

@@ -57,6 +57,8 @@
     <Compile Include="Blocks\InlineBlock.cs" />
     <Compile Include="Blocks\MainBlock.cs" />
     <Compile Include="CompileException.cs" />
+    <Compile Include="Groups\GroupedBlock.cs" />
+    <Compile Include="Groups\Groupifier.cs" />
     <Compile Include="Link\LinkContext.cs" />
     <Compile Include="Link\LinkedModule.cs" />
     <Compile Include="Link\Linker.cs" />

@@ -15,5 +15,20 @@ namespace Suna.Blocks
       {
          this.tokens = tokens;
       }
+
+      public int TokenCount
+      {
+         get
+         {
+            return tokens.Length;
+         }
+      }
+
+      public Token[] GetTokenRange(int offset, int count)
+      {
+         Token[] result = new Token[count];
+         Array.Copy(tokens, offset, result, 0, count);
+         return result;
+      }
    }
 }
