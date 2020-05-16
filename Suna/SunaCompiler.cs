@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Suna.Blocks;
+using Suna.Link;
 using Suna.Tokens;
 
 namespace Suna
@@ -70,6 +71,10 @@ namespace Suna
          }
          if (currentBlock.Count != 0)
             blockifiedModule.Add(currentBlock[0].CreateBlock(currentBlock.ToArray()));
+
+         // link
+         Linker linker = new Linker();
+         LinkedModule linkedModule = linker.Link(blockifiedModule);
 
          // then something
          throw new NotImplementedException();
