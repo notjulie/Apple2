@@ -78,7 +78,6 @@ namespace Suna.Tokens
 
       public virtual Group ReadGroup(IEnumerator<Token> enumerator)
       {
-         Group group = new Group();
          throw new NotImplementedException();
       }
 
