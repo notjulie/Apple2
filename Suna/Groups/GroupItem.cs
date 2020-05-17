@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Suna.Link;
 using Suna.Tokens;
 
 namespace Suna.Groups
@@ -17,50 +18,28 @@ namespace Suna.Groups
    /// </summary>
    class GroupItem
    {
-      #region Private Fields
+      #region Types / Constants
 
-      private Token token;
-      private List<GroupItem> childItems;
+      private enum Error 
+      {
+         InvalidGroupForCompile
+      }
 
       #endregion
 
       #region Constructor
 
-      public GroupItem(Token token)
+      public GroupItem()
       {
-         this.token = token;
-      }
-
-      public GroupItem(ICollection<GroupItem> items)
-      {
-         childItems = new List<GroupItem>(items);
       }
 
       #endregion
 
-      #region Base Class Overrides
+      #region Public Methods
 
-      /// <summary>
-      /// Returns a string representation of the object
-      /// </summary>
-      /// <returns></returns>
-      public override string ToString()
+      virtual public void Compile(LinkContext linkContext)
       {
-         if (token != null)
-         {
-            return token.ToString();
-         }
-         else
-         {
-            StringBuilder s = new StringBuilder();
-            foreach (var item in childItems)
-            {
-               if (s.Length == 0)
-                  s.Append(' ');
-               s.Append(item.ToString());
-            }
-            return s.ToString();
-         }
+         throw new CompileException(Error.InvalidGroupForCompile);
       }
 
       #endregion

@@ -78,7 +78,7 @@ namespace Suna.Tokens
 
       public virtual GroupItem ReadGroupItem(IEnumerator<Token> enumerator)
       {
-         return new GroupItem(this);
+         return new TokenGroupItem(this);
       }
 
       #endregion

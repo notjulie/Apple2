@@ -19,7 +19,6 @@ namespace Suna.Tokens
 
       private enum Error
       {
-         MissingClosingSymbol,
          UnexpectedSymbol
       }
 
@@ -107,46 +106,17 @@ namespace Suna.Tokens
          switch (Symbol)
          {
             case Symbol.LeftCurlyBracket:
-               return ReadGroupUntil(enumerator, Symbol.RightCurlyBracket);
+               return CurlyBracketGroup.Read(enumerator);
 
             case Symbol.LeftParen:
-               return ReadGroupUntil(enumerator, Symbol.RightParen);
+               return ParentheticGroup.Read(enumerator);
 
             case Symbol.RightCurlyBracket:
             case Symbol.RightParen:
                throw new CompileException(Error.UnexpectedSymbol);
 
             default:
-               return new GroupItem(this);
-         }
-      }
-
-      #endregion
-
-      #region Private Methods
-
-      public GroupItem ReadGroupUntil(IEnumerator<Token> enumerator, Symbol closingSymbol)
-      {
-         List<GroupItem> groupItems = new List<GroupItem>();
-         groupItems.Add(new GroupItem(this));
-
-         for (; ; )
-         {
-            // move to the next token
-            if (!enumerator.MoveNext())
-               throw new CompileException(Error.MissingClosingSymbol);
-
-            // see if it's the closing symbol we need
-            SymbolToken symbolToken = enumerator.Current as SymbolToken;
-            if (symbolToken!=null && symbolToken.Symbol==closingSymbol)
-            {
-               groupItems.Add(new GroupItem(symbolToken));
-               return new GroupItem(groupItems);
-            }
-            else
-            {
-               groupItems.Add(enumerator.Current.ReadGroupItem(enumerator));
-            }
+               return base.ReadGroupItem(enumerator);
          }
       }
 

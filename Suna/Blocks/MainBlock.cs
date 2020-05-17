@@ -41,9 +41,10 @@ namespace Suna.Blocks
 
          // groupify the contents of the block... the block's contents start immediately
          // after the main keyword
-         GroupItem groupedBlock = Groupifier.GroupifyTokens(enumerator);
+         GroupItem groupedBlock = GroupedBlock.Read(enumerator);
 
-         throw new NotImplementedException();
+         // compile the item
+         groupedBlock.Compile(linkContext);
       }
    }
 }
