@@ -35,6 +35,18 @@ namespace Suna.Groups
 
       #endregion
 
+      #region Public Properties
+
+      /// <summary>
+      /// Gets a value indicating whether the item is an identifier
+      /// </summary>
+      public virtual bool IsIdentifier
+      {
+         get;
+      } = false;
+
+      #endregion
+
       #region Public Methods
 
       virtual public void Compile(LinkContext linkContext)

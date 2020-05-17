@@ -14,6 +14,17 @@ namespace Suna.Groups
    /// </summary>
    class CurlyBracketGroup : Group
    {
+      #region Constructor
+
+      /// <summary>
+      /// Initializes a new instance of class CurlyBracketGroup
+      /// </summary>
+      private CurlyBracketGroup()
+      {
+      }
+
+      #endregion
+
       #region Public Methods
 
       /// <summary>

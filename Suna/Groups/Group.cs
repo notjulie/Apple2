@@ -52,8 +52,15 @@ namespace Suna.Groups
 
       #region Protected Methods
 
+      /// <summary>
+      /// Creates a group by iterating throw the given list of tokens until a token
+      /// matching the isGroupEnd delegate is found
+      /// </summary>
+      /// <param name="enumerator"></param>
+      /// <param name="isGroupEnd"></param>
       protected void ReadGroupUntil(IEnumerator<Token> enumerator, Func<Token,bool> isGroupEnd)
       {
+         // scan until we hit the end
          for (; ; )
          {
             // move to the next token
@@ -62,10 +69,22 @@ namespace Suna.Groups
 
             // see if it's the closing symbol we need
             if (isGroupEnd(enumerator.Current))
-               return;
+               break;
 
             // else let the token read the next group item from the enumerator
             Add(enumerator.Current.ReadGroupItem(enumerator));
+         }
+
+         // look through the result and combine things
+         // look for the invoke pattern
+         for (int i=0; i<childItems.Count-1; ++i)
+         {
+            if (childItems[i].IsIdentifier && childItems[i+1] is ParentheticGroup)
+            {
+               var invokeGroup = new InvokeGroup(childItems[i], childItems[i + 1]);
+               childItems.RemoveAt(i + 1);
+               childItems[i] = invokeGroup;
+            }
          }
       }
 
