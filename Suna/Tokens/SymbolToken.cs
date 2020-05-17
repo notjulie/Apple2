@@ -145,7 +145,7 @@ namespace Suna.Tokens
             }
             else
             {
-               groupItems.Add(Groupifier.GroupifyTokens(enumerator));
+               groupItems.Add(enumerator.Current.ReadGroupItem(enumerator));
             }
          }
       }
