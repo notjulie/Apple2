@@ -26,6 +26,21 @@ namespace Suna.Groups
 
       #endregion
 
+      #region Public Properties
+
+      /// <summary>
+      /// Gets the items
+      /// </summary>
+      public IEnumerable<GroupItem> Items
+      {
+         get
+         {
+            return childItems;
+         }
+      }
+
+      #endregion
+
       #region Public Methods
 
       public void Add(GroupItem item)

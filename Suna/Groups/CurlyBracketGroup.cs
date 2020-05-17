@@ -4,12 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Suna.Link;
 using Suna.Tokens;
 
 namespace Suna.Groups
 {
+   /// <summary>
+   /// Represents content within curly brackets
+   /// </summary>
    class CurlyBracketGroup : Group
    {
+      #region Public Methods
+
+      /// <summary>
+      /// Reads a CurlyBracketGroup from the given enumerator 
+      /// </summary>
+      /// <param name="enumerator"></param>
+      /// <returns></returns>
       public static CurlyBracketGroup Read(IEnumerator<Token> enumerator)
       {
          var result = new CurlyBracketGroup();
@@ -22,5 +33,29 @@ namespace Suna.Groups
             );
          return result;
       }
+
+      #endregion
+
+      #region Base Class Overrides
+
+      /// <summary>
+      /// Compiles this object in the given context
+      /// </summary>
+      /// <param name="linkContext"></param>
+      public override void Compile(LinkContext linkContext)
+      {
+         throw new NotImplementedException();
+      }
+
+      /// <summary>
+      /// Returns a string representation of this object
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+         return "{" + base.ToString() + "}";
+      }
+
+      #endregion
    }
 }
