@@ -44,7 +44,14 @@ namespace Suna.Groups
       /// <param name="linkContext"></param>
       public override void Compile(LinkContext linkContext)
       {
-         throw new NotImplementedException();
+         // grab an enumerator
+         IEnumerator<GroupItem> items = Items.GetEnumerator();
+
+         // enumerate
+         while (items.MoveNext())
+         {
+            throw new NotImplementedException();
+         }
       }
 
       /// <summary>
