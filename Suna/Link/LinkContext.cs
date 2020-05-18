@@ -20,5 +20,10 @@ namespace Suna.Link
          get;
          private set;
       }
+
+      public void CompileInvocation(string identifier, ParentheticGroup callParameters)
+      {
+         throw new NotImplementedException();
+      }
    }
 }
