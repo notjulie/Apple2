@@ -61,7 +61,7 @@ namespace Suna.Groups
          // enumerate
          while (items.MoveNext())
          {
-            throw new NotImplementedException();
+            items.Current.Compile(linkContext);
          }
       }
 

@@ -81,7 +81,7 @@ namespace Suna.Groups
          {
             if (childItems[i].IsIdentifier && childItems[i+1] is ParentheticGroup)
             {
-               var invokeGroup = new InvokeGroup(childItems[i], childItems[i + 1]);
+               var invokeGroup = new InvokeGroupItem(childItems[i], childItems[i + 1]);
                childItems.RemoveAt(i + 1);
                childItems[i] = invokeGroup;
             }
