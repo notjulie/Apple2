@@ -16,6 +16,7 @@ namespace Suna.Blocks
 
       private enum Error
       {
+         DuplicateFunctionName,
          InternalErrorUnknownBlockType,
          MultipleMains
       }
@@ -24,8 +25,8 @@ namespace Suna.Blocks
 
       #region Private Fields
 
-      private List<Block> functions = new List<Block>();
-      private List<Block> inlines = new List<Block>();
+      private Dictionary<string, FunctionBlock> functions = new Dictionary<string, FunctionBlock>();
+      private Dictionary<string, InlineBlock> inlines = new Dictionary<string, InlineBlock>();
 
       #endregion
 
@@ -54,16 +55,32 @@ namespace Suna.Blocks
          }
          else if (block is FunctionBlock)
          {
-            functions.Add(block);
+            var functionBlock = block as FunctionBlock;
+            string name = functionBlock.Name;
+            if (functions.ContainsKey(name))
+               throw new CompileException(Error.DuplicateFunctionName);
+            functions.Add(name, functionBlock);
          }
          else if (block is InlineBlock)
          {
-            inlines.Add(block);
+            var inlineBlock = block as InlineBlock;
+            string name = inlineBlock.Name;
+            inlines.Add(name, inlineBlock);
          }
          else
          {
             throw new CompileException(Error.InternalErrorUnknownBlockType);
          }
+      }
+
+      public Block GetBlock(string identifier)
+      {
+         if (inlines.ContainsKey(identifier))
+            return inlines[identifier];
+         else if (functions.ContainsKey(identifier))
+            return functions[identifier];
+         else
+            return null;
       }
 
       #endregion

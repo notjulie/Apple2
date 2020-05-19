@@ -13,6 +13,14 @@ namespace Suna.Blocks
       public FunctionBlock(Token[] tokens)
          :base(tokens)
       {
+         //TODO... set Name property
+         throw new NotImplementedException();
+      }
+
+      public string Name
+      {
+         get;
+         private set;
       }
    }
 }

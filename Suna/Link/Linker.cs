@@ -51,7 +51,7 @@ namespace Suna.Link
             throw new CompileException(Error.NoMain);
 
          // create the base (global) context
-         LinkContext context = new LinkContext(result);
+         LinkContext context = new LinkContext(module, result);
 
          // let main compile itself in the global context
          main.Compile(context);
