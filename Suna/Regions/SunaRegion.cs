@@ -9,9 +9,5 @@ namespace Suna.Regions
 {
    class SunaRegion : Region
    {
-      public TextReader OpenReader()
-      {
-         throw new NotImplementedException();
-      }
    }
 }
