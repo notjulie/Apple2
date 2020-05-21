@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Suna.Regions
 {
-   class SunaRegion : Region
+   class Region
    {
-      public TextReader OpenReader()
+      private StringBuilder contents = new StringBuilder();
+
+      public void AddLine(string line)
       {
-         throw new NotImplementedException();
+         contents.AppendLine(line);
       }
    }
 }

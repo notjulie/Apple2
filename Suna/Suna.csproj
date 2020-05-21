@@ -70,6 +70,8 @@
     <Compile Include="Link\LinkContext.cs" />
     <Compile Include="Link\LinkedModule.cs" />
     <Compile Include="Link\Linker.cs" />
+    <Compile Include="Regions\JavascriptRegion.cs" />
+    <Compile Include="Regions\Region.cs" />
     <Compile Include="Regions\RegionizedModule.cs" />
     <Compile Include="Regions\SunaRegion.cs" />
     <Compile Include="SunaCompiler.cs" />
