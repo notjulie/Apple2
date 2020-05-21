@@ -5,33 +5,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Suna.Regions;
+
 namespace Suna.Tokens
 {
    class Tokenizer
    {
-      private TokenizedModule tokens;
-
       /// <summary>
       /// Creates a TokenizedModule for the SourceModule
       /// </summary>
-      /// <param name="sourceModule"></param>
+      /// <param name="sunaRegion"></param>
       /// <returns></returns>
-      public TokenizedModule Tokenize(SourceModule sourceModule)
+      public void Tokenize(SunaRegion sunaRegion)
       {
-         tokens = new TokenizedModule();
-
-         using (TextReader reader = sourceModule.OpenReader())
+         using (TextReader reader = sunaRegion.OpenReader())
          {
             for (; ; )
             {
                string line = reader.ReadLine();
                if (line == null)
-                  return tokens;
+                  return;
 
                TokenizeLine(line);
             }
          }
       }
+
+      public TokenizedModule TokenizedModule
+      {
+         get;
+      } = new TokenizedModule();
 
       private void TokenizeLine(string line)
       {
@@ -46,11 +49,11 @@ namespace Suna.Tokens
             // switch according to first character
             char firstCharacter = line[0];
             if (char.IsLetter(firstCharacter))
-               tokens.Add(GetWordToken(ref line));
+               TokenizedModule.Add(GetWordToken(ref line));
             else if (SymbolToken.IsSymbolCharacter(firstCharacter))
-               tokens.Add(SymbolToken.GetSymbolToken(ref line));
+               TokenizedModule.Add(SymbolToken.GetSymbolToken(ref line));
             else if (char.IsDigit(firstCharacter))
-               tokens.Add(NumericToken.GetNumericToken(ref line));
+               TokenizedModule.Add(NumericToken.GetNumericToken(ref line));
             else
                throw new NotImplementedException("Invalid token start character: " + firstCharacter);
          }

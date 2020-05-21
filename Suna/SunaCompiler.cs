@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 using Suna.Blocks;
 using Suna.Link;
+using Suna.Regions;
 using Suna.Tokens;
 
 namespace Suna
@@ -42,8 +43,13 @@ namespace Suna
       {
          Contract.Requires(sourceModule != null);
 
+         // regionize
+         var regionizedModule = new RegionizedModule(sourceModule);
+
          // tokenize
-         var tokenizedModule = tokenizer.Tokenize(sourceModule);
+         foreach (var sunaRegion in regionizedModule.SunaRegions)
+            tokenizer.Tokenize(sunaRegion);
+         var tokenizedModule = tokenizer.TokenizedModule;
 
          // blockify
          var blockifiedModule = new BlockifiedModule();
