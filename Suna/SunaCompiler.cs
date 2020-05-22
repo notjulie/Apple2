@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Suna.Blocks;
+using Suna.JS;
 using Suna.Link;
 using Suna.Regions;
 using Suna.Tokens;
@@ -47,9 +48,9 @@ namespace Suna
          var regionizedModule = new RegionizedModule(sourceModule);
 
          // parse the JavaScript sections
-         Jint.Engine jsEngine = new Jint.Engine();
+         JsModule jsModule = new JsModule();
          foreach (var jsRegion in regionizedModule.JavascriptRegions)
-            jsEngine.Execute(jsRegion.ToString());
+            jsModule.Execute(jsRegion.ToString());
 
          // tokenize
          foreach (var sunaRegion in regionizedModule.SunaRegions)
@@ -84,7 +85,7 @@ namespace Suna
             blockifiedModule.Add(currentBlock[0].CreateBlock(currentBlock.ToArray()));
 
          // package up our inputs to the linker
-         LinkContext linkContext = new LinkContext(blockifiedModule, jsEngine);
+         LinkContext linkContext = new LinkContext(blockifiedModule, jsModule);
 
          // link
          Linker linker = new Linker();

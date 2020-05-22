@@ -67,6 +67,7 @@
     <Compile Include="Groups\InvokeGroupItem.cs" />
     <Compile Include="Groups\ParentheticGroup.cs" />
     <Compile Include="Groups\TokenGroupItem.cs" />
+    <Compile Include="JS\JsModule.cs" />
     <Compile Include="Link\LinkContext.cs" />
     <Compile Include="Link\LinkedModule.cs" />
     <Compile Include="Link\Linker.cs" />

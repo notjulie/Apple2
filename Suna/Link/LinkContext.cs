@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Suna.Blocks;
 using Suna.Groups;
+using Suna.JS;
 
 namespace Suna.Link
 {
@@ -16,12 +17,12 @@ namespace Suna.Link
          IdentifierIsNotInvokable
       }
 
-      private Jint.Engine jsEngine;
+      private JsModule jsModule;
 
-      public LinkContext(BlockifiedModule sourceModule, Jint.Engine jsEngine)
+      public LinkContext(BlockifiedModule sourceModule, JsModule jsModule)
       {
          this.SourceModule = sourceModule;
-         this.jsEngine = jsEngine;
+         this.jsModule = jsModule;
       }
 
       public BlockifiedModule SourceModule
@@ -48,6 +49,10 @@ namespace Suna.Link
          if (invokableBlock is InlineBlock)
          {
             ((InlineBlock)invokableBlock).Compile(this, callParameters);
+         }
+         else if (jsModule.IsFunctionName(identifier))
+         {
+            throw new NotImplementedException();
          }
          else
          {
