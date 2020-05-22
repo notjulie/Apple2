@@ -82,6 +82,14 @@ namespace Suna.Regions
 
       #region Public Properties
 
+      public ICollection<JavascriptRegion> JavascriptRegions
+      {
+         get
+         {
+            return this.javascriptRegions;
+         }
+      }
+
       public ICollection<SunaRegion> SunaRegions
       {
          get

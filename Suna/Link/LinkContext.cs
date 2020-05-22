@@ -16,10 +16,12 @@ namespace Suna.Link
          IdentifierIsNotInvokable
       }
 
-      public LinkContext(BlockifiedModule sourceModule, LinkedModule module)
+      private Jint.Engine jsEngine;
+
+      public LinkContext(BlockifiedModule sourceModule, Jint.Engine jsEngine)
       {
          this.SourceModule = sourceModule;
-         this.LinkedModule = module;
+         this.jsEngine = jsEngine;
       }
 
       public BlockifiedModule SourceModule
@@ -31,8 +33,7 @@ namespace Suna.Link
       public LinkedModule LinkedModule
       {
          get;
-         private set;
-      }
+      } = new LinkedModule();
 
       /// <summary>
       /// Compiles the invocation of the invokable item with the given name, using the

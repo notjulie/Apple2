@@ -46,6 +46,11 @@ namespace Suna
          // regionize
          var regionizedModule = new RegionizedModule(sourceModule);
 
+         // parse the JavaScript sections
+         Jint.Engine jsEngine = new Jint.Engine();
+         foreach (var jsRegion in regionizedModule.JavascriptRegions)
+            jsEngine.Execute(jsRegion.ToString());
+
          // tokenize
          foreach (var sunaRegion in regionizedModule.SunaRegions)
             tokenizer.Tokenize(sunaRegion);
@@ -78,9 +83,12 @@ namespace Suna
          if (currentBlock.Count != 0)
             blockifiedModule.Add(currentBlock[0].CreateBlock(currentBlock.ToArray()));
 
+         // package up our inputs to the linker
+         LinkContext linkContext = new LinkContext(blockifiedModule, jsEngine);
+
          // link
          Linker linker = new Linker();
-         LinkedModule linkedModule = linker.Link(blockifiedModule);
+         LinkedModule linkedModule = linker.Link(linkContext);
 
          // then something
          throw new NotImplementedException();

@@ -26,7 +26,7 @@ namespace Suna.Link
 
       #region Private Fields
 
-      private BlockifiedModule module;
+      private LinkContext context;
 
       #endregion
 
@@ -35,23 +35,17 @@ namespace Suna.Link
       /// <summary>
       /// Links the given module
       /// </summary>
-      /// <param name="module"></param>
+      /// <param name="context"></param>
       /// <returns></returns>
-      public LinkedModule Link(BlockifiedModule module)
+      public LinkedModule Link(LinkContext context)
       {
          // save parameters
-         this.module = module;
-
-         // create the result
-         LinkedModule result = new LinkedModule();
+         this.context = context;
 
          // find the "main" block
-         MainBlock main = module.Main;
+         MainBlock main = context.SourceModule.Main;
          if (main == null)
             throw new CompileException(Error.NoMain);
-
-         // create the base (global) context
-         LinkContext context = new LinkContext(module, result);
 
          // let main compile itself in the global context
          main.Compile(context);
