@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Suna.Blocks;
 using Suna.Groups;
+using Suna.Link;
 
 namespace Suna.Tokens
 {
@@ -19,7 +20,8 @@ namespace Suna.Tokens
       private enum Error
       {
          InternalErrorEmptyToken,
-         InternalErrorInvalidBlockHeaderToken
+         InternalErrorInvalidBlockHeaderToken,
+         TokenCannotBeCompiled
       }
 
       #endregion
@@ -79,6 +81,16 @@ namespace Suna.Tokens
       public virtual GroupItem ReadGroupItem(IEnumerator<Token> enumerator)
       {
          return new TokenGroupItem(this);
+      }
+
+      /// <summary>
+      /// Compiles the token; in general a single token doesn't mean enough by
+      /// itself to be compilable, but give them the option
+      /// </summary>
+      /// <param name="linkContext"></param>
+      public virtual void Compile(LinkContext linkContext)
+      {
+         throw new CompileException(Error.TokenCannotBeCompiled);
       }
 
       #endregion

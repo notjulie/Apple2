@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml.Xsl;
 
 using Suna.Groups;
+using Suna.Link;
 
 namespace Suna.Tokens
 {
@@ -117,6 +118,20 @@ namespace Suna.Tokens
 
             default:
                return base.ReadGroupItem(enumerator);
+         }
+      }
+
+      public override void Compile(LinkContext linkContext)
+      {
+         switch (Symbol)
+         {
+            case Symbol.Semicolon:
+               // this is harmless
+               break;
+
+            default:
+               base.Compile(linkContext);
+               break;
          }
       }
 

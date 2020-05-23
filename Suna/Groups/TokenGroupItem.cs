@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Suna.Link;
 using Suna.Tokens;
 
 namespace Suna.Groups
@@ -37,6 +37,17 @@ namespace Suna.Groups
          {
             return Token is IdentifierToken;
          }
+      }
+
+      /// <summary>
+      /// Compiles the item in the given context
+      /// </summary>
+      /// <param name="linkContext"></param>
+      public override void Compile(LinkContext linkContext)
+      {
+         // in general, tokens shouldn't compile, but let the token handle it
+         // anyway since they are self-aware polymorphic objects
+         Token.Compile(linkContext);
       }
 
       public override string ToString()
