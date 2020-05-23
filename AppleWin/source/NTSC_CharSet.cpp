@@ -24,6 +24,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "../resource/resource.h"
 #include "Video.h"
 
+#include "ApplewinEx.h"
+
 #include "NTSC_CharSet.h"
 
 unsigned char csbits_enhanced2e[2][256][8];	// Enhanced //e (2732 4K video ROM)

@@ -501,6 +501,9 @@
     <ClInclude Include="Extensions\FrameEx.h">
       <Filter>Source Files\Extensions</Filter>
     </ClInclude>
+    <ClInclude Include="Extensions\ApplewinEx.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\Applewin.bmp">

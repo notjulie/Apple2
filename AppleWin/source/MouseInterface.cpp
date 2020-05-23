@@ -52,6 +52,8 @@ Etc.
 #include "MouseInterface.h"
 #include "YamlHelper.h"
 
+#include "ApplewinEx.h"
+
 #include "../resource/resource.h"
 
 #ifdef _DEBUG

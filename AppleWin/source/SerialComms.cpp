@@ -43,6 +43,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "SerialComms.h"
 #include "YamlHelper.h"
 
+#include "ApplewinEx.h"
+
 #include "../resource/resource.h"
 
 #define TCP_SERIAL_PORT 1977
