@@ -9,7 +9,7 @@
    <DockPanel>
       <Menu DockPanel.Dock="Top" HorizontalAlignment="Stretch">
          <MenuItem Name="fileMenu" Header="File">
-            <MenuItem Name="compileItem" Header="Compile"/>
+            <MenuItem Name="compileAndRunItem" Header="Compile And Run"/>
          </MenuItem>
          <MenuItem Name="windowMenu" Header="Window">
             <MenuItem Name="emulatorItem" Header="Emulator"/>

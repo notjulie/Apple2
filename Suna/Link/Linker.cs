@@ -37,7 +37,7 @@ namespace Suna.Link
       /// </summary>
       /// <param name="context"></param>
       /// <returns></returns>
-      public LinkedModule Link(LinkContext context)
+      public void Link(LinkContext context)
       {
          // save parameters
          this.context = context;
@@ -49,9 +49,6 @@ namespace Suna.Link
 
          // let main compile itself in the global context
          main.Compile(context);
-
-         // now what?
-         throw new NotImplementedException();
       }
 
       #endregion

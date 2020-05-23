@@ -205,6 +205,9 @@
     <ClCompile Include="Managed\FrameEx.cpp">
       <Filter>Source Files\Managed</Filter>
     </ClCompile>
+    <ClCompile Include="Machine.cpp">
+      <Filter>Source Files\Managed</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Applewin.h">

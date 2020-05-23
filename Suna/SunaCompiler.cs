@@ -40,7 +40,7 @@ namespace Suna
       /// Compiles the given module
       /// </summary>
       /// <param name="sourceModule"></param>
-      public void Compile(SourceModule sourceModule)
+      public LinkedModule Compile(SourceModule sourceModule)
       {
          Contract.Requires(sourceModule != null);
 
@@ -89,10 +89,10 @@ namespace Suna
 
          // link
          Linker linker = new Linker();
-         LinkedModule linkedModule = linker.Link(linkContext);
+         linker.Link(linkContext);
 
-         // then something
-         throw new NotImplementedException();
+         // return the result
+         return linkContext.LinkedModule;
       }
 
       #endregion
