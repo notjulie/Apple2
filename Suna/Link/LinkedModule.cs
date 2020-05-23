@@ -8,5 +8,9 @@ namespace Suna.Link
 {
    class LinkedModule
    {
+      public void AppendCode(byte[] code)
+      {
+         throw new NotImplementedException();
+      }
    }
 }

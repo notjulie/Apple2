@@ -52,7 +52,8 @@ namespace Suna.Link
          }
          else if (jsModule.IsFunctionName(identifier))
          {
-            throw new NotImplementedException();
+            byte[] generatedCode = jsModule.EvaluateByteArray(identifier + callParameters.ToString());
+            this.LinkedModule.AppendCode(generatedCode);
          }
          else
          {
