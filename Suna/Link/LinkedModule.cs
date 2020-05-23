@@ -8,9 +8,19 @@ namespace Suna.Link
 {
    class LinkedModule
    {
+      #region Private Fields
+
+      private List<byte> code = new List<byte>();
+
+      #endregion
+
+      #region Public Methods
+
       public void AppendCode(byte[] code)
       {
-         throw new NotImplementedException();
+         this.code.AddRange(code);
       }
+
+      #endregion
    }
 }
