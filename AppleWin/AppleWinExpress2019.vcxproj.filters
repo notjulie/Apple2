@@ -202,11 +202,11 @@
     <ClCompile Include="Managed\AppleWinThread.cpp">
       <Filter>Source Files\Managed</Filter>
     </ClCompile>
-    <ClCompile Include="Managed\FrameEx.cpp">
-      <Filter>Source Files\Managed</Filter>
-    </ClCompile>
     <ClCompile Include="Machine.cpp">
       <Filter>Source Files\Managed</Filter>
+    </ClCompile>
+    <ClCompile Include="Extensions\FrameEx.cpp">
+      <Filter>Source Files\Extensions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -495,8 +495,8 @@
     <ClInclude Include="source\Card.h">
       <Filter>Source Files\Emulator</Filter>
     </ClInclude>
-    <ClInclude Include="Managed\FrameEx.h">
-      <Filter>Source Files\Managed</Filter>
+    <ClInclude Include="Extensions\FrameEx.h">
+      <Filter>Source Files\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -731,6 +731,9 @@
     </Filter>
     <Filter Include="Source Files\Managed">
       <UniqueIdentifier>{a55b3ae1-9d16-4ba9-9dcc-2548836eea7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Extensions">
+      <UniqueIdentifier>{18279442-6af1-41a0-9671-ef3164b41062}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
