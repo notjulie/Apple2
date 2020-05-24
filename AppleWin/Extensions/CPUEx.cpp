@@ -15,15 +15,18 @@ void CPUEx::Jump(uint16_t address)
 
 void CPUEx::Jsr(uint16_t address)
 {
-   Push(regs.pc >> 8);
-   Push(regs.pc & 0xFF);
+   uint16_t pushAddress = regs.pc - 1;
+   Push(pushAddress >> 8);
+   Push(pushAddress & 0xFF);
    Jump(address);
 }
 
 
 void CPUEx::Push(uint8_t value)
 {
-   mem[0x100 + regs.sp--] = value;
+   mem[regs.sp--] = value;
+   if (regs.sp < 0x100)
+      regs.sp += 0x100;
 }
 
 

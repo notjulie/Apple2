@@ -35,6 +35,15 @@ namespace Suna.Link
       /// Appends the given chunk of machine code to the output
       /// </summary>
       /// <param name="code"></param>
+      public void AppendCode(byte code)
+      {
+         this.code.Add(code);
+      }
+
+      /// <summary>
+      /// Appends the given chunk of machine code to the output
+      /// </summary>
+      /// <param name="code"></param>
       public void AppendCode(byte[] code)
       {
          this.code.AddRange(code);

@@ -45,6 +45,9 @@ namespace Suna.Blocks
 
          // compile the item
          groupedBlock.Compile(linkContext);
+
+         // append the RTS instruction
+         linkContext.LinkedModule.AppendCode(0x60);
       }
    }
 }
