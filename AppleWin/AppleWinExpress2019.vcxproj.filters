@@ -211,6 +211,9 @@
     <ClCompile Include="Extensions\ApplewinEx.cpp">
       <Filter>Source Files\Extensions</Filter>
     </ClCompile>
+    <ClCompile Include="Extensions\CPUEx.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Applewin.h">
@@ -502,6 +505,9 @@
       <Filter>Source Files\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="Extensions\ApplewinEx.h">
+      <Filter>Source Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="Extensions\CPUEx.h">
       <Filter>Source Files\Extensions</Filter>
     </ClInclude>
   </ItemGroup>

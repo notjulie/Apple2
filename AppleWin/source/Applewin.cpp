@@ -459,6 +459,9 @@ void EnterMessageLoop(void)
 
 			while ((g_nAppMode == MODE_RUNNING) || (g_nAppMode == MODE_STEPPING))
 			{
+				// service requests from other threads
+				ServiceApplewinExtensions();
+
 				if (PeekMessage(&message,0,0,0,PM_REMOVE))
 				{
 					if (message.message == WM_QUIT)

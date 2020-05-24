@@ -1,14 +1,14 @@
 
 #include "ApplewinEx.h"
+#include "CPUEx.h"
 
 namespace AppleWin::Managed {
    public ref class Machine {
    public:
       static void EnterMonitor() {
          ApplewinInvoke([]() {
-            int x = 1;
+            CPUEx::Jump(0xFF69);
             });
-         throw gcnew System::NotImplementedException();
       }
 
       static void CopyMemory(array<System::Byte>^ memory, System::UInt16 startAddress) {
