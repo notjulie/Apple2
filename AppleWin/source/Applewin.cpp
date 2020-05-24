@@ -57,6 +57,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "RGBMonitor.h"
 #include "NTSC.h"
 
+#include "ApplewinEx.h"
+
 #include "Configuration/About.h"
 #include "Configuration/PropertySheet.h"
 #include "Tfe/Tfe.h"
@@ -447,6 +449,9 @@ void EnterMessageLoop(void)
 
 	while (message.message!=WM_QUIT)
 	{
+		// service requests from other threads
+		ServiceApplewinExtensions();
+
 		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&message);

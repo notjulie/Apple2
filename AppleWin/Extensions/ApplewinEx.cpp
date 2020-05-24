@@ -1,10 +1,18 @@
 
 #include <Windows.h>
+#include <deque>
+#include <future>
 
 /// <summary>
 /// Instance handle of the DLL, vor access to resources
 /// </summary>
 static HINSTANCE myDLLInstanceHandle;
+
+/// <summary>
+/// tasks requested from other threads
+/// </summary>
+static std::deque<std::packaged_task<void()>> taskQueue;
+static std::mutex taskQueueMutex;
 
 /// <summary>
 /// DLL entry point; needed in order to capture the DLL's instance handle
@@ -61,3 +69,46 @@ HGLOBAL LoadAppleWinResource(HRSRC hResInfo)
 	return LoadResource(myDLLInstanceHandle, hResInfo);
 }
 
+
+/// <summary>
+/// Function that gets called from the main loop so that my extensions
+/// can carry out their business.
+/// </summary>
+/// <param name=""></param>
+void ServiceApplewinExtensions(void)
+{
+	for (;;)
+	{
+		// get the next task
+		std::packaged_task<void()> task;
+		{
+			std::lock_guard<std::mutex> lock(taskQueueMutex);
+			if (taskQueue.empty())
+				return;
+			task = std::move(taskQueue.front());
+			taskQueue.pop_front();
+		}
+
+		// execute
+		task();
+	}
+}
+
+
+void ApplewinInvoke(const std::function<void()>& function)
+{
+	// package up a task
+	std::packaged_task<void()> task(function);
+
+	// snag its future
+	auto future = task.get_future();
+
+	// enqueue it
+	{
+		std::lock_guard<std::mutex> lock(taskQueueMutex);
+		taskQueue.push_back(std::move(task));
+	}
+	
+	// wait on it
+	future.wait();
+}
