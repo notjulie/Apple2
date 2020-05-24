@@ -63,13 +63,7 @@ namespace AppleDev
 
             // enter monitor so that the Apple ][ is not using memory that we want
             // not used
-            Machine.EnterMonitor();
-
-            // install the app
-            Machine.CopyMemory(linkedModule.GetImage(), linkedModule.BaseAddress);
-
-            // run
-            Machine.InjectJSR(linkedModule.BaseAddress);
+            Machine.ExecuteProgram(linkedModule.GetImage(), linkedModule.BaseAddress);
          }
          catch (NotImplementedException niX)
          {
