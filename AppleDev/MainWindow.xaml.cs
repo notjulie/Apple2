@@ -75,7 +75,7 @@ namespace AppleDev
          }
       }
 
-      private void ProgramText_TextChanged(object sender, TextChangedEventArgs e)
+      private void ProgramText_TextChanged(object sender, EventArgs e)
       {
          AppleDev.Properties.Settings.Default.ProgramText = programText.Text;
       }

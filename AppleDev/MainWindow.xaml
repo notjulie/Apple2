@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
         xmlns:local="clr-namespace:AppleDev"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
@@ -16,7 +17,7 @@
          </MenuItem>
       </Menu>
       <Grid>
-         <TextBox x:Name="programText" AcceptsReturn="True" AcceptsTab="True"/>
+         <avalonEdit:TextEditor x:Name="programText" SyntaxHighlighting="C#" ShowLineNumbers="True"/>
       </Grid>
    </DockPanel>
 </Window>
