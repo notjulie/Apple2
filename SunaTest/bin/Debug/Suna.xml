@@ -1,0 +1,389 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Suna</name>
+    </assembly>
+    <members>
+        <member name="T:Suna.Blocks.BlockifiedModule">
+            <summary>
+            A collection of blocks of code; a blockification is just a process of splitting a
+            source file into manageable sections; functions, inlines, etc.
+            </summary>
+        </member>
+        <member name="P:Suna.Blocks.BlockifiedModule.Main">
+            <summary>
+            Gets the "main" block
+            </summary>
+        </member>
+        <member name="T:Suna.Blocks.InlineBlock">
+            <summary>
+            Represents a block in the code that starts with the "inline" keyword.  It's
+            a function type syntax that is evaluated somewhat like a C macro expansion.
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.InlineBlock.#ctor(Suna.Tokens.Token[])">
+            <summary>
+            Initializes a new instance of class InlineBlock
+            </summary>
+            <param name="tokens"></param>
+        </member>
+        <member name="P:Suna.Blocks.InlineBlock.Name">
+            <summary>
+            Gets the block's name
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.InlineBlock.Compile(Suna.Link.LinkContext,Suna.Groups.ParentheticGroup)">
+            <summary>
+            Compiles the block to the given context with the given parameters
+            </summary>
+            <param name="context"></param>
+            <param name="callParameters"></param>
+        </member>
+        <member name="T:Suna.Blocks.MainBlock">
+            <summary>
+            Class representing the block indicated by the "main" keyword
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.MainBlock.#ctor(Suna.Tokens.Token[])">
+            <summary>
+            Initializes a new instance of class MainBlock
+            </summary>
+            <param name="tokens"></param>
+        </member>
+        <member name="M:Suna.Blocks.MainBlock.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles the block
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="T:Suna.CompileException">
+            <summary>
+            Exception during compiling
+            </summary>
+        </member>
+        <member name="M:Suna.CompileException.#ctor">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+        </member>
+        <member name="M:Suna.CompileException.#ctor(System.Enum)">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Suna.CompileException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+            <param name="message"></param>
+        </member>
+        <member name="M:Suna.CompileException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+            <param name="message"></param>
+            <param name="inner"></param>
+        </member>
+        <member name="M:Suna.CompileException.#ctor(System.Enum,System.Exception)">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+            <param name="message"></param>
+            <param name="inner"></param>
+        </member>
+        <member name="M:Suna.CompileException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of class CompileException
+            </summary>
+            <param name="info"></param>
+            <param name="context"></param>
+        </member>
+        <member name="T:Suna.Groups.CurlyBracketGroup">
+            <summary>
+            Represents content within curly brackets
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.CurlyBracketGroup.#ctor">
+            <summary>
+            Initializes a new instance of class CurlyBracketGroup
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.CurlyBracketGroup.Read(System.Collections.Generic.IEnumerator{Suna.Tokens.Token})">
+            <summary>
+            Reads a CurlyBracketGroup from the given enumerator 
+            </summary>
+            <param name="enumerator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Groups.CurlyBracketGroup.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles this object in the given context
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Groups.CurlyBracketGroup.ToString">
+            <summary>
+            Returns a string representation of this object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Suna.Groups.Group.Items">
+            <summary>
+            Gets the items
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.Group.ReadGroupUntil(System.Collections.Generic.IEnumerator{Suna.Tokens.Token},System.Func{Suna.Tokens.Token,System.Boolean})">
+            <summary>
+            Creates a group by iterating throw the given list of tokens until a token
+            matching the isGroupEnd delegate is found
+            </summary>
+            <param name="enumerator"></param>
+            <param name="isGroupEnd"></param>
+        </member>
+        <member name="M:Suna.Groups.Group.ToString">
+            <summary>
+            Returns a string representation of the object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Groups.GroupedBlock">
+            <summary>
+            Class that groupifies tokens
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.GroupedBlock.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles this object into the given context
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Groups.GroupedBlock.AddAllTokens(System.Collections.Generic.IEnumerator{Suna.Tokens.Token})">
+            <summary>
+            Adds all tokens in the enumerator to this object
+            </summary>
+            <param name="tokens"></param>
+        </member>
+        <member name="T:Suna.Groups.GroupItem">
+            <summary>
+            Represents an item in our grouped view of the code; this is just my way
+            of dealing with the hierachical nature of code.  A GroupItem can be:
+               - a token
+               - a group of items bounded by brackets or parentheses
+               - other things as I see fit
+            </summary>
+        </member>
+        <member name="P:Suna.Groups.GroupItem.IsIdentifier">
+            <summary>
+            Gets a value indicating whether the item is an identifier
+            </summary>
+        </member>
+        <member name="T:Suna.Groups.InvokeGroupItem">
+            <summary>
+            Represents an "invocation", which as a spot in the code where an identifier is
+            followed by a parenthetical.
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.InvokeGroupItem.#ctor(Suna.Groups.GroupItem,Suna.Groups.GroupItem)">
+            <summary>
+            Initializes a new instance of class InvokeGroupItem
+            </summary>
+            <param name="identifier">the identifier of the thing being invoked</param>
+            <param name="callParameters">the parameters</param>
+        </member>
+        <member name="M:Suna.Groups.InvokeGroupItem.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles the item
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Groups.TokenGroupItem.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles the item in the given context
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Link.LinkContext.CompileInvocation(System.String,Suna.Groups.ParentheticGroup)">
+            <summary>
+            Compiles the invocation of the invokable item with the given name, using the
+            given parameters.
+            </summary>
+            <param name="identifier">the name of the invokable item</param>
+            <param name="callParameters">the parameters</param>
+        </member>
+        <member name="T:Suna.Link.LinkedModule">
+            <summary>
+            Represents the final result of a compile/link operation
+            </summary>
+        </member>
+        <member name="P:Suna.Link.LinkedModule.BaseAddress">
+            <summary>
+            Gets the base address
+            </summary>
+        </member>
+        <member name="M:Suna.Link.LinkedModule.AppendCode(System.Byte)">
+            <summary>
+            Appends the given chunk of machine code to the output
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:Suna.Link.LinkedModule.AppendCode(System.Byte[])">
+            <summary>
+            Appends the given chunk of machine code to the output
+            </summary>
+            <param name="code"></param>
+        </member>
+        <member name="M:Suna.Link.LinkedModule.GetImage">
+            <summary>
+            Returns the image
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Link.Linker">
+            <summary>
+            Linker class; it's job is to take a module and convert it to code.  Compilation
+            is done as-needed, so we get called from the top level of the process and invoke
+            compilation as necessary.
+            </summary>
+        </member>
+        <member name="M:Suna.Link.Linker.Link(Suna.Link.LinkContext)">
+            <summary>
+            Links the given module
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Regions.Region">
+            <summary>
+            Represents a region in the code; this is generally just either a normal
+            Suna region or a region marked as Javascript.
+            </summary>
+        </member>
+        <member name="T:Suna.Regions.RegionizedModule">
+            <summary>
+            A source module broken up into regions; currently the only purpose is to
+            separate sections of JavaScript from sections of Suna.
+            </summary>
+        </member>
+        <member name="T:Suna.SunaCompiler">
+            <summary>
+            Compiler class
+            </summary>
+        </member>
+        <member name="M:Suna.SunaCompiler.Compile(Suna.SourceModule)">
+            <summary>
+            Compiles the given module
+            </summary>
+            <param name="sourceModule"></param>
+        </member>
+        <member name="T:Suna.SourceModule">
+            <summary>
+            A source module.  Currently this is a single file, though it remains to be
+            seen how I decide to structure things with multi-file builds.
+            </summary>
+        </member>
+        <member name="M:Suna.SourceModule.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of class SourceModule
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:Suna.SourceModule.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of class SourceModule
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="P:Suna.SourceModule.ModuleText">
+            <summary>
+            Gets the module's text
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.KeywordToken.#ctor(Suna.Tokens.Keyword)">
+            <summary>
+            Initializes a new instance of class KeywordToken
+            </summary>
+            <param name="keyword"></param>
+        </member>
+        <member name="P:Suna.Tokens.KeywordToken.IsBlockStart">
+            <summary>
+            Gets a value indicating whether this token indicates the start of a blocks
+            </summary>
+        </member>
+        <member name="P:Suna.Tokens.KeywordToken.Keyword">
+            <summary>
+            Gets the keyword
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.KeywordToken.CreateBlock(Suna.Tokens.Token[])">
+            <summary>
+            Creates a block of the type associated with this keyword
+            </summary>
+            <param name="tokens"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Tokens.SymbolToken">
+            <summary>
+            Token extension specific to symbol tokens
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.SymbolToken.ReadGroupItem(System.Collections.Generic.IEnumerator{Suna.Tokens.Token})">
+            <summary>
+            Reads a group that begins with this token
+            </summary>
+            <param name="enumerator"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Tokens.Token">
+            <summary>
+            Base class representing a token in the source
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.Token.#ctor(Suna.Tokens.TokenInfo)">
+            <summary>
+            Initializes a new instance of class Token
+            </summary>
+            <param name="tokenInfo"></param>
+        </member>
+        <member name="P:Suna.Tokens.Token.IsBlockStart">
+            <summary>
+            Gets a value indicating whether the token is the start of a block
+            </summary>
+        </member>
+        <member name="P:Suna.Tokens.Token.TokenInfo">
+            <summary>
+            Gets information about the token
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.Token.CreateBlock(Suna.Tokens.Token[])">
+            <summary>
+            Creates a Block from the given list of tokens; this is called on the block-header
+            token (e.g. "function" keyword), so that the correct type of block can be created.
+            Blocks that are not block-start tokens should just call the base implementation,
+            i.e. they should throw the error that we throw below.
+            </summary>
+            <param name="tokens"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.Token.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles the token; in general a single token doesn't mean enough by
+            itself to be compilable, but give them the option
+            </summary>
+            <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Tokens.Token.ToString">
+            <summary>
+            Returns a string representation of the object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.Tokenizer.Tokenize(Suna.Regions.SunaRegion)">
+            <summary>
+            Creates a TokenizedModule for the SourceModule
+            </summary>
+            <param name="sunaRegion"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

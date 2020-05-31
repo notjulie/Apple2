@@ -23,6 +23,20 @@ namespace Suna
       }
 
       /// <summary>
+      /// Initializes a new instance of class SourceModule
+      /// </summary>
+      /// <param name="stream"></param>
+      public SourceModule(Stream stream)
+         : this(
+              new Func<string>(() => { 
+                 using (var reader = new StreamReader(stream))
+                    return reader.ReadToEnd();
+              }) ()
+              )
+      {
+      }
+
+      /// <summary>
       /// Gets the module's text
       /// </summary>
       public string ModuleText

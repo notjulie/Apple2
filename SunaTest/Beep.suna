@@ -1,0 +1,26 @@
+﻿
+main
+{
+	beep();
+	beep();
+	beep();
+}
+
+inline beep()
+{
+	jsr(0xFF3A);
+}
+
+
+
+#beginJavascript
+	function jsr(address) {
+		return [
+			0x20,
+			address & 0xFF,
+			address >> 8
+		];
+	}
+#endJavascript
+
+
