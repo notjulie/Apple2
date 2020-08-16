@@ -54,6 +54,8 @@ namespace Suna.Tokens
                TokenizedModule.Add(SymbolToken.GetSymbolToken(ref line));
             else if (char.IsDigit(firstCharacter))
                TokenizedModule.Add(NumericToken.GetNumericToken(ref line));
+            else if (firstCharacter == '"')
+               TokenizedModule.Add(StringToken.GetStringToken(ref line));
             else
                throw new NotImplementedException("Invalid token start character: " + firstCharacter);
          }
