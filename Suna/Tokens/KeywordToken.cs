@@ -36,6 +36,7 @@ namespace Suna.Tokens
             switch (Keyword)
             {
                case Keyword.function:
+               case Keyword.import:
                case Keyword.inline:
                case Keyword.main:
                   return true;
@@ -70,6 +71,9 @@ namespace Suna.Tokens
          {
             case Keyword.function:
                return new FunctionBlock(tokens);
+
+            case Keyword.import:
+               return new ImportBlock(tokens);
 
             case Keyword.inline:
                return new InlineBlock(tokens);

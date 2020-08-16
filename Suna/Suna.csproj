@@ -57,6 +57,7 @@
     <Compile Include="Blocks\Block.cs" />
     <Compile Include="Blocks\BlockifiedModule.cs" />
     <Compile Include="Blocks\FunctionBlock.cs" />
+    <Compile Include="Blocks\ImportBlock.cs" />
     <Compile Include="Blocks\InlineBlock.cs" />
     <Compile Include="Blocks\MainBlock.cs" />
     <Compile Include="CompileException.cs" />
