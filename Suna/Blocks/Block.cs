@@ -13,6 +13,15 @@ namespace Suna.Blocks
    /// </summary>
    public class Block
    {
+      #region Types
+
+      private enum Error
+      {
+         AddToModuleNotImplemented
+      }
+
+      #endregion
+
       #region Private Fields
 
       private Token[] tokens;
@@ -43,6 +52,19 @@ namespace Suna.Blocks
          {
             return tokens;
          }
+      }
+
+      #endregion
+
+      #region Public Methods
+
+      /// <summary>
+      /// Adds this object to the given BlockifiedModule
+      /// </summary>
+      /// <param name="blockifiedModule"></param>
+      public virtual void AddToModule(BlockifiedModule blockifiedModule)
+      {
+         throw new CompileException(Error.AddToModuleNotImplemented);
       }
 
       #endregion

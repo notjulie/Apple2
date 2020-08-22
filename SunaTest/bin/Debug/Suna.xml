@@ -21,6 +21,12 @@
             Gets the blocks tokens
             </summary>
         </member>
+        <member name="M:Suna.Blocks.Block.AddToModule(Suna.Blocks.BlockifiedModule)">
+            <summary>
+            Adds this object to the given BlockifiedModule
+            </summary>
+            <param name="blockifiedModule"></param>
+        </member>
         <member name="T:Suna.Blocks.BlockifiedModule">
             <summary>
             A collection of blocks of code; a blockification is just a process of splitting a
@@ -38,12 +44,46 @@
             </summary>
             <param name="block"></param>
         </member>
+        <member name="M:Suna.Blocks.BlockifiedModule.AddFunction(Suna.Blocks.FunctionBlock)">
+            <summary>
+            Adds the given function
+            </summary>
+            <param name="functionBlock"></param>
+        </member>
+        <member name="M:Suna.Blocks.BlockifiedModule.AddInline(Suna.Blocks.InlineBlock)">
+            <summary>
+            Adds the given function
+            </summary>
+            <param name="inlineBlock"></param>
+        </member>
         <member name="M:Suna.Blocks.BlockifiedModule.GetBlock(System.String)">
             <summary>
             Gets the block associated with the given identifier
             </summary>
             <param name="identifier"></param>
             <returns></returns>
+        </member>
+        <member name="T:Suna.Blocks.FunctionBlock">
+            <summary>
+            A block of tokens representing a function
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.FunctionBlock.#ctor(Suna.Tokens.Token[])">
+            <summary>
+            Initializes a new instance of class FunctionBlock
+            </summary>
+            <param name="tokens"></param>
+        </member>
+        <member name="P:Suna.Blocks.FunctionBlock.Name">
+            <summary>
+            Gets the name
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.FunctionBlock.AddToModule(Suna.Blocks.BlockifiedModule)">
+            <summary>
+            Adds this block to the given module
+            </summary>
+            <param name="blockifiedModule"></param>
         </member>
         <member name="M:Suna.Blocks.ImportBlock.#ctor(Suna.Tokens.Token[])">
             <summary>
@@ -75,6 +115,12 @@
             <param name="context"></param>
             <param name="callParameters"></param>
         </member>
+        <member name="M:Suna.Blocks.InlineBlock.AddToModule(Suna.Blocks.BlockifiedModule)">
+            <summary>
+            Adds this object to the given module
+            </summary>
+            <param name="blockifiedModule"></param>
+        </member>
         <member name="T:Suna.Blocks.MainBlock">
             <summary>
             Class representing the block indicated by the "main" keyword
@@ -91,6 +137,12 @@
             Compiles the block
             </summary>
             <param name="linkContext"></param>
+        </member>
+        <member name="M:Suna.Blocks.MainBlock.AddToModule(Suna.Blocks.BlockifiedModule)">
+            <summary>
+            Adds this block to the given module
+            </summary>
+            <param name="blockifiedModule"></param>
         </member>
         <member name="T:Suna.CompileException">
             <summary>

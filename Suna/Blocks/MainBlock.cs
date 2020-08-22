@@ -49,5 +49,16 @@ namespace Suna.Blocks
          // append the RTS instruction
          linkContext.LinkedModule.AppendCode(0x60);
       }
+
+      /// <summary>
+      /// Adds this block to the given module
+      /// </summary>
+      /// <param name="blockifiedModule"></param>
+      public override void AddToModule(BlockifiedModule blockifiedModule)
+      {
+         Contract.Requires(blockifiedModule != null);
+
+         blockifiedModule.Main = this;
+      }
    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,6 @@ namespace Suna.Blocks
       private enum Error
       {
          DuplicateFunctionName,
-         InternalErrorUnknownBlockType,
          MultipleMains
       }
 
@@ -25,6 +25,7 @@ namespace Suna.Blocks
 
       #region Private Fields
 
+      private MainBlock mainBlock;
       private Dictionary<string, FunctionBlock> functions = new Dictionary<string, FunctionBlock>();
       private Dictionary<string, InlineBlock> inlines = new Dictionary<string, InlineBlock>();
 
@@ -37,9 +38,25 @@ namespace Suna.Blocks
       /// </summary>
       public MainBlock Main
       {
-         get;
-         private set;
-      } = null;
+         get
+         {
+            return mainBlock;
+         }
+         set
+         {
+            if (value != mainBlock)
+            {
+               if (mainBlock == null)
+               {
+                  mainBlock = value;
+               }
+               else
+               {
+                  throw new CompileException(Error.MultipleMains);
+               }
+            }
+         }
+      }
 
       #endregion
 
@@ -51,30 +68,36 @@ namespace Suna.Blocks
       /// <param name="block"></param>
       public void Add(Block block)
       {
-         if (block is MainBlock)
-         {
-            if (Main != null)
-               throw new CompileException(Error.MultipleMains);
-            Main = (MainBlock)block;
-         }
-         else if (block is FunctionBlock)
-         {
-            var functionBlock = block as FunctionBlock;
-            string name = functionBlock.Name;
-            if (functions.ContainsKey(name))
-               throw new CompileException(Error.DuplicateFunctionName);
-            functions.Add(name, functionBlock);
-         }
-         else if (block is InlineBlock)
-         {
-            var inlineBlock = block as InlineBlock;
-            string name = inlineBlock.Name;
-            inlines.Add(name, inlineBlock);
-         }
-         else
-         {
-            throw new CompileException(Error.InternalErrorUnknownBlockType);
-         }
+         Contract.Requires(block != null);
+
+         // let the block decide how to handle this
+         block.AddToModule(this);
+      }
+
+      /// <summary>
+      /// Adds the given function
+      /// </summary>
+      /// <param name="functionBlock"></param>
+      public void AddFunction(FunctionBlock functionBlock)
+      {
+         Contract.Requires(functionBlock != null);
+
+         string name = functionBlock.Name;
+         if (functions.ContainsKey(name))
+            throw new CompileException(Error.DuplicateFunctionName);
+         functions.Add(name, functionBlock);
+      }
+
+      /// <summary>
+      /// Adds the given function
+      /// </summary>
+      /// <param name="inlineBlock"></param>
+      public void AddInline(InlineBlock inlineBlock)
+      {
+         Contract.Requires(inlineBlock != null);
+
+         string name = inlineBlock.Name;
+         inlines.Add(name, inlineBlock);
       }
 
       /// <summary>

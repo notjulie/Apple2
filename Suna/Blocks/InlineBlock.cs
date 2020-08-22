@@ -15,7 +15,7 @@ namespace Suna.Blocks
    /// Represents a block in the code that starts with the "inline" keyword.  It's
    /// a function type syntax that is evaluated somewhat like a C macro expansion.
    /// </summary>
-   class InlineBlock : Block
+   public class InlineBlock : Block
    {
       /// <summary>
       /// Initializes a new instance of class InlineBlock
@@ -24,6 +24,8 @@ namespace Suna.Blocks
       public InlineBlock(Token[] tokens)
          :base(tokens)
       {
+         Contract.Requires(tokens != null);
+
          Name = ((IdentifierToken)tokens[1]).Identifier;
       }
 
@@ -57,6 +59,15 @@ namespace Suna.Blocks
 
          // just compile the code for now
          groupedBlock.Items.ElementAt(3).Compile(context);
+      }
+
+      /// <summary>
+      /// Adds this object to the given module
+      /// </summary>
+      /// <param name="blockifiedModule"></param>
+      public override void AddToModule(BlockifiedModule blockifiedModule)
+      {
+         base.AddToModule(blockifiedModule);
       }
    }
 }
