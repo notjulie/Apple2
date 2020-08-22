@@ -24,5 +24,10 @@ namespace Suna.Blocks
          get;
          private set;
       }
+
+      public override void AddToModule(BlockifiedModule blockifiedModule)
+      {
+         throw new NotImplementedException();
+      }
    }
 }
