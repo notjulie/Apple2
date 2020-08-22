@@ -17,3 +17,4 @@ C:\Users\Randy\Documents\Dev\Apple2\SunaTest\obj\Debug\SunaTest.csproj.CopyCompl
 C:\Users\Randy\Documents\Dev\Apple2\SunaTest\obj\Debug\SunaTest.dll
 C:\Users\Randy\Documents\Dev\Apple2\SunaTest\obj\Debug\SunaTest.pdb
 C:\Users\Randy\Documents\Dev\Apple2\SunaTest\bin\Debug\SunaTest.xml
+C:\Users\Randy\Documents\Dev\Apple2\SunaTest\bin\Debug\sys\6502.js

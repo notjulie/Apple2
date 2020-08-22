@@ -28,6 +28,7 @@ namespace Suna.Blocks
       private MainBlock mainBlock;
       private Dictionary<string, FunctionBlock> functions = new Dictionary<string, FunctionBlock>();
       private Dictionary<string, InlineBlock> inlines = new Dictionary<string, InlineBlock>();
+      private List<ImportBlock> imports = new List<ImportBlock>();
 
       #endregion
 
@@ -89,7 +90,18 @@ namespace Suna.Blocks
       }
 
       /// <summary>
-      /// Adds the given function
+      /// Adds the given import
+      /// </summary>
+      /// <param name="importBlock"></param>
+      public void AddImport(ImportBlock importBlock)
+      {
+         Contract.Requires(importBlock != null);
+
+         imports.Add(importBlock);
+      }
+
+      /// <summary>
+      /// Adds the given inline
       /// </summary>
       /// <param name="inlineBlock"></param>
       public void AddInline(InlineBlock inlineBlock)

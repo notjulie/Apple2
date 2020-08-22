@@ -50,9 +50,15 @@
             </summary>
             <param name="functionBlock"></param>
         </member>
+        <member name="M:Suna.Blocks.BlockifiedModule.AddImport(Suna.Blocks.ImportBlock)">
+            <summary>
+            Adds the given import
+            </summary>
+            <param name="importBlock"></param>
+        </member>
         <member name="M:Suna.Blocks.BlockifiedModule.AddInline(Suna.Blocks.InlineBlock)">
             <summary>
-            Adds the given function
+            Adds the given inline
             </summary>
             <param name="inlineBlock"></param>
         </member>
@@ -85,11 +91,27 @@
             </summary>
             <param name="blockifiedModule"></param>
         </member>
+        <member name="T:Suna.Blocks.ImportBlock">
+            <summary>
+            An import of an external module
+            </summary>
+        </member>
         <member name="M:Suna.Blocks.ImportBlock.#ctor(Suna.Tokens.Token[])">
             <summary>
             Initializes a new instance of class ImportBlock
             </summary>
             <param name="tokens"></param>
+        </member>
+        <member name="P:Suna.Blocks.ImportBlock.Path">
+            <summary>
+            Gets the path
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.ImportBlock.AddToModule(Suna.Blocks.BlockifiedModule)">
+            <summary>
+            Adds this instance to the given module
+            </summary>
+            <param name="blockifiedModule"></param>
         </member>
         <member name="T:Suna.Blocks.InlineBlock">
             <summary>

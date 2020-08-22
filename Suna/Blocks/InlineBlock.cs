@@ -67,7 +67,9 @@ namespace Suna.Blocks
       /// <param name="blockifiedModule"></param>
       public override void AddToModule(BlockifiedModule blockifiedModule)
       {
-         base.AddToModule(blockifiedModule);
+         Contract.Requires(blockifiedModule != null);
+
+         blockifiedModule.AddInline(this);
       }
    }
 }
