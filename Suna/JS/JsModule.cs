@@ -55,7 +55,18 @@ namespace Suna.JS
       /// <returns></returns>
       public bool IsFunctionName(string name)
       {
-         return jsEngine.Execute(name + " instanceof Function").GetCompletionValue().AsBoolean();
+         // get the value
+         var value = jsEngine.GetValue(name);
+
+         // if it passes as an object, see if it is a ICallable
+         if (value.IsObject())
+         {
+            var o = value.AsObject();
+            if (o is Jint.Native.ICallable)
+               return true;
+         }
+
+         return false;
       }
    }
 }
