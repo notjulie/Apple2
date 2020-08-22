@@ -10,7 +10,10 @@ using Jint;
 
 namespace Suna.JS
 {
-   class JsModule
+   /// <summary>
+   /// Represents a JavaScript module
+   /// </summary>
+   public class JsModule
    {
       private enum Error
       {
@@ -19,6 +22,11 @@ namespace Suna.JS
 
       private Engine jsEngine = new Jint.Engine();
 
+      /// <summary>
+      /// Evaluates a string as a byte array
+      /// </summary>
+      /// <param name="jsString"></param>
+      /// <returns></returns>
       public byte[] EvaluateByteArray(string jsString)
       {
          IEnumerable collection = jsEngine.Execute(jsString).GetCompletionValue().ToObject() as IEnumerable;
@@ -31,11 +39,20 @@ namespace Suna.JS
          return result.ToArray();
       }
 
+      /// <summary>
+      /// Executes a JavaScript string
+      /// </summary>
+      /// <param name="jsString"></param>
       public void Execute(string jsString)
       {
          jsEngine.Execute(jsString);
       }
 
+      /// <summary>
+      /// Returns true of the given name is a JavaScript function
+      /// </summary>
+      /// <param name="name"></param>
+      /// <returns></returns>
       public bool IsFunctionName(string name)
       {
          return jsEngine.Execute(name + " instanceof Function").GetCompletionValue().AsBoolean();

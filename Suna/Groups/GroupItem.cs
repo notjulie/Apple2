@@ -16,7 +16,7 @@ namespace Suna.Groups
    ///    - a group of items bounded by brackets or parentheses
    ///    - other things as I see fit
    /// </summary>
-   class GroupItem
+   public class GroupItem
    {
       #region Types / Constants
 
@@ -29,6 +29,9 @@ namespace Suna.Groups
 
       #region Constructor
 
+      /// <summary>
+      /// Initializes a new instance of class GroupItem
+      /// </summary>
       public GroupItem()
       {
       }
@@ -49,6 +52,10 @@ namespace Suna.Groups
 
       #region Public Methods
 
+      /// <summary>
+      /// Compiles the item
+      /// </summary>
+      /// <param name="linkContext"></param>
       virtual public void Compile(LinkContext linkContext)
       {
          throw new CompileException(Error.InvalidGroupForCompile);

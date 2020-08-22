@@ -4,6 +4,23 @@
         <name>Suna</name>
     </assembly>
     <members>
+        <member name="T:Suna.Blocks.Block">
+            <summary>
+            Represents a block of code in a module; blocks are standalone sections that
+            can be compiled/interpreted as a unit, such as a function
+            </summary>
+        </member>
+        <member name="M:Suna.Blocks.Block.#ctor(Suna.Tokens.Token[])">
+            <summary>
+            Initializes a new instance of class Block
+            </summary>
+            <param name="tokens"></param>
+        </member>
+        <member name="P:Suna.Blocks.Block.Tokens">
+            <summary>
+            Gets the blocks tokens
+            </summary>
+        </member>
         <member name="T:Suna.Blocks.BlockifiedModule">
             <summary>
             A collection of blocks of code; a blockification is just a process of splitting a
@@ -14,6 +31,25 @@
             <summary>
             Gets the "main" block
             </summary>
+        </member>
+        <member name="M:Suna.Blocks.BlockifiedModule.Add(Suna.Blocks.Block)">
+            <summary>
+            Adds the given block to the module
+            </summary>
+            <param name="block"></param>
+        </member>
+        <member name="M:Suna.Blocks.BlockifiedModule.GetBlock(System.String)">
+            <summary>
+            Gets the block associated with the given identifier
+            </summary>
+            <param name="identifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Blocks.ImportBlock.#ctor(Suna.Tokens.Token[])">
+            <summary>
+            Initializes a new instance of class ImportBlock
+            </summary>
+            <param name="tokens"></param>
         </member>
         <member name="T:Suna.Blocks.InlineBlock">
             <summary>
@@ -128,10 +164,21 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:Suna.Groups.Group">
+            <summary>
+            Represents a logical group of items in the code
+            </summary>
+        </member>
         <member name="P:Suna.Groups.Group.Items">
             <summary>
             Gets the items
             </summary>
+        </member>
+        <member name="M:Suna.Groups.Group.Add(Suna.Groups.GroupItem)">
+            <summary>
+            Adds the given item to the group
+            </summary>
+            <param name="item"></param>
         </member>
         <member name="M:Suna.Groups.Group.ReadGroupUntil(System.Collections.Generic.IEnumerator{Suna.Tokens.Token},System.Func{Suna.Tokens.Token,System.Boolean})">
             <summary>
@@ -173,10 +220,21 @@
                - other things as I see fit
             </summary>
         </member>
+        <member name="M:Suna.Groups.GroupItem.#ctor">
+            <summary>
+            Initializes a new instance of class GroupItem
+            </summary>
+        </member>
         <member name="P:Suna.Groups.GroupItem.IsIdentifier">
             <summary>
             Gets a value indicating whether the item is an identifier
             </summary>
+        </member>
+        <member name="M:Suna.Groups.GroupItem.Compile(Suna.Link.LinkContext)">
+            <summary>
+            Compiles the item
+            </summary>
+            <param name="linkContext"></param>
         </member>
         <member name="T:Suna.Groups.InvokeGroupItem">
             <summary>
@@ -197,11 +255,76 @@
             </summary>
             <param name="linkContext"></param>
         </member>
+        <member name="T:Suna.Groups.ParentheticGroup">
+            <summary>
+            Represents a group of items in parentheses
+            </summary>
+        </member>
+        <member name="M:Suna.Groups.ParentheticGroup.Read(System.Collections.Generic.IEnumerator{Suna.Tokens.Token})">
+            <summary>
+            Reads a group from the given stream of tokens
+            </summary>
+            <param name="enumerator"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Groups.ParentheticGroup.ToString">
+            <summary>
+            Returns a string representation of the object
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Suna.Groups.TokenGroupItem.Compile(Suna.Link.LinkContext)">
             <summary>
             Compiles the item in the given context
             </summary>
             <param name="linkContext"></param>
+        </member>
+        <member name="T:Suna.JS.JsModule">
+            <summary>
+            Represents a JavaScript module
+            </summary>
+        </member>
+        <member name="M:Suna.JS.JsModule.EvaluateByteArray(System.String)">
+            <summary>
+            Evaluates a string as a byte array
+            </summary>
+            <param name="jsString"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.JS.JsModule.Execute(System.String)">
+            <summary>
+            Executes a JavaScript string
+            </summary>
+            <param name="jsString"></param>
+        </member>
+        <member name="M:Suna.JS.JsModule.IsFunctionName(System.String)">
+            <summary>
+            Returns true of the given name is a JavaScript function
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Link.LinkContext">
+            <summary>
+            A context representing the current state in which linking is taking place
+            </summary>
+        </member>
+        <member name="M:Suna.Link.LinkContext.#ctor(Suna.Blocks.BlockifiedModule,Suna.JS.JsModule)">
+            <summary>
+            Initializes a new instance of class LickContext
+            </summary>
+            <param name="sourceModule"></param>
+            <param name="jsModule"></param>
+        </member>
+        <member name="P:Suna.Link.LinkContext.SourceModule">
+            <summary>
+            Gets the source module associated with the context
+            </summary>
+        </member>
+        <member name="P:Suna.Link.LinkContext.LinkedModule">
+            <summary>
+            Gets the associated LinkedModule
+            </summary>
         </member>
         <member name="M:Suna.Link.LinkContext.CompileInvocation(System.String,Suna.Groups.ParentheticGroup)">
             <summary>
@@ -365,6 +488,13 @@
             <param name="tokens"></param>
             <returns></returns>
         </member>
+        <member name="M:Suna.Tokens.Token.ReadGroupItem(System.Collections.Generic.IEnumerator{Suna.Tokens.Token})">
+            <summary>
+            Pulls the next GroupItem from the token stream
+            </summary>
+            <param name="enumerator"></param>
+            <returns></returns>
+        </member>
         <member name="M:Suna.Tokens.Token.Compile(Suna.Link.LinkContext)">
             <summary>
             Compiles the token; in general a single token doesn't mean enough by
@@ -376,6 +506,58 @@
             <summary>
             Returns a string representation of the object.
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Suna.Tokens.TokenInfo">
+            <summary>
+            Represents information about a token
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of class TokenInfo
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="P:Suna.Tokens.TokenInfo.Text">
+            <summary>
+            Gets the token's text
+            </summary>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.Equals(System.Object)">
+            <summary>
+            Compares this instance to another object
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.GetHashCode">
+            <summary>
+            Returns a hash code for the object
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.Equals(Suna.Tokens.TokenInfo)">
+            <summary>
+            Compares this instance to another
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.op_Equality(Suna.Tokens.TokenInfo,Suna.Tokens.TokenInfo)">
+            <summary>
+            Equality operator
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Suna.Tokens.TokenInfo.op_Inequality(Suna.Tokens.TokenInfo,Suna.Tokens.TokenInfo)">
+            <summary>
+            Inequality operator
+            </summary>
+            <param name="a"></param>
+            <param name="b"></param>
             <returns></returns>
         </member>
         <member name="M:Suna.Tokens.Tokenizer.Tokenize(Suna.Regions.SunaRegion)">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,10 @@ using Suna.JS;
 
 namespace Suna.Link
 {
-   class LinkContext
+   /// <summary>
+   /// A context representing the current state in which linking is taking place
+   /// </summary>
+   public class LinkContext
    {
       private enum Error
       {
@@ -19,18 +23,29 @@ namespace Suna.Link
 
       private JsModule jsModule;
 
+      /// <summary>
+      /// Initializes a new instance of class LickContext
+      /// </summary>
+      /// <param name="sourceModule"></param>
+      /// <param name="jsModule"></param>
       public LinkContext(BlockifiedModule sourceModule, JsModule jsModule)
       {
          this.SourceModule = sourceModule;
          this.jsModule = jsModule;
       }
 
+      /// <summary>
+      /// Gets the source module associated with the context
+      /// </summary>
       public BlockifiedModule SourceModule
       {
          get;
          private set;
       }
 
+      /// <summary>
+      /// Gets the associated LinkedModule
+      /// </summary>
       public LinkedModule LinkedModule
       {
          get;
@@ -44,6 +59,8 @@ namespace Suna.Link
       /// <param name="callParameters">the parameters</param>
       public void CompileInvocation(string identifier, ParentheticGroup callParameters)
       {
+         Contract.Requires(callParameters != null);
+
          // find the block
          Block invokableBlock = SourceModule.GetBlock(identifier);
          if (invokableBlock is InlineBlock)

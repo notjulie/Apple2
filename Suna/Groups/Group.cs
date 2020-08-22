@@ -8,7 +8,10 @@ using Suna.Tokens;
 
 namespace Suna.Groups
 {
-   class Group : GroupItem
+   /// <summary>
+   /// Represents a logical group of items in the code
+   /// </summary>
+   public class Group : GroupItem
    {
       #region Types / Constants
 
@@ -43,6 +46,10 @@ namespace Suna.Groups
 
       #region Public Methods
 
+      /// <summary>
+      /// Adds the given item to the group
+      /// </summary>
+      /// <param name="item"></param>
       public void Add(GroupItem item)
       {
          childItems.Add(item);

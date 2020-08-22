@@ -14,7 +14,7 @@ namespace Suna.Blocks
    /// <summary>
    /// Class representing the block indicated by the "main" keyword
    /// </summary>
-   class MainBlock  : Block
+   public class MainBlock  : Block
    {
       /// <summary>
       /// Initializes a new instance of class MainBlock

@@ -13,7 +13,7 @@ namespace Suna.Tokens
    /// <summary>
    /// Base class representing a token in the source
    /// </summary>
-   class Token
+   public class Token
    {
       #region Types / Constants
 
@@ -78,6 +78,11 @@ namespace Suna.Tokens
          throw new CompileException(Error.InternalErrorInvalidBlockHeaderToken);
       }
 
+      /// <summary>
+      /// Pulls the next GroupItem from the token stream
+      /// </summary>
+      /// <param name="enumerator"></param>
+      /// <returns></returns>
       public virtual GroupItem ReadGroupItem(IEnumerator<Token> enumerator)
       {
          return new TokenGroupItem(this);

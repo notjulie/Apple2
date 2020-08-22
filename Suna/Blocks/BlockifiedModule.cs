@@ -10,7 +10,7 @@ namespace Suna.Blocks
    /// A collection of blocks of code; a blockification is just a process of splitting a
    /// source file into manageable sections; functions, inlines, etc.
    /// </summary>
-   class BlockifiedModule
+   public class BlockifiedModule
    {
       #region Types / Constants
 
@@ -45,6 +45,10 @@ namespace Suna.Blocks
 
       #region Public Methods
 
+      /// <summary>
+      /// Adds the given block to the module
+      /// </summary>
+      /// <param name="block"></param>
       public void Add(Block block)
       {
          if (block is MainBlock)
@@ -73,6 +77,11 @@ namespace Suna.Blocks
          }
       }
 
+      /// <summary>
+      /// Gets the block associated with the given identifier
+      /// </summary>
+      /// <param name="identifier"></param>
+      /// <returns></returns>
       public Block GetBlock(string identifier)
       {
          if (inlines.ContainsKey(identifier))
