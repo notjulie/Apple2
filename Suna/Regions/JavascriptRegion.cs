@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Suna.Regions
 {
-   class JavascriptRegion : Region
+   /// <summary>
+   /// Javascript region in a suna module
+   /// </summary>
+   public class JavascriptRegion : Region
    {
    }
 }

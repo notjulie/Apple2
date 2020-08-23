@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Suna.Blocks;
 using Suna.Groups;
 using Suna.JS;
+using Suna.Regions;
 using Suna.Tokens;
 
 namespace Suna.Link
@@ -22,17 +23,15 @@ namespace Suna.Link
          IdentifierIsNotInvokable
       }
 
-      private JsModule jsModule;
+      private JsModule jsModule = new JsModule();
 
       /// <summary>
       /// Initializes a new instance of class LickContext
       /// </summary>
       /// <param name="sourceModule"></param>
-      /// <param name="jsModule"></param>
-      public LinkContext(BlockifiedModule sourceModule, JsModule jsModule)
+      public LinkContext(BlockifiedModule sourceModule)
       {
          this.SourceModule = sourceModule;
-         this.jsModule = jsModule;
       }
 
       /// <summary>
@@ -51,6 +50,16 @@ namespace Suna.Link
       {
          get;
       } = new LinkedModule();
+
+      /// <summary>
+      /// Adds a javaScript region
+      /// </summary>
+      public void AddJavaScriptRegion(JavascriptRegion javaScriptRegion)
+      {
+         Contract.Requires(javaScriptRegion != null);
+
+         jsModule.Execute(javaScriptRegion.ToString());
+      }
 
       /// <summary>
       /// Compiles the invocation of the invokable item with the given name, using the

@@ -11,7 +11,7 @@ namespace Suna.Regions
    /// Represents a region in the code; this is generally just either a normal
    /// Suna region or a region marked as Javascript.
    /// </summary>
-   class Region
+   public class Region
    {
       #region Private Fields
 
@@ -21,11 +21,19 @@ namespace Suna.Regions
 
       #region Public Methods
 
+      /// <summary>
+      /// Adds a line of text to the region
+      /// </summary>
+      /// <param name="line"></param>
       public void AddLine(string line)
       {
          contents.AppendLine(line);
       }
 
+      /// <summary>
+      /// Opens a reader based on the contents of the region
+      /// </summary>
+      /// <returns></returns>
       public TextReader OpenReader()
       {
          return new StringReader(contents.ToString());
@@ -35,6 +43,10 @@ namespace Suna.Regions
 
       #region Base Class Overrides
 
+      /// <summary>
+      /// Returns a string representation of the object
+      /// </summary>
+      /// <returns></returns>
       public override string ToString()
       {
          return contents.ToString();

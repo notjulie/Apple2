@@ -47,11 +47,6 @@ namespace Suna
          // regionize
          var regionizedModule = new RegionizedModule(sourceModule);
 
-         // parse the JavaScript sections
-         JsModule jsModule = new JsModule();
-         foreach (var jsRegion in regionizedModule.JavascriptRegions)
-            jsModule.Execute(jsRegion.ToString());
-
          // tokenize
          foreach (var sunaRegion in regionizedModule.SunaRegions)
             tokenizer.Tokenize(sunaRegion);
@@ -85,7 +80,11 @@ namespace Suna
             blockifiedModule.Add(currentBlock[0].CreateBlock(currentBlock.ToArray()));
 
          // package up our inputs to the linker
-         LinkContext linkContext = new LinkContext(blockifiedModule, jsModule);
+         LinkContext linkContext = new LinkContext(blockifiedModule);
+
+         // parse the JavaScript sections
+         foreach (var jsRegion in regionizedModule.JavascriptRegions)
+            linkContext.AddJavaScriptRegion(jsRegion);
 
          // link
          Linker linker = new Linker();
