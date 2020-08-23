@@ -80,7 +80,8 @@ namespace Suna
             blockifiedModule.Add(currentBlock[0].CreateBlock(currentBlock.ToArray()));
 
          // package up our inputs to the linker
-         LinkContext linkContext = new LinkContext(blockifiedModule);
+         LinkContext linkContext = new LinkContext();
+         linkContext.AddModule(blockifiedModule);
 
          // parse the JavaScript sections
          foreach (var jsRegion in regionizedModule.JavascriptRegions)

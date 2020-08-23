@@ -24,23 +24,13 @@ namespace Suna.Link
       }
 
       private JsModule jsModule = new JsModule();
+      private List<BlockifiedModule> modules = new List<BlockifiedModule>();
 
       /// <summary>
       /// Initializes a new instance of class LickContext
       /// </summary>
-      /// <param name="sourceModule"></param>
-      public LinkContext(BlockifiedModule sourceModule)
+      public LinkContext()
       {
-         this.SourceModule = sourceModule;
-      }
-
-      /// <summary>
-      /// Gets the source module associated with the context
-      /// </summary>
-      public BlockifiedModule SourceModule
-      {
-         get;
-         private set;
       }
 
       /// <summary>
@@ -52,6 +42,17 @@ namespace Suna.Link
       } = new LinkedModule();
 
       /// <summary>
+      /// Gets the main block
+      /// </summary>
+      public MainBlock Main
+      {
+         get
+         {
+            return modules[0].Main;
+         }
+      }
+
+      /// <summary>
       /// Adds a javaScript region
       /// </summary>
       public void AddJavaScriptRegion(JavascriptRegion javaScriptRegion)
@@ -59,6 +60,15 @@ namespace Suna.Link
          Contract.Requires(javaScriptRegion != null);
 
          jsModule.Execute(javaScriptRegion.ToString());
+      }
+
+      /// <summary>
+      /// Adds the given module
+      /// </summary>
+      /// <param name="module"></param>
+      public void AddModule(BlockifiedModule module)
+      {
+         modules.Add(module);
       }
 
       /// <summary>
@@ -73,7 +83,7 @@ namespace Suna.Link
          Contract.Requires(identifier != null);
 
          // find the block
-         Block invokableBlock = SourceModule.GetBlock(identifier.Identifier);
+         Block invokableBlock = GetBlock(identifier);
          if (invokableBlock is InlineBlock)
          {
             ((InlineBlock)invokableBlock).Compile(this, callParameters);
@@ -87,6 +97,18 @@ namespace Suna.Link
          {
             throw new CompileException(Error.IdentifierIsNotInvokable, identifier);
          }
+      }
+
+      private Block GetBlock(IdentifierToken identifier)
+      {
+         foreach (var module in this.modules)
+         {
+            var block = module.GetBlock(identifier.Identifier);
+            if (block != null)
+               return block;
+         }
+
+         return null;
       }
    }
 }

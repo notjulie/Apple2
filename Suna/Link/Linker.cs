@@ -43,7 +43,7 @@ namespace Suna.Link
          this.context = context;
 
          // find the "main" block
-         MainBlock main = context.SourceModule.Main;
+         MainBlock main = context.Main;
          if (main == null)
             throw new CompileException(Error.NoMain);
 
