@@ -139,7 +139,7 @@ namespace Suna.Link
             }
 
             if (!isLoaded)
-               throw new NotImplementedException();
+               jsModule.Execute(import.LoadString());
          }
       }
    }

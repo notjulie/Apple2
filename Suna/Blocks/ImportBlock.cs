@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +15,8 @@ namespace Suna.Blocks
    /// </summary>
    public class ImportBlock : Block
    {
+      private string path = string.Empty;
+
       /// <summary>
       /// Initializes a new instance of class ImportBlock
       /// </summary>
@@ -22,7 +26,7 @@ namespace Suna.Blocks
       {
          Contract.Requires(tokens != null);
 
-         Path = ((StringToken)tokens[1]).Value;
+         path = ((StringToken)tokens[1]).Value;
       }
 
       /// <summary>
@@ -30,8 +34,14 @@ namespace Suna.Blocks
       /// </summary>
       public string Path
       {
-         get;
-         private set;
+         get
+         {
+            // for now just assume that it is relative to this assembly
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            var assemblyFile = assembly.Location;
+            var assemblyDir = System.IO.Path.GetDirectoryName(assemblyFile);
+            return System.IO.Path.Combine(assemblyDir, this.path);
+         }
       }
 
       /// <summary>
@@ -43,6 +53,16 @@ namespace Suna.Blocks
          Contract.Requires(blockifiedModule != null);
 
          blockifiedModule.AddImport(this);
+      }
+
+      /// <summary>
+      /// Loads the import as a string
+      /// </summary>
+      /// <returns></returns>
+      public string LoadString()
+      {
+         using (var reader = new StreamReader(Path))
+            return reader.ReadToEnd();
       }
    }
 }
