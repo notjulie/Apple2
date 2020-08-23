@@ -1,0 +1,6 @@
+﻿
+inline beep()
+{
+	jsr(0xFF3A);
+}
+
