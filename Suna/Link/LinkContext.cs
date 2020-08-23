@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Suna.Blocks;
 using Suna.Groups;
@@ -19,15 +16,27 @@ namespace Suna.Link
    /// </summary>
    public class LinkContext
    {
+
+      #region Types
+
       private enum Error
       {
-         IdentifierIsNotInvokable
+         IdentifierIsNotInvokable,
+         InvalidImportExtension
       }
+
+      #endregion
+
+      #region Private Fields
 
       private JsModule jsModule = new JsModule();
       private List<BlockifiedModule> modules = new List<BlockifiedModule>();
       private List<ImportBlock> imports = new List<ImportBlock>();
       private List<ImportBlock> loadedImports = new List<ImportBlock>();
+
+      #endregion
+
+      #region Constructor
 
       /// <summary>
       /// Initializes a new instance of class LickContext
@@ -35,6 +44,10 @@ namespace Suna.Link
       public LinkContext()
       {
       }
+
+      #endregion
+
+      #region Properties
 
       /// <summary>
       /// Gets the associated LinkedModule
@@ -54,6 +67,10 @@ namespace Suna.Link
             return modules[0].Main;
          }
       }
+
+      #endregion
+
+      #region Public Methods
 
       /// <summary>
       /// Adds a javaScript region
@@ -112,6 +129,10 @@ namespace Suna.Link
          }
       }
 
+      #endregion
+
+      #region Private Methods
+
       private Block GetBlock(IdentifierToken identifier)
       {
          foreach (var module in this.modules)
@@ -139,8 +160,24 @@ namespace Suna.Link
             }
 
             if (!isLoaded)
-               jsModule.Execute(import.LoadString());
+               LoadImport(import);
          }
       }
+
+      private void LoadImport(ImportBlock importBlock)
+      {
+         // switch on extension
+         switch (System.IO.Path.GetExtension(importBlock.Path).ToUpperInvariant())
+         {
+            case ".JS":
+               jsModule.Execute(importBlock.LoadString());
+               break;
+
+            default:
+               throw new CompileException(Error.InvalidImportExtension);
+         }
+      }
+
+      #endregion
    }
 }
