@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
@@ -33,6 +34,17 @@ namespace Suna.Blocks
       #endregion
 
       #region Public Properties
+
+      /// <summary>
+      /// Gets the imports
+      /// </summary>
+      public ReadOnlyCollection<ImportBlock> Imports
+      {
+         get
+         {
+            return new ReadOnlyCollection<ImportBlock>(imports);
+         }
+      }
 
       /// <summary>
       /// Gets the "main" block

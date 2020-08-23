@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace Suna.Link
 
       private JsModule jsModule = new JsModule();
       private List<BlockifiedModule> modules = new List<BlockifiedModule>();
+      private List<ImportBlock> imports = new List<ImportBlock>();
+      private List<ImportBlock> loadedImports = new List<ImportBlock>();
 
       /// <summary>
       /// Initializes a new instance of class LickContext
@@ -68,7 +71,17 @@ namespace Suna.Link
       /// <param name="module"></param>
       public void AddModule(BlockifiedModule module)
       {
+         Contract.Requires(module != null);
+
+         // add it to our list
          modules.Add(module);
+
+         // add its imports
+         foreach (var import in module.Imports)
+            imports.Add(import);
+
+         // load any imports that haven't already been loaded
+         LoadImports();
       }
 
       /// <summary>
@@ -109,6 +122,25 @@ namespace Suna.Link
          }
 
          return null;
+      }
+
+      private void LoadImports()
+      {
+         foreach (var import in imports)
+         {
+            // see if it's already loaded
+            bool isLoaded = false;
+            foreach (var loadedImport in loadedImports)
+            {
+               string path1 = Path.GetFullPath(import.Path).ToUpperInvariant();
+               string path2 = Path.GetFullPath(loadedImport.Path).ToUpperInvariant();
+               if (path1 == path2)
+                  isLoaded = true;
+            }
+
+            if (!isLoaded)
+               throw new NotImplementedException();
+         }
       }
    }
 }
