@@ -17,7 +17,7 @@ namespace Suna.Groups
    {
       #region Private Fields
 
-      private string identifier;
+      private IdentifierToken identifier;
       private ParentheticGroup callParameters;
 
       #endregion
@@ -32,7 +32,7 @@ namespace Suna.Groups
       public InvokeGroupItem(GroupItem identifier, GroupItem callParameters)
       {
          var token = ((TokenGroupItem)identifier).Token;
-         this.identifier = ((IdentifierToken)token).Identifier;
+         this.identifier = (IdentifierToken)token;
          this.callParameters = (ParentheticGroup)callParameters;
       }
 

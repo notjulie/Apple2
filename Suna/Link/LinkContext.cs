@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Suna.Blocks;
 using Suna.Groups;
 using Suna.JS;
+using Suna.Tokens;
 
 namespace Suna.Link
 {
@@ -57,24 +58,25 @@ namespace Suna.Link
       /// </summary>
       /// <param name="identifier">the name of the invokable item</param>
       /// <param name="callParameters">the parameters</param>
-      public void CompileInvocation(string identifier, ParentheticGroup callParameters)
+      public void CompileInvocation(IdentifierToken identifier, ParentheticGroup callParameters)
       {
          Contract.Requires(callParameters != null);
+         Contract.Requires(identifier != null);
 
          // find the block
-         Block invokableBlock = SourceModule.GetBlock(identifier);
+         Block invokableBlock = SourceModule.GetBlock(identifier.Identifier);
          if (invokableBlock is InlineBlock)
          {
             ((InlineBlock)invokableBlock).Compile(this, callParameters);
          }
-         else if (jsModule.IsFunctionName(identifier))
+         else if (jsModule.IsFunctionName(identifier.Identifier))
          {
             byte[] generatedCode = jsModule.EvaluateByteArray(identifier + callParameters.ToString());
             this.LinkedModule.AppendCode(generatedCode);
          }
          else
          {
-            throw new CompileException(Error.IdentifierIsNotInvokable);
+            throw new CompileException(Error.IdentifierIsNotInvokable, identifier);
          }
       }
    }

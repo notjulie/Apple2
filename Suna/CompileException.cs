@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Suna.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -25,9 +26,7 @@ namespace Suna
       /// </summary>
       /// <param name="message"></param>
       public CompileException(Enum message)
-#pragma warning disable CA1062 // Validate arguments of public methods
-         : this(message.ToString())
-#pragma warning restore CA1062 // Validate arguments of public methods
+         : this(FormatMessage(message))
       {
       }
 
@@ -56,9 +55,17 @@ namespace Suna
       /// <param name="message"></param>
       /// <param name="inner"></param>
       public CompileException(Enum message, Exception inner)
-#pragma warning disable CA1062 // Validate arguments of public methods
-         : this(message.ToString(), inner)
-#pragma warning restore CA1062 // Validate arguments of public methods
+         : this(FormatMessage(message), inner)
+      {
+      }
+
+      /// <summary>
+      /// Initializes a new instance of class CompileException
+      /// </summary>
+      /// <param name="message"></param>
+      /// <param name="token"></param>
+      public CompileException(Enum message, Token token)
+         : this(FormatMessage(message, token))
       {
       }
 
@@ -70,6 +77,16 @@ namespace Suna
       protected CompileException(SerializationInfo info, StreamingContext context)
          : base(info, context)
       {
+      }
+
+      private static string FormatMessage(Enum error)
+      {
+         return error.ToString();
+      }
+
+      private static string FormatMessage(Enum error, Token token)
+      {
+         return error.ToString() + ": " + token;
       }
    }
 }
