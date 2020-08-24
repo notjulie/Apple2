@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Suna.Regions
 {
-   class SunaRegion : Region
+   /// <summary>
+   /// A region that contains Suna code
+   /// </summary>
+   public class SunaRegion : Region
    {
    }
 }

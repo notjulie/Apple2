@@ -85,20 +85,24 @@ namespace Suna.Link
       /// <summary>
       /// Adds the given module
       /// </summary>
-      /// <param name="module"></param>
-      public void AddModule(BlockifiedModule module)
+      /// <param name="sourceModule"></param>
+      public void AddModule(SourceModule sourceModule)
       {
-         Contract.Requires(module != null);
+         Contract.Requires(sourceModule != null);
+
+         // nab the module's blocks
+         var blocks = sourceModule.GetBlocks();
 
          // add it to our list
-         modules.Add(module);
+         modules.Add(blocks);
 
          // add its imports
-         foreach (var import in module.Imports)
+         foreach (var import in blocks.Imports)
             imports.Add(import);
 
-         // load any imports that haven't already been loaded
-         LoadImports();
+         // parse the JavaScript sections
+         foreach (var jsRegion in sourceModule.Regions.JavascriptRegions)
+            AddJavaScriptRegion(jsRegion);
       }
 
       /// <summary>
@@ -129,23 +133,10 @@ namespace Suna.Link
          }
       }
 
-      #endregion
-
-      #region Private Methods
-
-      private Block GetBlock(IdentifierToken identifier)
-      {
-         foreach (var module in this.modules)
-         {
-            var block = module.GetBlock(identifier.Identifier);
-            if (block != null)
-               return block;
-         }
-
-         return null;
-      }
-
-      private void LoadImports()
+      /// <summary>
+      /// Loads any imports referenced by modules that have been added
+      /// </summary>
+      public void LoadImports()
       {
          foreach (var import in imports)
          {
@@ -164,6 +155,22 @@ namespace Suna.Link
          }
       }
 
+      #endregion
+
+      #region Private Methods
+
+      private Block GetBlock(IdentifierToken identifier)
+      {
+         foreach (var module in this.modules)
+         {
+            var block = module.GetBlock(identifier.Identifier);
+            if (block != null)
+               return block;
+         }
+
+         return null;
+      }
+
       private void LoadImport(ImportBlock importBlock)
       {
          // switch on extension
@@ -171,6 +178,10 @@ namespace Suna.Link
          {
             case ".JS":
                jsModule.Execute(importBlock.LoadString());
+               break;
+
+            case ".SUNA":
+               this.AddModule(new SourceModule(importBlock.LoadString()));
                break;
 
             default:

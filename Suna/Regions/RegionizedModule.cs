@@ -11,7 +11,7 @@ namespace Suna.Regions
    /// A source module broken up into regions; currently the only purpose is to
    /// separate sections of JavaScript from sections of Suna.
    /// </summary>
-   class RegionizedModule
+   public class RegionizedModule
    {
       #region Types / Constants
 
@@ -31,6 +31,10 @@ namespace Suna.Regions
 
       #region Constructor
 
+      /// <summary>
+      /// A source module that has been broken into regions
+      /// </summary>
+      /// <param name="sourceModule"></param>
       public RegionizedModule(SourceModule sourceModule)
       {
          Contract.Requires(sourceModule != null);
@@ -82,6 +86,9 @@ namespace Suna.Regions
 
       #region Public Properties
 
+      /// <summary>
+      /// Gets the JavaScript regions
+      /// </summary>
       public ICollection<JavascriptRegion> JavascriptRegions
       {
          get
@@ -90,6 +97,9 @@ namespace Suna.Regions
          }
       }
 
+      /// <summary>
+      /// Gets the SUna regions
+      /// </summary>
       public ICollection<SunaRegion> SunaRegions
       {
          get
