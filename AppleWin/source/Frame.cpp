@@ -909,7 +909,7 @@ void FrameDrawDiskStatus( HDC passdc )
 }
 
 //===========================================================================
-static void DrawStatusArea (HDC passdc, int drawflags)
+void DrawStatusArea (HDC passdc, int drawflags)
 {
 	if (g_hFrameWindow == NULL)
 	{

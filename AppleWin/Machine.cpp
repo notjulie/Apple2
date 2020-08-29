@@ -1,6 +1,9 @@
 
+#include <thread>
 #include "ApplewinEx.h"
 #include "CPUEx.h"
+#include "FrameEx.h"
+using namespace std::chrono_literals;
 
 namespace AppleWin::Managed {
    public ref class Machine {
@@ -16,6 +19,24 @@ namespace AppleWin::Managed {
          for (int i = 0; i < _memory->Length; ++i)
             memory.push_back(_memory[i]);
 
+         // reset
+         bool resetComplete = false;
+         ApplewinInvoke([&]() {
+            // reset
+            StartRunning();
+            ResetMachineState();
+            resetComplete = true;
+            });
+
+         // wait for reset to complete
+         while (!resetComplete)
+            std::this_thread::sleep_for(1ms);
+
+         // for now throw in a delay; TODO - find a less trusting way to
+         // synchronize this
+         std::this_thread::sleep_for(1000ms);
+
+         // start the program
          ApplewinInvoke([=]() {
             // copy the memory
             CPUEx::CopyToAppleMemory(&memory[0], startAddress, (uint16_t)memory.size());
