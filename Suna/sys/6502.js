@@ -7,3 +7,10 @@ function jsr(address) {
 	];
 }
 
+function lda_abs(address) {
+	return [
+		0xAD,
+		address & 0xFF,
+		address >> 8
+	];
+}

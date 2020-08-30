@@ -43,7 +43,7 @@ namespace Suna.Tokens
       public static ReadOnlyCollection<char> IdentifierCharacters
       {
          get;
-      } = new ReadOnlyCollection<char>("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray());
+      } = new ReadOnlyCollection<char>("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_".ToCharArray());
 
       #endregion
    }
