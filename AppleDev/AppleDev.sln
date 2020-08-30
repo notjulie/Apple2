@@ -17,6 +17,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Suna", "..\Suna\Suna.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SunaTest", "..\SunaTest\SunaTest.csproj", "{4B63298B-1561-4958-A2AE-F2C421CD2FAD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reference", "Reference", "{A3FF9BBE-74DA-4965-BF65-01918759929B}"
+	ProjectSection(SolutionItems) = preProject
+		..\Reference\AIIETECHREF1.pdf = ..\Reference\AIIETECHREF1.pdf
+		..\Reference\AIIETECHREF2.pdf = ..\Reference\AIIETECHREF2.pdf
+		..\Reference\Assembly_Cookbook_for_the_Apple_II_IIe.pdf = ..\Reference\Assembly_Cookbook_for_the_Apple_II_IIe.pdf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug NoDX|Any CPU = Debug NoDX|Any CPU
