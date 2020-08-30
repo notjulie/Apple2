@@ -37,6 +37,6 @@ void AppleWinMain(void);
 /// <param name=""></param>
 void ServiceApplewinExtensions(void);
 
-void ApplewinInvoke(const std::function<void()>& function);
+void ApplewinInvokeSynchronous(const std::function<void()>& function);
 
 #endif

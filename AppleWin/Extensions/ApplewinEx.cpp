@@ -94,8 +94,13 @@ void ServiceApplewinExtensions(void)
 	}
 }
 
-
-void ApplewinInvoke(const std::function<void()>& function)
+/// <summary>
+/// Invokes the given function on the Applewin thread and waits for it
+/// to complete; uses packaged_task, so exceptions get propogated back
+/// to the calling thread.
+/// </summary>
+/// <param name="function"></param>
+void ApplewinInvokeSynchronous(const std::function<void()>& function)
 {
 	// package up a task
 	std::packaged_task<void()> task(function);

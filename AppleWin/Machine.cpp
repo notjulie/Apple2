@@ -20,24 +20,19 @@ namespace AppleWin::Managed {
             memory.push_back(_memory[i]);
 
          // reset
-         bool resetComplete = false;
-         ApplewinInvoke([&]() {
+         ApplewinInvokeSynchronous([=]() {
             // reset
             StartRunning();
             ResetMachineState();
-            resetComplete = true;
             });
 
-         // wait for reset to complete
-         while (!resetComplete)
-            std::this_thread::sleep_for(1ms);
-
          // for now throw in a delay; TODO - find a less trusting way to
-         // synchronize this
+         // synchronize this... in the meantime it seems like the only risk
+         // is we might gets the wrong number of beeps on startup
          std::this_thread::sleep_for(1000ms);
 
          // start the program
-         ApplewinInvoke([=]() {
+         ApplewinInvokeSynchronous([=]() {
             // copy the memory
             CPUEx::CopyToAppleMemory(&memory[0], startAddress, (uint16_t)memory.size());
 
