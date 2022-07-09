@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Sh2CB" />
+		<Option pch_mode="2" />
+		<Option compiler="arm-elf-gcc" />
+		<Build>
+			<Target title="default">
+				<Option output="default/Sh2CB.elf" prefix_auto="0" extension_auto="0" />
+				<Option object_output="default" />
+				<Option type="1" />
+				<Option compiler="llvm-mos" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-mcpu=arm7tdmi" />
+			<Add option="-O2" />
+			<Add option="-Wall" />
+			<Add option="-g" />
+			<Add option="-fno-common" />
+			<Add option="-DEK_AT91SAM7A3" />
+			<Add option="-D__NO_CTOR_DTOR_SUPPORT__" />
+			<Add option="-DUSE_IRQ" />
+			<Add directory="src" />
+			<Add directory="h" />
+		</Compiler>
+		<Linker>
+			<Add option="-s" />
+			<Add option="-T ld/target.ld" />
+		</Linker>
+		<Unit filename="h/at91sam7a3.h" />
+		<Unit filename="h/sam7a3ek.h" />
+		<Unit filename="ld/target.ld" />
+		<Unit filename="ld/targetRAM.ld" />
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
