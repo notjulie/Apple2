@@ -21,8 +21,16 @@ bool IsFrameWindowShowing(void)
    return IsWindowVisible(::g_hFrameWindow);
 }
 
+/// <summary>
+/// Shows the frame window
+/// </summary>
+/// <param name="show"></param>
 void ShowFrameWindow(bool show)
 {
+   // deal with the potential race condition where we get called while the
+   // thread is still creating the window
+   while (g_hFrameWindow == NULL)
+      Sleep(1);
    ShowWindow(g_hFrameWindow, show ? SW_SHOW : SW_HIDE);
 }
 

@@ -138,10 +138,6 @@
       <Project>{0a960136-a00a-4d4b-805f-664d9950d2ca}</Project>
       <Name>AppleWin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Suna\Suna.csproj">
-      <Project>{e4ad2457-9abe-4ebb-91aa-524d32167434}</Project>
-      <Name>Suna</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.6\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
@@ -156,8 +152,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy $(ProjectDir)$(ConfigurationName)\HookFilter.dll $(ProjectDir)$(OutDir)</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -16,6 +16,7 @@ namespace AppleDev
    public partial class App : Application
    {
       private Thread mainWindowThread;
+      private DispatcherTimer timer = new DispatcherTimer();
 
       /// <summary>
       /// Performs actions on application startup
@@ -31,6 +32,20 @@ namespace AppleDev
          mainWindowThread.Name = "AppleWin";
          mainWindowThread.SetApartmentState(ApartmentState.STA);
          mainWindowThread.Start();
+
+         // show it
+         AppleWin.Managed.AppleWinThread.Show(true);
+
+         // start a timer to monitor if it closes
+         timer.Interval = TimeSpan.FromMilliseconds(100);
+         timer.Tick += Timer_Tick;
+         timer.IsEnabled = true;
+      }
+
+      private void Timer_Tick(object sender, EventArgs e)
+      {
+         if (!AppleWin.Managed.AppleWinThread.IsShowing())
+            this.Shutdown();
       }
 
       /// <summary>

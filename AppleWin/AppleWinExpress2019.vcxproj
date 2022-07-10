@@ -307,6 +307,9 @@
     <None Include="source\CPU\cpu_instructions.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="HookFilter\HookFilter-vs2019.vcxproj">
+      <Project>{aa5854ad-2bc7-4efd-9790-349adb35e35a}</Project>
+    </ProjectReference>
     <ProjectReference Include="zip_lib\zip_lib2019.vcxproj">
       <Project>{509739e7-0af3-4c09-a1a9-f0b1bc31b39d}</Project>
     </ProjectReference>
