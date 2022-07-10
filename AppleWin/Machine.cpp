@@ -1,6 +1,9 @@
 
 #include <thread>
+#include <Windows.h>
 #include "ApplewinEx.h"
+#include "Common.h"
+#include "CPU.h"
 #include "CPUEx.h"
 #include "FrameEx.h"
 using namespace std::chrono_literals;
@@ -19,27 +22,32 @@ namespace AppleWin::Managed {
          for (int i = 0; i < _memory->Length; ++i)
             memory.push_back(_memory[i]);
 
-         // reset
+         // put the CPU into running state
          ApplewinInvokeSynchronous([=]() {
             // reset
             StartRunning();
-            ResetMachineState();
             });
 
-         // for now throw in a delay; TODO - find a less trusting way to
-         // synchronize this... in the meantime it seems like the only risk
-         // is we might gets the wrong number of beeps on startup
-         std::this_thread::sleep_for(1000ms);
+         // TODO...find better way to synchronize this
+         std::this_thread::sleep_for(2000ms);
 
-         // start the program
+         // reset
          ApplewinInvokeSynchronous([=]() {
-            // copy the memory
-            CPUEx::CopyToAppleMemory(&memory[0], startAddress, (uint16_t)memory.size());
+            CtrlReset();
+            });
 
-            // jump to the monitor so we have a safe place to return to
+         // TODO...find better way to synchronize this
+         std::this_thread::sleep_for(2000ms);
+
+         // run
+         ApplewinInvokeSynchronous([=]() {
+            // jump to the monitor so that we land there when we're done
             CPUEx::Jump(0xFF69);
 
-            // then JSR to our target address
+            // copy the program to memory
+            CPUEx::CopyToAppleMemory(&memory[0], startAddress, (uint16_t)memory.size());
+
+            // JSR to it
             CPUEx::Jsr(startAddress);
             });
       }

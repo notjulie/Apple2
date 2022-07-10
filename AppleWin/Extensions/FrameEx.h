@@ -2,7 +2,8 @@
 #ifndef FRAMEEX_H
 #define FRAMEEX_H
 
-// prototypes for functions in Frame.h
+// prototypes for functions in Frame.cpp
+void CtrlReset();
 void ResetMachineState();
 
 bool IsFrameWindowShowing();

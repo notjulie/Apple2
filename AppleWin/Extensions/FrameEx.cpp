@@ -36,12 +36,12 @@ void ShowFrameWindow(bool show)
 
 void StartRunning()
 {
-	if (g_CardMgr.QuerySlot(SLOT6) == CT_Disk2)
-		dynamic_cast<Disk2InterfaceCard&>(g_CardMgr.GetRef(SLOT6)).Boot();
+	//if (g_CardMgr.QuerySlot(SLOT6) == CT_Disk2)
+		//dynamic_cast<Disk2InterfaceCard&>(g_CardMgr.GetRef(SLOT6)).Boot();
 
 	LogFileTimeUntilFirstKeyReadReset();
 	g_nAppMode = MODE_RUNNING;
 
-   DrawStatusArea((HDC)0, DRAW_TITLE);
-   VideoRedrawScreen();
+   //DrawStatusArea((HDC)0, DRAW_TITLE);
+   //VideoRedrawScreen();
 }

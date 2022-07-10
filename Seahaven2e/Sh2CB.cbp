@@ -13,9 +13,10 @@
 				<Option compiler="llvm-mos" />
 				<Option use_console_runner="0" />
 				<Compiler>
-					<Add option="-g" />
+					<Add option="-Os" />
 				</Compiler>
 				<Linker>
+					<Add library="libcrt.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 			</Target>
@@ -39,7 +40,6 @@
 		<Unit filename="h/at91sam7a3.h" />
 		<Unit filename="h/sam7a3ek.h" />
 		<Unit filename="ld/target.ld" />
-		<Unit filename="ld/targetRAM.ld" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
