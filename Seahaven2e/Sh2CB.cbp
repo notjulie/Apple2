@@ -14,6 +14,7 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add directory="../Apple2SDK" />
 				</Compiler>
 				<Linker>
 					<Add library="libcrt.a" />
@@ -37,10 +38,11 @@
 			<Add option="-s" />
 			<Add option="-T ld/target.ld" />
 		</Linker>
+		<Unit filename="../Apple2SDK/Apple2ROM.h" />
 		<Unit filename="h/at91sam7a3.h" />
 		<Unit filename="h/sam7a3ek.h" />
 		<Unit filename="ld/target.ld" />
-		<Unit filename="src/main.c">
+		<Unit filename="src/main.cpp">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
