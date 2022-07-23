@@ -1,7 +1,7 @@
 
 #include <stdint.h>
-#include <Apple2IO.h>
-#include <Apple2ROM.h>
+#include <Apple2Lib/IO.h>
+#include <Apple2Lib/ROM.h>
 
 
 /** \brief
