@@ -37,7 +37,12 @@
 		<Linker>
 			<Add option="-s" />
 			<Add option="-T ld/target.ld" />
+			<Add option="--Map Sh2CB.map" />
 		</Linker>
+		<Unit filename="../Apple2Lib/HGR.cpp" />
+		<Unit filename="../Apple2Lib/HGR.h" />
+		<Unit filename="../Apple2Lib/IO.h" />
+		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../Apple2SDK/Apple2ROM.h" />
 		<Unit filename="h/at91sam7a3.h" />
 		<Unit filename="h/sam7a3ek.h" />

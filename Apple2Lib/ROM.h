@@ -20,6 +20,36 @@ namespace a2 {
       asm volatile ("JSR\t$FDED" : "+a"(c));
    }
 
+   /** \brief
+    * Moves the cursor to the first position of the next video display
+    * line (and scrolls if required). On exit, A andY are destroyed.
+    *
+    */
+   inline void CR()
+   {
+      asm volatile ("JSR\t$FC62" :::"a", "y" );
+   }
+
+   /** \brief
+    * Clears the screen display from the current cursor position to the end
+    * of the line without changing the cursor position. On exit, A andY
+    * are destroyed.
+    *
+    */
+   inline void CLREOL()
+   {
+      asm volatile ("JSR\t$FC9C" :::"a", "y" );
+   }
+
+   /** \brief
+    * Displays a byte as two hexadecimal digits. On entry, A contains
+    * the byte to be displayed. On exit, A is destroyed.
+    *
+    */
+   inline void PRBYTE(uint8_t b)
+   {
+      asm volatile ("JSR\t$FDDA" : "+a"(b));
+   }
 }
 
 #endif // APPLE2ROM_H
