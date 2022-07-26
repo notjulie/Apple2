@@ -4,19 +4,26 @@
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
 
+static void SetHGRWhite()
+{
+   for (int y=0; y<192; ++y)
+   {
+      uint8_t *p = (uint8_t *)(0x2000 + a2::HGRRow::GetIndex(y));
+      for (int x=0; x<40; ++x)
+         p[x] = 0xFF;
+   }
+}
 
 /** \brief
  * Main entry point
  */
 extern "C" int main()
 {
+   // call initilization
    a2::HGRRow::InitializeRowOffsets();
-   for (int i=0; i<10; ++i)
-   {
-      uint16_t offset = a2::HGRRow::GetIndex(i);
-      a2::PRBYTE(offset>>8);
-      a2::PRBYTE((uint8_t)offset);
-      a2::CLREOL();
-      a2::CR();
-   }
+
+   // dump to the HGR screen
+   a2::HIRESON();
+   a2::TEXTOFF();
+   SetHGRWhite();
 }

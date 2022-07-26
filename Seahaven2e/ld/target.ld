@@ -3,9 +3,9 @@
  */
 
 MEMORY {
-    ram (rw) : ORIGIN = 0x0800, LENGTH = 0x97ff
+   /* origin is at 3 beyond 0x4000 to account for the JMP main instruction */
+   ram (rw) : ORIGIN = 0x4004, LENGTH = 0x55FC
 }
-
 
 SECTIONS {
     INCLUDE c.ld
@@ -27,8 +27,16 @@ ASSERT(__rc31 == 0x00FF, "Inconsistent zero page map.")
 /* Set initial soft stack address to end of BASIC area. (It grows down.) */
 __stack = 0x9FFF;
 
+
 OUTPUT_FORMAT {
     /* Tells AppleWin where to place the file's contents. */
-    SHORT(0x0800)
+    SHORT(0x4000)
+
+    /* JMP to main */
+    BYTE(0x4C)
+    SHORT(main)
+    BYTE(0x00)
+
+    /* the program */
     TRIM(ram)
 }

@@ -18,6 +18,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="libcrt.a" />
+					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libc.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 			</Target>
@@ -38,6 +39,7 @@
 			<Add option="-s" />
 			<Add option="-T ld/target.ld" />
 			<Add option="--Map Sh2CB.map" />
+			<Add option="-O 5" />
 		</Linker>
 		<Unit filename="../Apple2Lib/HGR.cpp" />
 		<Unit filename="../Apple2Lib/HGR.h" />
