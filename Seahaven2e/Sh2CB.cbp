@@ -19,7 +19,6 @@
 				</Compiler>
 				<Linker>
 					<Add library="libcrt.a" />
-					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libc.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -49,6 +48,7 @@
 		<Unit filename="../Apple2Lib/IO.h" />
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../Apple2SDK/Apple2ROM.h" />
+		<Unit filename="../C6502/Memory.h" />
 		<Unit filename="h/at91sam7a3.h" />
 		<Unit filename="h/sam7a3ek.h" />
 		<Unit filename="ld/target.ld" />

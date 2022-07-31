@@ -3,14 +3,14 @@
 #include <Apple2Lib/HGR.h>
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
+#include <C6502/Memory.h>
 
 static void SetHGRWhite()
 {
    for (int y=0; y<192; ++y)
    {
       uint8_t *p = (uint8_t *)(0x2000 + a2::HGRRow::GetIndex(y));
-      for (int x=0; x<40; ++x)
-         p[x] = 0xFF;
+      c6502::memset8(p, 0xFF, 40);
    }
 }
 
