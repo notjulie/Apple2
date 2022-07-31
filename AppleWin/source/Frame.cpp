@@ -2681,7 +2681,7 @@ void FrameCreateWindow(void)
 		TEXT("APPLE2FRAME"),
 		g_pAppTitle.c_str(),
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU |
-		WS_MINIMIZEBOX, // | WS_VISIBLE, RER-- create visible and show later
+		WS_MINIMIZEBOX, // | WS_VISIBLE, RER-- create invisible and show later
 		nXPos, nYPos, nWidth, nHeight,
 		HWND_DESKTOP,
 		(HMENU)0,

@@ -6,6 +6,7 @@
 void CtrlReset();
 void ResetMachineState();
 
+void ActivateFrameWindow();
 bool IsFrameWindowShowing();
 void ShowFrameWindow(bool show);
 void StartRunning();

@@ -25,6 +25,10 @@ namespace AppleWin::Managed {
          ShowFrameWindow(show);
       }
 
+      static void ActivateWindow() {
+         ActivateFrameWindow();
+      }
+
       static void Shutdown(void) {
          if (threadID != 0)
             PostThreadMessage(threadID, WM_QUIT, 0, 0);

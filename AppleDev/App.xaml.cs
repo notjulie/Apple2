@@ -15,14 +15,29 @@ namespace AppleDev
    /// <summary>
    /// Interaction logic for App.xaml
    /// </summary>
-   [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1001:Types that own disposable fields should be disposable", Justification = "<Pending>")]
-   public partial class App : Application
+   public sealed partial class App : Application, IDisposable
    {
+      #region Private Fields
+
       private const string PipeName = "AppleDevNamedPipe";
       private const string ProgramFileTooShortMessage = "Program file too short";
       private Thread mainWindowThread;
       private DispatcherTimer timer = new DispatcherTimer();
       private NamedPipeServerStream pipeServer;
+
+      #endregion
+
+      #region Event Handlers
+
+      private void Timer_Tick(object sender, EventArgs e)
+      {
+         if (!AppleWin.Managed.AppleWinThread.IsShowing())
+            this.Shutdown();
+      }
+
+      #endregion
+
+      #region Protected Methods
 
       /// <summary>
       /// Performs actions on application startup
@@ -74,8 +89,9 @@ namespace AppleDev
          mainWindowThread.SetApartmentState(ApartmentState.STA);
          mainWindowThread.Start();
 
-         // show it
+         // show it and activate it
          AppleWin.Managed.AppleWinThread.Show(true);
+         AppleWin.Managed.AppleWinThread.ActivateWindow();
 
          // if we have a single command line parameter it's a program to run
          if (commandLineArgs.Length == 2)
@@ -89,8 +105,59 @@ namespace AppleDev
          timer.IsEnabled = true;
       }
 
+      /// <summary>
+      /// Performs actions on application exit
+      /// </summary>
+      /// <param name="e"></param>
+      protected override void OnExit(ExitEventArgs e)
+      {
+         // call the base class
+         base.OnExit(e);
+
+         // and dispose
+         Dispose();
+      }
+
+      #endregion
+
+      #region IDisposable
+
+      /// <summary>
+      /// Releases resources held by the object
+      /// </summary>
+      public void Dispose()
+      {
+         // tell AppleWin to shut down
+         if (mainWindowThread != null)
+         {
+            AppleWin.Managed.AppleWinThread.Shutdown();
+            mainWindowThread.Join();
+            mainWindowThread = null;
+         }
+
+         // save the default settings
+         AppleDev.Properties.Settings.Default.Save();
+
+         // shut down our pipe server
+         if (pipeServer != null)
+         {
+            pipeServer.Dispose();
+            pipeServer = null;
+         }
+      }
+
+      #endregion
+
+      #region Private Methods
+
+      /// <summary>
+      /// Handles a connection received on our named pipe
+      /// </summary>
+      /// <param name="asyncResult"></param>
       private void PipeConnectionReceived(IAsyncResult asyncResult)
       {
+         // the caller is supposed to connect, send the name of a file to open and
+         // disconnect
          if (pipeServer != null)
          {
             string message;
@@ -101,7 +168,11 @@ namespace AppleDev
             BeginPipeListener();
 
             if (message != null)
+            {
+               // bring the window to the front and run the executable
+               AppleWin.Managed.AppleWinThread.ActivateWindow();
                LoadAndRunFile(message);
+            }
          }
       }
 
@@ -152,34 +223,6 @@ namespace AppleDev
          }
       }
 
-      private void Timer_Tick(object sender, EventArgs e)
-      {
-         if (!AppleWin.Managed.AppleWinThread.IsShowing())
-            this.Shutdown();
-      }
-
-      /// <summary>
-      /// Performs actions on application exit
-      /// </summary>
-      /// <param name="e"></param>
-      protected override void OnExit(ExitEventArgs e)
-      {
-         // call the base class
-         base.OnExit(e);
-
-         // tell AppleWin to shut down
-         AppleWin.Managed.AppleWinThread.Shutdown();
-         mainWindowThread.Join();
-
-         // save the default settings
-         AppleDev.Properties.Settings.Default.Save();
-
-         // shut down our pipe server
-         if (pipeServer != null)
-         {
-            pipeServer.Dispose();
-            pipeServer = null;
-         }
-      }
+      #endregion
    }
 }

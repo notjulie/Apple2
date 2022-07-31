@@ -34,6 +34,11 @@ void ShowFrameWindow(bool show)
    ShowWindow(g_hFrameWindow, show ? SW_SHOW : SW_HIDE);
 }
 
+void ActivateFrameWindow()
+{
+   SetForegroundWindow(g_hFrameWindow);
+}
+
 void StartRunning()
 {
 	//if (g_CardMgr.QuerySlot(SLOT6) == CT_Disk2)
