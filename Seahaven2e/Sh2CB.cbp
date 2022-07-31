@@ -14,6 +14,7 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add option="-g" />
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
@@ -21,6 +22,9 @@
 					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libc.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
+				<ExtraCommands>
+					<Add after=".\postBuild.bat" />
+				</ExtraCommands>
 			</Target>
 		</Build>
 		<Compiler>
@@ -36,7 +40,6 @@
 			<Add directory="h" />
 		</Compiler>
 		<Linker>
-			<Add option="-s" />
 			<Add option="-T ld/target.ld" />
 			<Add option="--Map Sh2CB.map" />
 			<Add option="-O 5" />
