@@ -52,6 +52,8 @@
 		<Unit filename="h/at91sam7a3.h" />
 		<Unit filename="h/sam7a3ek.h" />
 		<Unit filename="ld/target.ld" />
+		<Unit filename="src/Drawing.cpp" />
+		<Unit filename="src/Drawing.h" />
 		<Unit filename="src/main.cpp">
 			<Option compilerVar="CC" />
 		</Unit>

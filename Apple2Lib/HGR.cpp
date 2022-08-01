@@ -1,5 +1,6 @@
 
 #include "HGR.h"
+#include <C6502/Memory.h>
 
 namespace a2 {
 
@@ -18,6 +19,15 @@ namespace a2 {
                   (k << 10)
                ;
          }
+      }
+   }
+
+   void HGRFill(uint8_t value)
+   {
+      for (int y=0; y<192; ++y)
+      {
+         uint8_t *p = (uint8_t *)(0x2000 + a2::HGRRow::GetIndex(y));
+         c6502::memset8(p, value, 40);
       }
    }
 }

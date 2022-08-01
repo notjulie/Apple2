@@ -7,6 +7,9 @@
 namespace a2 {
    const uint8_t HGRHeight = 192;
 
+   inline uint8_t *HGRPage1Base() {
+      return (uint8_t *)0x2000;
+   }
 
    class HGRRow {
    public:
@@ -19,6 +22,8 @@ namespace a2 {
    private:
       static uint16_t rowOffsets[192];
    };
+
+   void HGRFill(uint8_t value);
 
 }
 
