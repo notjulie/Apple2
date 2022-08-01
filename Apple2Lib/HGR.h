@@ -15,8 +15,14 @@ namespace a2 {
    public:
       static void InitializeRowOffsets();
 
-      static inline uint16_t GetIndex(uint8_t row) {
-         return rowOffsetsLow[row] | (rowOffsetsHigh[row]<<8);
+      static inline uint8_t *GetRowAddress(uint8_t row) {
+         return (uint8_t *)(rowOffsetsLow[row] | (rowOffsetsHigh[row]<<8));
+      }
+
+      static inline uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) {
+         // we can simplify this... the offset doesn't affect the hight byte so
+         // we don't have to do 16-bit math
+         return (uint8_t *)(((uint8_t)(rowOffsetsLow[row] + byteOffset)) | (rowOffsetsHigh[row]<<8));
       }
 
    private:

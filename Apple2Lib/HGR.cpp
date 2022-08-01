@@ -21,7 +21,7 @@ namespace a2 {
                   (k << 10)
                ;
                rowOffsetsLow[index] = (uint8_t)rowOffset;
-               rowOffsetsHigh[index] = (uint8_t)(rowOffset>>8);
+               rowOffsetsHigh[index] = 0x20 + (uint8_t)(rowOffset>>8);
                ++index;
             }
          }
@@ -32,7 +32,7 @@ namespace a2 {
    {
       for (int y=0; y<192; ++y)
       {
-         uint8_t *p = (uint8_t *)(0x2000 + a2::HGRRow::GetIndex(y));
+         uint8_t *p = a2::HGRRow::GetRowAddress(y);
          c6502::memset8(p, value, 40);
       }
    }
