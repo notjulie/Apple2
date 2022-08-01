@@ -16,11 +16,12 @@ namespace a2 {
       static void InitializeRowOffsets();
 
       static inline uint16_t GetIndex(uint8_t row) {
-         return rowOffsets[row];
+         return rowOffsetsLow[row] | (rowOffsetsHigh[row]<<8);
       }
 
    private:
-      static uint16_t rowOffsets[192];
+      static uint8_t rowOffsetsLow[192];
+      static uint8_t rowOffsetsHigh[192];
    };
 
    void HGRFill(uint8_t value);

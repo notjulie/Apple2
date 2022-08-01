@@ -4,20 +4,26 @@
 
 namespace a2 {
 
-   uint16_t HGRRow::rowOffsets[192];
+   uint8_t HGRRow::rowOffsetsLow[192];
+   uint8_t HGRRow::rowOffsetsHigh[192];
 
    void HGRRow::InitializeRowOffsets() {
       uint8_t index = 0;
-      for (uint8_t i=0; i<=120; i+=40)
+      for (uint8_t i=0; i<120; i+=40)
       {
          for (uint8_t j=0; j<8; ++j)
          {
             for (uint8_t k=0; k<8; ++k)
-               rowOffsets[index++] =
+            {
+               uint16_t rowOffset =
                   i |
                   (j << 7) |
                   (k << 10)
                ;
+               rowOffsetsLow[index] = (uint8_t)rowOffset;
+               rowOffsetsHigh[index] = (uint8_t)(rowOffset>>8);
+               ++index;
+            }
          }
       }
    }
