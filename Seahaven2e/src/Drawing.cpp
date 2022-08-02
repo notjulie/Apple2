@@ -2,11 +2,9 @@
 #include "Drawing.h"
 #include <stdint.h>
 #include <Apple2Lib/HGRRowTable.h>
+#include <Apple2Lib/HGRWord.h>
 #include <C6502/Memory.h>
 
-const uint16_t WWWWWWWWWWWWWW = 0xFFFF;
-const uint16_t WRRRRRRRRRRRRR = 0xAAD5;
-const uint16_t _RRRRRRRRRRRRR = 0xA8D5;
 
 const a2::HGRRowTable hgr;
 
@@ -48,20 +46,8 @@ void DrawCardBackground(uint8_t row, uint8_t byteOffset)
  */
 void DrawABunchOfCards()
 {
-   //for (uint8_t offset=0; offset<40; offset+=4)
-      //DrawCardBackground(10, offset);
-
-   uint16_t pattern = _RRRRRRRRRRRRR;
-   uint8_t row = 5;
-   uint8_t byteOffset = 10;
-   for (uint8_t i=0; i<20; ++i)
-   {
-      uint8_t *rowPointer = hgr.GetByteAddress(row++, byteOffset);
-      rowPointer[0] = c6502::hi8(pattern);
-      rowPointer[1] = c6502::lo8(pattern);
-      rowPointer[2] = c6502::hi8(pattern);
-      rowPointer[3] = c6502::lo8(pattern);
-   }
+   for (uint8_t offset=0; offset<40; offset+=4)
+      DrawCardBackground(10, offset);
 }
 
 void DrawBackground()
@@ -69,4 +55,57 @@ void DrawBackground()
    hgr.Fill(0);
 }
 
+void DrawTest()
+{
+   static const a2::HGRWord black ("              ");
+   static const a2::HGRWord white ("WWWWWWWWWWWWWW");
+   static const a2::HGRWord red   ("RRRRRRRRRRRRRR");
+   static const a2::HGRWord blue  ("BBBBBBBBBBBBBB");
+   static const a2::HGRWord violet("VVVVVVVVVVVVVV");
+   static const a2::HGRWord green ("GGGGGGGGGGGGGG");
 
+   uint8_t y = 10;
+   uint8_t *row;
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = white.GetLeft();
+      row[1] = white.GetRight();
+   }
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = black.GetLeft();
+      row[1] = black.GetRight();
+   }
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = red.GetLeft();
+      row[1] = red.GetRight();
+   }
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = blue.GetLeft();
+      row[1] = blue.GetRight();
+   }
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = violet.GetLeft();
+      row[1] = violet.GetRight();
+   }
+
+   for (uint8_t i=0; i<10; ++i)
+   {
+      row = hgr.GetByteAddress(y++, 10);
+      row[0] = green.GetLeft();
+      row[1] = green.GetRight();
+   }
+}
