@@ -45,6 +45,8 @@
 		</Linker>
 		<Unit filename="../Apple2Lib/HGR.cpp" />
 		<Unit filename="../Apple2Lib/HGR.h" />
+		<Unit filename="../Apple2Lib/HGRRowTable.cpp" />
+		<Unit filename="../Apple2Lib/HGRRowTable.h" />
 		<Unit filename="../Apple2Lib/IO.h" />
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../Apple2SDK/Apple2ROM.h" />

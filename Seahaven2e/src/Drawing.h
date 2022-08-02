@@ -2,6 +2,10 @@
 #ifndef DRAWING_H
 #define DRAWING_H
 
-void DrawABunchOfRectangles();
+#include <stdint.h>
+
+void DrawBackground();
+void DrawCardBackground(uint8_t row, uint8_t byteOffset);
+void DrawABunchOfCards();
 
 #endif // DRAWING_H

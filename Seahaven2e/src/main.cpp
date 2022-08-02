@@ -7,21 +7,18 @@
 #include "Drawing.h"
 
 
+
 /** \brief
  * Main entry point
  */
 extern "C" int main()
 {
-   // call initilization
-   a2::HGRRow::InitializeRowOffsets();
-
    // set HGR
    a2::HIRESON();
    a2::TEXTOFF();
 
    // dump to the HGR screen
-   a2::HGRFill(0x00);
-
-   DrawABunchOfRectangles();
+   DrawBackground();
+   DrawABunchOfCards();
 }
 
