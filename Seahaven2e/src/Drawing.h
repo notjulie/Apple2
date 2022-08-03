@@ -8,5 +8,6 @@ void DrawBackground();
 void DrawCardBackground(uint8_t row, uint8_t byteOffset);
 void DrawABunchOfCards();
 void DrawTest();
+void DrawSprites();
 
 #endif // DRAWING_H

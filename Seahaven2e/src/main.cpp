@@ -20,6 +20,7 @@ extern "C" int main()
    // dump to the HGR screen
    DrawBackground();
    //DrawABunchOfCards();
-   DrawTest();
+   //DrawTest();
+   DrawSprites();
 }
 

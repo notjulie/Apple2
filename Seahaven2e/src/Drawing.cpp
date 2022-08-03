@@ -55,57 +55,68 @@ void DrawBackground()
    hgr.Fill(0);
 }
 
-void DrawTest()
+
+static const a2::HGRWord club[] {
+   "WWWWWWWWWWWWWW",
+   "WWWWWW  WWWWWW",
+   "WWWWW    WWWWW",
+   "WWWWWW  WWWWWW",
+   "WWW        WWW",
+   "WWW        WWW",
+   "WWWWWW  WWWWWW",
+   "WWWWW    WWWWW",
+   "WWWWWWWWWWWWWW",
+};
+
+static const a2::HGRWord spade[] {
+   "WWWWWWWWWWWWWW",
+   "WWWWWW  WWWWWW",
+   "WWWWW    WWWWW",
+   "WWW        WWW",
+   "WW          WW",
+   "WWW        WWW",
+   "WWWWWW  WWWWWW",
+   "WWWWW    WWWWW",
+   "WWWWWWWWWWWWWW",
+};
+
+static const a2::HGRWord heart[] {
+   "WWWWWWWWWWWWWW",
+   "WWWRRRWWRRWWWW",
+   "WRRRRRRRRRRRWW",
+   "WWRRRRRRRRRWWW",
+   "WWWRRRRRRRWWWW",
+   "WWWWRRRRRWWWWW",
+   "WWWWWRRRWWWWWW",
+   "WWWWWWWWWWWWWW",
+};
+
+static const a2::HGRWord diamond[] {
+   "WWWWWWWWWWWWWW",
+   "WWWWWRRRWWWWWW",
+   "WWWWRRRRRWWWWW",
+   "WWWRRRRRRRWWWW",
+   "WWRRRRRRRRRWWW",
+   "WWWRRRRRRRWWWW",
+   "WWWWRRRRRWWWWW",
+   "WWWWWRRRWWWWWW",
+   "WWWWWWWWWWWWWW",
+};
+
+void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 {
-   static const a2::HGRWord black ("              ");
-   static const a2::HGRWord white ("WWWWWWWWWWWWWW");
-   static const a2::HGRWord red   ("RRRRRRRRRRRRRR");
-   static const a2::HGRWord blue  ("BBBBBBBBBBBBBB");
-   static const a2::HGRWord violet("VVVVVVVVVVVVVV");
-   static const a2::HGRWord green ("GGGGGGGGGGGGGG");
-
-   uint8_t y = 10;
-   uint8_t *row;
-
-   for (uint8_t i=0; i<10; ++i)
+   for (int i=0; i<rows; ++i)
    {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = white.GetLeft();
-      row[1] = white.GetRight();
+      uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
+      rowPointer[0] = sprite[i].GetLeft();
+      rowPointer[1] = sprite[i].GetRight();
    }
+}
 
-   for (uint8_t i=0; i<10; ++i)
-   {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = black.GetLeft();
-      row[1] = black.GetRight();
-   }
-
-   for (uint8_t i=0; i<10; ++i)
-   {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = red.GetLeft();
-      row[1] = red.GetRight();
-   }
-
-   for (uint8_t i=0; i<10; ++i)
-   {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = blue.GetLeft();
-      row[1] = blue.GetRight();
-   }
-
-   for (uint8_t i=0; i<10; ++i)
-   {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = violet.GetLeft();
-      row[1] = violet.GetRight();
-   }
-
-   for (uint8_t i=0; i<10; ++i)
-   {
-      row = hgr.GetByteAddress(y++, 10);
-      row[0] = green.GetLeft();
-      row[1] = green.GetRight();
-   }
+void DrawSprites()
+{
+   DrawSprite(club, sizeof(club)/sizeof(club[0]), 10, 10);
+   DrawSprite(diamond, sizeof(diamond)/sizeof(diamond[0]), 30, 10);
+   DrawSprite(heart, sizeof(heart)/sizeof(heart[0]), 50, 10);
+   DrawSprite(spade, sizeof(spade)/sizeof(spade[0]), 70, 10);
 }
