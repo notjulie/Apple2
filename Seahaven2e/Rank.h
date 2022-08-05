@@ -2,10 +2,13 @@
 #ifndef RANK_H
 #define RANK_H
 
+#include <stdint.h>
+
 /** \brief
  * Rank enumeration
  */
 enum class Rank {
+   Null,
    Ace,
    Two,
    Three,

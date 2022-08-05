@@ -55,7 +55,7 @@ const CardTopSprite suits[4] {
    }
 };
 
-const CardTopSprite ranks[13] {
+const CardTopSprite Sprites::ranks[13] {
    // ace
    {
       " WWWWWWWWWWWWW",

@@ -89,7 +89,7 @@ void DrawSprites()
    // ranks
    for (auto rank=Rank::Ace; rank<=Rank::King; ++rank)
    {
-      DrawSprite(ranks[uint8_t(rank)], CardTopSpriteHeight, y, x);
+      DrawSprite(Sprites::GetRankSprite(rank), CardTopSpriteHeight, y, x);
       y += 10;
 
       if (y > 100)
