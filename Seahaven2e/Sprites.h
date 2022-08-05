@@ -10,5 +10,6 @@ const uint8_t CardTopSpriteHeight = 9;
 typedef a2::HGRWord CardTopSprite[CardTopSpriteHeight];
 
 extern const CardTopSprite suits[4];
+extern const CardTopSprite ranks[13];
 
 #endif // SPRITES_H

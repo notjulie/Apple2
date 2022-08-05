@@ -8,6 +8,7 @@
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
 
+#include "Rank.h"
 #include "Suit.h"
 #include "Sprites.h"
 
@@ -75,10 +76,26 @@ void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 
 void DrawSprites()
 {
+   uint8_t x = 4;
    uint8_t y = 10;
+
+   // suits
    for (auto suit=Suit::Clubs; suit<=Suit::Spades; ++suit)
    {
-      DrawSprite(suits[uint8_t(suit)], CardTopSpriteHeight, 10, y);
+      DrawSprite(suits[uint8_t(suit)], CardTopSpriteHeight, y, x);
       y += 10;
+   }
+
+   // ranks
+   for (auto rank=Rank::Ace; rank<=Rank::King; ++rank)
+   {
+      DrawSprite(ranks[uint8_t(rank)], CardTopSpriteHeight, y, x);
+      y += 10;
+
+      if (y > 100)
+      {
+         y = 10;
+         x += 4;
+      }
    }
 }

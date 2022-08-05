@@ -54,6 +54,7 @@
 		<Unit filename="../C6502/Memory.h" />
 		<Unit filename="Drawing.cpp" />
 		<Unit filename="Drawing.h" />
+		<Unit filename="Rank.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
 		<Unit filename="Suit.h" />
