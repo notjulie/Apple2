@@ -12,7 +12,7 @@ namespace a2 {
       /** \brief
        * Initializes an instance based on a string where each character represents a pixel color
        */
-      constexpr HGRWord(const char *s)
+      constexpr HGRWord(const char *s = "              ")
          : left(ParseByte(&s[0], 0)), right(ParseByte(&s[7], 1))
       {
       }

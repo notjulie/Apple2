@@ -52,14 +52,13 @@
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../Apple2SDK/Apple2ROM.h" />
 		<Unit filename="../C6502/Memory.h" />
-		<Unit filename="h/at91sam7a3.h" />
-		<Unit filename="h/sam7a3ek.h" />
+		<Unit filename="Drawing.cpp" />
+		<Unit filename="Drawing.h" />
+		<Unit filename="Sprites.cpp" />
+		<Unit filename="Sprites.h" />
+		<Unit filename="Suit.h" />
 		<Unit filename="ld/target.ld" />
-		<Unit filename="src/Drawing.cpp" />
-		<Unit filename="src/Drawing.h" />
-		<Unit filename="src/main.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

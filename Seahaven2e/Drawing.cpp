@@ -1,9 +1,15 @@
 
 #include "Drawing.h"
+
 #include <stdint.h>
 #include <Apple2Lib/HGRRowTable.h>
 #include <Apple2Lib/HGRWord.h>
+#include <Apple2Lib/IO.h>
+#include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
+
+#include "Suit.h"
+#include "Sprites.h"
 
 
 const a2::HGRRowTable hgr;
@@ -56,53 +62,6 @@ void DrawBackground()
 }
 
 
-static const a2::HGRWord club[] {
-   "WWWWWWWWWWWWWW",
-   "WWWWWW  WWWWWW",
-   "WWWWW    WWWWW",
-   "WWWWWW  WWWWWW",
-   "WWW        WWW",
-   "WWW        WWW",
-   "WWWWWW  WWWWWW",
-   "WWWWW    WWWWW",
-   "WWWWWWWWWWWWWW",
-};
-
-static const a2::HGRWord spade[] {
-   "WWWWWWWWWWWWWW",
-   "WWWWWW  WWWWWW",
-   "WWWWW    WWWWW",
-   "WWW        WWW",
-   "WW          WW",
-   "WWW        WWW",
-   "WWWWWW  WWWWWW",
-   "WWWWW    WWWWW",
-   "WWWWWWWWWWWWWW",
-};
-
-static const a2::HGRWord heart[] {
-   "WWWWWWWWWWWWWW",
-   "WWWRRRWWRRWWWW",
-   "WRRRRRRRRRRRWW",
-   "WWRRRRRRRRRWWW",
-   "WWWRRRRRRRWWWW",
-   "WWWWRRRRRWWWWW",
-   "WWWWWRRRWWWWWW",
-   "WWWWWWWWWWWWWW",
-};
-
-static const a2::HGRWord diamond[] {
-   "WWWWWWWWWWWWWW",
-   "WWWWWRRRWWWWWW",
-   "WWWWRRRRRWWWWW",
-   "WWWRRRRRRRWWWW",
-   "WWRRRRRRRRRWWW",
-   "WWWRRRRRRRWWWW",
-   "WWWWRRRRRWWWWW",
-   "WWWWWRRRWWWWWW",
-   "WWWWWWWWWWWWWW",
-};
-
 void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 {
    for (int i=0; i<rows; ++i)
@@ -113,10 +72,13 @@ void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
    }
 }
 
+
 void DrawSprites()
 {
-   DrawSprite(club, sizeof(club)/sizeof(club[0]), 10, 10);
-   DrawSprite(diamond, sizeof(diamond)/sizeof(diamond[0]), 30, 10);
-   DrawSprite(heart, sizeof(heart)/sizeof(heart[0]), 50, 10);
-   DrawSprite(spade, sizeof(spade)/sizeof(spade[0]), 70, 10);
+   uint8_t y = 10;
+   for (auto suit=Suit::Clubs; suit<=Suit::Spades; ++suit)
+   {
+      DrawSprite(suits[uint8_t(suit)], CardTopSpriteHeight, 10, y);
+      y += 10;
+   }
 }
