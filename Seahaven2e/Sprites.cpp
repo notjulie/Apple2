@@ -1,8 +1,10 @@
 
 #include "Sprites.h"
 
+PointerLookup<const CardTopSprite, 13> Sprites::ranksLookup;
+PointerLookup<const CardTopSprite, 4> Sprites::suitsLookup;
 
-const CardTopSprite suits[4] {
+const CardTopSprite Sprites::suits[4] {
    // club
    {
       "WWWWWWWWWWWW  ",
@@ -214,3 +216,16 @@ const CardTopSprite Sprites::ranks[13] {
       "WWWWWWWWWWWWWW",
    },
 };
+
+
+void Sprites::Initialize()
+{
+   const CardTopSprite *rankSprite = &ranks[0];
+   for (uint8_t i=0; i<13; ++i)
+      ranksLookup.Set(i, rankSprite++);
+
+   const CardTopSprite *suitSprite = &suits[0];
+   for (uint8_t i=0; i<4; ++i)
+      suitsLookup.Set(i, suitSprite++);
+}
+

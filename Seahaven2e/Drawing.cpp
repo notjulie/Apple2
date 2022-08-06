@@ -83,7 +83,7 @@ void DrawSprites()
    // suits
    for (auto suit=Suit::Clubs; suit<=Suit::Spades; ++suit)
    {
-      DrawSprite(suits[uint8_t(suit)], CardTopSpriteHeight, y, x);
+      DrawSprite(Sprites::GetSuitSprite(suit), CardTopSpriteHeight, y, x);
       y += 10;
    }
 
@@ -104,7 +104,7 @@ void DrawSprites()
 void DrawCard(Card &card, uint8_t x, uint8_t y)
 {
    DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
-   DrawSprite(suits[uint8_t(card.GetSuit())], CardTopSpriteHeight, y, x + 2);
+   DrawSprite(Sprites::GetSuitSprite(card.GetSuit()), CardTopSpriteHeight, y, x + 2);
 }
 
 void DrawGame()

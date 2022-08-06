@@ -7,6 +7,7 @@
 
 #include "Drawing.h"
 #include "Game.h"
+#include "Sprites.h"
 
 
 
@@ -15,6 +16,9 @@
  */
 extern "C" int main()
 {
+   // call initializes
+   Sprites::Initialize();
+
    // set HGR
    a2::HIRESON();
    a2::TEXTOFF();
