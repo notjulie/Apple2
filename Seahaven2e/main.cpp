@@ -4,7 +4,9 @@
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
+
 #include "Drawing.h"
+#include "Game.h"
 
 
 
@@ -17,10 +19,14 @@ extern "C" int main()
    a2::HIRESON();
    a2::TEXTOFF();
 
+   // new game
+   Game::instance.Initialize();
+
    // dump to the HGR screen
    DrawBackground();
    //DrawABunchOfCards();
    //DrawTest();
-   DrawSprites();
+   //DrawSprites();
+   DrawGame();
 }
 

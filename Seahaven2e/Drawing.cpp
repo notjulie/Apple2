@@ -8,6 +8,7 @@
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
 
+#include "Game.h"
 #include "Rank.h"
 #include "Suit.h"
 #include "Sprites.h"
@@ -97,5 +98,23 @@ void DrawSprites()
          y = 10;
          x += 4;
       }
+   }
+}
+
+void DrawCard(Card &card, uint8_t x, uint8_t y)
+{
+   DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
+   DrawSprite(suits[uint8_t(card.GetSuit())], CardTopSpriteHeight, y, x + 2);
+}
+
+void DrawGame()
+{
+   uint8_t x = 0;
+   for (uint8_t i=0; i<10; ++i)
+   {
+      Column &column = Game::instance.GetColumn(i);
+      for (uint8_t j=0; j<5; ++j)
+         DrawCard(column.GetCard(j), x, j * 10);
+      x += 4;
    }
 }

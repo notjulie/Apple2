@@ -1,7 +1,9 @@
 
 #include "Game.h"
 
-Game::Game()
+Game Game::instance;
+
+void Game::Initialize()
 {
    uint8_t cardNumber = 0;
    for (uint8_t column=0; column<10; ++column)

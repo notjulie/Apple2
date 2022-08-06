@@ -9,9 +9,12 @@ class Card
 {
 public:
    inline void SetFromCardNumber(uint8_t cardNumber) {
-      rank = (Rank)(cardNumber & 3);
-      suit = (Suit)(1 + (cardNumber >> 2));
+      suit = (Suit)(cardNumber & 3);
+      rank = (Rank)(1 + (cardNumber >> 2));
    }
+
+   inline Rank GetRank() const { return rank; }
+   inline Suit GetSuit() const { return suit; }
 
 private:
    Suit suit;
@@ -30,9 +33,11 @@ private:
 class Game
 {
 public:
-   Game();
-
+   void Initialize();
    inline Column &GetColumn(uint8_t index) { return columns[index];}
+
+public:
+   static Game instance;
 
 private:
    Card towers[4];
