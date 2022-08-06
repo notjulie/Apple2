@@ -5,6 +5,9 @@
 #include "Rank.h"
 #include "Suit.h"
 
+/** \brief
+ * Represents a card in our game table
+ */
 class Card
 {
 public:
@@ -18,9 +21,13 @@ public:
 
 private:
    Suit suit;
-   Rank rank = Rank::Null;
+   Rank rank;
 };
 
+
+/** \brief
+ * Represents a column on the game board
+ */
 class Column
 {
 public:
@@ -30,6 +37,10 @@ private:
    Card  cards[5];
 };
 
+
+/** \brief
+ * Represents the game as a whole
+ */
 class Game
 {
 public:
