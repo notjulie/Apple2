@@ -3,6 +3,7 @@
 #define HGRROWTABLE_H
 
 #include <stdint.h>
+#include <C6502/LookupTable.h>
 
 namespace a2 {
 
@@ -16,7 +17,6 @@ namespace a2 {
        * Initializes a new instance of class HGRRowTable
        */
       constexpr HGRRowTable()
-         :rowOffsetsLow(), rowOffsetsHigh()
       {
          uint8_t index = 0;
          for (uint8_t i=0; i<120; i+=40)
@@ -30,9 +30,8 @@ namespace a2 {
                      (j << 7) |
                      (k << 10)
                   ;
-                  rowOffsetsLow[index] = (uint8_t)rowOffset;
-                  rowOffsetsHigh[index] = 0x20 + (uint8_t)(rowOffset>>8);
-                  ++index;
+
+                  rowPointers.Set(index++, (uint8_t *)(0x2000 + rowOffset));
                }
             }
          }
@@ -42,21 +41,27 @@ namespace a2 {
        * Returns the address of the given row
        */
       inline uint8_t *GetRowAddress(uint8_t row) const {
-         return (uint8_t *)(rowOffsetsLow[row] | (rowOffsetsHigh[row]<<8));
+         return rowPointers.Get(row);
       }
 
       /** \brief
        * Returns the address of the byte at the given offset
        */
       inline uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
-         return (uint8_t *)(((uint8_t)(rowOffsetsLow[row] + byteOffset)) | (rowOffsetsHigh[row]<<8));
+         // NOTE: this has a cheat... it adds the offset to the low byte
+         // but does not add the carry to the high byte, which is an important
+         // performance improvement
+         return (uint8_t *)
+            (
+               (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+               (rowPointers.GetHighByte(row) << 8)
+            );
       }
 
       void Fill(uint8_t value) const;
 
    private:
-      uint8_t rowOffsetsLow[192];
-      uint8_t rowOffsetsHigh[192];
+      c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
    };
 
 }
