@@ -14,6 +14,12 @@
 #include "Sprites.h"
 
 
+static const uint8_t CardHeight = 33;
+static const uint8_t TowersTop = 3;
+static const uint8_t TowersBottom = TowersTop + CardHeight;
+static const uint8_t TowersLeft = 12;
+static const uint8_t ColumnsTop = TowersBottom + 4;
+
 const a2::HGRRowTable hgr;
 
 /** \brief
@@ -101,20 +107,77 @@ void DrawSprites()
    }
 }
 
-void DrawCard(Card &card, uint8_t x, uint8_t y)
+void DrawCardTop(Card &card, uint8_t x, uint8_t y)
 {
    DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
    DrawSprite(Sprites::GetSuitSprite(card.GetSuit()), CardTopSpriteHeight, y, x + 2);
 }
 
-void DrawGame()
+void DrawCardBottom(uint8_t x, uint8_t y)
+{
+   uint8_t * row;
+
+   for (uint8_t i=0; i<CardHeight - CardTopSpriteHeight - 1; ++i)
+   {
+      row = hgr.GetByteAddress(y++, x);
+      row[0] = 0x7F;
+      row[1] = 0x7F;
+      row[2] = 0x7F;
+      row[3] = 0x3F;
+   }
+
+   row = hgr.GetByteAddress(y++, x);
+   row[0] = 0x7E;
+   row[1] = 0x7F;
+   row[2] = 0x7F;
+   row[3] = 0x1F;
+}
+
+
+void DrawTowers()
+{
+   uint8_t x = TowersLeft;
+
+   for (uint8_t tower=0; tower<4; ++tower)
+   {
+      Card &card = Game::instance.GetTower(tower);
+      if (!card.IsNull())
+      {
+         DrawCardTop(card, x, TowersTop);
+         DrawCardBottom(x, TowersTop + CardTopSpriteHeight);
+      }
+      x += 4;
+   }
+}
+
+void DrawColumns()
 {
    uint8_t x = 0;
+
    for (uint8_t i=0; i<10; ++i)
    {
       Column &column = Game::instance.GetColumn(i);
+
+      uint8_t y = ColumnsTop;
       for (uint8_t j=0; j<5; ++j)
-         DrawCard(column.GetCard(j), x, j * 10);
+      {
+         DrawCardTop(column.GetCard(j), x, y);
+         if (j == 4)
+         {
+            DrawCardBottom(x, y + CardTopSpriteHeight);
+         }
+         else
+         {
+            y += CardTopSpriteHeight + 1;
+         }
+      }
+
       x += 4;
    }
+}
+
+void DrawGame()
+{
+   DrawColumns();
+   DrawTowers();
 }

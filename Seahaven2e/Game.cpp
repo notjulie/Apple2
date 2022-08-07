@@ -14,7 +14,9 @@ void Game::Initialize()
       }
    }
 
+   towers[0].SetNull();
    towers[1].SetFromCardNumber(cardNumber++);
    towers[2].SetFromCardNumber(cardNumber++);
+   towers[3].SetNull();
 }
 

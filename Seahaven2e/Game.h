@@ -18,6 +18,8 @@ public:
 
    inline Rank GetRank() const { return rank; }
    inline Suit GetSuit() const { return suit; }
+   inline bool IsNull() const { return rank == Rank::Null; }
+   inline void SetNull() { rank = Rank::Null; }
 
 private:
    Suit suit;
@@ -46,6 +48,7 @@ class Game
 public:
    void Initialize();
    inline Column &GetColumn(uint8_t index) { return columns[index];}
+   inline Card &GetTower(uint8_t index) { return towers[index]; }
 
 public:
    static Game instance;
