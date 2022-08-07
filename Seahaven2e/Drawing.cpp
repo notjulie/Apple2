@@ -120,17 +120,17 @@ void DrawCardBottom(uint8_t x, uint8_t y)
    for (uint8_t i=0; i<CardHeight - CardTopSpriteHeight - 1; ++i)
    {
       row = hgr.GetByteAddress(y++, x);
-      row[0] = 0x7F;
-      row[1] = 0x7F;
-      row[2] = 0x7F;
-      row[3] = 0x3F;
+      row[0] = 0xFF;
+      row[1] = 0xFF;
+      row[2] = 0xFF;
+      row[3] = 0xBF;
    }
 
    row = hgr.GetByteAddress(y++, x);
-   row[0] = 0x7E;
-   row[1] = 0x7F;
-   row[2] = 0x7F;
-   row[3] = 0x1F;
+   row[0] = 0xFE;
+   row[1] = 0xFF;
+   row[2] = 0xFF;
+   row[3] = 0x9F;
 }
 
 

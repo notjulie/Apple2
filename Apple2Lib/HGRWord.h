@@ -41,6 +41,11 @@ namespace a2 {
                break;
 
             case 'W':
+               isGroup2 = true;
+               result |= (1<<i);
+               break;
+
+            case 'w':
                result |= (1<<i);
                break;
 
