@@ -3,8 +3,8 @@
 #define SPRITES_H
 
 #include <stdint.h>
+#include <C6502/LookupTable.h>
 #include <Apple2Lib/HGRWord.h>
-#include "PointerLookup.h"
 #include "Rank.h"
 #include "Suit.h"
 
@@ -26,10 +26,10 @@ public:
 
 private:
    static const CardTopSprite ranks[13];
-   static PointerLookup<const CardTopSprite, 13> ranksLookup;
+   static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
 
    static const CardTopSprite suits[4];
-   static PointerLookup<const CardTopSprite, 4> suitsLookup;
+   static c6502::Lookup16Bit<const CardTopSprite *, 4> suitsLookup;
 };
 
 #endif // SPRITES_H

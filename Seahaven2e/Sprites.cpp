@@ -1,8 +1,8 @@
 
 #include "Sprites.h"
 
-PointerLookup<const CardTopSprite, 13> Sprites::ranksLookup;
-PointerLookup<const CardTopSprite, 4> Sprites::suitsLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 13> Sprites::ranksLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::suitsLookup;
 
 const CardTopSprite Sprites::suits[4] {
    // club
