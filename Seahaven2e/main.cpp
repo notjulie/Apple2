@@ -28,9 +28,22 @@ extern "C" int main()
 
    // dump to the HGR screen
    DrawBackground();
-   //DrawABunchOfCards();
-   //DrawTest();
-   //DrawSprites();
    DrawGame();
+
+   // enter main loop
+   for (;;)
+   {
+      switch (a2::getchar())
+      {
+      case 'N':
+         // new game... doesn't really do anything useful, placeholder for now
+         DrawBackground();
+         DrawGame();
+         break;
+
+      default:
+         break;
+      }
+   }
 }
 

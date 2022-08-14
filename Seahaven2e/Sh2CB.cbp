@@ -48,6 +48,7 @@
 		<Unit filename="../Apple2Lib/HGRRowTable.cpp" />
 		<Unit filename="../Apple2Lib/HGRRowTable.h" />
 		<Unit filename="../Apple2Lib/HGRWord.h" />
+		<Unit filename="../Apple2Lib/IO.cpp" />
 		<Unit filename="../Apple2Lib/IO.h" />
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../C6502/LookupTable.h" />

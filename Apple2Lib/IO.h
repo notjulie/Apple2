@@ -2,6 +2,8 @@
 #ifndef APPLE2IO_H
 #define APPLE2IO_H
 
+#include <stdint.h>
+
 namespace a2 {
 
    /** \brief
@@ -36,6 +38,8 @@ namespace a2 {
    {
       asm volatile ("STA\t$C051" : );
    }
+
+   int16_t getchar();
 }
 
 /*
