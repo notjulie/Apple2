@@ -7,6 +7,7 @@
 
 #include "Drawing.h"
 #include "Game.h"
+#include "Random.h"
 #include "Sprites.h"
 
 

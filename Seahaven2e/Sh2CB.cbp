@@ -14,7 +14,6 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
-					<Add option="-g" />
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
@@ -41,7 +40,6 @@
 		<Linker>
 			<Add option="-T ld/target.ld" />
 			<Add option="--Map Sh2CB.map" />
-			<Add option="-O 5" />
 		</Linker>
 		<Unit filename="../Apple2Lib/HGR.cpp" />
 		<Unit filename="../Apple2Lib/HGR.h" />
@@ -57,6 +55,8 @@
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
+		<Unit filename="Random.cpp" />
+		<Unit filename="Random.h" />
 		<Unit filename="Rank.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
