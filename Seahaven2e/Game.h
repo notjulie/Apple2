@@ -46,7 +46,7 @@ private:
 class Game
 {
 public:
-   void Initialize();
+   void Shuffle();
    inline Column &GetColumn(uint8_t index) { return columns[index];}
    inline Card &GetTower(uint8_t index) { return towers[index]; }
 

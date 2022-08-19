@@ -17,7 +17,6 @@
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
-					<Add library="libcrt.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -55,6 +54,8 @@
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
+		<Unit filename="PersistentState.cpp" />
+		<Unit filename="PersistentState.h" />
 		<Unit filename="Random.cpp" />
 		<Unit filename="Random.h" />
 		<Unit filename="Rank.h" />

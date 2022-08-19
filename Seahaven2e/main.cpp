@@ -7,6 +7,7 @@
 
 #include "Drawing.h"
 #include "Game.h"
+#include "PersistentState.h"
 #include "Random.h"
 #include "Sprites.h"
 
@@ -25,7 +26,7 @@ extern "C" int main()
    a2::TEXTOFF();
 
    // new game
-   Game::instance.Initialize();
+   Game::instance.Shuffle();
 
    // dump to the HGR screen
    DrawBackground();
@@ -37,7 +38,9 @@ extern "C" int main()
       switch (a2::getchar())
       {
       case 'N':
-         // new game... doesn't really do anything useful, placeholder for now
+         // new game...
+         Random::Seed(PersistentState::instance.GetNextGameSeed());
+         Game::instance.Shuffle();
          DrawBackground();
          DrawGame();
          break;
