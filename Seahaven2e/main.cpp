@@ -17,7 +17,7 @@
  */
 extern "C" int main()
 {
-   // call initializes
+   // call initializers
    Sprites::Initialize();
 
    // set HGR
