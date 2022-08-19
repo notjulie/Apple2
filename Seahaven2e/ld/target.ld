@@ -23,6 +23,7 @@ __rc0 = 0x00E0;
 INCLUDE imag-regs.ld
 ASSERT(__rc0 == 0x00E0, "Inconsistent zero page map.")
 ASSERT(__rc31 == 0x00FF, "Inconsistent zero page map.")
+MEMORY { zp : ORIGIN = __rc31 + 1, LENGTH = 0x90 - (__rc31 + 1) }
 
 /* Set initial soft stack address to end of BASIC area. (It grows down.) */
 __stack = 0x9FFF;

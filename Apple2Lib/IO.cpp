@@ -12,7 +12,7 @@ namespace a2 {
    int16_t getchar()
    {
       // get a character if we have one
-      int8_t b = *(int8_t *)KBD;
+      int8_t b = *(volatile int8_t *)KBD;
       if (b < 0)
       {
          // got a character; clear the strobe

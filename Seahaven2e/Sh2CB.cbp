@@ -25,7 +25,8 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-mcpu=arm7tdmi" />
+			<Add option="--target=mos" />
+			<Add option="-flto" />
 			<Add option="-O2" />
 			<Add option="-Wall" />
 			<Add option="-g" />

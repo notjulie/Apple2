@@ -8,7 +8,11 @@
 class Random {
 public:
    static uint8_t GetByte();
-   static void Seed(uint16_t seed);
+   /*static inline void Seed(uint16_t seed){
+         a = seed >> 8;
+         b = (uint8_t)seed;
+      }*/
+
 
 private:
    static uint8_t a;

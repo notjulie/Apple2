@@ -24,9 +24,10 @@ extern "C" int main()
    // set HGR
    a2::HIRESON();
    a2::TEXTOFF();
+   a2::MIXEDON();
 
    // new game
-   Game::instance.Shuffle();
+   Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
 
    // dump to the HGR screen
    DrawBackground();
@@ -39,8 +40,8 @@ extern "C" int main()
       {
       case 'N':
          // new game...
-         Random::Seed(PersistentState::instance.GetNextGameSeed());
-         Game::instance.Shuffle();
+         //Random::Seed(PersistentState::instance.GetNextGameSeed());
+         Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
          DrawBackground();
          DrawGame();
          break;

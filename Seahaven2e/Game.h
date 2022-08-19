@@ -11,10 +11,7 @@
 class Card
 {
 public:
-   inline void SetFromCardNumber(uint8_t cardNumber) {
-      suit = (Suit)(cardNumber & 3);
-      rank = (Rank)(1 + (cardNumber >> 2));
-   }
+   void SetFromCardNumber(uint8_t cardNumber);
 
    inline Rank GetRank() const { return rank; }
    inline Suit GetSuit() const { return suit; }
@@ -46,7 +43,7 @@ private:
 class Game
 {
 public:
-   void Shuffle();
+   void Shuffle16(uint16_t instruction);
    inline Column &GetColumn(uint8_t index) { return columns[index];}
    inline Card &GetTower(uint8_t index) { return towers[index]; }
 
@@ -54,6 +51,10 @@ public:
    static Game instance;
 
 private:
+   void Shuffle8(uint8_t instruction);
+
+private:
+   uint8_t deck[52];
    Card towers[4];
    Column columns[10];
 };

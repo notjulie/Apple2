@@ -12,17 +12,15 @@ uint8_t Random::b;
  */
 uint8_t Random::GetByte()
 {
-   uint8_t newValue = a + b + 7;
-   a = b;
-   b = newValue;
-   return b;
+   b += 37;
+   return b ^ a;
 }
 
 /** \brief
  * Seeds our generator
  */
-void Random::Seed(uint16_t seed)
+/*void Random::Seed(uint16_t seed)
 {
    a = seed >> 8;
    b = (uint8_t)seed;
-}
+}*/

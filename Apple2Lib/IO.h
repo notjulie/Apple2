@@ -24,6 +24,23 @@ namespace a2 {
    }
 
    /** \brief
+    * Select graphics mode without 4 lines of text at bottom
+    */
+   inline void MIXEDOFF()
+   {
+      asm volatile ("STA\t$C052" : );
+   }
+
+
+   /** \brief
+    * Select graphics mode with 4 lines of text at bottom
+    */
+   inline void MIXEDON()
+   {
+      asm volatile ("STA\t$C053" : );
+   }
+
+   /** \brief
     * Select graphics mode
     */
    inline void TEXTOFF()

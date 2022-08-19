@@ -34,6 +34,31 @@ namespace c6502 {
       : "a", "y" // clobbers
       );
    }
+
+   /** \brief
+    * If the compiler detects that it can replace a loop with memcpy, it
+    * will do so, and as a result link in the entire runtime.  This is a
+    * simple inline replacement for memcpy when the count < 256.
+    */
+   inline void memcpy8(void *dest, const void *src, uint8_t count) {
+      asm volatile (
+         // load the count into Y, bail if it's zero
+         "LDY\t%2\n"
+         "BEQ\t2f\n"
+
+      "1:\n"
+         // decrement our counter, copy and continue if y != 0
+         "DEY\n"
+         "LDA\t(%1),y\n"
+         "STA\t(%0),y\n"
+         "BNE\t1b\n"
+      "2:\n"
+
+      : // outputs : none
+      : "r"(dest), "r"(src),"r"(count) // input
+      : "a", "y" // clobbers
+      );
+   }
 }
 
 #endif // C6502_MEMORY_H
