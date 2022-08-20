@@ -49,8 +49,10 @@ namespace c6502 {
       "1:\n"
          // decrement our counter, copy and continue if y != 0
          "DEY\n"
+         "PHP\n"
          "LDA\t(%1),y\n"
          "STA\t(%0),y\n"
+         "PLP\n"
          "BNE\t1b\n"
       "2:\n"
 

@@ -57,8 +57,6 @@
 		<Unit filename="Game.h" />
 		<Unit filename="PersistentState.cpp" />
 		<Unit filename="PersistentState.h" />
-		<Unit filename="Random.cpp" />
-		<Unit filename="Random.h" />
 		<Unit filename="Rank.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />

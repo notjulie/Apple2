@@ -4,7 +4,6 @@
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
-#include "Random.h"
 
 Game Game::instance;
 
@@ -22,21 +21,6 @@ void Game::Shuffle16(uint16_t instruction)
 
    // shuffle 8 times according to low byte
    Shuffle8((uint8_t)instruction);
-
-   // shuffle
-   /*for (uint8_t i=0; i<5; ++i)
-   {
-      for (int8_t cardIndex=51; cardIndex>=0; --cardIndex)
-      {
-         uint8_t randomIndex = 63 & Random::GetByte();
-         if (randomIndex > 52)
-            randomIndex -= 52;
-
-         uint8_t temp = deck[cardIndex];
-         deck[cardIndex] = deck[randomIndex];
-         deck[randomIndex] = temp;
-      }
-   }*/
 
    // deal
    uint8_t cardIndex = 0;
@@ -57,6 +41,7 @@ void Game::Shuffle16(uint16_t instruction)
 void Game::Shuffle8(uint8_t instruction)
 {
    uint8_t deckCopy[52];
+   uint8_t index;
 
    // we have two types of shuffling, and we choose one each time through
    // based on the bits in the instruction
@@ -66,17 +51,17 @@ void Game::Shuffle8(uint8_t instruction)
 
       if (instruction & 1)
       {
-         uint8_t index = 0;
+         index = 0;
          for (int j=0; j<26; ++j)
          {
-            deck[index++] = deckCopy[j];
+            deck[index++] = deckCopy[25 - j];
             deck[index++] = deckCopy[j + 26];
          }
       }
       else
       {
-         uint8_t index = 0;
-         for (int j=0; j<52; ++j)
+         index = 23;
+         for (int j=51; j>=0; --j)
          {
             deck[j] = deckCopy[index];
             index += 7;

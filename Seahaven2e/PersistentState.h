@@ -12,7 +12,7 @@ public:
    static PersistentState instance;
 
 private:
-   uint16_t gameSeed;
+   uint16_t gameSeed = 0;
 };
 
 #endif // PERSISTENT_STATE_H

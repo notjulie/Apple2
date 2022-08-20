@@ -8,7 +8,6 @@
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
-#include "Random.h"
 #include "Sprites.h"
 
 
@@ -20,6 +19,7 @@ extern "C" int main()
 {
    // call initializers
    Sprites::Initialize();
+   PersistentState::instance = PersistentState();
 
    // set HGR
    a2::HIRESON();
@@ -40,7 +40,6 @@ extern "C" int main()
       {
       case 'N':
          // new game...
-         //Random::Seed(PersistentState::instance.GetNextGameSeed());
          Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
          DrawBackground();
          DrawGame();
