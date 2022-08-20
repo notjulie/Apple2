@@ -44,17 +44,22 @@ namespace c6502 {
       asm volatile (
          // load the count into Y, bail if it's zero
          "LDY\t%2\n"
-         "BEQ\t2f\n"
+         "BEQ\t3f\n"
+         "BNE\t2f\n"
 
       "1:\n"
-         // decrement our counter, copy and continue if y != 0
-         "DEY\n"
-         "PHP\n"
+         // copy
          "LDA\t(%1),y\n"
          "STA\t(%0),y\n"
-         "PLP\n"
-         "BNE\t1b\n"
       "2:\n"
+         // decrement Y, continue if not zero
+         "DEY\n"
+         "BNE\t1b\n"
+
+         // one last copy at y = 0
+         "LDA\t(%1),y\n"
+         "STA\t(%0),y\n"
+      "3:\n"
 
       : // outputs : none
       : "r"(dest), "r"(src),"r"(count) // input
