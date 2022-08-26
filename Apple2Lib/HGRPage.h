@@ -1,6 +1,6 @@
 
-#ifndef HGRROWTABLE_H
-#define HGRROWTABLE_H
+#ifndef HGRPAGE_H
+#define HGRPAGE_H
 
 #include <stdint.h>
 #include <C6502/LookupTable.h>
@@ -11,13 +11,20 @@ namespace a2 {
     * Look up table that returns the address of a row in a HGR page given its
     * Y coordinate
     */
-   class HGRRowTable {
+   class HGRPage {
    public:
+      constexpr HGRPage(uint8_t _pageOffset)
+         : pageOffset(_pageOffset)
+      {
+      }
+
       /** \brief
        * Initializes a new instance of class HGRRowTable
        */
-      constexpr HGRRowTable()
+      static constexpr c6502::Lookup16Bit<uint8_t *, 192> GetLookupTable()
       {
+         c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
+
          uint8_t index = 0;
          for (uint8_t i=0; i<120; i+=40)
          {
@@ -31,10 +38,12 @@ namespace a2 {
                      (k << 10)
                   ;
 
-                  rowPointers.Set(index++, (uint8_t *)(0x2000 + rowOffset));
+                  rowPointers.Set(index++, (uint8_t *)rowOffset);
                }
             }
          }
+
+         return rowPointers;
       }
 
       /** \brief
@@ -54,14 +63,17 @@ namespace a2 {
          return (uint8_t *)
             (
                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
-               (rowPointers.GetHighByte(row) << 8)
+               ((pageOffset + rowPointers.GetHighByte(row)) << 8)
             );
       }
 
       void Fill(uint8_t value) const;
 
    private:
-      c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
+      uint8_t pageOffset;
+
+   private:
+      static c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
    };
 
 }

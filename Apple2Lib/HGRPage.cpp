@@ -1,13 +1,15 @@
 
-#include "HGRRowTable.h"
+#include "HGRPage.h"
 #include <C6502/Memory.h>
 
 namespace a2 {
 
+   c6502::Lookup16Bit<uint8_t *, 192> HGRPage::rowPointers = HGRPage::GetLookupTable();
+
    /** \brief
     * Fills the entire HGR window with the given value
     */
-   void HGRRowTable::Fill(uint8_t value) const
+   void HGRPage::Fill(uint8_t value) const
    {
       for (uint8_t y=0; y<192; ++y)
       {

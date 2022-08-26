@@ -2,7 +2,7 @@
 #include "Drawing.h"
 
 #include <stdint.h>
-#include <Apple2Lib/HGRRowTable.h>
+#include <Apple2Lib/HGRPage.h>
 #include <Apple2Lib/HGRWord.h>
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
@@ -20,7 +20,7 @@ static const uint8_t TowersBottom = TowersTop + CardHeight;
 static const uint8_t TowersLeft = 12;
 static const uint8_t ColumnsTop = TowersBottom + 4;
 
-const a2::HGRRowTable hgr;
+const a2::HGRPage hgr(0x20);
 
 /** \brief
  * Draws the shape of a card at the given location in the main
