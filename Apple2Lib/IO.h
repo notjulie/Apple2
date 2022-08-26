@@ -41,6 +41,23 @@ namespace a2 {
    }
 
    /** \brief
+    * Select graphics page 1
+    */
+   inline void PAGE2OFF()
+   {
+      asm volatile ("STA\t$C054" : );
+   }
+
+   /** \brief
+    * Select graphics page 2
+    */
+   inline void PAGE2ON()
+   {
+      asm volatile ("STA\t$C055" : );
+   }
+
+
+   /** \brief
     * Select graphics mode
     */
    inline void TEXTOFF()

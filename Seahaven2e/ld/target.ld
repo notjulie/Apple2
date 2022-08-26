@@ -3,8 +3,8 @@
  */
 
 MEMORY {
-   /* origin is at 3 beyond 0x4000 to account for the JMP main instruction */
-   ram (rw) : ORIGIN = 0x4004, LENGTH = 0x55FC
+   /* origin is at 3 beyond 0x6000 to account for the JMP main instruction */
+   ram (rw) : ORIGIN = 0x6004, LENGTH = 0x35FC
 }
 
 SECTIONS {
@@ -31,7 +31,7 @@ __stack = 0x9FFF;
 
 OUTPUT_FORMAT {
     /* Tells AppleWin where to place the file's contents. */
-    SHORT(0x4000)
+    SHORT(0x6000)
 
     /* JMP to main */
     BYTE(0x4C)
