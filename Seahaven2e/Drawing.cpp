@@ -20,13 +20,15 @@ static const uint8_t TowersBottom = TowersTop + CardHeight;
 static const uint8_t TowersLeft = 12;
 static const uint8_t ColumnsTop = TowersBottom + 4;
 
-const a2::HGRPage hgr(0x20);
+
+Drawing drawing1(a2::HGRPage::HGR());
+Drawing drawing2(a2::HGRPage::HGR2());
 
 /** \brief
  * Draws the shape of a card at the given location in the main
  * HGR window
  */
-void DrawCardBackground(uint8_t row, uint8_t byteOffset)
+void Drawing::DrawCardBackground(uint8_t row, uint8_t byteOffset)
 {
    {
       uint8_t *rowPointer = hgr.GetByteAddress(row++, byteOffset);
@@ -55,22 +57,13 @@ void DrawCardBackground(uint8_t row, uint8_t byteOffset)
 }
 
 
-/** \brief
- * Test that draws a bunch of cards
- */
-void DrawABunchOfCards()
-{
-   for (uint8_t offset=0; offset<40; offset+=4)
-      DrawCardBackground(10, offset);
-}
-
-void DrawBackground()
+void Drawing::DrawBackground()
 {
    hgr.Fill(0);
 }
 
 
-void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
+void Drawing::DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 {
    for (int i=0; i<rows; ++i)
    {
@@ -81,39 +74,13 @@ void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 }
 
 
-void DrawSprites()
-{
-   uint8_t x = 4;
-   uint8_t y = 10;
-
-   // suits
-   for (auto suit=Suit::Clubs; suit<=Suit::Spades; ++suit)
-   {
-      DrawSprite(Sprites::GetSuitSprite(suit), CardTopSpriteHeight, y, x);
-      y += 10;
-   }
-
-   // ranks
-   for (auto rank=Rank::Ace; rank<=Rank::King; ++rank)
-   {
-      DrawSprite(Sprites::GetRankSprite(rank), CardTopSpriteHeight, y, x);
-      y += 10;
-
-      if (y > 100)
-      {
-         y = 10;
-         x += 4;
-      }
-   }
-}
-
-void DrawCardTop(Card &card, uint8_t x, uint8_t y)
+void Drawing::DrawCardTop(Card &card, uint8_t x, uint8_t y)
 {
    DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
    DrawSprite(Sprites::GetSuitSprite(card.GetSuit()), CardTopSpriteHeight, y, x + 2);
 }
 
-void DrawCardBottom(uint8_t x, uint8_t y)
+void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
 {
    uint8_t * row;
 
@@ -134,7 +101,7 @@ void DrawCardBottom(uint8_t x, uint8_t y)
 }
 
 
-void DrawTowers()
+void Drawing::DrawTowers()
 {
    uint8_t x = TowersLeft;
 
@@ -150,7 +117,7 @@ void DrawTowers()
    }
 }
 
-void DrawColumns()
+void Drawing::DrawColumns()
 {
    uint8_t x = 0;
 
@@ -176,7 +143,7 @@ void DrawColumns()
    }
 }
 
-void DrawGame()
+void Drawing::DrawGame()
 {
    DrawColumns();
    DrawTowers();

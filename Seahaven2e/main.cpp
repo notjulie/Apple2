@@ -30,8 +30,8 @@ extern "C" int main()
    Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
 
    // dump to the HGR screen
-   DrawBackground();
-   DrawGame();
+   drawing1.DrawBackground();
+   drawing1.DrawGame();
 
    // enter main loop
    for (;;)
@@ -41,8 +41,8 @@ extern "C" int main()
       case 'N':
          // new game...
          Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-         DrawBackground();
-         DrawGame();
+         drawing1.DrawBackground();
+         drawing1.DrawGame();
          break;
 
       default:

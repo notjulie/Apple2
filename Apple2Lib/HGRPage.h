@@ -21,9 +21,9 @@ namespace a2 {
       /** \brief
        * Initializes a new instance of class HGRRowTable
        */
-      static constexpr c6502::Lookup16Bit<uint8_t *, 192> GetLookupTable()
+      static constexpr c6502::Lookup16Bit<uint16_t, 192> GetLookupTable()
       {
-         c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
+         c6502::Lookup16Bit<uint16_t, 192> rowPointers;
 
          uint8_t index = 0;
          for (uint8_t i=0; i<120; i+=40)
@@ -38,7 +38,7 @@ namespace a2 {
                      (k << 10)
                   ;
 
-                  rowPointers.Set(index++, (uint8_t *)rowOffset);
+                  rowPointers.Set(index++, rowOffset);
                }
             }
          }
@@ -50,7 +50,7 @@ namespace a2 {
        * Returns the address of the given row
        */
       inline uint8_t *GetRowAddress(uint8_t row) const {
-         return rowPointers.Get(row);
+         return GetByteAddress(row, 0);
       }
 
       /** \brief
@@ -69,13 +69,15 @@ namespace a2 {
 
       void Fill(uint8_t value) const;
 
+      static constexpr HGRPage HGR() { return HGRPage(0x20); }
+      static constexpr HGRPage HGR2() { return HGRPage(0x40); }
+
    private:
       uint8_t pageOffset;
 
    private:
-      static c6502::Lookup16Bit<uint8_t *, 192> rowPointers;
+      static c6502::Lookup16Bit<uint16_t, 192> rowPointers;
    };
-
 }
 
 #endif // HGRROWTABLE_H
