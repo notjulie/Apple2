@@ -9,7 +9,9 @@
 #include "Game.h"
 #include "PersistentState.h"
 #include "Sprites.h"
+#include "StateMachine.h"
 
+static StateMachine stateMachine;
 
 
 /** \brief
@@ -20,6 +22,7 @@ extern "C" int main()
    // call initializers
    Sprites::Initialize();
    PersistentState::instance = PersistentState();
+   stateMachine = StateMachine();
 
    // set HGR
    a2::HIRESON();
@@ -36,27 +39,7 @@ extern "C" int main()
    // enter main loop
    for (;;)
    {
-      switch (a2::getchar())
-      {
-      case 'N':
-         // new game...
-         Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-         drawing1.DrawBackground();
-         drawing1.DrawGame();
-         a2::PAGE2OFF();
-         break;
-
-      case 'M':
-         // new game...
-         Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-         drawing2.DrawBackground();
-         drawing2.DrawGame();
-         a2::PAGE2ON();
-         break;
-
-      default:
-         break;
-      }
+      stateMachine.Service();
    }
 }
 

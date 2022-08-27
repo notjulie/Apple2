@@ -60,6 +60,8 @@
 		<Unit filename="Rank.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
+		<Unit filename="StateMachine.cpp" />
+		<Unit filename="StateMachine.h" />
 		<Unit filename="Suit.h" />
 		<Unit filename="ld/target.ld" />
 		<Unit filename="main.cpp" />

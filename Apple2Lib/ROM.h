@@ -2,6 +2,8 @@
 #ifndef APPLE2ROM_H
 #define APPLE2ROM_H
 
+#include <stdint.h>
+
 namespace a2 {
 
    /** \brief
