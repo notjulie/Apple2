@@ -52,6 +52,22 @@ namespace a2 {
    {
       asm volatile ("JSR\t$FDDA" : "+a"(b));
    }
+
+   /** \brief
+    * DOS warm start... basically exits to BASIC
+    */
+   inline void DOSWRM()
+   {
+      asm volatile ("JMP\t$03D0" :::);
+   }
+
+   /** \brief
+    * Exit to monitor
+    */
+   inline void MONITOR()
+   {
+      asm volatile ("JMP\t$FF69" :::);
+   }
 }
 
 #endif // APPLE2ROM_H

@@ -24,18 +24,6 @@ extern "C" int main()
    PersistentState::instance = PersistentState();
    stateMachine = StateMachine();
 
-   // set HGR
-   a2::HIRESON();
-   a2::TEXTOFF();
-   a2::MIXEDON();
-
-   // new game
-   Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-
-   // dump to the HGR screen
-   drawing1.DrawBackground();
-   drawing1.DrawGame();
-
    // enter main loop
    for (;;)
    {

@@ -17,6 +17,7 @@
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
+					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libcrt.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
@@ -40,6 +41,7 @@
 		<Linker>
 			<Add option="-T ld/target.ld" />
 			<Add option="--Map Sh2CB.map" />
+			<Add option="--gc-sections" />
 		</Linker>
 		<Unit filename="../Apple2Lib/HGR.cpp" />
 		<Unit filename="../Apple2Lib/HGR.h" />
@@ -51,6 +53,9 @@
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../C6502/LookupTable.h" />
 		<Unit filename="../C6502/Memory.h" />
+		<Unit filename="CardAnimator.cpp" />
+		<Unit filename="CardAnimator.h" />
+		<Unit filename="CardLocation.h" />
 		<Unit filename="Drawing.cpp" />
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />

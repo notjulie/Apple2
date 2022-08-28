@@ -1,11 +1,41 @@
 
 #include "StateMachine.h"
+
 #include <Apple2Lib/IO.h>
+#include <Apple2Lib/ROM.h>
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
 
 void StateMachine::Service()
+{
+   switch (state)
+   {
+   case State::Uninitialized:
+      // set HGR
+      a2::HIRESON();
+      a2::TEXTOFF();
+      a2::MIXEDON();
+
+      // new game
+      Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
+
+      // dump to the HGR screen
+      drawing1.DrawBackground();
+      drawing1.DrawGame();
+
+      // switch to idle state for now
+      state = State::Idle;
+      break;
+
+   case State::Idle:
+      ServiceIdle();
+      break;
+   }
+}
+
+
+void StateMachine::ServiceIdle()
 {
    switch (a2::getchar())
    {
@@ -29,4 +59,3 @@ void StateMachine::Service()
       break;
    }
 }
-

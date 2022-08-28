@@ -8,6 +8,18 @@ public:
    constexpr StateMachine() {}
 
    void Service();
+
+private:
+   void ServiceIdle();
+
+private:
+   enum class State {
+      Uninitialized,
+      Idle
+   };
+
+private:
+   State state = State::Uninitialized;
 };
 
 
