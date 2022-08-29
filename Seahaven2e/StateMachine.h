@@ -10,6 +10,7 @@ public:
    void Service();
 
 private:
+   bool CheckAcesToMove();
    void ServiceIdle();
 
 private:

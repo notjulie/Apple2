@@ -74,9 +74,27 @@ void Game::Shuffle8(uint8_t instruction)
    }
 }
 
+/** \brief
+ * Gets the location of the first card that needs to move to the
+ * aces.
+ */
+CardLocation Game::GetAceToMove()
+{
+   // TODO... for the moment all I do is look for an ace on the towers just for
+   // a starting point
+   for (int i=0; i<4; ++i)
+   {
+      if (towers[i].GetRank() == Rank::Ace)
+         return CardLocation::Tower(i);
+   }
+
+   return CardLocation();
+}
+
 
 void Card::SetFromCardNumber(uint8_t cardNumber)
 {
    suit = (Suit)(cardNumber & 3);
    rank = (Rank)(1 + (cardNumber >> 2));
 }
+

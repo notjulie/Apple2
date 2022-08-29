@@ -2,6 +2,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "CardLocation.h"
 #include "Rank.h"
 #include "Suit.h"
 
@@ -44,8 +45,11 @@ class Game
 {
 public:
    void Shuffle16(uint16_t instruction);
+
    inline Column &GetColumn(uint8_t index) { return columns[index];}
    inline Card &GetTower(uint8_t index) { return towers[index]; }
+
+   CardLocation GetAceToMove();
 
 public:
    static Game instance;

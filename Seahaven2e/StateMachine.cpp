@@ -3,6 +3,7 @@
 
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
+#include "CardLocation.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
@@ -37,6 +38,9 @@ void StateMachine::Service()
 
 void StateMachine::ServiceIdle()
 {
+   if (CheckAcesToMove())
+      return;
+
    switch (a2::getchar())
    {
    case 'N':
@@ -59,3 +63,16 @@ void StateMachine::ServiceIdle()
       break;
    }
 }
+
+
+bool StateMachine::CheckAcesToMove()
+{
+   CardLocation aceLocation = Game::instance.GetAceToMove();
+   if (aceLocation.IsNull())
+      return false;
+
+   a2::PRBYTE(0x42);
+   a2::MONITOR();
+   return true;
+}
+
