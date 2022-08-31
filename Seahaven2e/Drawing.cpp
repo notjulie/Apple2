@@ -74,7 +74,7 @@ void Drawing::DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uin
 }
 
 
-void Drawing::DrawCardTop(Card &card, uint8_t x, uint8_t y)
+void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
 {
    DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
    DrawSprite(Sprites::GetSuitSprite(card.GetSuit()), CardTopSpriteHeight, y, x + 2);
@@ -107,7 +107,7 @@ void Drawing::DrawTowers()
 
    for (uint8_t tower=0; tower<4; ++tower)
    {
-      Card &card = Game::instance.GetTower(tower);
+      Card card = Game::instance.GetTower(tower);
       if (!card.IsNull())
       {
          DrawCardTop(card, x, TowersTop);

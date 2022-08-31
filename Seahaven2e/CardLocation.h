@@ -6,13 +6,6 @@
 
 class CardLocation {
 public:
-   inline CardLocation() : area(Area::Nowhere), index(0) { }
-
-   inline bool IsNull() const { return area == Area::Nowhere; }
-
-   static inline CardLocation Tower(uint8_t index) { return CardLocation(Area::Towers, index); }
-
-private:
    enum class Area {
       Nowhere,
       Aces,
@@ -28,6 +21,15 @@ private:
       Column9,
       Column10
    };
+
+public:
+   inline CardLocation() : area(Area::Nowhere), index(0) { }
+
+   inline Area GetArea() const { return area; }
+   inline uint8_t GetIndex() const { return index; }
+   inline bool IsNull() const { return area == Area::Nowhere; }
+
+   static inline CardLocation Tower(uint8_t index) { return CardLocation(Area::Towers, index); }
 
 private:
    inline CardLocation(Area _area, uint8_t _index) : area(_area), index(_index) {}

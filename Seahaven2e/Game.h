@@ -2,27 +2,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Card.h"
 #include "CardLocation.h"
-#include "Rank.h"
-#include "Suit.h"
-
-/** \brief
- * Represents a card in our game table
- */
-class Card
-{
-public:
-   void SetFromCardNumber(uint8_t cardNumber);
-
-   inline Rank GetRank() const { return rank; }
-   inline Suit GetSuit() const { return suit; }
-   inline bool IsNull() const { return rank == Rank::Null; }
-   inline void SetNull() { rank = Rank::Null; }
-
-private:
-   Suit suit;
-   Rank rank;
-};
 
 
 /** \brief
@@ -31,7 +12,8 @@ private:
 class Column
 {
 public:
-   inline Card &GetCard(uint8_t index) { return cards[index];}
+   inline Card GetCard(uint8_t index) const { return cards[index]; }
+   void SetCard(uint8_t index, Card card) { cards[index] = card; }
 
 private:
    Card  cards[5];
@@ -49,7 +31,8 @@ public:
    inline Column &GetColumn(uint8_t index) { return columns[index];}
    inline Card &GetTower(uint8_t index) { return towers[index]; }
 
-   CardLocation GetAceToMove();
+   Card GetCard(CardLocation location) const;
+   CardLocation GetCardToMoveToAce() const;
 
 public:
    static Game instance;
@@ -59,6 +42,7 @@ private:
 
 private:
    uint8_t deck[52];
+   Card aces[4];
    Card towers[4];
    Column columns[10];
 };

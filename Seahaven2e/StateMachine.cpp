@@ -65,14 +65,23 @@ void StateMachine::ServiceIdle()
 }
 
 
+/// \brief
+///   Checks if there are any aces to move and starts the movement if so
+/// \return
+///   true if a card is being moved to the aces
+///
 bool StateMachine::CheckAcesToMove()
 {
-   CardLocation aceLocation = Game::instance.GetAceToMove();
-   if (aceLocation.IsNull())
+   // find the location of the card to move
+   CardLocation startLocation = Game::instance.GetCardToMoveToAce();
+   if (startLocation.IsNull())
       return false;
 
-   a2::PRBYTE(0x42);
-   a2::MONITOR();
-   return true;
+   // get the card
+   Card card = Game::instance.GetCard(startLocation);
+   a2::PRBYTE((uint8_t)card.GetSuit());
+   a2::CLREOL();
+   a2::CR();
+   return false;
 }
 

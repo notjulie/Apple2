@@ -4,6 +4,7 @@
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
+#include "CardLocation.h"
 
 Game Game::instance;
 
@@ -28,13 +29,13 @@ void Game::Shuffle16(uint16_t instruction)
    {
       for (uint8_t row=0; row<5; ++row)
       {
-         columns[column].GetCard(row).SetFromCardNumber(deck[cardIndex++]);
+         columns[column].SetCard(row, Card(deck[cardIndex++]));
       }
    }
 
    towers[0].SetNull();
-   towers[1].SetFromCardNumber(deck[cardIndex++]);
-   towers[2].SetFromCardNumber(deck[cardIndex++]);
+   towers[1] = Card(deck[cardIndex++]);
+   towers[2] = Card(deck[cardIndex++]);
    towers[3].SetNull();
 }
 
@@ -78,7 +79,7 @@ void Game::Shuffle8(uint8_t instruction)
  * Gets the location of the first card that needs to move to the
  * aces.
  */
-CardLocation Game::GetAceToMove()
+CardLocation Game::GetCardToMoveToAce() const
 {
    // TODO... for the moment all I do is look for an ace on the towers just for
    // a starting point
@@ -91,10 +92,21 @@ CardLocation Game::GetAceToMove()
    return CardLocation();
 }
 
-
-void Card::SetFromCardNumber(uint8_t cardNumber)
+Card Game::GetCard(CardLocation location) const
 {
-   suit = (Suit)(cardNumber & 3);
-   rank = (Rank)(1 + (cardNumber >> 2));
-}
+   CardLocation::Area area = location.GetArea();
+   switch (area)
+   {
+   case CardLocation::Area::Aces:
+      return aces[location.GetIndex()];
 
+   case CardLocation::Area::Towers:
+      return towers[location.GetIndex()];
+
+   case CardLocation::Area::Nowhere:
+      return Card();
+
+   default:
+      return columns[(uint8_t)area - (uint8_t)CardLocation::Area::Column1].GetCard(location.GetIndex());
+   }
+}
