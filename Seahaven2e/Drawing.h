@@ -17,9 +17,12 @@ public:
    void DrawBackground();
    void DrawCardBackground(uint8_t row, uint8_t byteOffset);
    void DrawGame();
+   void DrawAcePiles();
    void DrawTowers();
 
 private:
+   void DrawAcePile(Suit suit, uint8_t x);
+   void DrawCard(Card card, uint8_t x, uint8_t y);
    void DrawCardBottom(uint8_t x, uint8_t y);
    void DrawCardTop(Card card, uint8_t x, uint8_t y);
    void DrawColumns();

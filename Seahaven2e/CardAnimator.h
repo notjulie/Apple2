@@ -2,8 +2,15 @@
 #ifndef CARDANIMATOR_h
 #define CARDANIMATOR_h
 
+#include "Card.h"
+#include "CardLocation.h"
+
 class CardAnimator {
-private:
+public:
+   bool IsAnimating() { return false; }
+   void StartAnimation(Card card, CardLocation start, CardLocation end);
+
+public:
    static CardAnimator instance;
 };
 

@@ -16,7 +16,8 @@ private:
 private:
    enum class State {
       Uninitialized,
-      Idle
+      Idle,
+      Animating
    };
 
 private:

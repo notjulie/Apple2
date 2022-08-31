@@ -3,6 +3,7 @@
 
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
+#include "CardAnimator.h"
 #include "CardLocation.h"
 #include "Drawing.h"
 #include "Game.h"
@@ -31,6 +32,13 @@ void StateMachine::Service()
 
    case State::Idle:
       ServiceIdle();
+      break;
+
+   case State::Animating:
+      if (!CardAnimator::instance.IsAnimating())
+      {
+         state = State::Idle;
+      }
       break;
    }
 }
@@ -79,9 +87,10 @@ bool StateMachine::CheckAcesToMove()
 
    // get the card
    Card card = Game::instance.GetCard(startLocation);
-   a2::PRBYTE((uint8_t)card.GetSuit());
-   a2::CLREOL();
-   a2::CR();
-   return false;
+
+   // start the animation
+   CardAnimator::instance.StartAnimation(card, startLocation, CardLocation::AcePile(card.GetSuit()));
+   state = State::Animating;
+   return true;
 }
 

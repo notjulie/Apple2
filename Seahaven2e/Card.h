@@ -19,7 +19,6 @@ public:
    inline Rank GetRank() const { return rank; }
    inline Suit GetSuit() const { return suit; }
    inline bool IsNull() const { return rank == Rank::Null; }
-   inline void SetNull() { rank = Rank::Null; }
 
 private:
    Suit suit;

@@ -29,10 +29,12 @@ public:
    void Shuffle16(uint16_t instruction);
 
    inline Column &GetColumn(uint8_t index) { return columns[index];}
+   inline Card GetAcePileCard(Suit suit) const { return acePiles[(uint8_t)suit]; }
    inline Card &GetTower(uint8_t index) { return towers[index]; }
 
    Card GetCard(CardLocation location) const;
    CardLocation GetCardToMoveToAce() const;
+   void SetCard(CardLocation location, Card card);
 
 public:
    static Game instance;
@@ -42,7 +44,7 @@ private:
 
 private:
    uint8_t deck[52];
-   Card aces[4];
+   Card acePiles[4];
    Card towers[4];
    Column columns[10];
 };

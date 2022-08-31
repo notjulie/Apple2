@@ -8,7 +8,7 @@ class CardLocation {
 public:
    enum class Area {
       Nowhere,
-      Aces,
+      AcePiles,
       Towers,
       Column1,
       Column2,
@@ -29,6 +29,7 @@ public:
    inline uint8_t GetIndex() const { return index; }
    inline bool IsNull() const { return area == Area::Nowhere; }
 
+   static inline CardLocation AcePile(Suit suit) { return CardLocation(Area::AcePiles, (uint8_t)suit); }
    static inline CardLocation Tower(uint8_t index) { return CardLocation(Area::Towers, index); }
 
 private:

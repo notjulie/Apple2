@@ -18,6 +18,7 @@
 				</Compiler>
 				<Linker>
 					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libcrt.a" />
+					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libc.a" />
 					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>

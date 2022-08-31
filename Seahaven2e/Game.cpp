@@ -33,10 +33,15 @@ void Game::Shuffle16(uint16_t instruction)
       }
    }
 
-   towers[0].SetNull();
+   towers[0] = Card();
    towers[1] = Card(deck[cardIndex++]);
    towers[2] = Card(deck[cardIndex++]);
-   towers[3].SetNull();
+   towers[3] = Card();
+
+   acePiles[0] = Card();
+   acePiles[1] = Card();
+   acePiles[2] = Card();
+   acePiles[3] = Card();
 }
 
 void Game::Shuffle8(uint8_t instruction)
@@ -97,8 +102,8 @@ Card Game::GetCard(CardLocation location) const
    CardLocation::Area area = location.GetArea();
    switch (area)
    {
-   case CardLocation::Area::Aces:
-      return aces[location.GetIndex()];
+   case CardLocation::Area::AcePiles:
+      return acePiles[location.GetIndex()];
 
    case CardLocation::Area::Towers:
       return towers[location.GetIndex()];
@@ -108,5 +113,27 @@ Card Game::GetCard(CardLocation location) const
 
    default:
       return columns[(uint8_t)area - (uint8_t)CardLocation::Area::Column1].GetCard(location.GetIndex());
+   }
+}
+
+void Game::SetCard(CardLocation location, Card card)
+{
+   CardLocation::Area area = location.GetArea();
+   switch (area)
+   {
+   case CardLocation::Area::AcePiles:
+      acePiles[location.GetIndex()] = card;
+      break;
+
+   case CardLocation::Area::Towers:
+      towers[location.GetIndex()] = card;
+      break;
+
+   case CardLocation::Area::Nowhere:
+      break;
+
+   default:
+      columns[(uint8_t)area - (uint8_t)CardLocation::Area::Column1].SetCard(location.GetIndex(), card);
+      break;
    }
 }

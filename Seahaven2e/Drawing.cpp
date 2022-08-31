@@ -80,6 +80,12 @@ void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
    DrawSprite(Sprites::GetSuitSprite(card.GetSuit()), CardTopSpriteHeight, y, x + 2);
 }
 
+void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
+{
+   DrawCardTop(card, x, y);
+   DrawCardBottom(x, y + CardTopSpriteHeight);
+}
+
 void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
 {
    uint8_t * row;
@@ -101,6 +107,34 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
 }
 
 
+void Drawing::DrawAcePile(Suit suit, uint8_t x)
+{
+   Card card = Game::instance.GetAcePileCard(suit);
+   if (!card.IsNull())
+   {
+      DrawCard(card, x, TowersTop);
+   }
+}
+
+void Drawing::DrawAcePiles()
+{
+   DrawAcePile(Suit::Clubs, 0);
+   DrawAcePile(Suit::Diamonds, 4);
+   DrawAcePile(Suit::Hearts, 32);
+   DrawAcePile(Suit::Spades, 36);
+   uint8_t x = TowersLeft;
+
+   for (uint8_t tower=0; tower<4; ++tower)
+   {
+      Card card = Game::instance.GetTower(tower);
+      if (!card.IsNull())
+      {
+         DrawCard(card, x, TowersTop);
+      }
+      x += 4;
+   }
+}
+
 void Drawing::DrawTowers()
 {
    uint8_t x = TowersLeft;
@@ -110,8 +144,7 @@ void Drawing::DrawTowers()
       Card card = Game::instance.GetTower(tower);
       if (!card.IsNull())
       {
-         DrawCardTop(card, x, TowersTop);
-         DrawCardBottom(x, TowersTop + CardTopSpriteHeight);
+         DrawCard(card, x, TowersTop);
       }
       x += 4;
    }
@@ -145,6 +178,7 @@ void Drawing::DrawColumns()
 
 void Drawing::DrawGame()
 {
+   DrawAcePiles();
    DrawColumns();
    DrawTowers();
 }
