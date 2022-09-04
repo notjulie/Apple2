@@ -20,7 +20,8 @@ void CardAnimator::StartAnimation(Card card, CardLocation start, CardLocation en
    drawing2.DrawGame();
 
    // draw the card at its original position, saving the background
-   drawing2.DrawCardSavingBackground(card, start.GetX(), start.GetY(), &background2);
+   drawing2.SaveCardBackground(start.GetX(), start.GetY(), &background2);
+   drawing2.DrawCard(card, start.GetX(), start.GetY());
 
    // switch to page 2
    a2::PAGE2ON();

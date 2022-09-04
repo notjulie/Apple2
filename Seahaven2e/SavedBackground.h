@@ -2,6 +2,8 @@
 #ifndef SAVEDBACKGROUND_H
 #define SAVEDBACKGROUND_H
 
-typedef uint8_t SavedBackground[120];
+struct SavedBackground {
+   uint8_t pixels[120];
+};
 
 #endif // SAVEDBACKGROUND_H

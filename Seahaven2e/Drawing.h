@@ -16,15 +16,15 @@ public:
    }
 
    void DrawBackground();
+   void DrawCard(Card card, uint8_t x, uint8_t y);
    void DrawCardBackground(uint8_t row, uint8_t byteOffset);
-   void DrawCardSavingBackground(Card card, uint8_t x, uint8_t y, SavedBackground *background);
+   void SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background);
    void DrawGame();
    void DrawAcePiles();
    void DrawTowers();
 
 private:
    void DrawAcePile(Suit suit, uint8_t x);
-   void DrawCard(Card card, uint8_t x, uint8_t y);
    void DrawCardBottom(uint8_t x, uint8_t y);
    void DrawCardTop(Card card, uint8_t x, uint8_t y);
    void DrawColumns();

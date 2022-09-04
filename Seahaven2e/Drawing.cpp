@@ -180,9 +180,18 @@ void Drawing::DrawGame()
 }
 
 
-void Drawing::DrawCardSavingBackground(Card card, uint8_t x, uint8_t y, SavedBackground *background)
+void Drawing::SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background)
 {
-   a2::puts("DRAWING::DRAWCARDSAVINGBACKGROUND");
-   a2::MONITOR();
+   uint8_t *p = &background->pixels[0];
+   uint8_t *row;
+   for (uint8_t i=0; i<CardHeight; ++i)
+   {
+      row = hgr.GetByteAddress(y++, x);
+      p[0] = row[0];
+      p[1] = row[1];
+      p[2] = row[2];
+      p[3] = row[3];
+      p += 4;
+   }
 }
 
