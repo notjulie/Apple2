@@ -9,6 +9,7 @@
 #include "Suit.h"
 
 const uint8_t CardTopSpriteHeight = 9;
+const uint8_t CardHeight = 33;
 
 typedef a2::HGRWord CardTopSprite[CardTopSpriteHeight];
 

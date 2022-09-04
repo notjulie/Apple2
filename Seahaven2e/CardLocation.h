@@ -3,6 +3,7 @@
 #define CARDLOCATION_H
 
 #include <stdint.h>
+#include "Sprites.h"
 #include "Suit.h"
 
 class CardLocation {
@@ -23,6 +24,10 @@ public:
       Column10
    };
 
+   static const uint8_t TowersTop = 3;
+   static const uint8_t TowersBottom = CardLocation::TowersTop + CardHeight;
+   static const uint8_t ColumnsTop = TowersBottom + 4;
+
 public:
    inline CardLocation() : area(Area::Nowhere), index(0) { }
 
@@ -38,6 +43,7 @@ public:
 
 private:
    inline CardLocation(Area _area, uint8_t _index) : area(_area), index(_index) {}
+   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
 
 private:
    Area area;

@@ -14,11 +14,7 @@
 #include "Sprites.h"
 
 
-static const uint8_t CardHeight = 33;
-static const uint8_t TowersTop = 3;
-static const uint8_t TowersBottom = TowersTop + CardHeight;
 static const uint8_t TowersLeft = 12;
-static const uint8_t ColumnsTop = TowersBottom + 4;
 
 
 Drawing drawing1(a2::HGRPage::HGR());
@@ -112,7 +108,7 @@ void Drawing::DrawAcePile(Suit suit, uint8_t x)
    Card card = Game::instance.GetAcePileCard(suit);
    if (!card.IsNull())
    {
-      DrawCard(card, x, TowersTop);
+      DrawCard(card, x, CardLocation::TowersTop);
    }
 }
 
@@ -129,7 +125,7 @@ void Drawing::DrawAcePiles()
       Card card = Game::instance.GetTower(tower);
       if (!card.IsNull())
       {
-         DrawCard(card, x, TowersTop);
+         DrawCard(card, x, CardLocation::TowersTop);
       }
       x += 4;
    }
@@ -144,7 +140,7 @@ void Drawing::DrawTowers()
       Card card = Game::instance.GetTower(tower);
       if (!card.IsNull())
       {
-         DrawCard(card, x, TowersTop);
+         DrawCard(card, x, CardLocation::TowersTop);
       }
       x += 4;
    }
@@ -158,7 +154,7 @@ void Drawing::DrawColumns()
    {
       Column &column = Game::instance.GetColumn(i);
 
-      uint8_t y = ColumnsTop;
+      uint8_t y = CardLocation::ColumnsTop;
       for (uint8_t j=0; j<5; ++j)
       {
          DrawCardTop(column.GetCard(j), x, y);
