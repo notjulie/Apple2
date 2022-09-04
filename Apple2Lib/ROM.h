@@ -68,6 +68,8 @@ namespace a2 {
    {
       asm volatile ("JMP\t$FF69" :::);
    }
+
+   void puts(const char *s);
 }
 
 #endif // APPLE2ROM_H

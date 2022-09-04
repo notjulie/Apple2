@@ -6,6 +6,7 @@
 #include <Apple2Lib/HGRPage.h>
 #include <Apple2Lib/HGRWord.h>
 #include "Game.h"
+#include "SavedBackground.h"
 
 class Drawing {
 public:
@@ -16,6 +17,7 @@ public:
 
    void DrawBackground();
    void DrawCardBackground(uint8_t row, uint8_t byteOffset);
+   void DrawCardSavingBackground(Card card, uint8_t x, uint8_t y, SavedBackground *background);
    void DrawGame();
    void DrawAcePiles();
    void DrawTowers();

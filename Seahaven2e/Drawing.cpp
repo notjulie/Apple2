@@ -182,3 +182,11 @@ void Drawing::DrawGame()
    DrawColumns();
    DrawTowers();
 }
+
+
+void Drawing::DrawCardSavingBackground(Card card, uint8_t x, uint8_t y, SavedBackground *background)
+{
+   a2::puts("DRAWING::DRAWCARDSAVINGBACKGROUND");
+   a2::MONITOR();
+}
+

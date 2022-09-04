@@ -1,6 +1,8 @@
 
 #include "IO.h"
 
+#include "ROM.h"
+
 namespace a2 {
 
    static const uint16_t KBD      = 0xC000;
@@ -23,6 +25,12 @@ namespace a2 {
       {
          return -1;
       }
+   }
+
+   void puts(const char *s)
+   {
+      while (*s)
+         COUT(*s++);
    }
 }
 

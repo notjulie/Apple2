@@ -3,6 +3,7 @@
 #define CARDLOCATION_H
 
 #include <stdint.h>
+#include "Suit.h"
 
 class CardLocation {
 public:
@@ -28,6 +29,9 @@ public:
    inline Area GetArea() const { return area; }
    inline uint8_t GetIndex() const { return index; }
    inline bool IsNull() const { return area == Area::Nowhere; }
+
+   uint8_t GetX() const;
+   uint8_t GetY() const;
 
    static inline CardLocation AcePile(Suit suit) { return CardLocation(Area::AcePiles, (uint8_t)suit); }
    static inline CardLocation Tower(uint8_t index) { return CardLocation(Area::Towers, index); }

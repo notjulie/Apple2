@@ -58,6 +58,7 @@
 		<Unit filename="Card.h" />
 		<Unit filename="CardAnimator.cpp" />
 		<Unit filename="CardAnimator.h" />
+		<Unit filename="CardLocation.cpp" />
 		<Unit filename="CardLocation.h" />
 		<Unit filename="Drawing.cpp" />
 		<Unit filename="Drawing.h" />
@@ -66,6 +67,7 @@
 		<Unit filename="PersistentState.cpp" />
 		<Unit filename="PersistentState.h" />
 		<Unit filename="Rank.h" />
+		<Unit filename="SavedBackground.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
 		<Unit filename="StateMachine.cpp" />

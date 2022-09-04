@@ -4,6 +4,7 @@
 
 #include "Card.h"
 #include "CardLocation.h"
+#include "SavedBackground.h"
 
 class CardAnimator {
 public:
@@ -12,6 +13,9 @@ public:
 
 public:
    static CardAnimator instance;
+
+private:
+   SavedBackground background2;
 };
 
 #endif // CARDANIMATOR_h
