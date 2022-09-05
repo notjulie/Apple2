@@ -196,10 +196,18 @@ void Drawing::SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *backgrou
 }
 
 
-void Drawing::RestoreBackground(SavedBackground &bacground)
+void Drawing::RestoreBackground(SavedBackground &background, uint8_t x, uint8_t y)
 {
-   a2::puts("DRAWING::RESTOREBACKGROUND");
-   a2::PAGE2OFF();
-   a2::MONITOR();
+   uint8_t *p = &background.pixels[0];
+   uint8_t *row;
+   for (uint8_t i=0; i<CardHeight; ++i)
+   {
+      row = hgr.GetByteAddress(y++, x);
+      row[0] = p[0];
+      row[1] = p[1];
+      row[2] = p[2];
+      row[3] = p[3];
+      p += 4;
+   }
 }
 

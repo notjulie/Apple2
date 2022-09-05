@@ -28,8 +28,15 @@ private:
 
 private:
    State state = State::Idle;
+
+   uint8_t background1X;
+   uint8_t background1Y;
    SavedBackground background1;
+
+   uint8_t background2X;
+   uint8_t background2Y;
    SavedBackground background2;
+
    uint8_t currentX, currentY;
    uint8_t targetX, targetY;
    Card cardToMove;

@@ -28,8 +28,10 @@ void CardAnimator::StartAnimation(Card card, CardLocation start, CardLocation en
    drawing2.DrawGame();
 
    // draw the card at its original position, saving the background
-   drawing2.SaveCardBackground(start.GetX(), start.GetY(), &background2);
-   drawing2.DrawCard(card, start.GetX(), start.GetY());
+   background2X = currentX;
+   background2Y = currentY;
+   drawing2.SaveCardBackground(currentX, currentY, &background2);
+   drawing2.DrawCard(card, currentX, currentY);
 
    // switch to page 2
    a2::PAGE2ON();
@@ -40,6 +42,9 @@ void CardAnimator::StartAnimation(Card card, CardLocation start, CardLocation en
 
 void CardAnimator::Service()
 {
+   for (int i=0; i<10000; ++i)
+      a2::getchar();
+
    switch (state)
    {
    case State::Idle:
@@ -50,12 +55,14 @@ void CardAnimator::Service()
       drawing2.CopyTo(drawing1);
 
       // erase the card that we're moving
-      drawing1.RestoreBackground(background2);
+      drawing1.RestoreBackground(background2, background2X, background2Y);
 
       // set the new position
       UpdatePosition();
 
       // save background, draw, switch pages, update state
+      background1X = currentX;
+      background1Y = currentY;
       drawing1.SaveCardBackground(currentX, currentY, &background1);
       drawing1.DrawCard(cardToMove, currentX, currentY);
       a2::PAGE2OFF();
@@ -63,8 +70,10 @@ void CardAnimator::Service()
       break;
 
    case State::Page1Visible:
-      drawing2.RestoreBackground(background2);
+      drawing2.RestoreBackground(background2, background2X, background2Y);
       UpdatePosition();
+      background2X = currentX;
+      background2Y = currentY;
       drawing2.SaveCardBackground(currentX, currentY, &background2);
       drawing2.DrawCard(cardToMove, currentX, currentY);
       a2::PAGE2ON();
@@ -72,8 +81,10 @@ void CardAnimator::Service()
       break;
 
    case State::Page2Visible:
-      drawing1.RestoreBackground(background1);
+      drawing1.RestoreBackground(background1, background1X, background1Y);
       UpdatePosition();
+      background1X = currentX;
+      background1Y = currentY;
       drawing1.SaveCardBackground(currentX, currentY, &background1);
       drawing1.DrawCard(cardToMove, currentX, currentY);
       a2::PAGE2OFF();
@@ -84,7 +95,6 @@ void CardAnimator::Service()
 
 void CardAnimator::UpdatePosition()
 {
-   a2::puts("CARDANIMATOR::UPDATEPOSITION");
-   a2::PAGE2OFF();
-   a2::MONITOR();
+   currentX = (currentX + 1) & 31;
+   currentY = (currentY + 1) & 127;
 }
