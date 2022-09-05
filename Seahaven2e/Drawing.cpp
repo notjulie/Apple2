@@ -195,3 +195,11 @@ void Drawing::SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *backgrou
    }
 }
 
+
+void Drawing::RestoreBackground(SavedBackground &bacground)
+{
+   a2::puts("DRAWING::RESTOREBACKGROUND");
+   a2::PAGE2OFF();
+   a2::MONITOR();
+}
+

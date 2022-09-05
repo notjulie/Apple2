@@ -22,6 +22,8 @@ public:
    void DrawGame();
    void DrawAcePiles();
    void DrawTowers();
+   void CopyTo(Drawing &target) { hgr.CopyTo(target.hgr); }
+   void RestoreBackground(SavedBackground &bacground);
 
 private:
    void DrawAcePile(Suit suit, uint8_t x);

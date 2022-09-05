@@ -3,7 +3,7 @@
 #define SAVEDBACKGROUND_H
 
 struct SavedBackground {
-   uint8_t pixels[120];
+   uint8_t pixels[4 * CardHeight];
 };
 
 #endif // SAVEDBACKGROUND_H

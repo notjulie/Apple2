@@ -5,6 +5,7 @@
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
 
+#include "CardAnimator.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
@@ -23,6 +24,7 @@ extern "C" int main()
    Sprites::Initialize();
    PersistentState::instance = PersistentState();
    stateMachine = StateMachine();
+   CardAnimator::instance = CardAnimator();
 
    // enter main loop
    for (;;)

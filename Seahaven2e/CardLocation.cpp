@@ -1,6 +1,7 @@
 // Copyright 2022 Randy Rasmussen
 
 #include "CardLocation.h"
+#include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
 #include "Sprites.h"
 
@@ -15,6 +16,7 @@ uint8_t CardLocation::GetX() const
    {
    case Area::Nowhere:
       a2::puts("CARDLOCATION::GETX; NOWHERE");
+      a2::PAGE2OFF();
       a2::MONITOR();
       return 0;
 
@@ -31,6 +33,7 @@ uint8_t CardLocation::GetX() const
          return GetColumnX(9);
       }
       a2::puts("CARDLOCATION::GETX; ACEPILE");
+      a2::PAGE2OFF();
       a2::MONITOR();
       return 0;
 
@@ -51,6 +54,7 @@ uint8_t CardLocation::GetY() const
    {
    case Area::Nowhere:
       a2::puts("CARDLOCATION::GETY; NOWHERE");
+      a2::PAGE2OFF();
       a2::MONITOR();
       return 0;
 
@@ -60,6 +64,7 @@ uint8_t CardLocation::GetY() const
 
    default:
       a2::puts("CARDLOCATION::GETY; DEFAULT");
+      a2::PAGE2OFF();
       a2::MONITOR();
       return 0;
    }

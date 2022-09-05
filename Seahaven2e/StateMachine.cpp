@@ -35,6 +35,7 @@ void StateMachine::Service()
       break;
 
    case State::Animating:
+      CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
       {
          state = State::Idle;

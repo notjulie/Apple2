@@ -1,6 +1,8 @@
 
 #include "HGRPage.h"
 #include <C6502/Memory.h>
+#include "IO.h"
+#include "ROM.h"
 
 namespace a2 {
 
@@ -16,6 +18,13 @@ namespace a2 {
          uint8_t *p = GetRowAddress(y);
          c6502::memset8(p, value, 40);
       }
+   }
+
+   void HGRPage::CopyTo(HGRPage target) const
+   {
+      a2::puts("HGRPAGE::COPYTO");
+      a2::PAGE2OFF();
+      a2::MONITOR();
    }
 
 }

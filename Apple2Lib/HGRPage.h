@@ -68,6 +68,7 @@ namespace a2 {
       }
 
       void Fill(uint8_t value) const;
+      void CopyTo(HGRPage target) const;
 
       static constexpr HGRPage HGR() { return HGRPage(0x20); }
       static constexpr HGRPage HGR2() { return HGRPage(0x40); }
