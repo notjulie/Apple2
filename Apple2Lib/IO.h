@@ -5,6 +5,14 @@
 #include <stdint.h>
 
 namespace a2 {
+   /// \brief
+   ///   Gets the VBLFLAG; high bit set means either VBL in process of not...
+   ///   the polarity changed between 2c and 2e
+   ///
+   inline int8_t VBLFLAG()
+   {
+      return *(volatile int8_t *)(0xC019);
+   }
 
    /** \brief
     * Select low-resolution graphics
