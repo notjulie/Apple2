@@ -3,6 +3,7 @@
 
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
+#include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"
 #include "Game.h"
 
@@ -21,6 +22,31 @@ void CardAnimator::StartAnimation(Card card, CardLocation start, CardLocation en
    currentY = start.GetY();
    targetX = end.GetX();
    targetY = end.GetY();
+   if (targetX > currentX)
+   {
+      distanceX = targetX - currentX;
+      directionX = 1;
+   }
+   else
+   {
+      distanceX = currentX - targetX;
+      directionX = -1;
+   }
+   if (targetY > currentY)
+   {
+      distanceY = targetY - currentY;
+      directionY = 1;
+   }
+   else
+   {
+      distanceY = currentY - targetY;
+      directionY = -1;
+   }
+   // throw together a duration... TODO better
+   duration = 30;
+   timeLeft = duration;
+   numeratorX = numeratorY = 0;
+   lastVBLCount = a2::VBLCounter::GetCounter();
    cardToMove = card;
 
    // draw the game without the card on page 2
@@ -40,11 +66,12 @@ void CardAnimator::StartAnimation(Card card, CardLocation start, CardLocation en
    state = State::Page2Initialized;
 }
 
+
+/// \brief
+///   Updates the state of the animation
+///
 void CardAnimator::Service()
 {
-   for (int i=0; i<10000; ++i)
-      a2::getchar();
-
    switch (state)
    {
    case State::Idle:
@@ -70,6 +97,11 @@ void CardAnimator::Service()
       break;
 
    case State::Page1Visible:
+      if (timeLeft == 0)
+      {
+         state = State::Idle;
+         break;
+      }
       drawing2.RestoreBackground(background2, background2X, background2Y);
       UpdatePosition();
       background2X = currentX;
@@ -93,8 +125,37 @@ void CardAnimator::Service()
    }
 }
 
+
+/// \brief
+///   Calculates the new position
+///
 void CardAnimator::UpdatePosition()
 {
-   currentX = (currentX + 1) & 31;
-   currentY = (currentY + 1) & 127;
+   if (timeLeft == 0)
+      return;
+
+   // snapshot the time
+   uint8_t now = a2::VBLCounter::GetCounter();
+
+   // step once for each tick of the clock
+   while (lastVBLCount != now)
+   {
+      numeratorX += distanceX;
+      while (numeratorX >= duration)
+      {
+         currentX += directionX;
+         numeratorX -= duration;
+      }
+
+      numeratorY += distanceY;
+      while (numeratorY >= duration)
+      {
+         currentY += directionY;
+         numeratorY -= duration;
+      }
+
+      ++lastVBLCount;
+      if (--timeLeft == 0)
+         break;
+   }
 }

@@ -28,18 +28,12 @@ extern "C" int main()
    CardAnimator::instance = CardAnimator();
 
    // enter main loop
-   uint8_t lastCount = a2::VBLCounter::GetCounter();
    for (;;)
    {
+      // update the VBL counter
       a2::VBLCounter::Update();
-      uint8_t count = a2::VBLCounter::GetCounter();
-      uint8_t elapsed = count - lastCount;
-      if (elapsed >= 60)
-      {
-         lastCount = count;
-         a2::puts("BLEEM");
-      }
 
+      // give the state machine its timeslice
       stateMachine.Service();
    }
 }

@@ -6,6 +6,7 @@
 #include <Apple2Lib/HGRWord.h>
 #include <Apple2Lib/IO.h>
 #include <Apple2Lib/ROM.h>
+#include <Apple2Lib/VBLCounter.h>
 #include <C6502/Memory.h>
 
 #include "Game.h"
@@ -78,8 +79,11 @@ void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
 
 void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 {
+   a2::VBLCounter::Update();
    DrawCardTop(card, x, y);
+   a2::VBLCounter::Update();
    DrawCardBottom(x, y + CardTopSpriteHeight);
+   a2::VBLCounter::Update();
 }
 
 void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
@@ -182,6 +186,7 @@ void Drawing::DrawGame()
 
 void Drawing::SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background)
 {
+   a2::VBLCounter::Update();
    uint8_t *p = &background->pixels[0];
    uint8_t *row;
    for (uint8_t i=0; i<CardHeight; ++i)
@@ -198,6 +203,7 @@ void Drawing::SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *backgrou
 
 void Drawing::RestoreBackground(SavedBackground &background, uint8_t x, uint8_t y)
 {
+   a2::VBLCounter::Update();
    uint8_t *p = &background.pixels[0];
    uint8_t *row;
    for (uint8_t i=0; i<CardHeight; ++i)
