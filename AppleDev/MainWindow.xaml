@@ -16,8 +16,5 @@
             <MenuItem Name="emulatorItem" Header="Emulator"/>
          </MenuItem>
       </Menu>
-      <Grid>
-         <avalonEdit:TextEditor x:Name="programText" SyntaxHighlighting="C#" ShowLineNumbers="True"/>
-      </Grid>
    </DockPanel>
 </Window>
