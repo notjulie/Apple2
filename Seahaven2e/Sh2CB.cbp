@@ -17,12 +17,12 @@
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
-					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libcrt.a" />
-					<Add library="../../../Bin/llvm-mos/mos-platform/common/lib/libc.a" />
-					<Add directory="../../../Bin/llvm-mos/mos-platform/common/lib" />
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libcrt.a" />
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libc.a" />
+					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
-					<Add after=".\postBuild.bat" />
+					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot;' />
 				</ExtraCommands>
 			</Target>
 		</Build>
