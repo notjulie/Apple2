@@ -218,6 +218,33 @@ const CardTopSprite Sprites::ranks[13] {
 };
 
 
+const CardTopSprite Sprites::cursorLeft =
+{
+   " WWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWW",
+   "WWWWWWWWWWW   ",
+   "WWWWWWWWWWW   ",
+   "WWWWWWWWWWW   ",
+   "WWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWW",
+};
+
+const CardTopSprite Sprites::cursorRight =
+{
+   "WWWWWWWWWWWW  ",
+   "WWWWWWWWWWWWW ",
+   "WWWWWWWWWWWWW ",
+   " WWWWWWWWWWWW ",
+   " WWWWWWWWWWWW ",
+   " WWWWWWWWWWWW ",
+   "WWWWWWWWWWWWW ",
+   "WWWWWWWWWWWWW ",
+   "WWWWWWWWWWWWW ",
+};
+
+
 void Sprites::Initialize()
 {
    const CardTopSprite *rankSprite = &ranks[0];

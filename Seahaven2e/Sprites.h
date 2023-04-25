@@ -25,12 +25,15 @@ public:
       return *suitsLookup.Get((uint8_t)suit);
    }
 
-private:
+public:
    static const CardTopSprite ranks[13];
    static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
 
    static const CardTopSprite suits[4];
    static c6502::Lookup16Bit<const CardTopSprite *, 4> suitsLookup;
+
+   static const CardTopSprite cursorLeft;
+   static const CardTopSprite cursorRight;
 };
 
 #endif // SPRITES_H
