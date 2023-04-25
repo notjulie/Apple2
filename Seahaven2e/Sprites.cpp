@@ -170,13 +170,13 @@ const CardTopSprite Sprites::ranks[13] {
    // ten
    {
       " WWWWWWWWWWWWW",
-      "WWW WWW   WWWW",
-      "WW  WW WWW WWW",
-      "WWW WW WWW WWW",
-      "WWW WW WWW WWW",
-      "WWW WW WWW WWW",
-      "WWW WW WWW WWW",
-      "WWW WWW   WWWW",
+      "WWW WWW  WWWWW",
+      "WW  WW WW WWWW",
+      "WWW WW WW WWWW",
+      "WWW WW WW WWWW",
+      "WWW WW WW WWWW",
+      "WWW WW WW WWWW",
+      "WWW WWW  WWWWW",
       "WWWWWWWWWWWWWW",
    },
    // jack
