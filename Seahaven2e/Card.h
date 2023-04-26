@@ -1,6 +1,9 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
-#ifndef CARD_H
-#define CARD_H
+#ifndef SEAHAVEN2E_CARD_H_
+#define SEAHAVEN2E_CARD_H_
 
 #include <stdint.h>
 #include "Rank.h"
@@ -10,20 +13,19 @@
 /** \brief
  * Represents a card in our game table
  */
-class Card
-{
-public:
-   Card() : rank(Rank::Null) {}
-   Card(uint8_t cardNumber);
+class Card {
+ public:
+  Card() : rank(Rank::Null) {}
+  explicit Card(uint8_t cardNumber);
 
-   inline Rank GetRank() const { return rank; }
-   inline Suit GetSuit() const { return suit; }
-   inline bool IsNull() const { return rank == Rank::Null; }
+  inline Rank GetRank() const { return rank; }
+  inline Suit GetSuit() const { return suit; }
+  inline bool IsNull() const { return rank == Rank::Null; }
 
-private:
-   Suit suit;
-   Rank rank;
+ private:
+  Suit suit;
+  Rank rank;
 };
 
 
-#endif // CARD_H
+#endif  // SEAHAVEN2E_CARD_H_
