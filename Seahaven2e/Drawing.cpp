@@ -71,13 +71,13 @@ void Drawing::DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uin
 }
 
 
-void Drawing::AndSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
+void Drawing::XorSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x)
 {
    for (int i=0; i<rows; ++i)
    {
       uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
-      rowPointer[0] &= sprite[i].GetLeft();
-      rowPointer[1] &= sprite[i].GetRight();
+      rowPointer[0] ^= sprite[i].GetLeft();
+      rowPointer[1] ^= sprite[i].GetRight();
    }
 }
 
@@ -93,8 +93,8 @@ void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
 
 void Drawing::DrawCursor(uint8_t x, uint8_t y)
 {
-   AndSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
-   AndSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
+   XorSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
+   XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
 }
 
 

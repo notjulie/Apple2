@@ -32,7 +32,7 @@ private:
    void DrawColumns();
    void DrawCursor(uint8_t x, uint8_t y);
    void DrawSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
-   void AndSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
+   void XorSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:
    const a2::HGRPage hgr;
