@@ -1,28 +1,31 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
-#ifndef STATEMACHINE_H
-#define STATEMACHINE_H
+#ifndef SEAHAVEN2E_STATEMACHINE_H_
+#define SEAHAVEN2E_STATEMACHINE_H_
 
 
 class StateMachine {
-public:
-   constexpr StateMachine() {}
+ public:
+  constexpr StateMachine() {}
 
-   void Service();
+  void Service();
 
-private:
-   bool CheckAcesToMove();
-   void ServiceIdle();
+ private:
+  bool CheckAcesToMove();
+  void ServiceIdle();
 
-private:
-   enum class State {
-      Uninitialized,
-      Idle,
-      Animating
-   };
+ private:
+  enum class State {
+    Uninitialized,
+    Idle,
+    Animating
+  };
 
-private:
-   State state = State::Uninitialized;
+ private:
+  State state = State::Uninitialized;
 };
 
 
-#endif // STATEMACHINE_H
+#endif  // SEAHAVEN2E_STATEMACHINE_H_
