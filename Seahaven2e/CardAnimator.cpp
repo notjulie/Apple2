@@ -76,10 +76,10 @@ void CardAnimator::Service() {
 
   case State::Page2Initialized:
     // copy page 2 to page 1
-    drawing2.CopyTo(drawing1);
+    drawing2.CopyTo(&drawing1);
 
     // erase the card that we're moving
-    drawing1.RestoreBackground(background2, background2X, background2Y);
+    drawing1.RestoreBackground(&background2, background2X, background2Y);
 
     // set the new position
     UpdatePosition();
@@ -98,7 +98,7 @@ void CardAnimator::Service() {
       state = State::Idle;
       break;
     }
-    drawing2.RestoreBackground(background2, background2X, background2Y);
+    drawing2.RestoreBackground(&background2, background2X, background2Y);
     UpdatePosition();
     background2X = currentX;
     background2Y = currentY;
@@ -109,7 +109,7 @@ void CardAnimator::Service() {
     break;
 
   case State::Page2Visible:
-    drawing1.RestoreBackground(background1, background1X, background1Y);
+    drawing1.RestoreBackground(&background1, background1X, background1Y);
     UpdatePosition();
     background1X = currentX;
     background1Y = currentY;

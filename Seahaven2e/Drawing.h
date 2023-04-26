@@ -24,7 +24,7 @@ class Drawing {
   void DrawGame();
   void DrawAcePiles();
   void DrawTowers();
-  void CopyTo(Drawing *target) { hgr.CopyTo(target.hgr); }
+  void CopyTo(Drawing *target) { hgr.CopyTo(target->hgr); }
   void RestoreBackground(SavedBackground *background, uint8_t x, uint8_t y);
 
  private:

@@ -210,10 +210,10 @@ void Drawing::SaveCardBackground(
 
 
 void Drawing::RestoreBackground(
-                SavedBackground &background,
+                SavedBackground *background,
                 uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
-  uint8_t *p = &background.pixels[0];
+  uint8_t *p = &background->pixels[0];
   uint8_t *row;
   for (uint8_t i=0; i < CardHeight; ++i) {
     row = hgr.GetByteAddress(y++, x);
