@@ -21,21 +21,14 @@ void StateMachine::Service() {
     a2::MIXEDON();
 
     // new game
-    Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-
-    // dump to the HGR screen
-    drawing1.DrawBackground();
-    drawing1.DrawGame();
-
-    // switch to idle state for now
-    state = State::Idle;
+    NewGame();
     break;
 
   case State::Idle:
     ServiceIdle();
     break;
 
-  case State::Animating:
+  case State::MoveToAces:
     CardAnimator::instance.Service();
     if (!CardAnimator::instance.IsAnimating()) {
       state = State::Idle;
@@ -52,23 +45,25 @@ void StateMachine::ServiceIdle() {
   switch (a2::getchar()) {
   case 'N':
     // new game...
-    Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-    drawing1.DrawBackground();
-    drawing1.DrawGame();
-    a2::PAGE2OFF();
-    break;
-
-  case 'M':
-    // new game...
-    Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-    drawing2.DrawBackground();
-    drawing2.DrawGame();
-    a2::PAGE2ON();
+    NewGame();
     break;
 
   default:
     break;
   }
+}
+
+
+/// \brief
+///   Starts a new game
+///
+void StateMachine::NewGame() {
+  Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
+  drawing1.DrawBackground();
+  drawing1.DrawGame();
+  a2::PAGE2OFF();
+  if (!CheckAcesToMove())
+    state = State::Idle;
 }
 
 
@@ -91,6 +86,6 @@ bool StateMachine::CheckAcesToMove() {
       card,
       startLocation,
       CardLocation::AcePile(card.GetSuit()));
-  state = State::Animating;
+  state = State::MoveToAces;
   return true;
 }

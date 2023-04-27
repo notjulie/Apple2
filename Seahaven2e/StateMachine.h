@@ -14,13 +14,14 @@ class StateMachine {
 
  private:
   bool CheckAcesToMove();
+  void NewGame();
   void ServiceIdle();
 
  private:
   enum class State {
     Uninitialized,
     Idle,
-    Animating
+    MoveToAces
   };
 
  private:
