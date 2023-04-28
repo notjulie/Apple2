@@ -6,6 +6,9 @@
 #define SEAHAVEN2E_STATEMACHINE_H_
 
 
+/// <summary>
+/// The top level state machine for the game
+/// </summary>
 class StateMachine {
  public:
   constexpr StateMachine() {}
@@ -15,6 +18,7 @@ class StateMachine {
  private:
   bool CheckAcesToMove();
   void NewGame();
+  void EnterIdle();
   void ServiceIdle();
 
  private:

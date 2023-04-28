@@ -92,12 +92,10 @@ void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y) {
     Sprites::GetSuitSprite(card.GetSuit()),
     CardTopSpriteHeight,
     y, x + 2);
-
-  DrawCursor(x, y);
 }
 
 
-void Drawing::DrawCursor(uint8_t x, uint8_t y) {
+void Drawing::ToggleCursor(uint8_t x, uint8_t y) {
   XorSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
   XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
 }

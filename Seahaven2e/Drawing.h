@@ -26,13 +26,13 @@ class Drawing {
   void DrawTowers();
   void CopyTo(Drawing *target) { hgr.CopyTo(target->hgr); }
   void RestoreBackground(SavedBackground *background, uint8_t x, uint8_t y);
+  void ToggleCursor(uint8_t x, uint8_t y);
 
  private:
   void DrawAcePile(Suit suit, uint8_t x);
   void DrawCardBottom(uint8_t x, uint8_t y);
   void DrawCardTop(Card card, uint8_t x, uint8_t y);
   void DrawColumns();
-  void DrawCursor(uint8_t x, uint8_t y);
   void DrawSprite(
           const a2::HGRWord *sprite,
           uint8_t rows,

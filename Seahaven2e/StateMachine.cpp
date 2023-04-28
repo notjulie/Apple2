@@ -12,6 +12,10 @@
 #include "Game.h"
 #include "PersistentState.h"
 
+
+/// <summary>
+/// Performs periodic action
+/// </summary>
 void StateMachine::Service() {
   switch (state) {
   case State::Uninitialized:
@@ -30,9 +34,8 @@ void StateMachine::Service() {
 
   case State::MoveToAces:
     CardAnimator::instance.Service();
-    if (!CardAnimator::instance.IsAnimating()) {
-      state = State::Idle;
-    }
+    if (!CardAnimator::instance.IsAnimating())
+      EnterIdle();
     break;
   }
 }
@@ -63,7 +66,18 @@ void StateMachine::NewGame() {
   drawing1.DrawGame();
   a2::PAGE2OFF();
   if (!CheckAcesToMove())
-    state = State::Idle;
+    EnterIdle();
+}
+
+
+/// <summary>
+/// Enters idle state
+/// </summary>
+void StateMachine::EnterIdle() {
+  state = State::Idle;
+
+  CardLocation location = CardLocation::Tower(1);
+  drawing1.ToggleCursor(location.GetX(), location.GetY());
 }
 
 
