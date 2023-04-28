@@ -8,6 +8,7 @@
 #include <Apple2Lib/ROM.h>
 #include "CardAnimator.h"
 #include "CardLocation.h"
+#include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
@@ -75,9 +76,7 @@ void StateMachine::NewGame() {
 /// </summary>
 void StateMachine::EnterIdle() {
   state = State::Idle;
-
-  CardLocation location = CardLocation::Tower(1);
-  drawing1.ToggleCursor(location.GetX(), location.GetY());
+  Cursor::instance.Start(CardLocation::Tower(1));
 }
 
 
