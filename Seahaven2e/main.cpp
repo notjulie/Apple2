@@ -1,3 +1,6 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
 #include <stdint.h>
 #include <Apple2Lib/HGR.h>
@@ -19,22 +22,19 @@ static StateMachine stateMachine;
 /** \brief
  * Main entry point
  */
-extern "C" int main()
-{
-   // call initializers
-   Sprites::Initialize();
-   PersistentState::instance = PersistentState();
-   stateMachine = StateMachine();
-   CardAnimator::instance = CardAnimator();
+extern "C" int main() {
+  // call initializers
+  Sprites::Initialize();
+  PersistentState::instance = PersistentState();
+  stateMachine = StateMachine();
+  CardAnimator::instance = CardAnimator();
 
-   // enter main loop
-   for (;;)
-   {
-      // update the VBL counter
-      a2::VBLCounter::Update();
+  // enter main loop
+  for (;;) {
+    // update the VBL counter
+    a2::VBLCounter::Update();
 
-      // give the state machine its timeslice
-      stateMachine.Service();
-   }
+    // give the state machine its timeslice
+    stateMachine.Service();
+  }
 }
-
