@@ -42,10 +42,14 @@ void StateMachine::Service() {
 }
 
 
+/// <summary>
+/// Performs periodic actions during Idle state
+/// </summary>
 void StateMachine::ServiceIdle() {
-  if (CheckAcesToMove())
-    return;
+  // give the cursor its timeslice
+  Cursor::instance.Service();
 
+  // check for user input
   switch (a2::getchar()) {
   case 'N':
     // new game...
