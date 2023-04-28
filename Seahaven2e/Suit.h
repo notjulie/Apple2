@@ -1,36 +1,36 @@
-/** \brief
- * Suit defintions
- */
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+//
+//    Suit definitions.
+// =============================================================
 
-
-#ifndef SUIT_H
-#define SUIT_H
+#ifndef SEAHAVEN2E_SUIT_H_
+#define SEAHAVEN2E_SUIT_H_
 
 /** \brief
  * Suit enumeration
  */
 enum class Suit {
-   Clubs,
-   Diamonds,
-   Hearts,
-   Spades
+  Clubs,
+  Diamonds,
+  Hearts,
+  Spades
 };
 
 /** \brief
  * Suit pre-increment operator
  */
-inline Suit &operator++(Suit &s) {
-   s = (Suit)((uint8_t)s + 1);
-   return s;
+inline Suit operator++(Suit s) {
+  s = (Suit)((uint8_t)s + 1);
+  return s;
 }
 
 /** \brief
  * Suit post-increment operator
  */
-inline Suit operator++(Suit &s, int) {
-   s = (Suit)((uint8_t)s + 1);
-   return s;
+inline Suit operator++(Suit s, int) {
+  s = (Suit)((uint8_t)s + 1);
+  return s;
 }
 
-#endif // SUIT_H
-
+#endif  // SEAHAVEN2E_SUIT_H_
