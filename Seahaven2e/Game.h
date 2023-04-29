@@ -14,6 +14,7 @@ class Column
 public:
    inline Card GetCard(uint8_t index) const { return cards[index]; }
    void SetCard(uint8_t index, Card card) { cards[index] = card; }
+   int8_t GetBottomCardRow();
 
 private:
    Card  cards[5];
@@ -35,6 +36,7 @@ public:
    Card GetCard(CardLocation location) const;
    CardLocation GetCardToMoveToAce() const;
    void SetCard(CardLocation location, Card card);
+   CardLocation GetBottomColumnCardLocation(uint8_t column);
 
 public:
    static Game instance;

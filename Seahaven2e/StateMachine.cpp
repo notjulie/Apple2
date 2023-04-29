@@ -70,6 +70,9 @@ void StateMachine::NewGame() {
   drawing1.DrawBackground();
   drawing1.DrawGame();
   a2::PAGE2OFF();
+
+  Cursor::instance.SetCursorLocationToDefault();
+
   if (!CheckAcesToMove())
     EnterIdle();
 }
@@ -80,7 +83,7 @@ void StateMachine::NewGame() {
 /// </summary>
 void StateMachine::EnterIdle() {
   state = State::Idle;
-  Cursor::instance.Start(CardLocation::Tower(1));
+  Cursor::instance.Show();
 }
 
 

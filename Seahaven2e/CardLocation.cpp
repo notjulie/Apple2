@@ -14,13 +14,13 @@ uint8_t CardLocation::GetX() const
 {
    switch (area)
    {
-   case Area::Nowhere:
+   case CardArea::Nowhere:
       a2::puts("CARDLOCATION::GETX; NOWHERE");
       a2::PAGE2OFF();
       a2::MONITOR();
       return 0;
 
-   case Area::AcePiles:
+   case CardArea::AcePiles:
       switch (index)
       {
       case 0:
@@ -37,37 +37,53 @@ uint8_t CardLocation::GetX() const
       a2::MONITOR();
       return 0;
 
-   case Area::Towers:
+   case CardArea::Towers:
       return GetColumnX(3 + index);
 
    default:
-      return GetColumnX((uint8_t)area - (uint8_t)Area::Column1);
+      return GetColumnX((uint8_t)area - (uint8_t)CardArea::Column1);
    }
 }
 
 /// \brief
 ///   Gets the Y coordinate of the location
 ///
-uint8_t CardLocation::GetY() const
-{
-   switch (area)
-   {
-   case Area::Nowhere:
-      a2::puts("CARDLOCATION::GETY; NOWHERE");
-      a2::PAGE2OFF();
-      a2::MONITOR();
-      return 0;
+uint8_t CardLocation::GetY() const {
+  switch (area)
+  {
+  case CardArea::Nowhere:
+    a2::puts("CARDLOCATION::GETY; NOWHERE");
+    a2::PAGE2OFF();
+    a2::MONITOR();
+    return 0;
 
-   case Area::AcePiles:
-   case Area::Towers:
-      return TowersTop;
+  case CardArea::AcePiles:
+  case CardArea::Towers:
+    return TowersTop;
 
-   default:
-      a2::puts("CARDLOCATION::GETY; DEFAULT");
-      a2::PAGE2OFF();
-      a2::MONITOR();
-      return 0;
-   }
+  case CardArea::Column1:
+  case CardArea::Column2:
+  case CardArea::Column3:
+  case CardArea::Column4:
+  case CardArea::Column5:
+  case CardArea::Column6:
+  case CardArea::Column7:
+  case CardArea::Column8:
+  case CardArea::Column9:
+  case CardArea::Column10: {
+    uint8_t y = ColumnsTop;
+    for (int i=0; i < index; ++i)
+      y += DistanceBetweenColumnCards;
+    return y;
+  }
+
+  default:
+    a2::puts("CARDLOCATION::GETY; DEFAULT");
+    a2::PAGE2OFF();
+    a2::MONITOR();
+    return 0;
+  }
 }
+
 
 

@@ -175,7 +175,7 @@ void Drawing::DrawColumns() {
       if (j == 4) {
         DrawCardBottom(x, y + CardTopSpriteHeight);
       } else {
-        y += CardTopSpriteHeight + 1;
+        y += DistanceBetweenColumnCards;
       }
     }
 

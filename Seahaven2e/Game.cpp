@@ -99,41 +99,66 @@ CardLocation Game::GetCardToMoveToAce() const
 
 Card Game::GetCard(CardLocation location) const
 {
-   CardLocation::Area area = location.GetArea();
+   CardArea area = location.GetArea();
    switch (area)
    {
-   case CardLocation::Area::AcePiles:
+   case CardArea::AcePiles:
       return acePiles[location.GetIndex()];
 
-   case CardLocation::Area::Towers:
+   case CardArea::Towers:
       return towers[location.GetIndex()];
 
-   case CardLocation::Area::Nowhere:
+   case CardArea::Nowhere:
       return Card();
 
    default:
-      return columns[(uint8_t)area - (uint8_t)CardLocation::Area::Column1].GetCard(location.GetIndex());
+      return columns[(uint8_t)area - (uint8_t)CardArea::Column1].GetCard(location.GetIndex());
    }
 }
 
 void Game::SetCard(CardLocation location, Card card)
 {
-   CardLocation::Area area = location.GetArea();
+   CardArea area = location.GetArea();
    switch (area)
    {
-   case CardLocation::Area::AcePiles:
+   case CardArea::AcePiles:
       acePiles[location.GetIndex()] = card;
       break;
 
-   case CardLocation::Area::Towers:
+   case CardArea::Towers:
       towers[location.GetIndex()] = card;
       break;
 
-   case CardLocation::Area::Nowhere:
+   case CardArea::Nowhere:
       break;
 
    default:
-      columns[(uint8_t)area - (uint8_t)CardLocation::Area::Column1].SetCard(location.GetIndex(), card);
+      columns[(uint8_t)area - (uint8_t)CardArea::Column1].SetCard(location.GetIndex(), card);
       break;
    }
 }
+
+
+CardLocation Game::GetBottomColumnCardLocation(uint8_t column) {
+  int8_t row = columns[column].GetBottomCardRow();
+  if (row >= 0)
+    return CardLocation::Column(column, row);
+  else
+    return CardLocation();
+}
+
+
+// ============================================================================
+// ============================================================================
+//      class Column
+// ============================================================================
+// ============================================================================
+
+/// <summary>
+/// Returns the location of the bottom card on this column
+/// </summary>
+int8_t Column::GetBottomCardRow() {
+  //TODO: actually implement
+  return 4;
+}
+

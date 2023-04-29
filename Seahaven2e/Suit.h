@@ -20,7 +20,7 @@ enum class Suit {
 /** \brief
  * Suit pre-increment operator
  */
-inline Suit operator++(Suit s) {
+inline Suit &operator++(Suit &s) {
   s = (Suit)((uint8_t)s + 1);
   return s;
 }
@@ -28,7 +28,7 @@ inline Suit operator++(Suit s) {
 /** \brief
  * Suit post-increment operator
  */
-inline Suit operator++(Suit s, int) {
+inline Suit &operator++(Suit &s, int) {
   s = (Suit)((uint8_t)s + 1);
   return s;
 }

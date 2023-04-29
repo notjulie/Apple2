@@ -10,6 +10,7 @@
 #include <C6502/Memory.h>
 
 #include "CardAnimator.h"
+#include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
@@ -28,6 +29,7 @@ extern "C" int main() {
   PersistentState::instance = PersistentState();
   stateMachine = StateMachine();
   CardAnimator::instance = CardAnimator();
+  Cursor::instance = Cursor();
 
   // enter main loop
   for (;;) {

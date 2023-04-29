@@ -4,19 +4,57 @@
 
 #include "Cursor.h"
 
+#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"
 
 Cursor Cursor::instance;
 
 /// <summary>
+/// Sets the cursor location to the bottom card on column 4, adjusting
+/// as needed if the column is empty
+/// </summary>
+void Cursor::SetCursorLocationToDefault() {
+  //TODO: adjust if column is empty
+  SetLocation(Game::instance.GetBottomColumnCardLocation(4));
+  a2::PRBYTE((uint8_t)location.GetArea());
+  a2::puts(" ");
+  a2::PRBYTE(location.GetIndex());
+}
+
+
+/// <summary>
+/// Shows the cursor at its current location
+/// </summary>
+void Cursor::Show() {
+  if (state == State::Idle) {
+    Toggle();
+    state = State::On;
+  }
+}
+
+/// <summary>
 /// Starts showing the cursor at the given location
 /// </summary>
-void Cursor::Start(CardLocation location)
+void Cursor::SetLocation(CardLocation location)
 {
-  this->location = location;
-  Toggle();
-  state = State::On;
+  switch (state)
+  {
+  case State::Idle:
+  case State::Off:
+    this->location = location;
+    break;
+
+  case State::On:
+    Toggle();
+    this->location = location;
+    Toggle();
+    break;
+
+  default:
+    a2::puts("CURSORSETLOCATION FAIL");
+    break;
+  }
 }
 
 void Cursor::Service() {

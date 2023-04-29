@@ -7,9 +7,13 @@
 
 #include "CardLocation.h"
 
+/// <summary>
+/// Cursor implementation
+/// </summary>
 class Cursor {
  public:
-  void Start(CardLocation location);
+  void SetCursorLocationToDefault();
+  void Show();
   void Service();
 
  public:
@@ -23,6 +27,7 @@ class Cursor {
   };
 
  private:
+  void SetLocation(CardLocation location);
   void Toggle();
 
  private:
