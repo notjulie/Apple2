@@ -1,9 +1,13 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
-#ifndef SAVEDBACKGROUND_H
-#define SAVEDBACKGROUND_H
+
+#ifndef SEAHAVEN2E_SAVEDBACKGROUND_H_
+#define SEAHAVEN2E_SAVEDBACKGROUND_H_
 
 struct SavedBackground {
-   uint8_t pixels[4 * CardHeight];
+  uint8_t pixels[4 * CardHeight];
 };
 
-#endif // SAVEDBACKGROUND_H
+#endif  // SEAHAVEN2E_SAVEDBACKGROUND_H_
