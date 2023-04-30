@@ -10,47 +10,43 @@
 /// \brief
 ///   Gets the byte offset of the location within the raster
 ///
-uint8_t CardLocation::GetX() const
-{
-   switch (area)
-   {
-   case CardArea::Nowhere:
-      a2::puts("CARDLOCATION::GETX; NOWHERE");
-      a2::PAGE2OFF();
-      a2::MONITOR();
-      return 0;
+uint8_t CardLocation::GetX() const {
+  switch (area) {
+  case CardArea::Nowhere:
+    a2::puts("CARDLOCATION::GETX; NOWHERE");
+    a2::PAGE2OFF();
+    a2::MONITOR();
+    return 0;
 
-   case CardArea::AcePiles:
-      switch (index)
-      {
-      case 0:
-         return GetColumnX(0);
-      case 1:
-         return GetColumnX(1);
-      case 2:
-         return GetColumnX(8);
-      case 3:
-         return GetColumnX(9);
-      }
-      a2::puts("CARDLOCATION::GETX; ACEPILE");
-      a2::PAGE2OFF();
-      a2::MONITOR();
-      return 0;
+  case CardArea::AcePiles:
+    switch (index) {
+    case 0:
+      return GetColumnX(0);
+    case 1:
+      return GetColumnX(1);
+    case 2:
+      return GetColumnX(8);
+    case 3:
+      return GetColumnX(9);
+    }
+    a2::puts("CARDLOCATION::GETX; ACEPILE");
+    a2::PAGE2OFF();
+    a2::MONITOR();
+    return 0;
 
-   case CardArea::Towers:
-      return GetColumnX(3 + index);
+  case CardArea::Towers:
+    return GetColumnX(3 + index);
 
-   default:
-      return GetColumnX((uint8_t)area - (uint8_t)CardArea::Column1);
-   }
+  default:
+    return GetColumnX((uint8_t)area - (uint8_t)CardArea::Column1);
+  }
 }
 
 /// \brief
 ///   Gets the Y coordinate of the location
 ///
 uint8_t CardLocation::GetY() const {
-  switch (area)
-  {
+  switch (area) {
   case CardArea::Nowhere:
     a2::puts("CARDLOCATION::GETY; NOWHERE");
     a2::PAGE2OFF();
@@ -84,6 +80,3 @@ uint8_t CardLocation::GetY() const {
     return 0;
   }
 }
-
-
-

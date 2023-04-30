@@ -1,6 +1,9 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
-#ifndef CARDLOCATION_H
-#define CARDLOCATION_H
+#ifndef SEAHAVEN2E_CARDLOCATION_H_
+#define SEAHAVEN2E_CARDLOCATION_H_
 
 #include <stdint.h>
 #include "Sprites.h"
@@ -30,32 +33,36 @@ inline CardArea operator+(CardArea area, uint8_t addend) {
 }
 
 class CardLocation {
-public:
-   static const uint8_t TowersTop = 3;
-   static const uint8_t TowersBottom = CardLocation::TowersTop + CardHeight;
-   static const uint8_t ColumnsTop = TowersBottom + 4;
+ public:
+  static const uint8_t TowersTop = 3;
+  static const uint8_t TowersBottom = CardLocation::TowersTop + CardHeight;
+  static const uint8_t ColumnsTop = TowersBottom + 4;
 
-public:
-   inline CardLocation() : area(CardArea::Nowhere), index(0) { }
+ public:
+  inline CardLocation() : area(CardArea::Nowhere), index(0) { }
 
-   inline CardArea GetArea() const { return area; }
-   inline uint8_t GetIndex() const { return index; }
-   inline bool IsNull() const { return area == CardArea::Nowhere; }
+  inline CardArea GetArea() const { return area; }
+  inline uint8_t GetIndex() const { return index; }
+  inline bool IsNull() const { return area == CardArea::Nowhere; }
 
-   uint8_t GetX() const;
-   uint8_t GetY() const;
+  uint8_t GetX() const;
+  uint8_t GetY() const;
 
-   static inline CardLocation AcePile(Suit suit) { return CardLocation(CardArea::AcePiles, (uint8_t)suit); }
-   static inline CardLocation Column(uint8_t column, uint8_t index) { return CardLocation(CardArea::Column1 + column, index); }
-   static inline CardLocation Tower(uint8_t index) { return CardLocation(CardArea::Towers, index); }
+  static inline CardLocation AcePile(Suit suit) {
+    return CardLocation(CardArea::AcePiles, (uint8_t)suit); }
+  static inline CardLocation Column(uint8_t column, uint8_t index) {
+    return CardLocation(CardArea::Column1 + column, index); }
+  static inline CardLocation Tower(uint8_t index) {
+     return CardLocation(CardArea::Towers, index); }
 
-private:
-   inline CardLocation(CardArea _area, uint8_t _index) : area(_area), index(_index) {}
-   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
+ private:
+  inline CardLocation(CardArea _area, uint8_t _index)
+    : area(_area), index(_index) {}
+  static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
 
-private:
-   CardArea area;
-   uint8_t index;
+ private:
+  CardArea area;
+  uint8_t index;
 };
 
-#endif // CARDLOCATION_H
+#endif  // SEAHAVEN2E_CARDLOCATION_H_
