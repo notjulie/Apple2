@@ -12,7 +12,8 @@
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
-using namespace a2;
+
+using ::a2::KeyCode;
 
 /// <summary>
 /// Performs periodic action
@@ -87,9 +88,9 @@ void StateMachine::ServiceIdle() {
 
 
 
-/// \brief
+/// <summary>
 ///   Starts a new game
-///
+/// </summary>
 void StateMachine::NewGame() {
   Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
   drawing1.DrawBackground();
@@ -112,11 +113,12 @@ void StateMachine::EnterIdle() {
 }
 
 
-/// \brief
+/// <summary>
 ///   Checks if there are any aces to move and starts the movement if so
-/// \return
+/// </summary>
+/// <return>
 ///   true if a card is being moved to the aces
-///
+/// </return>
 bool StateMachine::CheckAcesToMove() {
   // find the location of the card to move
   CardLocation startLocation = Game::instance.GetCardToMoveToAce();
@@ -134,3 +136,4 @@ bool StateMachine::CheckAcesToMove() {
   state = State::MoveToAces;
   return true;
 }
+
