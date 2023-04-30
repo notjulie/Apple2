@@ -16,6 +16,11 @@ class Cursor {
   void Show();
   void Service();
 
+  void Up() {}
+  void Down() {}
+  void Left() {}
+  void Right() {}
+
  public:
   static Cursor instance;
 

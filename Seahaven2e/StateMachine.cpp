@@ -12,7 +12,7 @@
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
-
+using namespace a2;
 
 /// <summary>
 /// Performs periodic action
@@ -50,16 +50,41 @@ void StateMachine::ServiceIdle() {
   Cursor::instance.Service();
 
   // check for user input
-  switch (a2::getchar()) {
-  case 'N':
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wswitch"
+  KeyCode key = a2::getKey();
+  switch (key) {
+  case (KeyCode)'N':
     // new game...
     NewGame();
     break;
 
+  case KeyCode::Up:
+    Cursor::instance.Up();
+    break;
+
+  case KeyCode::Down:
+    Cursor::instance.Down();
+    break;
+
+  case KeyCode::Left:
+    Cursor::instance.Left();
+    break;
+
+  case KeyCode::Right:
+    Cursor::instance.Right();
+    break;
+
+  case KeyCode::None:
+    break;
+
   default:
+    a2::PRBYTE((uint8_t)key);
     break;
   }
+#pragma GCC diagnostic pop
 }
+
 
 
 /// \brief
