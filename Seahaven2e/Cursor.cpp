@@ -15,7 +15,7 @@ Cursor Cursor::instance;
 /// as needed if the column is empty
 /// </summary>
 void Cursor::SetCursorLocationToDefault() {
-  //TODO: adjust if column is empty
+  // TODO(RER): adjust if column is empty
   SetLocation(Game::instance.GetBottomColumnCardLocation(4));
   a2::PRBYTE((uint8_t)location.GetArea());
   a2::puts(" ");
@@ -36,10 +36,8 @@ void Cursor::Show() {
 /// <summary>
 /// Starts showing the cursor at the given location
 /// </summary>
-void Cursor::SetLocation(CardLocation location)
-{
-  switch (state)
-  {
+void Cursor::SetLocation(CardLocation location) {
+  switch (state) {
   case State::Idle:
   case State::Off:
     this->location = location;
