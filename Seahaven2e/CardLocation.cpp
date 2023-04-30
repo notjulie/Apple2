@@ -55,7 +55,7 @@ uint8_t CardLocation::GetY() const {
 
   case CardArea::AcePiles:
   case CardArea::Towers:
-    return TowersTop;
+    return CardLocations::TowersTop;
 
   case CardArea::Column1:
   case CardArea::Column2:
@@ -66,12 +66,8 @@ uint8_t CardLocation::GetY() const {
   case CardArea::Column7:
   case CardArea::Column8:
   case CardArea::Column9:
-  case CardArea::Column10: {
-    uint8_t y = ColumnsTop;
-    for (int i=0; i < index; ++i)
-      y += DistanceBetweenColumnCards;
-    return y;
-  }
+  case CardArea::Column10:
+    return columnYLookup.Y(index);
 
   default:
     a2::puts("CARDLOCATION::GETY; DEFAULT");

@@ -10,7 +10,25 @@
 #include "Suit.h"
 
 
-const uint8_t DistanceBetweenColumnCards = CardTopSpriteHeight + 1;
+// ==========================================================
+// ==========================================================
+//      namespace CardLocations
+// ==========================================================
+// ==========================================================
+
+namespace CardLocations {
+  constexpr uint8_t DistanceBetweenColumnCards = CardTopSpriteHeight + 1;
+  constexpr uint8_t TowersTop = 3;
+  constexpr uint8_t TowersBottom = TowersTop + CardHeight;
+  constexpr uint8_t ColumnsTop = TowersBottom + 4;
+  constexpr uint8_t MaxColumnCards = 16;
+}
+
+// ==========================================================
+// ==========================================================
+//      enum class CardArea
+// ==========================================================
+// ==========================================================
 
 enum class CardArea {
   Nowhere,
@@ -32,12 +50,41 @@ inline CardArea operator+(CardArea area, uint8_t addend) {
   return (CardArea)((uint8_t)area + addend);
 }
 
-class CardLocation {
- public:
-  static const uint8_t TowersTop = 3;
-  static const uint8_t TowersBottom = CardLocation::TowersTop + CardHeight;
-  static const uint8_t ColumnsTop = TowersBottom + 4;
 
+// ==========================================================
+// ==========================================================
+//      class ColumnYLookup
+// ==========================================================
+// ==========================================================
+
+/// <summary>
+/// Handy constexpr lookup for the top of a column card so
+/// that we don't have to multiply
+/// </summary>
+class ColumnYLookup {
+ public:
+  constexpr ColumnYLookup() : y() {
+    for (int i=0; i < CardLocations::MaxColumnCards; ++i)
+      y[i] =
+        CardLocations::ColumnsTop +
+        i * CardLocations::DistanceBetweenColumnCards;
+  }
+
+  inline uint8_t Y(uint8_t index) const { return y[index]; }
+
+ private:
+  uint8_t y[CardLocations::MaxColumnCards];
+};
+
+constexpr ColumnYLookup columnYLookup;
+
+// ==========================================================
+// ==========================================================
+//      class CardLocation
+// ==========================================================
+// ==========================================================
+
+class CardLocation {
  public:
   inline CardLocation() : area(CardArea::Nowhere), index(0) { }
 

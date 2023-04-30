@@ -131,7 +131,7 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 void Drawing::DrawAcePile(Suit suit, uint8_t x) {
   Card card = Game::instance.GetAcePileCard(suit);
   if (!card.IsNull()) {
-      DrawCard(card, x, CardLocation::TowersTop);
+      DrawCard(card, x, CardLocations::TowersTop);
   }
 }
 
@@ -145,7 +145,7 @@ void Drawing::DrawAcePiles() {
   for (uint8_t tower=0; tower < 4; ++tower) {
     Card card = Game::instance.GetTower(tower);
     if (!card.IsNull()) {
-      DrawCard(card, x, CardLocation::TowersTop);
+      DrawCard(card, x, CardLocations::TowersTop);
     }
     x += 4;
   }
@@ -157,7 +157,7 @@ void Drawing::DrawTowers() {
   for (uint8_t tower=0; tower < 4; ++tower) {
     Card card = Game::instance.GetTower(tower);
     if (!card.IsNull()) {
-      DrawCard(card, x, CardLocation::TowersTop);
+      DrawCard(card, x, CardLocations::TowersTop);
     }
     x += 4;
   }
@@ -169,13 +169,13 @@ void Drawing::DrawColumns() {
   for (uint8_t i=0; i < 10; ++i) {
     Column &column = Game::instance.GetColumn(i);
 
-    uint8_t y = CardLocation::ColumnsTop;
+    uint8_t y = CardLocations::ColumnsTop;
     for (uint8_t j=0; j < 5; ++j) {
       DrawCardTop(column.GetCard(j), x, y);
       if (j == 4) {
         DrawCardBottom(x, y + CardTopSpriteHeight);
       } else {
-        y += DistanceBetweenColumnCards;
+        y += CardLocations::DistanceBetweenColumnCards;
       }
     }
 
