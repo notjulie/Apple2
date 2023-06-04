@@ -15,11 +15,31 @@ Cursor Cursor::instance;
 /// as needed if the column is empty
 /// </summary>
 void Cursor::SetCursorLocationToDefault() {
-  // TODO(RER): adjust if column is empty
-  SetLocation(Game::instance.GetBottomColumnCardLocation(4));
-  a2::PRBYTE((uint8_t)location.GetArea());
-  a2::puts(" ");
-  a2::PRBYTE(location.GetIndex());
+  // grab the bottom card from column 4
+  CardLocation location;
+
+  // grab the bottom card from the column nearest the center
+  for (int i=0; i<5; ++i) {
+    location = Game::instance.GetBottomColumnCardLocation(4 - i);
+    if (!location.IsNull())
+      break;
+    location = Game::instance.GetBottomColumnCardLocation(5 + i);
+    if (!location.IsNull())
+      break;
+  }
+
+  // if we found none, find a tower
+  if (location.IsNull()) {
+    for (int i=0; i<4; ++i) {
+      if (!Game::instance.GetTower(i).IsNull()) {
+        location = CardLocation::Tower(i);
+        break;
+      }
+    }
+  }
+
+  // set it
+  SetLocation(location);
 }
 
 
@@ -79,6 +99,8 @@ void Cursor::Service() {
 }
 
 void Cursor::Toggle() {
+  if (location.IsNull())
+    return;
   lastToggleTime = a2::VBLCounter::GetCounter();
   drawing1.ToggleCursor(location.GetX(), location.GetY());
 }
