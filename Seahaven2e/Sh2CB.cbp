@@ -62,6 +62,10 @@
 		<Unit filename="CardAnimator.h" />
 		<Unit filename="CardLocation.cpp" />
 		<Unit filename="CardLocation.h" />
+		<Unit filename="Column.cpp" />
+		<Unit filename="Column.h" />
+		<Unit filename="Cursor.cpp" />
+		<Unit filename="Cursor.h" />
 		<Unit filename="Drawing.cpp" />
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />

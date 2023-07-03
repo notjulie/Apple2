@@ -7,20 +7,7 @@
 
 #include "Card.h"
 #include "CardLocation.h"
-
-
-/** \brief
- * Represents a column on the game board
- */
-class Column {
- public:
-  inline Card GetCard(uint8_t index) const { return cards[index]; }
-  void SetCard(uint8_t index, Card card) { cards[index] = card; }
-  int8_t GetBottomCardRow();
-
- private:
-  Card  cards[5];
-};
+#include "Column.h"
 
 
 /** \brief
