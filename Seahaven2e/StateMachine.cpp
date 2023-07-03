@@ -76,6 +76,10 @@ void StateMachine::ServiceIdle() {
     Cursor::instance.Right();
     break;
 
+  case (KeyCode)'T':
+    MoveToTower();
+    break;
+
   case KeyCode::None:
     break;
 
@@ -86,6 +90,27 @@ void StateMachine::ServiceIdle() {
 #pragma GCC diagnostic pop
 }
 
+
+/// <summary>
+/// Moves the currently selected card to a tower
+/// </summary>
+void StateMachine::MoveToTower()
+{
+  CardLocation location = Cursor::instance.GetLocation();
+  if (location.IsNull())
+    return;
+
+  // get the card
+  Card card = Game::instance.GetCard(location);
+
+  // start the animation
+  CardAnimator::instance.StartAnimation(
+      card,
+      location,
+      CardLocation::Tower(0)
+    );
+  state = State::MoveToAces;
+}
 
 
 /// <summary>

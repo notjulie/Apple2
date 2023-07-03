@@ -21,6 +21,8 @@ class Cursor {
   void Left() {}
   void Right() {}
 
+  CardLocation GetLocation() const { return location; }
+
  public:
   static Cursor instance;
 

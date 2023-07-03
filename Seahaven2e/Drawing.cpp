@@ -163,6 +163,9 @@ void Drawing::DrawTowers() {
   }
 }
 
+/// <summary>
+/// Draws all the columns
+/// </summary>
 void Drawing::DrawColumns() {
   uint8_t x = 0;
 
@@ -171,13 +174,14 @@ void Drawing::DrawColumns() {
 
     uint8_t y = CardLocations::ColumnsTop;
     for (uint8_t j=0; j < 5; ++j) {
-      DrawCardTop(column.GetCard(j), x, y);
-      if (j == 4) {
-        DrawCardBottom(x, y + CardTopSpriteHeight);
-      } else {
-        y += CardLocations::DistanceBetweenColumnCards;
-      }
+      Card card = column.GetCard(j);
+      if (card.IsNull())
+        break;
+
+      DrawCardTop(card, x, y);
+      y += CardLocations::DistanceBetweenColumnCards;
     }
+    DrawCardBottom(x, y + CardTopSpriteHeight - CardLocations::DistanceBetweenColumnCards);
 
     x += 4;
   }
