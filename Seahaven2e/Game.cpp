@@ -28,8 +28,9 @@ void Game::Shuffle16(uint16_t instruction) {
   // deal
   uint8_t cardIndex = 0;
   for (uint8_t column=0; column < 10; ++column) {
+    columns[column].Clear();
     for (uint8_t row=0; row < 5; ++row) {
-      columns[column].SetCard(row, Card(deck[cardIndex++]));
+      columns[column].Append(Card(deck[cardIndex++]));
     }
   }
 
@@ -121,17 +122,16 @@ void Game::SetCard(CardLocation location, Card card) {
     break;
 
   default:
-    columns[(uint8_t)area - (uint8_t)CardArea::Column1].SetCard(
-      location.GetIndex(), card);
+    columns[area - CardArea::Column1].SetCard(location.GetIndex(), card);
     break;
   }
 }
 
 
 CardLocation Game::GetBottomColumnCardLocation(uint8_t column) {
-  int8_t row = columns[column].GetBottomCardRow();
-  if (row >= 0)
-    return CardLocation::Column(column, row);
+  int8_t row = columns[column].GetCount();
+  if (row > 0)
+    return CardLocation::Column(column, row - 1);
   else
     return CardLocation();
 }

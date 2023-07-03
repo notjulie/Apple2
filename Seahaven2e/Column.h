@@ -12,12 +12,17 @@
  */
 class Column {
  public:
+  void Clear() { count = 0; }
+  void Append(Card card) { SetCard(count, card); }
+
   inline Card GetCard(uint8_t index) const { return cards[index]; }
-  void SetCard(uint8_t index, Card card) { cards[index] = card; }
-  int8_t GetBottomCardRow();
+  uint8_t GetCount() const { return count; }
+
+  void SetCard(uint8_t row, Card card);
 
  private:
   Card  cards[5];
+  uint8_t count;
 };
 
 

@@ -22,10 +22,15 @@ class Card {
   inline Suit GetSuit() const { return suit; }
   inline bool IsNull() const { return rank == Rank::Null; }
 
+  Card &operator-=(int i);
+  bool operator==(Card c) const { return c.suit==suit && c.rank==rank; }
+  bool operator!=(Card c) const { return !operator==(c); }
+
  private:
   Suit suit;
   Rank rank;
 };
 
+Card operator-(Card card, uint8_t i);
 
 #endif  // SEAHAVEN2E_CARD_H_

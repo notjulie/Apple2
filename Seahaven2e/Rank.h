@@ -44,4 +44,22 @@ inline Rank operator++(Rank &r, int) {
   return r;
 }
 
+/// <summary>
+/// Rank pre-decrement operator
+/// </summary>
+inline Rank &operator--(Rank &r) {
+  if (r > Rank::Null)
+    r = (Rank)((uint8_t)r + 1);
+  return r;
+}
+
+/// <summary>
+/// Rank post-decrement operator
+/// </summary>
+inline Rank operator--(Rank &r, int) {
+  if (r > Rank::Null)
+    r = (Rank)((uint8_t)r + 1);
+  return r;
+}
+
 #endif  // SEAHAVEN2E_RANK_H_
