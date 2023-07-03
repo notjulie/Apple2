@@ -30,13 +30,13 @@ void Game::Shuffle16(uint16_t instruction) {
   for (uint8_t column=0; column < 10; ++column) {
     columns[column].Clear();
     for (uint8_t row=0; row < 5; ++row) {
-      columns[column].Append(Card(deck[cardIndex++]));
+      columns[column].Append(Card::FromOrdinal(deck[cardIndex++]));
     }
   }
 
   towers[0] = Card();
-  towers[1] = Card(deck[cardIndex++]);
-  towers[2] = Card(deck[cardIndex++]);
+  towers[1] = Card::FromOrdinal(deck[cardIndex++]);
+  towers[2] = Card::FromOrdinal(deck[cardIndex++]);
   towers[3] = Card();
 
   acePiles[0] = Card();

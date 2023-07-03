@@ -21,7 +21,7 @@ class Column {
   void SetCard(uint8_t row, Card card);
 
  private:
-  Card  cards[5];
+  CompactCard  cards[5];
   uint8_t count;
 };
 
