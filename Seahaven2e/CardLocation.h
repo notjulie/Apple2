@@ -50,6 +50,10 @@ inline CardArea operator+(CardArea area, uint8_t addend) {
   return (CardArea)((uint8_t)area + addend);
 }
 
+inline int8_t operator-(CardArea area1, CardArea area2) {
+  return (int8_t)area1 - (int8_t)area2;
+}
+
 
 // ==========================================================
 // ==========================================================
@@ -94,6 +98,8 @@ class CardLocation {
 
   uint8_t GetX() const;
   uint8_t GetY() const;
+
+  CardLocation Up() const;
 
   static inline CardLocation AcePile(Suit suit) {
     return CardLocation(CardArea::AcePiles, (uint8_t)suit); }

@@ -44,6 +44,15 @@ void Cursor::SetCursorLocationToDefault() {
 
 
 /// <summary>
+/// Moves the cursor up
+/// </summary>
+void Cursor::Up()
+{
+  SetLocation(location.Up());
+}
+
+
+/// <summary>
 /// Shows the cursor at its current location
 /// </summary>
 void Cursor::Show() {

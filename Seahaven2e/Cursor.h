@@ -16,7 +16,7 @@ class Cursor {
   void Show();
   void Service();
 
-  void Up() {}
+  void Up();
   void Down() {}
   void Left() {}
   void Right() {}

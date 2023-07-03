@@ -76,3 +76,39 @@ uint8_t CardLocation::GetY() const {
     return 0;
   }
 }
+
+
+CardLocation CardLocation::Up() const
+{
+  CardLocation result = *this;
+
+  switch (area)
+  {
+  case CardArea::Column1:
+  case CardArea::Column2:
+  case CardArea::Column3:
+  case CardArea::Column8:
+  case CardArea::Column9:
+  case CardArea::Column10:
+    if (index > 0)
+      --result.index;
+    break;
+
+  case CardArea::Column4:
+  case CardArea::Column5:
+  case CardArea::Column6:
+  case CardArea::Column7:
+    if (index > 0) {
+      --result.index;
+    } else {
+      result.area = CardArea::Towers;
+      result.index = area - CardArea::Column4;
+    }
+    break;
+
+  default:
+    break;
+  }
+
+  return result;
+}
