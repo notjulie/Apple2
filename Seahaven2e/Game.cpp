@@ -128,6 +128,18 @@ CardLocation Game::GetCardLocation(CompactCard card) {
   return CardLocation();
 }
 
+
+/// <summary>
+/// Returns true if the given location is the bottom card on a column
+/// <summary>
+bool Game::IsBottomOfColumn(CardLocation location) const {
+  uint8_t columnIndex = (uint8_t)(location.GetArea() - CardArea::Column1);
+  if (columnIndex >= 10)
+    return false;
+  else
+    return columns[columnIndex].GetCount() == location.GetIndex() + 1;
+}
+
 void Game::SetCard(CardLocation location, Card card) {
   CardArea area = location.GetArea();
   switch (area) {

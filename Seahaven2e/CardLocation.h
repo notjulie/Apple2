@@ -116,6 +116,9 @@ class CardLocation {
  private:
   CardArea area;
   uint8_t index;
+
+friend CardLocation operator+(CardLocation location, int8_t i);
 };
+
 
 #endif  // SEAHAVEN2E_CARDLOCATION_H_

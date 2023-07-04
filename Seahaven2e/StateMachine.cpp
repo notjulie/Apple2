@@ -111,14 +111,14 @@ void StateMachine::MoveToColumn()
 
   // get the location of the card above it
   CardLocation targetLocation = Game::instance.GetCardLocation(card + 1);
-  if (targetLocation.IsNull())
+  if (!Game::instance.IsBottomOfColumn(targetLocation))
     return;
 
   // start the animation
   CardAnimator::instance.StartAnimation(
       card,
       location,
-      targetLocation
+      targetLocation + 1
     );
   state = State::MoveToAces;
 }

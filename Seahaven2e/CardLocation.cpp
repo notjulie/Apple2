@@ -112,3 +112,40 @@ CardLocation CardLocation::Up() const
 
   return result;
 }
+
+/// <summary>
+/// Addition operator for CardLocation
+/// </summary>
+CardLocation operator+(CardLocation location, int8_t i) {
+  location.index += i;
+
+  switch (location.area)
+  {
+  case CardArea::AcePiles:
+  case CardArea::Towers:
+    if (location.index >= 4)
+      location.area = CardArea::Nowhere;
+    break;
+
+  case CardArea::Column1:
+  case CardArea::Column2:
+  case CardArea::Column3:
+  case CardArea::Column4:
+  case CardArea::Column5:
+  case CardArea::Column6:
+  case CardArea::Column7:
+  case CardArea::Column8:
+  case CardArea::Column9:
+  case CardArea::Column10:
+    if (location.index >= 10)
+      location.area = CardArea::Nowhere;
+    break;
+
+  default:
+    location.area = CardArea::Nowhere;
+    break;
+  }
+
+  return location;
+}
+

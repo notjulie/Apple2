@@ -29,6 +29,8 @@ class Game {
   CardLocation GetBottomColumnCardLocation(uint8_t column);
   CardLocation GetCardLocation(CompactCard card);
 
+  bool IsBottomOfColumn(CardLocation location) const;
+
  public:
   static Game instance;
 
