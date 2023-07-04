@@ -24,6 +24,7 @@ friend class CompactCard;
   inline bool IsNull() const { return rank == Rank::Null; }
 
   Card &operator-=(int i);
+  Card &operator+=(int i);
   bool operator==(Card c) const { return c.suit==suit && c.rank==rank; }
   bool operator!=(Card c) const { return !operator==(c); }
 
@@ -35,6 +36,7 @@ friend class CompactCard;
 };
 
 Card operator-(Card card, uint8_t i);
+Card operator+(Card card, uint8_t i);
 
 
 class CompactCard {

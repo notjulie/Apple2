@@ -27,6 +27,7 @@ class Game {
   CardLocation GetCardToMoveToAce() const;
   void SetCard(CardLocation location, Card card);
   CardLocation GetBottomColumnCardLocation(uint8_t column);
+  CardLocation GetCardLocation(Card card);
 
  public:
   static Game instance;

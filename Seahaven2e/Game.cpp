@@ -107,6 +107,15 @@ Card Game::GetCard(CardLocation location) const {
   }
 }
 
+
+/// <summary>
+/// Gets the location of the given card
+/// </summary>
+CardLocation Game::GetCardLocation(Card card) {
+  a2::puts("GETCARDLOCATION");
+  return CardLocation();
+}
+
 void Game::SetCard(CardLocation location, Card card) {
   CardArea area = location.GetArea();
   switch (area) {

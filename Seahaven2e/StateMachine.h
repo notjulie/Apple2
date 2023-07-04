@@ -19,6 +19,7 @@ class StateMachine {
   bool CheckAcesToMove();
   void NewGame();
   void EnterIdle();
+  void MoveToColumn();
   void MoveToTower();
   void ServiceIdle();
 

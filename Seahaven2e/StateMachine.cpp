@@ -76,6 +76,10 @@ void StateMachine::ServiceIdle() {
     Cursor::instance.Right();
     break;
 
+  case (KeyCode)'C':
+    MoveToColumn();
+    break;
+
   case (KeyCode)'T':
     MoveToTower();
     break;
@@ -88,6 +92,35 @@ void StateMachine::ServiceIdle() {
     break;
   }
 #pragma GCC diagnostic pop
+}
+
+
+/// <summary>
+/// Moves the currently selected card to a column
+/// </summary>
+void StateMachine::MoveToColumn()
+{
+  CardLocation location = Cursor::instance.GetLocation();
+  if (location.IsNull())
+    return;
+
+  // get the card
+  Card card = Game::instance.GetCard(location);
+  if (card.IsNull())
+    return;
+
+  // get the location of the card above it
+  CardLocation targetLocation = Game::instance.GetCardLocation(card + 1);
+  if (targetLocation.IsNull())
+    return;
+
+  // start the animation
+  CardAnimator::instance.StartAnimation(
+      card,
+      location,
+      targetLocation
+    );
+  state = State::MoveToAces;
 }
 
 

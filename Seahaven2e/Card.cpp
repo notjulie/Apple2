@@ -11,8 +11,20 @@
 
 
 Card &Card::operator-=(int i) {
-  --rank;
+  rank = rank - i;
   return *this;
+}
+
+Card &Card::operator+=(int i) {
+  rank = rank + i;
+  return *this;
+}
+
+Card Card::FromOrdinal(uint8_t cardNumber) {
+  Card result;
+  result.suit = (Suit)(cardNumber & 3);
+  result.rank = (Rank)(1 + (cardNumber >> 2));
+  return result;
 }
 
 Card operator-(Card card, uint8_t i) {
@@ -21,10 +33,9 @@ Card operator-(Card card, uint8_t i) {
   return result;
 }
 
-Card Card::FromOrdinal(uint8_t cardNumber) {
-  Card result;
-  result.suit = (Suit)(cardNumber & 3);
-  result.rank = (Rank)(1 + (cardNumber >> 2));
+Card operator+(Card card, uint8_t i) {
+  Card result = card;
+  card += i;
   return result;
 }
 

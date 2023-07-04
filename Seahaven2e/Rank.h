@@ -27,39 +27,19 @@ enum class Rank {
   King
 };
 
-
 /// <summary>
-/// Rank pre-increment operator
+/// Rank addition operator
 /// </summary>
-inline Rank &operator++(Rank &r) {
-  r = (Rank)((uint8_t)r + 1);
+inline Rank operator+(Rank &r, int8_t i) {
+  r = (Rank)((uint8_t)r + i);
   return r;
 }
 
 /// <summary>
-/// Rank post-increment operator
+/// Rank subtraction operator
 /// </summary>
-inline Rank operator++(Rank &r, int) {
-  r = (Rank)((uint8_t)r + 1);
-  return r;
-}
-
-/// <summary>
-/// Rank pre-decrement operator
-/// </summary>
-inline Rank &operator--(Rank &r) {
-  if (r > Rank::Null)
-    r = (Rank)((uint8_t)r + 1);
-  return r;
-}
-
-/// <summary>
-/// Rank post-decrement operator
-/// </summary>
-inline Rank operator--(Rank &r, int) {
-  if (r > Rank::Null)
-    r = (Rank)((uint8_t)r + 1);
-  return r;
+inline Rank operator-(Rank &r, int8_t i) {
+  return r + (-i);
 }
 
 #endif  // SEAHAVEN2E_RANK_H_
