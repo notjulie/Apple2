@@ -6,6 +6,7 @@
 #define _COLUMN_H
 
 #include "Card.h"
+#include "CardLocation.h"
 
 /** \brief
  * Represents a column on the game board
@@ -19,6 +20,8 @@ class Column {
   uint8_t GetCount() const { return count; }
 
   void SetCard(uint8_t row, Card card);
+
+  CardLocation GetCardLocation(CompactCard card);
 
  private:
   CompactCard  cards[5];

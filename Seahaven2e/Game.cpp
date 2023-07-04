@@ -111,8 +111,20 @@ Card Game::GetCard(CardLocation location) const {
 /// <summary>
 /// Gets the location of the given card
 /// </summary>
-CardLocation Game::GetCardLocation(Card card) {
-  a2::puts("GETCARDLOCATION");
+CardLocation Game::GetCardLocation(CompactCard card) {
+  if (card.IsNull())
+    return CardLocation();
+
+  for (uint8_t i=0; i<4; ++i)
+    if (card == towers[i])
+      return CardLocation::Tower(i);
+
+  for (uint8_t i=0; i<10; ++i) {
+    CardLocation location = columns[i].GetCardLocation(card);
+    if (!location.IsNull())
+      return location;
+  }
+
   return CardLocation();
 }
 

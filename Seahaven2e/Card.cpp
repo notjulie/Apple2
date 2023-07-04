@@ -43,15 +43,16 @@ Card operator+(Card card, uint8_t i) {
 //          class CompactCard
 // ======================================================================
 
-CompactCard::CompactCard(Card card) {
-  rank = (uint8_t)card.rank;
-  suit = (uint8_t)card.suit;
+CompactCard::CompactCard(Card _card) {
+  card.asInt = 0;
+  card.parts.rank = (uint8_t)_card.rank;
+  card.parts.suit = (uint8_t)_card.suit;
 }
 
 CompactCard::operator Card() const
 {
   Card result;
-  result.rank = (Rank)rank;
-  result.suit = (Suit)suit;
+  result.rank = (Rank)card.parts.rank;
+  result.suit = (Suit)card.parts.suit;
   return result;
 }

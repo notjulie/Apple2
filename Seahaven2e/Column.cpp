@@ -32,3 +32,9 @@ void Column::SetCard(uint8_t row, Card card)
   if (row >= count)
     count = row + 1;
 }
+
+CardLocation Column::GetCardLocation(CompactCard card)
+{
+  a2::puts("COLUMNGETCARDLOCATION");
+  return CardLocation();
+}

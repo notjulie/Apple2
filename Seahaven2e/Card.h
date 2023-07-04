@@ -45,9 +45,23 @@ public:
   CompactCard(Card card);
   operator Card() const;
 
+  Rank GetRank() const { return (Rank)card.parts.rank; }
+  bool IsNull() const { return card.parts.rank == 0; }
+
+  bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
+
 private:
-  uint8_t rank : 4;
-  uint8_t suit : 2;
+  union CardDetails {
+    struct {
+      uint8_t rank : 4;
+      uint8_t suit : 2;
+    } parts;
+    uint8_t asInt;
+  };
+  static_assert(sizeof(CardDetails)==1, "CardDetails wrong size");
+
+private:
+  CardDetails card;
 };
 
 #endif  // SEAHAVEN2E_CARD_H_

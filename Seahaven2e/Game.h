@@ -21,13 +21,13 @@ class Game {
   inline Card GetAcePileCard(Suit suit) const {
                 return acePiles[(uint8_t)suit];
               }
-  inline Card &GetTower(uint8_t index) { return towers[index]; }
+  inline Card GetTower(uint8_t index) const { return towers[index]; }
 
   Card GetCard(CardLocation location) const;
   CardLocation GetCardToMoveToAce() const;
   void SetCard(CardLocation location, Card card);
   CardLocation GetBottomColumnCardLocation(uint8_t column);
-  CardLocation GetCardLocation(Card card);
+  CardLocation GetCardLocation(CompactCard card);
 
  public:
   static Game instance;
@@ -38,7 +38,7 @@ class Game {
  private:
   uint8_t deck[52];
   Card acePiles[4];
-  Card towers[4];
+  CompactCard towers[4];
   Column columns[10];
 };
 
