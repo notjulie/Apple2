@@ -21,7 +21,7 @@ class Column {
 
   void SetCard(uint8_t row, Card card);
 
-  CardLocation GetCardLocation(CompactCard card);
+  int8_t GetCardIndex(CompactCard card);
 
  private:
   CompactCard  cards[5];

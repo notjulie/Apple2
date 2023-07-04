@@ -120,9 +120,9 @@ CardLocation Game::GetCardLocation(CompactCard card) {
       return CardLocation::Tower(i);
 
   for (uint8_t i=0; i<10; ++i) {
-    CardLocation location = columns[i].GetCardLocation(card);
-    if (!location.IsNull())
-      return location;
+    int8_t index = columns[i].GetCardIndex(card);
+    if (index >= 0)
+      return CardLocation::Column(i, index);
   }
 
   return CardLocation();

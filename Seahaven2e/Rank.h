@@ -44,4 +44,11 @@ inline Rank operator-(Rank &r, int8_t i) {
   return r + (-i);
 }
 
+/// <summary>
+/// Rank subtraction operator
+/// </summary>
+inline int8_t operator-(Rank r1, Rank r2) {
+  return (int8_t)r1 - (int8_t)r2;
+}
+
 #endif  // SEAHAVEN2E_RANK_H_

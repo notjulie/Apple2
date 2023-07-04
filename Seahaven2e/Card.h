@@ -39,6 +39,10 @@ Card operator-(Card card, int8_t i);
 Card operator+(Card card, int8_t i);
 
 
+/// <summary>
+/// A single-byte representation of card that's handy for storage of card arrays
+/// or for passing around as a function parameter.
+/// </summary>
 class CompactCard {
 public:
   CompactCard() = default;
@@ -46,6 +50,7 @@ public:
   operator Card() const;
 
   Rank GetRank() const { return (Rank)card.parts.rank; }
+  Suit GetSuit() const { return (Suit)card.parts.suit; }
   bool IsNull() const { return card.parts.rank == 0; }
 
   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
