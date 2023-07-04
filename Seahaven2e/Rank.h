@@ -32,6 +32,8 @@ enum class Rank {
 /// </summary>
 inline Rank operator+(Rank &r, int8_t i) {
   r = (Rank)((uint8_t)r + i);
+  if (r<Rank::Ace || r>Rank::King)
+    r = Rank::Null;
   return r;
 }
 

@@ -10,12 +10,20 @@
 // ======================================================================
 
 
-Card &Card::operator-=(int i) {
+/// <summary>
+/// Subtracts the given value from the rank of the card; on overflow the
+/// result will be a null card
+/// </summary>
+Card &Card::operator-=(int8_t i) {
   rank = rank - i;
   return *this;
 }
 
-Card &Card::operator+=(int i) {
+/// <summary>
+/// Adds the given value to the rank of the card; on overflow the
+/// result will be a null card
+/// </summary>
+Card &Card::operator+=(int8_t i) {
   rank = rank + i;
   return *this;
 }
@@ -27,15 +35,23 @@ Card Card::FromOrdinal(uint8_t cardNumber) {
   return result;
 }
 
-Card operator-(Card card, uint8_t i) {
+/// <summary>
+/// Subtracts the given value from the rank of the card; on overflow the
+/// result will be a null card
+/// </summary>
+Card operator-(Card card, int8_t i) {
   Card result = card;
-  card -= i;
+  result -= i;
   return result;
 }
 
-Card operator+(Card card, uint8_t i) {
+/// <summary>
+/// Adds the given value to the rank of the card; on overflow the
+/// result will be a null card
+/// </summary>
+Card operator+(Card card, int8_t i) {
   Card result = card;
-  card += i;
+  result += i;
   return result;
 }
 
