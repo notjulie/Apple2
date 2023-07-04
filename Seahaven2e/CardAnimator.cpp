@@ -16,7 +16,7 @@ CardAnimator CardAnimator::instance;
 ///   Starts an animation of a card from one position to another
 ///
 void CardAnimator::StartAnimation(
-      Card card,
+      CompactCard card,
       CardLocation start,
       CardLocation end) {
   // save parameters

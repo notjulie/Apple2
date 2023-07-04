@@ -18,14 +18,14 @@ class Game {
   void Shuffle16(uint16_t instruction);
 
   inline Column &GetColumn(uint8_t index) { return columns[index];}
-  inline Card GetAcePileCard(Suit suit) const {
+  inline CompactCard GetAcePileCard(Suit suit) const {
                 return acePiles[(uint8_t)suit];
               }
-  inline Card GetTower(uint8_t index) const { return towers[index]; }
+  inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
 
-  Card GetCard(CardLocation location) const;
+  CompactCard GetCard(CardLocation location) const;
   CardLocation GetCardToMoveToAce() const;
-  void SetCard(CardLocation location, Card card);
+  void SetCard(CardLocation location, CompactCard card);
   CardLocation GetBottomColumnCardLocation(uint8_t column);
   CardLocation GetCardLocation(CompactCard card);
 
@@ -39,7 +39,7 @@ class Game {
 
  private:
   uint8_t deck[52];
-  Card acePiles[4];
+  CompactCard acePiles[4];
   CompactCard towers[4];
   Column columns[10];
 };

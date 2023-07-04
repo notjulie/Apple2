@@ -18,7 +18,7 @@ class Drawing {
   }
 
   void DrawBackground();
-  void DrawCard(Card card, uint8_t x, uint8_t y);
+  void DrawCard(CompactCard card, uint8_t x, uint8_t y);
   void DrawCardBackground(uint8_t row, uint8_t byteOffset);
   void SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background);
   void DrawGame();
@@ -31,7 +31,7 @@ class Drawing {
  private:
   void DrawAcePile(Suit suit, uint8_t x);
   void DrawCardBottom(uint8_t x, uint8_t y);
-  void DrawCardTop(Card card, uint8_t x, uint8_t y);
+  void DrawCardTop(CompactCard card, uint8_t x, uint8_t y);
   void DrawColumns();
   void DrawSprite(
           const a2::HGRWord *sprite,

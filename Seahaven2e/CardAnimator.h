@@ -12,7 +12,7 @@
 class CardAnimator {
  public:
   bool IsAnimating() { return state != State::Idle; }
-  void StartAnimation(Card card, CardLocation start, CardLocation end);
+  void StartAnimation(CompactCard card, CardLocation start, CardLocation end);
   void Service();
 
  public:
@@ -43,7 +43,7 @@ class CardAnimator {
   SavedBackground background2;
 
   // the animation in progress
-  Card cardToMove;
+  CompactCard cardToMove;
   CardLocation endLocation;
   uint8_t currentX, currentY;
   uint8_t targetX, targetY;

@@ -86,7 +86,7 @@ void Drawing::XorSprite(
 }
 
 
-void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y) {
+void Drawing::DrawCardTop(CompactCard card, uint8_t x, uint8_t y) {
   DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
   DrawSprite(
     Sprites::GetSuitSprite(card.GetSuit()),
@@ -101,7 +101,7 @@ void Drawing::ToggleCursor(uint8_t x, uint8_t y) {
 }
 
 
-void Drawing::DrawCard(Card card, uint8_t x, uint8_t y) {
+void Drawing::DrawCard(CompactCard card, uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
   DrawCardTop(card, x, y);
   a2::VBLCounter::Update();

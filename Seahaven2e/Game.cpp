@@ -89,7 +89,7 @@ CardLocation Game::GetCardToMoveToAce() const {
   return CardLocation();
 }
 
-Card Game::GetCard(CardLocation location) const {
+CompactCard Game::GetCard(CardLocation location) const {
   CardArea area = location.GetArea();
   switch (area) {
   case CardArea::AcePiles:
@@ -140,7 +140,7 @@ bool Game::IsBottomOfColumn(CardLocation location) const {
     return columns[columnIndex].GetCount() == location.GetIndex() + 1;
 }
 
-void Game::SetCard(CardLocation location, Card card) {
+void Game::SetCard(CardLocation location, CompactCard card) {
   CardArea area = location.GetArea();
   switch (area) {
   case CardArea::AcePiles:
