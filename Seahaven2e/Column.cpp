@@ -6,6 +6,30 @@
 #include <Apple2Lib/ROM.h>
 
 
+/// <summary>
+/// Gets the card at the given location
+/// </summary>
+Card Column::GetCard(uint8_t index) const {
+  Card result;
+
+  // return null for a bad index
+  if (index >= count)
+    return result;
+
+  // if it's in our array of cards return what's in the array
+  if (index < 5)
+    return cards[index];
+
+  // anything beyond the array is a card stacked on the last card of the array
+  result = cards[4];
+  result -= (index - 4);
+  return result;
+}
+
+
+/// <summary>
+/// Sets the card at the given location
+/// </summary>
 void Column::SetCard(uint8_t row, Card card)
 {
   // the argument shouldn't be null, RemoveCard is for that

@@ -19,6 +19,9 @@ void CardAnimator::StartAnimation(
       Card card,
       CardLocation start,
       CardLocation end) {
+  // save parameters
+  endLocation = end;
+
   // step 1: remove the card from its current position
   Game::instance.SetCard(start, Card());
 
@@ -95,6 +98,7 @@ void CardAnimator::Service() {
 
   case State::Page1Visible:
     if (timeLeft == 0) {
+      Game::instance.SetCard(endLocation, cardToMove);
       state = State::Idle;
       break;
     }

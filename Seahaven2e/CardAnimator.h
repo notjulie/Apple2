@@ -44,6 +44,7 @@ class CardAnimator {
 
   // the animation in progress
   Card cardToMove;
+  CardLocation endLocation;
   uint8_t currentX, currentY;
   uint8_t targetX, targetY;
   uint8_t distanceX, distanceY;

@@ -173,11 +173,8 @@ void Drawing::DrawColumns() {
     Column &column = Game::instance.GetColumn(i);
 
     uint8_t y = CardLocations::ColumnsTop;
-    for (uint8_t j=0; j < 5; ++j) {
+    for (uint8_t j=0; j < column.GetCount(); ++j) {
       Card card = column.GetCard(j);
-      if (card.IsNull())
-        break;
-
       DrawCardTop(card, x, y);
       y += CardLocations::DistanceBetweenColumnCards;
     }
