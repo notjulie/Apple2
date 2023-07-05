@@ -24,37 +24,6 @@ static const uint8_t TowersLeft = 12;
 Drawing drawing1(a2::HGRPage::HGR());
 Drawing drawing2(a2::HGRPage::HGR2());
 
-/** \brief
- * Draws the shape of a card at the given location in the main
- * HGR window
- */
-void Drawing::DrawCardBackground(uint8_t row, uint8_t byteOffset) {
-  {
-    uint8_t *rowPointer = hgr.GetByteAddress(row++, byteOffset);
-    rowPointer[0] = 0xFC;
-    rowPointer[1] = 0xFF;
-    rowPointer[2] = 0xFF;
-    rowPointer[3] = 0x1F;
-  }
-
-  for (uint8_t i=0; i < 37; ++i) {
-    uint8_t *rowPointer = hgr.GetByteAddress(row++, byteOffset);
-    rowPointer[0] = 0xFE;
-    rowPointer[1] = 0xFF;
-    rowPointer[2] = 0xFF;
-    rowPointer[3] = 0x3F;
-  }
-
-  {
-    uint8_t *rowPointer = hgr.GetByteAddress(row++, byteOffset);
-    rowPointer[0] = 0xFC;
-    rowPointer[1] = 0xFF;
-    rowPointer[2] = 0xFF;
-    rowPointer[3] = 0x1F;
-  }
-}
-
-
 void Drawing::DrawBackground() {
   hgr.Fill(0);
 }

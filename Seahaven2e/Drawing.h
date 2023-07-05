@@ -19,7 +19,6 @@ class Drawing {
 
   void DrawBackground();
   void DrawCard(CompactCard card, uint8_t x, uint8_t y);
-  void DrawCardBackground(uint8_t row, uint8_t byteOffset);
   void SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background);
   void DrawGame();
   void DrawAcePiles();
