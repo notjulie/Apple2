@@ -171,14 +171,12 @@ void Drawing::DrawColumns() {
 
   for (uint8_t i=0; i < 10; ++i) {
     Column &column = Game::instance.GetColumn(i);
+    uint8_t cardCount = column.GetCount();
 
-    uint8_t y = CardLocations::ColumnsTop;
-    for (uint8_t j=0; j < column.GetCount(); ++j) {
-      Card card = column.GetCard(j);
-      DrawCardTop(card, x, y);
-      y += CardLocations::DistanceBetweenColumnCards;
-    }
-    DrawCardBottom(x, y + CardTopSpriteHeight - CardLocations::DistanceBetweenColumnCards);
+    for (uint8_t j=0; j < cardCount; ++j)
+      DrawCardTop(column.GetCard(j), x, columnYLookup.Y(j));
+
+    DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
 
     x += 4;
   }
