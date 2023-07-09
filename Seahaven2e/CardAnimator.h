@@ -27,6 +27,7 @@ class CardAnimator {
   };
 
  private:
+  static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
   void UpdatePosition();
 
  private:

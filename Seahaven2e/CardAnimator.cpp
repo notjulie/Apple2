@@ -44,8 +44,11 @@ void CardAnimator::StartAnimation(
     distanceY = currentY - targetY;
     directionY = -1;
   }
-  // throw together a duration... TODO better
-  duration = 30;
+
+  // calculate the duration
+  uint8_t pixelDistance = CalculatePixelDistance(distanceX, distanceY);
+  duration = pixelDistance >> 4;
+
   timeLeft = duration;
   numeratorX = numeratorY = 0;
   lastVBLCount = a2::VBLCounter::GetCounter();
@@ -66,6 +69,20 @@ void CardAnimator::StartAnimation(
 
   // set the state
   state = State::Page2Initialized;
+}
+
+
+/// <summary>
+/// Calculates an approximate hypotenuse
+/// </summary>
+uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
+  // 3.5x + y
+  return
+    (dx >> 1) +
+    dx +
+    dx +
+    dx +
+    (dy >> 1);
 }
 
 
