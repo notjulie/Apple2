@@ -6,8 +6,13 @@
 #ifndef SEAHAVEN2E_SAVEDBACKGROUND_H_
 #define SEAHAVEN2E_SAVEDBACKGROUND_H_
 
+/// <summary>
+/// Memory area for saving the image behind a card during animation
+/// </summary>
 struct SavedBackground {
-  uint8_t pixels[4 * CardHeight];
+  static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;
+
+  uint8_t pixels[4 * Height];
 };
 
 #endif  // SEAHAVEN2E_SAVEDBACKGROUND_H_

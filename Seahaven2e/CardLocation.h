@@ -17,7 +17,8 @@
 // ==========================================================
 
 namespace CardLocations {
-  constexpr uint8_t DistanceBetweenColumnCards = CardTopSpriteHeight + 1;
+  constexpr uint8_t CardShadowHeight = 1;
+  constexpr uint8_t DistanceBetweenColumnCards = CardTopSpriteHeight + CardShadowHeight;
   constexpr uint8_t TowersTop = 3;
   constexpr uint8_t TowersBottom = TowersTop + CardHeight;
   constexpr uint8_t ColumnsTop = TowersBottom + 4;

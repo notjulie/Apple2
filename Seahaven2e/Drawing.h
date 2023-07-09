@@ -19,6 +19,7 @@ class Drawing {
 
   void DrawBackground();
   void DrawCard(CompactCard card, uint8_t x, uint8_t y);
+  void DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y);
   void SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background);
   void DrawGame();
   void DrawAcePiles();

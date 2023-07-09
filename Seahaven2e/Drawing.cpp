@@ -70,6 +70,23 @@ void Drawing::ToggleCursor(uint8_t x, uint8_t y) {
 }
 
 
+/// <summary>
+/// Draws a card with its shadow
+/// </summary>
+void Drawing::DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y) {
+  // draw the shadow
+  for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
+    uint8_t *row = hgr.GetByteAddress(y++, x);
+    row[0] = 0;
+    row[1] = 0;
+    row[2] = 0;
+    row[3] = 0;
+  }
+
+  // draw the card
+  DrawCard(card, x, y);
+}
+
 void Drawing::DrawCard(CompactCard card, uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
   DrawCardTop(card, x, y);
@@ -158,13 +175,16 @@ void Drawing::DrawGame() {
 }
 
 
+/// <summary>
+/// Saves a region from an HGR page to the SavedBackground object
+/// </summary>
 void Drawing::SaveCardBackground(
               uint8_t x, uint8_t y,
               SavedBackground *background) {
   a2::VBLCounter::Update();
   uint8_t *p = &background->pixels[0];
   uint8_t *row;
-  for (uint8_t i=0; i < CardHeight; ++i) {
+  for (uint8_t i=0; i < SavedBackground::Height; ++i) {
     row = hgr.GetByteAddress(y++, x);
     p[0] = row[0];
     p[1] = row[1];
@@ -175,13 +195,16 @@ void Drawing::SaveCardBackground(
 }
 
 
+/// <summary>
+/// Restores a region of the HGR page from the SavedBackground object
+/// </summary>
 void Drawing::RestoreBackground(
                 SavedBackground *background,
                 uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
   uint8_t *p = &background->pixels[0];
   uint8_t *row;
-  for (uint8_t i=0; i < CardHeight; ++i) {
+  for (uint8_t i=0; i < SavedBackground::Height; ++i) {
     row = hgr.GetByteAddress(y++, x);
     row[0] = p[0];
     row[1] = p[1];

@@ -27,9 +27,9 @@ void CardAnimator::StartAnimation(
 
   // set the bounds of the animation
   currentX = start.GetX();
-  currentY = start.GetY();
+  currentY = start.GetY() - CardLocations::CardShadowHeight;
   targetX = end.GetX();
-  targetY = end.GetY();
+  targetY = end.GetY() - CardLocations::CardShadowHeight;
   if (targetX > currentX) {
     distanceX = targetX - currentX;
     directionX = 1;
@@ -59,7 +59,7 @@ void CardAnimator::StartAnimation(
   background2X = currentX;
   background2Y = currentY;
   drawing2.SaveCardBackground(currentX, currentY, &background2);
-  drawing2.DrawCard(card, currentX, currentY);
+  drawing2.DrawCardWithShadow(card, currentX, currentY);
 
   // switch to page 2
   a2::PAGE2ON();
@@ -91,7 +91,7 @@ void CardAnimator::Service() {
     background1X = currentX;
     background1Y = currentY;
     drawing1.SaveCardBackground(currentX, currentY, &background1);
-    drawing1.DrawCard(cardToMove, currentX, currentY);
+    drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
     a2::PAGE2OFF();
     state = State::Page1Visible;
     break;
@@ -107,7 +107,7 @@ void CardAnimator::Service() {
     background2X = currentX;
     background2Y = currentY;
     drawing2.SaveCardBackground(currentX, currentY, &background2);
-    drawing2.DrawCard(cardToMove, currentX, currentY);
+    drawing2.DrawCardWithShadow(cardToMove, currentX, currentY);
     a2::PAGE2ON();
     state = State::Page2Visible;
     break;
@@ -118,7 +118,7 @@ void CardAnimator::Service() {
     background1X = currentX;
     background1Y = currentY;
     drawing1.SaveCardBackground(currentX, currentY, &background1);
-    drawing1.DrawCard(cardToMove, currentX, currentY);
+    drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
     a2::PAGE2OFF();
     state = State::Page1Visible;
     break;
