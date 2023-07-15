@@ -11,14 +11,14 @@
 ///   Gets the byte offset of the location within the raster
 ///
 uint8_t CardLocation::GetX() const {
-  switch (area) {
-  case CardArea::Nowhere:
+  switch (area.GetType()) {
+  case CardAreaType::Nowhere:
     a2::puts("CARDLOCATION::GETX; NOWHERE");
     a2::PAGE2OFF();
     a2::MONITOR();
     return 0;
 
-  case CardArea::AcePiles:
+  case CardAreaType::AcePiles:
     switch (index) {
     case 0:
       return GetColumnX(0);
@@ -34,11 +34,11 @@ uint8_t CardLocation::GetX() const {
     a2::MONITOR();
     return 0;
 
-  case CardArea::Towers:
+  case CardAreaType::Towers:
     return GetColumnX(3 + index);
 
   default:
-    return GetColumnX((uint8_t)area - (uint8_t)CardArea::Column1);
+    return GetColumnX(area.GetColumn());
   }
 }
 
@@ -46,27 +46,18 @@ uint8_t CardLocation::GetX() const {
 ///   Gets the Y coordinate of the location
 ///
 uint8_t CardLocation::GetY() const {
-  switch (area) {
-  case CardArea::Nowhere:
+  switch (area.GetType()) {
+  case CardAreaType::Nowhere:
     a2::puts("CARDLOCATION::GETY; NOWHERE");
     a2::PAGE2OFF();
     a2::MONITOR();
     return 0;
 
-  case CardArea::AcePiles:
-  case CardArea::Towers:
+  case CardAreaType::AcePiles:
+  case CardAreaType::Towers:
     return CardLocations::TowersTop;
 
-  case CardArea::Column1:
-  case CardArea::Column2:
-  case CardArea::Column3:
-  case CardArea::Column4:
-  case CardArea::Column5:
-  case CardArea::Column6:
-  case CardArea::Column7:
-  case CardArea::Column8:
-  case CardArea::Column9:
-  case CardArea::Column10:
+  case CardAreaType::Columns:
     return columnYLookup.Y(index);
 
   default:
@@ -82,70 +73,37 @@ CardLocation CardLocation::Up() const
 {
   CardLocation result = *this;
 
-  switch (area)
+  if (area.GetType() == CardAreaType::Columns)
   {
-  case CardArea::Column1:
-  case CardArea::Column2:
-  case CardArea::Column3:
-  case CardArea::Column8:
-  case CardArea::Column9:
-  case CardArea::Column10:
-    if (index > 0)
-      --result.index;
-    break;
+    switch (area.GetColumn())
+    {
+    case 0:
+    case 1:
+    case 2:
+    case 7:
+    case 8:
+    case 9:
+      if (index > 0)
+        --result.index;
+      break;
 
-  case CardArea::Column4:
-  case CardArea::Column5:
-  case CardArea::Column6:
-  case CardArea::Column7:
-    if (index > 0) {
-      --result.index;
-    } else {
-      result.area = CardArea::Towers;
-      result.index = area - CardArea::Column4;
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+      if (index > 0) {
+        --result.index;
+      } else {
+        result.area = CardArea::Towers();
+        result.index = area.GetColumn() - 3;
+      }
+      break;
+
+    default:
+      break;
     }
-    break;
-
-  default:
-    break;
   }
 
   return result;
-}
-
-/// <summary>
-/// Addition operator for CardLocation
-/// </summary>
-CardLocation operator+(CardLocation location, int8_t i) {
-  location.index += i;
-
-  switch (location.area)
-  {
-  case CardArea::AcePiles:
-  case CardArea::Towers:
-    if (location.index >= 4)
-      location.area = CardArea::Nowhere;
-    break;
-
-  case CardArea::Column1:
-  case CardArea::Column2:
-  case CardArea::Column3:
-  case CardArea::Column4:
-  case CardArea::Column5:
-  case CardArea::Column6:
-  case CardArea::Column7:
-  case CardArea::Column8:
-  case CardArea::Column9:
-  case CardArea::Column10:
-    if (location.index >= 10)
-      location.area = CardArea::Nowhere;
-    break;
-
-  default:
-    location.area = CardArea::Nowhere;
-    break;
-  }
-
-  return location;
 }
 

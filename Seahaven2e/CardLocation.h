@@ -31,30 +31,41 @@ namespace CardLocations {
 // ==========================================================
 // ==========================================================
 
-enum class CardArea {
+/// <summary>
+/// The type of area; CardArea is defined by one of these and a
+/// column index in the case of a column
+/// </summary>
+enum class CardAreaType {
   Nowhere,
   AcePiles,
   Towers,
-  Column1,
-  Column2,
-  Column3,
-  Column4,
-  Column5,
-  Column6,
-  Column7,
-  Column8,
-  Column9,
-  Column10
+  Columns
 };
 
-inline CardArea operator+(CardArea area, uint8_t addend) {
-  return (CardArea)((uint8_t)area + addend);
-}
 
-inline int8_t operator-(CardArea area1, CardArea area2) {
-  return (int8_t)area1 - (int8_t)area2;
-}
+// ==========================================================
+// ==========================================================
+//      enum class CardArea
+// ==========================================================
+// ==========================================================
 
+class CardArea {
+public:
+  constexpr CardArea(CardAreaType areaType, uint8_t column) : areaType((uint8_t)areaType), column(column) {}
+
+  uint8_t GetColumn() const { return column; }
+  CardAreaType GetType() const { return (CardAreaType)areaType; }
+  bool IsNowhere() const { return areaType == (uint8_t)CardAreaType::Nowhere; }
+
+  static constexpr CardArea Nowhere() { return CardArea(CardAreaType::Nowhere, 0); }
+  static constexpr CardArea AcePiles() { return CardArea(CardAreaType::AcePiles, 0); }
+  static constexpr CardArea Column(uint8_t column) { return CardArea(CardAreaType::Columns, column); }
+  static constexpr CardArea Towers() { return CardArea(CardAreaType::Towers, 0); }
+
+private:
+  uint8_t areaType : 3;
+  uint8_t column : 4;
+};
 
 // ==========================================================
 // ==========================================================
@@ -91,11 +102,11 @@ constexpr ColumnYLookup columnYLookup;
 
 class CardLocation {
  public:
-  inline CardLocation() : area(CardArea::Nowhere), index(0) { }
+  inline CardLocation() : area(CardArea::Nowhere()), index(0) { }
 
   inline CardArea GetArea() const { return area; }
   inline uint8_t GetIndex() const { return index; }
-  inline bool IsNull() const { return area == CardArea::Nowhere; }
+  inline bool IsNull() const { return area.IsNowhere(); }
 
   uint8_t GetX() const;
   uint8_t GetY() const;
@@ -103,11 +114,11 @@ class CardLocation {
   CardLocation Up() const;
 
   static inline CardLocation AcePile(Suit suit) {
-    return CardLocation(CardArea::AcePiles, (uint8_t)suit); }
+    return CardLocation(CardArea::AcePiles(), (uint8_t)suit); }
   static inline CardLocation Column(uint8_t column, uint8_t index) {
-    return CardLocation(CardArea::Column1 + column, index); }
+    return CardLocation(CardArea::Column(column), index); }
   static inline CardLocation Tower(uint8_t index) {
-     return CardLocation(CardArea::Towers, index); }
+     return CardLocation(CardArea::Towers(), index); }
 
  private:
   inline CardLocation(CardArea _area, uint8_t _index)
@@ -118,7 +129,7 @@ class CardLocation {
   CardArea area;
   uint8_t index;
 
-friend CardLocation operator+(CardLocation location, int8_t i);
+//friend CardLocation operator+(CardLocation location, int8_t i);
 };
 
 

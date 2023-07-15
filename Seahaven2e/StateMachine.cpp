@@ -118,15 +118,18 @@ void StateMachine::MoveToColumn()
     return;
 
   // get the location of the card above it
-  CardLocation targetLocation = Game::instance.GetCardLocation(card + 1);
-  if (!Game::instance.IsBottomOfColumn(targetLocation))
+  CardLocation locationAboveTarget = Game::instance.GetCardLocation(card + 1);
+  if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
     return;
+
+  // the target location is one below that
+  CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetArea().GetColumn(), locationAboveTarget.GetIndex() + 1);
 
   // start the animation
   CardAnimator::instance.StartAnimation(
       card,
       location,
-      targetLocation + 1
+      targetLocation
     );
   state = State::MoveToAces;
 }

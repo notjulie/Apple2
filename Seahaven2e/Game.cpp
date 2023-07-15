@@ -91,19 +91,18 @@ CardLocation Game::GetCardToMoveToAce() const {
 
 CompactCard Game::GetCard(CardLocation location) const {
   CardArea area = location.GetArea();
-  switch (area) {
-  case CardArea::AcePiles:
+  switch (area.GetType()) {
+  case CardAreaType::AcePiles:
     return acePiles[location.GetIndex()];
 
-  case CardArea::Towers:
+  case CardAreaType::Towers:
     return towers[location.GetIndex()];
 
-  case CardArea::Nowhere:
+  case CardAreaType::Nowhere:
     return Card();
 
   default:
-    return columns[(uint8_t)area - (uint8_t)CardArea::Column1].GetCard(
-      location.GetIndex());
+    return columns[area.GetColumn()].GetCard(location.GetIndex());
   }
 }
 
@@ -133,7 +132,11 @@ CardLocation Game::GetCardLocation(CompactCard card) {
 /// Returns true if the given location is the bottom card on a column
 /// <summary>
 bool Game::IsBottomOfColumn(CardLocation location) const {
-  uint8_t columnIndex = (uint8_t)(location.GetArea() - CardArea::Column1);
+  CardArea area = location.GetArea();
+  if (area.GetType() != CardAreaType::Columns)
+    return false;
+
+  uint8_t columnIndex = area.GetColumn();
   if (columnIndex >= 10)
     return false;
   else
@@ -142,20 +145,20 @@ bool Game::IsBottomOfColumn(CardLocation location) const {
 
 void Game::SetCard(CardLocation location, CompactCard card) {
   CardArea area = location.GetArea();
-  switch (area) {
-  case CardArea::AcePiles:
+  switch (area.GetType()) {
+  case CardAreaType::AcePiles:
     acePiles[location.GetIndex()] = card;
     break;
 
-  case CardArea::Towers:
+  case CardAreaType::Towers:
     towers[location.GetIndex()] = card;
     break;
 
-  case CardArea::Nowhere:
+  case CardAreaType::Nowhere:
     break;
 
   default:
-    columns[area - CardArea::Column1].SetCard(location.GetIndex(), card);
+    columns[area.GetColumn()].SetCard(location.GetIndex(), card);
     break;
   }
 }
