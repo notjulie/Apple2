@@ -45,8 +45,10 @@ Card operator+(Card card, int8_t i);
 /// </summary>
 class CompactCard {
 public:
-  CompactCard() = default;
+  CompactCard() {}
+  constexpr CompactCard(Suit suit, Rank rank) : card(rank, suit) {}
   CompactCard(Card card);
+
   operator Card() const;
 
   Rank GetRank() const { return (Rank)card.parts.rank; }
@@ -55,9 +57,14 @@ public:
 
   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
 
+  static constexpr CompactCard Null() { return CompactCard(Suit::Clubs, Rank::Null); }
+
 private:
   union CardDetails {
-    struct {
+    CardDetails() {}
+    constexpr CardDetails(Rank rank, Suit suit) : parts(rank, suit) {}
+    struct Parts {
+      constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suit((uint8_t)suit) {}
       uint8_t rank : 4;
       uint8_t suit : 2;
     } parts;

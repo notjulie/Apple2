@@ -9,19 +9,17 @@
 /// <summary>
 /// Gets the card at the given location
 /// </summary>
-Card Column::GetCard(uint8_t index) const {
-  Card result;
-
+CompactCard Column::GetCard(uint8_t index) const {
   // return null for a bad index
   if (index >= count)
-    return result;
+    return CompactCard::Null();
 
   // if it's in our array of cards return what's in the array
   if (index < 5)
     return cards[index];
 
   // anything beyond the array is a card stacked on the last card of the array
-  result = cards[4];
+  Card result = cards[4];
   result -= (index - 4);
   return result;
 }
