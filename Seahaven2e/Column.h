@@ -14,12 +14,12 @@
 class Column {
  public:
   void Clear() { count = 0; }
-  void Append(Card card) { SetCard(count, card); }
+  void Append(CompactCard card) { SetCard(count, card); }
 
   CompactCard GetCard(uint8_t index) const;
   uint8_t GetCount() const { return count; }
 
-  void SetCard(uint8_t row, Card card);
+  void SetCard(uint8_t row, CompactCard card);
 
   int8_t GetCardIndex(CompactCard card);
 

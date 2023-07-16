@@ -28,8 +28,10 @@ CompactCard Column::GetCard(uint8_t index) const {
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-void Column::SetCard(uint8_t row, Card card)
+void Column::SetCard(uint8_t row, CompactCard _card)
 {
+  Card card(_card);
+
   // the argument shouldn't be null, RemoveCard is for that
   if (card.IsNull()) {
     a2::puts("SETCARD is null");

@@ -17,7 +17,7 @@ Game Game::instance;
 void Game::Shuffle16(uint16_t instruction) {
   // create unshuffled deck
   for (uint8_t i=0; i < 52; ++i)
-    deck[i] = i;
+    deck[i] = CompactCard::FromOrdinal(i);
 
   // shuffle 8 times according to high byte
   Shuffle8(instruction >> 8);
@@ -30,13 +30,13 @@ void Game::Shuffle16(uint16_t instruction) {
   for (uint8_t column=0; column < 10; ++column) {
     columns[column].Clear();
     for (uint8_t row=0; row < 5; ++row) {
-      columns[column].Append(Card::FromOrdinal(deck[cardIndex++]));
+      columns[column].Append(deck[cardIndex++]);
     }
   }
 
   towers[0] = Card();
-  towers[1] = Card::FromOrdinal(deck[cardIndex++]);
-  towers[2] = Card::FromOrdinal(deck[cardIndex++]);
+  towers[1] = deck[cardIndex++];
+  towers[2] = deck[cardIndex++];
   towers[3] = Card();
 
   acePiles[0] = Card();
@@ -46,7 +46,7 @@ void Game::Shuffle16(uint16_t instruction) {
 }
 
 void Game::Shuffle8(uint8_t instruction) {
-  uint8_t deckCopy[52];
+  CompactCard deckCopy[52];
   uint8_t index;
 
   // we have two types of shuffling, and we choose one each time through

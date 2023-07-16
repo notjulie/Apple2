@@ -28,8 +28,6 @@ friend class CompactCard;
   bool operator==(Card c) const { return c.suit==suit && c.rank==rank; }
   bool operator!=(Card c) const { return !operator==(c); }
 
-  static Card FromOrdinal(uint8_t ordinal);
-
  private:
   Suit suit;
   Rank rank;
@@ -57,6 +55,7 @@ public:
 
   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
 
+  static CompactCard FromOrdinal(uint8_t ordinal);
   static constexpr CompactCard Null() { return CompactCard(Suit::Clubs, Rank::Null); }
 
 private:

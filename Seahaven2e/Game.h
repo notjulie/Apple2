@@ -39,7 +39,7 @@ class Game {
   void Shuffle8(uint8_t instruction);
 
  private:
-  uint8_t deck[52];
+  CompactCard deck[52];
   CompactCard acePiles[4];
   CompactCard towers[4];
   Column columns[10];

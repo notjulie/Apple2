@@ -28,13 +28,6 @@ Card &Card::operator+=(int8_t i) {
   return *this;
 }
 
-Card Card::FromOrdinal(uint8_t cardNumber) {
-  Card result;
-  result.suit = (Suit)(cardNumber & 3);
-  result.rank = (Rank)(1 + (cardNumber >> 2));
-  return result;
-}
-
 /// <summary>
 /// Subtracts the given value from the rank of the card; on overflow the
 /// result will be a null card
@@ -70,5 +63,12 @@ CompactCard::operator Card() const
   Card result;
   result.rank = (Rank)card.parts.rank;
   result.suit = (Suit)card.parts.suit;
+  return result;
+}
+
+CompactCard CompactCard::FromOrdinal(uint8_t cardNumber) {
+  CompactCard result;
+  result.card.parts.suit = cardNumber & 3;
+  result.card.parts.rank = 1 + (cardNumber >> 2);
   return result;
 }
