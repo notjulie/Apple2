@@ -102,7 +102,7 @@ constexpr ColumnYLookup columnYLookup;
 
 class CardLocation {
  public:
-  inline CardLocation() : area(CardArea::Nowhere()), index(0) { }
+  constexpr CardLocation(CardArea area, uint8_t index) : area(area), index(index) { }
 
   inline CardArea GetArea() const { return area; }
   inline uint8_t GetIndex() const { return index; }
@@ -119,10 +119,11 @@ class CardLocation {
     return CardLocation(CardArea::Column(column), index); }
   static inline CardLocation Tower(uint8_t index) {
      return CardLocation(CardArea::Towers(), index); }
+  static constexpr CardLocation Null() {
+    return CardLocation(CardArea::Nowhere(), 0);
+  }
 
  private:
-  inline CardLocation(CardArea _area, uint8_t _index)
-    : area(_area), index(_index) {}
   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
 
  private:

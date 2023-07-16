@@ -4,7 +4,7 @@
 
 #include "Cursor.h"
 
-#include <Apple2Lib/ROM.h>
+//#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"
 
@@ -15,31 +15,10 @@ Cursor Cursor::instance;
 /// as needed if the column is empty
 /// </summary>
 void Cursor::SetCursorLocationToDefault() {
-  // grab the bottom card from column 4
-  CardLocation location;
-
-  // grab the bottom card from the column nearest the center
-  for (int i=0; i<5; ++i) {
-    location = Game::instance.GetBottomColumnCardLocation(4 - i);
-    if (!location.IsNull())
-      break;
-    location = Game::instance.GetBottomColumnCardLocation(5 + i);
-    if (!location.IsNull())
-      break;
-  }
-
-  // if we found none, find a tower
-  if (location.IsNull()) {
-    for (int i=0; i<4; ++i) {
-      if (!Game::instance.GetTower(i).IsNull()) {
-        location = CardLocation::Tower(i);
-        break;
-      }
-    }
-  }
-
-  // set it
-  SetLocation(location);
+  // just set it to the bottomest of the bottom on column 4 and
+  // let our cursor adjustment logic handle it from there
+  CardLocation defaultLocation = CardLocation::Column(4, CardLocations::MaxColumnCards - 1);
+  SetAndAdjustLocation(defaultLocation);
 }
 
 
@@ -53,9 +32,11 @@ void Cursor::Up()
 
 
 /// <summary>
-/// Shows the cursor at its current location
+/// Shows the cursor at its current location... if the current location does not
+/// have a card on it we shuffle the cursor to a spot that does
 /// </summary>
 void Cursor::Show() {
+  location = GetClosestCardTo(location);
   if (state == State::Idle) {
     Toggle();
     state = State::On;
@@ -79,7 +60,6 @@ void Cursor::SetLocation(CardLocation location) {
     break;
 
   default:
-    a2::puts("CURSORSETLOCATION FAIL");
     break;
   }
 }
@@ -112,4 +92,137 @@ void Cursor::Toggle() {
     return;
   lastToggleTime = a2::VBLCounter::GetCounter();
   drawing1.ToggleCursor(location.GetX(), location.GetY());
+}
+
+
+/// <summary>
+/// Gets the location of the card closest to the given location
+/// </summary>
+CardLocation Cursor::GetClosestCardTo(CardLocation start) {
+  CardLocation result = CardLocation::Null();
+
+  switch (start.GetArea().GetType()) {
+  case CardAreaType::Columns:
+    result = GetClosestColumnCardTo(start);
+    if (result.IsNull()) {
+      result = GetClosestTowerCardTo(start);
+    }
+    break;
+
+  case CardAreaType::Towers:
+    result = GetClosestTowerCardTo(start);
+    if (result.IsNull())
+      result = GetClosestColumnCardTo(start);
+    break;
+
+  default:
+    break;
+  }
+
+  return result;
+}
+
+
+/// <summary>
+/// Gets the location of the column card closest to the given location
+/// </summary>
+CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
+  CardArea area = start.GetArea();
+
+  uint8_t startColumn;
+  uint8_t startIndex;
+
+  switch (area.GetType()) {
+  case CardAreaType::Columns:
+    startColumn = area.GetColumn();
+    startIndex = start.GetIndex();
+    break;
+
+  case CardAreaType::Towers:
+    // start looking from the top of the column nearest the tower
+    startColumn = start.GetIndex() + 3;
+    startIndex = 0;
+    break;
+
+  default:
+    return CardLocation::Null();
+  }
+
+  CardLocation result = CardLocation::Null();
+  for (uint8_t i=0; i<10; ++i) {
+    result = GetClosestCardOnColumn(startColumn + i, startIndex);
+    if (!result.IsNull())
+      break;
+    result = GetClosestCardOnColumn(startColumn - i, startIndex);
+    if (!result.IsNull())
+      break;
+  }
+
+  return result;
+}
+
+
+/// <summary>
+/// Gets the closest card to the given position on the given column
+/// </summary>
+CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) {
+  if (column < 10) {
+    CardLocation bottomCard = Game::instance.GetBottomColumnCardLocation(column);
+
+    if (!bottomCard.IsNull()) {
+      if (bottomCard.GetIndex() < startIndex) {
+        return bottomCard;
+      } else {
+        return CardLocation::Column(column, startIndex);
+      }
+    }
+  }
+
+  return CardLocation::Null();
+}
+
+
+/// <summary>
+/// Gets the location of the tower card closest to the given location
+/// </summary>
+CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
+  CardArea area = start.GetArea();
+
+  uint8_t startTower;
+
+  switch (area.GetType()) {
+  case CardAreaType::Columns:
+    startTower = start.GetIndex() - 3;
+    if ((int8_t)startTower < 0)
+      startTower = 0;
+    if (startTower > 3)
+      startTower = 3;
+    break;
+
+  case CardAreaType::Towers:
+    startTower = start.GetIndex();
+    break;
+
+  default:
+    return CardLocation::Null();
+  }
+
+  for (uint8_t i=0; i<4; ++i) {
+    uint8_t tower = startTower + i;
+    CompactCard card = Game::instance.GetTowerCard(tower);
+    if (!card.IsNull())
+      return CardLocation::Tower(tower);
+
+    tower = startTower - i;
+    card = Game::instance.GetTowerCard(tower);
+    if (!card.IsNull())
+      return CardLocation::Tower(tower);
+  }
+
+  return CardLocation::Null();
+}
+
+
+void Cursor::SetAndAdjustLocation(CardLocation location) {
+  SetLocation(GetClosestCardTo(location));
 }

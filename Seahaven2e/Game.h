@@ -28,6 +28,7 @@ class Game {
   void SetCard(CardLocation location, CompactCard card);
   CardLocation GetBottomColumnCardLocation(uint8_t column);
   CardLocation GetCardLocation(CompactCard card);
+  CompactCard GetTowerCard(uint8_t tower);
 
   bool IsBottomOfColumn(CardLocation location) const;
 

@@ -34,13 +34,18 @@ class Cursor {
   };
 
  private:
+  CardLocation GetClosestCardTo(CardLocation start);
+  CardLocation GetClosestColumnCardTo(CardLocation start);
+  CardLocation GetClosestTowerCardTo(CardLocation start);
+  CardLocation GetClosestCardOnColumn(uint8_t column, uint8_t startIndex);
   void SetLocation(CardLocation location);
+  void SetAndAdjustLocation(CardLocation location);
   void Toggle();
 
  private:
   uint8_t lastToggleTime = 0;
   State state = State::Idle;
-  CardLocation location;
+  CardLocation location = CardLocation::Null();
 };
 
 #endif  // SEAHAVEN2E_CURSOR_H_

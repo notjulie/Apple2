@@ -86,7 +86,7 @@ CardLocation Game::GetCardToMoveToAce() const {
       return CardLocation::Tower(i);
   }
 
-  return CardLocation();
+  return CardLocation::Null();
 }
 
 CompactCard Game::GetCard(CardLocation location) const {
@@ -112,7 +112,7 @@ CompactCard Game::GetCard(CardLocation location) const {
 /// </summary>
 CardLocation Game::GetCardLocation(CompactCard card) {
   if (card.IsNull())
-    return CardLocation();
+    return CardLocation::Null();
 
   for (uint8_t i=0; i<4; ++i)
     if (card == towers[i])
@@ -124,7 +124,7 @@ CardLocation Game::GetCardLocation(CompactCard card) {
       return CardLocation::Column(i, index);
   }
 
-  return CardLocation();
+  return CardLocation::Null();
 }
 
 
@@ -169,7 +169,14 @@ CardLocation Game::GetBottomColumnCardLocation(uint8_t column) {
   if (row > 0)
     return CardLocation::Column(column, row - 1);
   else
-    return CardLocation();
+    return CardLocation::Null();
 }
 
+
+CompactCard Game::GetTowerCard(uint8_t tower) {
+  if (tower < 4)
+    return towers[tower];
+  else
+    return CompactCard::Null();
+}
 

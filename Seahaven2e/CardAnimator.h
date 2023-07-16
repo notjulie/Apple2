@@ -45,7 +45,7 @@ class CardAnimator {
 
   // the animation in progress
   CompactCard cardToMove;
-  CardLocation endLocation;
+  CardLocation endLocation = CardLocation::Null();
   uint8_t currentX, currentY;
   uint8_t targetX, targetY;
   uint8_t distanceX, distanceY;
