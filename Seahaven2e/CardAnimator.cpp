@@ -12,17 +12,35 @@
 
 CardAnimator CardAnimator::instance;
 
+/// <summary>
+/// Draws the game as it currently sits; we are responsible for
+/// this since we maintain the states of the HGR pages
+/// </summary>
+void CardAnimator::DrawGame() {
+  // draw to page 1
+  drawing1.DrawBackground();
+  drawing1.DrawGame();
+
+  // show page 1
+  a2::PAGE2OFF();
+
+  // copy to the offscreen buffer
+  drawing1.CopyTo(&drawing2);
+}
+
+
 /// \brief
 ///   Starts an animation of a card from one position to another
 ///
 void CardAnimator::StartAnimation(
       CompactCard card,
-      CardLocation start,
-      CardLocation end) {
+      CardLocation end)
+{
   // save parameters
   endLocation = end;
 
   // step 1: remove the card from its current position
+  CardLocation start = Game::instance.GetCardLocation(card);
   Game::instance.SetCard(start, Card());
 
   // set the bounds of the animation

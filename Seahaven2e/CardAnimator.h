@@ -11,8 +11,9 @@
 
 class CardAnimator {
  public:
+  void DrawGame();
   bool IsAnimating() { return state != State::Idle; }
-  void StartAnimation(CompactCard card, CardLocation start, CardLocation end);
+  void StartAnimation(CompactCard card, CardLocation end);
   void Service();
 
  public:

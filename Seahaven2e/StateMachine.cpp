@@ -128,7 +128,6 @@ void StateMachine::MoveToColumn()
   // start the animation
   CardAnimator::instance.StartAnimation(
       card,
-      location,
       targetLocation
     );
   state = State::MoveToAces;
@@ -150,7 +149,6 @@ void StateMachine::MoveToTower()
   // start the animation
   CardAnimator::instance.StartAnimation(
       card,
-      location,
       CardLocation::Tower(0)
     );
   state = State::MoveToAces;
@@ -161,13 +159,16 @@ void StateMachine::MoveToTower()
 ///   Starts a new game
 /// </summary>
 void StateMachine::NewGame() {
+  // shuffle
   Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
-  drawing1.DrawBackground();
-  drawing1.DrawGame();
-  a2::PAGE2OFF();
 
+  // have the animator draw
+  CardAnimator::instance.DrawGame();
+
+  // reset the cursor
   Cursor::instance.SetCursorLocationToDefault();
 
+  // check for auto moves
   if (!CheckAcesToMove())
     EnterIdle();
 }
@@ -200,7 +201,6 @@ bool StateMachine::CheckAcesToMove() {
   // start the animation
   CardAnimator::instance.StartAnimation(
       card,
-      startLocation,
       CardLocation::AcePile(card.GetSuit()));
   state = State::MoveToAces;
   return true;
