@@ -125,10 +125,10 @@ CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
 
   if (start.IsColumn()) {
     startColumn = start.GetColumn();
-    startIndex = start.GetIndex();
+    startIndex = start.GetRow();
   } else if (start.IsTower()) {
     // start looking from the top of the column nearest the tower
-    startColumn = start.GetIndex() + 3;
+    startColumn = start.GetTowerIndex() + 3;
     startIndex = 0;
   } else {
     return CardLocation::Null();
@@ -156,7 +156,7 @@ CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) 
     CardLocation bottomCard = Game::instance.GetBottomColumnCardLocation(column);
 
     if (!bottomCard.IsNull()) {
-      if (bottomCard.GetIndex() < startIndex) {
+      if (bottomCard.GetRow() < startIndex) {
         return bottomCard;
       } else {
         return CardLocation::Column(column, startIndex);
@@ -175,13 +175,13 @@ CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
   uint8_t startTower;
 
   if (start.IsColumn()) {
-    startTower = start.GetIndex() - 3;
+    startTower = start.GetColumn() - 3;
     if ((int8_t)startTower < 0)
       startTower = 0;
     if (startTower > 3)
       startTower = 3;
   } else if (start.IsTower()) {
-    startTower = start.GetIndex();
+    startTower = start.GetTowerIndex();
   } else {
     return CardLocation::Null();
   }

@@ -91,11 +91,11 @@ CardLocation Game::GetCardToMoveToAce() const {
 
 CompactCard Game::GetCard(CardLocation location) const {
   if (location.IsAce()) {
-    return acePiles[location.GetIndex()];
+    return acePiles[(uint8_t)location.GetAceSuit()];
   } else if (location.IsTower()) {
-    return towers[location.GetIndex()];
+    return towers[location.GetTowerIndex()];
   } else if (location.IsColumn()) {
-    return columns[location.GetColumn()].GetCard(location.GetIndex());
+    return columns[location.GetColumn()].GetCard(location.GetRow());
   } else {
     return CompactCard::Null();
   }
@@ -134,16 +134,16 @@ bool Game::IsBottomOfColumn(CardLocation location) const {
   if (columnIndex >= 10)
     return false;
   else
-    return columns[columnIndex].GetCount() == location.GetIndex() + 1;
+    return columns[columnIndex].GetCount() == location.GetRow() + 1;
 }
 
 void Game::SetCard(CardLocation location, CompactCard card) {
   if (location.IsAce()) {
-    acePiles[location.GetIndex()] = card;
+    acePiles[(uint8_t)location.GetAceSuit()] = card;
   } else if (location.IsTower()) {
-    towers[location.GetIndex()] = card;
+    towers[location.GetTowerIndex()] = card;
   } else if (location.IsColumn()) {
-    columns[location.GetColumn()].SetCard(location.GetIndex(), card);
+    columns[location.GetColumn()].SetCard(location.GetRow(), card);
   }
 }
 

@@ -6,20 +6,57 @@
 #include "Sprites.h"
 
 
+/// <summary>
+/// Creates a CardLocation representing the given column and row
+/// </summary>
+CardLocation CardLocation::Column(uint8_t column, uint8_t row) {
+  if (row == 16) {
+    return CardLocation((11<<4) + column);
+  } else {
+    return CardLocation(((column + 1) << 4) | row);
+  }
+}
+
+
+/// <summary>
+/// Gets the row associated with a column location
+/// </summary>
+uint8_t CardLocation::GetRow() const {
+  uint8_t column = (locationNumber>>4) - 1;
+  if (column < 10) {
+    return locationNumber & 0x0F;
+  } else {
+    return 16;
+  }
+}
+
+
+/// <summary>
+/// Gets the column associated with a column location
+/// </summary>
+uint8_t CardLocation::GetColumn() const {
+  uint8_t column = (locationNumber>>4) - 1;
+  if (column < 10) {
+    return column;
+  } else {
+    return locationNumber & 0x0F;
+  }
+}
+
 
 /// \brief
 ///   Gets the byte offset of the location within the raster
 ///
 uint8_t CardLocation::GetX() const {
   if (IsAce()) {
-    switch (index) {
-    case 0:
+    switch (GetAceSuit()) {
+    case Suit::Clubs:
       return GetColumnX(0);
-    case 1:
+    case Suit::Diamonds:
       return GetColumnX(1);
-    case 2:
+    case Suit::Hearts:
       return GetColumnX(8);
-    case 3:
+    case Suit::Spades:
       return GetColumnX(9);
     }
     a2::puts("CARDLOCATION::GETX; ACEPILE");
@@ -27,14 +64,14 @@ uint8_t CardLocation::GetX() const {
     a2::MONITOR();
     return 0;
   } else if (IsTower()) {
-    return GetColumnX(3 + index);
+    return GetColumnX(3 + GetTowerIndex());
   } else if (IsNull()) {
     a2::puts("CARDLOCATION::GETX; NOWHERE");
     a2::PAGE2OFF();
     a2::MONITOR();
     return 0;
   } else {
-    return GetColumnX(area.GetColumn());
+    return GetColumnX(GetColumn());
   }
 }
 
@@ -45,7 +82,7 @@ uint8_t CardLocation::GetY() const {
   if (IsTower() || IsAce()) {
     return CardLocations::TowersTop;
   } else if (IsColumn()) {
-    return columnYLookup.Y(index);
+    return columnYLookup.Y(GetRow());
   } else {
     a2::puts("CARDLOCATION::GETY; NOWHERE");
     a2::PAGE2OFF();
@@ -61,7 +98,10 @@ CardLocation CardLocation::Up() const
 
   if (IsColumn())
   {
-    switch (area.GetColumn())
+    uint8_t column = GetColumn();
+    uint8_t row = GetRow();
+
+    switch (column)
     {
     case 0:
     case 1:
@@ -69,19 +109,18 @@ CardLocation CardLocation::Up() const
     case 7:
     case 8:
     case 9:
-      if (index > 0)
-        --result.index;
+      if (row > 0)
+        result = Column(column, row - 1);
       break;
 
     case 3:
     case 4:
     case 5:
     case 6:
-      if (index > 0) {
-        --result.index;
+      if (row > 0) {
+        result = Column(column, row - 1);
       } else {
-        result.area = CardArea::Towers();
-        result.index = area.GetColumn() - 3;
+        result = Tower(column - 3);
       }
       break;
 
