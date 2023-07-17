@@ -123,7 +123,7 @@ void StateMachine::MoveToColumn()
     return;
 
   // the target location is one below that
-  CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetArea().GetColumn(), locationAboveTarget.GetIndex() + 1);
+  CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetIndex() + 1);
 
   // start the animation
   CardAnimator::instance.StartAnimation(

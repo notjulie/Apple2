@@ -120,13 +120,11 @@ CardLocation Cursor::GetClosestCardTo(CardLocation start) {
 /// Gets the location of the column card closest to the given location
 /// </summary>
 CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
-  CardArea area = start.GetArea();
-
   uint8_t startColumn;
   uint8_t startIndex;
 
   if (start.IsColumn()) {
-    startColumn = area.GetColumn();
+    startColumn = start.GetColumn();
     startIndex = start.GetIndex();
   } else if (start.IsTower()) {
     // start looking from the top of the column nearest the tower

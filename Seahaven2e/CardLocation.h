@@ -107,7 +107,6 @@ class CardLocation {
  public:
   constexpr CardLocation(CardArea area, uint8_t index) : area(area), index(index) { }
 
-  inline CardArea GetArea() const { return area; }
   inline uint8_t GetIndex() const { return index; }
 
   bool IsNull() const { return area.IsNowhere(); }
@@ -137,8 +136,6 @@ class CardLocation {
  private:
   CardArea area;
   uint8_t index;
-
-//friend CardLocation operator+(CardLocation location, int8_t i);
 };
 
 
