@@ -11,14 +11,7 @@
 ///   Gets the byte offset of the location within the raster
 ///
 uint8_t CardLocation::GetX() const {
-  switch (area.GetType()) {
-  case CardAreaType::Nowhere:
-    a2::puts("CARDLOCATION::GETX; NOWHERE");
-    a2::PAGE2OFF();
-    a2::MONITOR();
-    return 0;
-
-  case CardAreaType::AcePiles:
+  if (IsAce()) {
     switch (index) {
     case 0:
       return GetColumnX(0);
@@ -33,11 +26,14 @@ uint8_t CardLocation::GetX() const {
     a2::PAGE2OFF();
     a2::MONITOR();
     return 0;
-
-  case CardAreaType::Towers:
+  } else if (IsTower()) {
     return GetColumnX(3 + index);
-
-  default:
+  } else if (IsNull()) {
+    a2::puts("CARDLOCATION::GETX; NOWHERE");
+    a2::PAGE2OFF();
+    a2::MONITOR();
+    return 0;
+  } else {
     return GetColumnX(area.GetColumn());
   }
 }
@@ -46,22 +42,12 @@ uint8_t CardLocation::GetX() const {
 ///   Gets the Y coordinate of the location
 ///
 uint8_t CardLocation::GetY() const {
-  switch (area.GetType()) {
-  case CardAreaType::Nowhere:
-    a2::puts("CARDLOCATION::GETY; NOWHERE");
-    a2::PAGE2OFF();
-    a2::MONITOR();
-    return 0;
-
-  case CardAreaType::AcePiles:
-  case CardAreaType::Towers:
+  if (IsTower() || IsAce()) {
     return CardLocations::TowersTop;
-
-  case CardAreaType::Columns:
+  } else if (IsColumn()) {
     return columnYLookup.Y(index);
-
-  default:
-    a2::puts("CARDLOCATION::GETY; DEFAULT");
+  } else {
+    a2::puts("CARDLOCATION::GETY; NOWHERE");
     a2::PAGE2OFF();
     a2::MONITOR();
     return 0;
@@ -73,7 +59,7 @@ CardLocation CardLocation::Up() const
 {
   CardLocation result = *this;
 
-  if (area.GetType() == CardAreaType::Columns)
+  if (IsColumn())
   {
     switch (area.GetColumn())
     {

@@ -54,8 +54,11 @@ public:
   constexpr CardArea(CardAreaType areaType, uint8_t column) : areaType((uint8_t)areaType), column(column) {}
 
   uint8_t GetColumn() const { return column; }
-  CardAreaType GetType() const { return (CardAreaType)areaType; }
+
   bool IsNowhere() const { return areaType == (uint8_t)CardAreaType::Nowhere; }
+  bool IsAce() const { return areaType == (uint8_t)CardAreaType::AcePiles; }
+  bool IsColumn() const { return areaType == (uint8_t)CardAreaType::Columns; }
+  bool IsTower() const { return areaType == (uint8_t)CardAreaType::Towers; }
 
   static constexpr CardArea Nowhere() { return CardArea(CardAreaType::Nowhere, 0); }
   static constexpr CardArea AcePiles() { return CardArea(CardAreaType::AcePiles, 0); }
@@ -106,8 +109,13 @@ class CardLocation {
 
   inline CardArea GetArea() const { return area; }
   inline uint8_t GetIndex() const { return index; }
-  inline bool IsNull() const { return area.IsNowhere(); }
 
+  bool IsNull() const { return area.IsNowhere(); }
+  bool IsAce() const { return area.IsAce(); }
+  bool IsColumn() const { return area.IsColumn(); }
+  bool IsTower() const { return area.IsTower(); }
+
+  uint8_t GetColumn() const { return area.GetColumn(); }
   uint8_t GetX() const;
   uint8_t GetY() const;
 

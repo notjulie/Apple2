@@ -101,22 +101,15 @@ void Cursor::Toggle() {
 CardLocation Cursor::GetClosestCardTo(CardLocation start) {
   CardLocation result = CardLocation::Null();
 
-  switch (start.GetArea().GetType()) {
-  case CardAreaType::Columns:
+  if (start.IsColumn()) {
     result = GetClosestColumnCardTo(start);
     if (result.IsNull()) {
       result = GetClosestTowerCardTo(start);
     }
-    break;
-
-  case CardAreaType::Towers:
+  } else if (start.IsTower()) {
     result = GetClosestTowerCardTo(start);
     if (result.IsNull())
       result = GetClosestColumnCardTo(start);
-    break;
-
-  default:
-    break;
   }
 
   return result;
@@ -132,19 +125,14 @@ CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
   uint8_t startColumn;
   uint8_t startIndex;
 
-  switch (area.GetType()) {
-  case CardAreaType::Columns:
+  if (start.IsColumn()) {
     startColumn = area.GetColumn();
     startIndex = start.GetIndex();
-    break;
-
-  case CardAreaType::Towers:
+  } else if (start.IsTower()) {
     // start looking from the top of the column nearest the tower
     startColumn = start.GetIndex() + 3;
     startIndex = 0;
-    break;
-
-  default:
+  } else {
     return CardLocation::Null();
   }
 
@@ -186,24 +174,17 @@ CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) 
 /// Gets the location of the tower card closest to the given location
 /// </summary>
 CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
-  CardArea area = start.GetArea();
-
   uint8_t startTower;
 
-  switch (area.GetType()) {
-  case CardAreaType::Columns:
+  if (start.IsColumn()) {
     startTower = start.GetIndex() - 3;
     if ((int8_t)startTower < 0)
       startTower = 0;
     if (startTower > 3)
       startTower = 3;
-    break;
-
-  case CardAreaType::Towers:
+  } else if (start.IsTower()) {
     startTower = start.GetIndex();
-    break;
-
-  default:
+  } else {
     return CardLocation::Null();
   }
 
