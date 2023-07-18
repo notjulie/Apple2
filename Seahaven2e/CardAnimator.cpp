@@ -26,12 +26,15 @@ void CardAnimator::DrawGame() {
 
   // copy to the offscreen buffer
   drawing1.CopyTo(&drawing2);
+
+  // both pages are the same and up to date
+  state = State::Idle;
 }
 
 
-/// \brief
+/// <summary>
 ///   Starts an animation of a card from one position to another
-///
+/// </summary>
 void CardAnimator::StartAnimation(
       CompactCard card,
       CardLocation end)
@@ -73,8 +76,7 @@ void CardAnimator::StartAnimation(
   cardToMove = card;
 
   // draw the game without the card on page 2
-  drawing2.DrawBackground();
-  drawing2.DrawGame();
+  drawing2.EraseCard(start);
 
   // draw the card at its original position, saving the background
   background2X = currentX;
@@ -85,8 +87,11 @@ void CardAnimator::StartAnimation(
   // switch to page 2
   a2::PAGE2ON();
 
+  // draw the game without the card on page 1
+  drawing1.EraseCard(start);
+
   // set the state
-  state = State::Page2Initialized;
+  state = State::Page2Visible;
 }
 
 
@@ -110,25 +115,6 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
 void CardAnimator::Service() {
   switch (state) {
   case State::Idle:
-    break;
-
-  case State::Page2Initialized:
-    // copy page 2 to page 1
-    drawing2.CopyTo(&drawing1);
-
-    // erase the card that we're moving
-    drawing1.RestoreBackground(&background2, background2X, background2Y);
-
-    // set the new position
-    UpdatePosition();
-
-    // save background, draw, switch pages, update state
-    background1X = currentX;
-    background1Y = currentY;
-    drawing1.SaveCardBackground(currentX, currentY, &background1);
-    drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
-    a2::PAGE2OFF();
-    state = State::Page1Visible;
     break;
 
   case State::Page1Visible:

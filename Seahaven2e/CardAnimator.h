@@ -21,9 +21,19 @@ class CardAnimator {
 
  private:
   enum class State {
+    /// <summary>
+    /// Both HGR pages the same and up to date
+    /// </summary>
     Idle,
-    Page2Initialized,
+
+    /// <summary>
+    /// Animating, page 1 visible
+    /// </summary>
     Page1Visible,
+
+    /// <summary>
+    /// Animating, page 1 visible
+    /// </summary>
     Page2Visible
   };
 

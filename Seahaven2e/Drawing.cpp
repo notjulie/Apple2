@@ -176,6 +176,32 @@ void Drawing::DrawGame() {
 
 
 /// <summary>
+/// Erases the location
+/// </summary>
+void Drawing::EraseCard(CardLocation location) {
+  // get the coordinates
+  uint8_t x = location.GetX();
+  uint8_t startY = location.GetY();
+  uint8_t y = startY;
+
+  // erase the card
+  for (int i=0; i<CardHeight; ++i) {
+    uint8_t *row = hgr.GetByteAddress(y++, x);
+    row[0] = 0;
+    row[1] = 0;
+    row[2] = 0;
+    row[3] = 0;
+  }
+
+  // if this was a column card we'll need to redraw the card above it, or at least
+  // its lower part
+  if (location.IsColumn()) {
+    DrawCardBottom(x, startY - CardLocations::CardShadowHeight);
+  }
+}
+
+
+/// <summary>
 /// Saves a region from an HGR page to the SavedBackground object
 /// </summary>
 void Drawing::SaveCardBackground(
