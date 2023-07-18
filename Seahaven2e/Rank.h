@@ -47,7 +47,7 @@ inline Rank operator-(Rank &r, int8_t i) {
 /// <summary>
 /// Rank subtraction operator
 /// </summary>
-inline int8_t operator-(Rank r1, Rank r2) {
+constexpr int8_t operator-(Rank r1, Rank r2) {
   return (int8_t)r1 - (int8_t)r2;
 }
 

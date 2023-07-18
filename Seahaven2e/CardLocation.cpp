@@ -1,4 +1,4 @@
-// Copyright 2022 Randy Rasmussen
+// Copyright 2022-2023 Randy Rasmussen
 
 #include "CardLocation.h"
 #include <Apple2Lib/IO.h>
@@ -10,11 +10,9 @@
 /// Creates a CardLocation representing the given column and row
 /// </summary>
 CardLocation CardLocation::Column(uint8_t column, uint8_t row) {
-  if (row == 16) {
-    return CardLocation((11<<4) + column);
-  } else {
-    return CardLocation(((column + 1) << 4) | row);
-  }
+  // this only works if the maximum column cards is no greater than 16
+  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
+  return CardLocation(((column + 1) << 4) | row);
 }
 
 
@@ -22,12 +20,9 @@ CardLocation CardLocation::Column(uint8_t column, uint8_t row) {
 /// Gets the row associated with a column location
 /// </summary>
 uint8_t CardLocation::GetRow() const {
-  uint8_t column = (locationNumber>>4) - 1;
-  if (column < 10) {
-    return locationNumber & 0x0F;
-  } else {
-    return 16;
-  }
+  // this only works if the maximum column cards is no greater than 16
+  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
+  return locationNumber & 0x0F;
 }
 
 
@@ -35,12 +30,9 @@ uint8_t CardLocation::GetRow() const {
 /// Gets the column associated with a column location
 /// </summary>
 uint8_t CardLocation::GetColumn() const {
-  uint8_t column = (locationNumber>>4) - 1;
-  if (column < 10) {
-    return column;
-  } else {
-    return locationNumber & 0x0F;
-  }
+  // this only works if the maximum column cards is no greater than 16
+  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
+  return (locationNumber>>4) - 1;
 }
 
 

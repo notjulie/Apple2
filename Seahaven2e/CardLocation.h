@@ -22,7 +22,17 @@ namespace CardLocations {
   constexpr uint8_t TowersTop = 3;
   constexpr uint8_t TowersBottom = TowersTop + CardHeight;
   constexpr uint8_t ColumnsTop = TowersBottom + 4;
-  constexpr uint8_t MaxColumnCards = 16;
+
+  /// <summary>
+  /// Starting column cards... 5, of course
+  /// </summary>
+  constexpr uint8_t StartingColumnCards = 5;
+
+  /// <summary>
+  /// Max column cards; it would be the case where the column starts with a king at
+  /// the bottom and then cards are stacked on it all the way down to two
+  /// </summary>
+  constexpr uint8_t MaxColumnCards = StartingColumnCards + (Rank::King - Rank::Two);
 }
 
 // ==========================================================
