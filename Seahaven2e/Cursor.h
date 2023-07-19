@@ -12,6 +12,8 @@
 /// </summary>
 class Cursor {
  public:
+  Cursor() = default;
+
   void SetCursorLocationToDefault();
   void Show();
   void Service();
@@ -43,9 +45,12 @@ class Cursor {
   void Toggle();
 
  private:
-  uint8_t lastToggleTime = 0;
+  // state must be initialized by constructor
   State state = State::Idle;
-  CardLocation location = CardLocation::Null();
+
+  // state variables that only matter in non-idle states
+  uint8_t lastToggleTime;
+  CardLocation location;
 };
 
 #endif  // SEAHAVEN2E_CURSOR_H_

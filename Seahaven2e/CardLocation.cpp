@@ -5,7 +5,6 @@
 #include <Apple2Lib/ROM.h>
 #include "Sprites.h"
 
-
 /// <summary>
 /// Creates a CardLocation representing the given column and row
 /// </summary>

@@ -82,6 +82,7 @@ void CardAnimator::StartAnimation(
   background2X = currentX;
   background2Y = currentY;
   drawing2.SaveCardBackground(currentX, currentY, &background2);
+  background2Saved = true;
   drawing2.DrawCardWithShadow(card, currentX, currentY);
 
   // switch to page 2
@@ -89,6 +90,7 @@ void CardAnimator::StartAnimation(
 
   // draw the game without the card on page 1
   drawing1.EraseCard(start);
+  background1Saved = false;
 
   // set the state
   state = State::Page2Visible;
@@ -123,22 +125,30 @@ void CardAnimator::Service() {
       state = State::Idle;
       break;
     }
-    drawing2.RestoreBackground(&background2, background2X, background2Y);
+    if (background2Saved) {
+      drawing2.RestoreBackground(&background2, background2X, background2Y);
+      background2Saved = false;
+    }
     UpdatePosition();
     background2X = currentX;
     background2Y = currentY;
     drawing2.SaveCardBackground(currentX, currentY, &background2);
+    background2Saved = true;
     drawing2.DrawCardWithShadow(cardToMove, currentX, currentY);
     a2::PAGE2ON();
     state = State::Page2Visible;
     break;
 
   case State::Page2Visible:
-    drawing1.RestoreBackground(&background1, background1X, background1Y);
+    if (background1Saved) {
+      drawing1.RestoreBackground(&background1, background1X, background1Y);
+      background1Saved = false;
+    }
     UpdatePosition();
     background1X = currentX;
     background1Y = currentY;
     drawing1.SaveCardBackground(currentX, currentY, &background1);
+    background1Saved = true;
     drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
     a2::PAGE2OFF();
     state = State::Page1Visible;

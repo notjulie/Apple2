@@ -11,6 +11,8 @@
 
 class CardAnimator {
  public:
+  CardAnimator() {}
+
   void DrawGame();
   bool IsAnimating() { return state != State::Idle; }
   void StartAnimation(CompactCard card, CardLocation end);
@@ -42,26 +44,32 @@ class CardAnimator {
   void UpdatePosition();
 
  private:
+  // operating state... the one thing that needs to be initialized
+  // by the constructor
   State state = State::Idle;
 
-  // saved background for graphics page 1
+  // saved background for graphics page 1; relevant only in animating states,
+  // don't need to be cleared by constructor
   uint8_t background1X;
   uint8_t background1Y;
+  bool background1Saved;
   SavedBackground background1;
 
-  // saved background for graphics page 2
+  // saved background for graphics page 2; relevant only in animating states,
+  // don't need to be cleared by constructor
   uint8_t background2X;
   uint8_t background2Y;
+  bool background2Saved;
   SavedBackground background2;
 
-  // the animation in progress
+  // the animation in progress; relevant only in animating states
+  // don't need to be cleared by constructor
   CompactCard cardToMove;
-  CardLocation endLocation = CardLocation::Null();
+  CardLocation endLocation;
   uint8_t currentX, currentY;
   uint8_t targetX, targetY;
   uint8_t distanceX, distanceY;
   int8_t directionX, directionY;
-
   uint8_t numeratorX, numeratorY;
   uint8_t lastVBLCount;
   uint8_t duration;

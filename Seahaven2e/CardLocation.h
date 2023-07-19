@@ -70,6 +70,8 @@ constexpr ColumnYLookup columnYLookup;
 
 class CardLocation {
  public:
+  CardLocation() = default; // we are uninitialized until assigned
+
   bool IsNull() const { return locationNumber == 0; }
   bool IsAce() const { return locationNumber < 5; }
   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
