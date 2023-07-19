@@ -4,15 +4,11 @@
 
 #include "Cursor.h"
 
+//#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"
 
-
-/// <summary>
-/// PersistentState global instance; forced into .data so that it gets
-/// initialized in the output file
-/// </summary>
-__declspec(allocate(".data")) Cursor Cursor::instance;
+Cursor Cursor::instance;
 
 /// <summary>
 /// Sets the cursor location to the bottom card on column 4, adjusting

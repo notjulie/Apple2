@@ -12,8 +12,6 @@
 /// </summary>
 class Cursor {
  public:
-  constexpr Cursor() {}
-
   void SetCursorLocationToDefault();
   void Show();
   void Service();

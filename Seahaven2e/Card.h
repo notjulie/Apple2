@@ -43,7 +43,8 @@ Card operator+(Card card, int8_t i);
 /// </summary>
 class CompactCard {
 public:
-  constexpr CompactCard(Suit suit = Suit::Clubs, Rank rank = Rank::Null) : card(rank, suit) {}
+  CompactCard() {}
+  constexpr CompactCard(Suit suit, Rank rank) : card(rank, suit) {}
   CompactCard(Card card);
 
   operator Card() const;

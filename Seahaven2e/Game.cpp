@@ -9,12 +9,7 @@
 #include <C6502/Memory.h>
 #include "CardLocation.h"
 
-
-/// <summary>
-/// Game global instance; forced into .data so that it gets
-/// initialized in the output file
-/// </summary>
-__declspec(allocate(".data")) Game Game::instance;
+Game Game::instance;
 
 /** \brief
  * Shuffles and deals out a new game
