@@ -10,7 +10,12 @@
 #include "Drawing.h"
 #include "Game.h"
 
-CardAnimator CardAnimator::instance;
+
+/// <summary>
+/// the global instance of CardAnimator, forced into .data so it is initialized
+/// in our binary image
+/// </summary>
+__declspec(allocate(".data")) CardAnimator CardAnimator::instance;
 
 /// <summary>
 /// Draws the game as it currently sits; we are responsible for

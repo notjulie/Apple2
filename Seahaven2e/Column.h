@@ -13,6 +13,8 @@
  */
 class Column {
  public:
+  constexpr Column() {}
+
   void Clear() { count = 0; }
   void Append(CompactCard card) { SetCard(count, card); }
 
@@ -25,7 +27,7 @@ class Column {
 
  private:
   CompactCard  cards[5];
-  uint8_t count;
+  uint8_t count = 0;
 };
 
 

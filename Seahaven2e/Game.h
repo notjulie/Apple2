@@ -15,6 +15,8 @@
  */
 class Game {
  public:
+  constexpr Game() {}
+
   void Shuffle16(uint16_t instruction);
 
   inline Column &GetColumn(uint8_t index) { return columns[index];}

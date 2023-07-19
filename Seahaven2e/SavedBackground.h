@@ -12,6 +12,8 @@
 struct SavedBackground {
   static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;
 
+  constexpr SavedBackground() : pixels() {}
+
   uint8_t pixels[4 * Height];
 };
 

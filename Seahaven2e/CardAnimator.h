@@ -11,6 +11,8 @@
 
 class CardAnimator {
  public:
+  constexpr CardAnimator() {}
+
   void DrawGame();
   bool IsAnimating() { return state != State::Idle; }
   void StartAnimation(CompactCard card, CardLocation end);
@@ -45,27 +47,32 @@ class CardAnimator {
   State state = State::Idle;
 
   // saved background for graphics page 1
-  uint8_t background1X;
-  uint8_t background1Y;
+  uint8_t background1X = 0;
+  uint8_t background1Y = 0;
   SavedBackground background1;
 
   // saved background for graphics page 2
-  uint8_t background2X;
-  uint8_t background2Y;
+  uint8_t background2X = 0;
+  uint8_t background2Y = 0;
   SavedBackground background2;
 
   // the animation in progress
-  CompactCard cardToMove;
+  CompactCard cardToMove = CompactCard::Null();
   CardLocation endLocation = CardLocation::Null();
-  uint8_t currentX, currentY;
-  uint8_t targetX, targetY;
-  uint8_t distanceX, distanceY;
-  int8_t directionX, directionY;
+  uint8_t currentX = 0;
+  uint8_t currentY = 0;
+  uint8_t targetX = 0;
+  uint8_t targetY = 0;
+  uint8_t distanceX = 0;
+  uint8_t distanceY = 0;
+  int8_t directionX = 0;
+  int8_t directionY = 0;
 
-  uint8_t numeratorX, numeratorY;
-  uint8_t lastVBLCount;
-  uint8_t duration;
-  uint8_t timeLeft;
+  uint8_t numeratorX = 0;
+  uint8_t numeratorY = 0;
+  uint8_t lastVBLCount = 0;
+  uint8_t duration = 0;
+  uint8_t timeLeft = 0;
 };
 
 #endif  // SEAHAVEN2E_CARDANIMATOR_H_

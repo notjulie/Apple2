@@ -17,7 +17,12 @@
 #include "Sprites.h"
 #include "StateMachine.h"
 
-static StateMachine stateMachine;
+
+/// <summary>
+/// the global state machine; force it into .data so that it gets allocated to
+/// the output file and thus initialized
+/// </summary>
+__declspec(allocate(".data")) static StateMachine stateMachine;
 
 
 /** \brief
@@ -26,10 +31,6 @@ static StateMachine stateMachine;
 extern "C" int main() {
   // call initializers
   Sprites::Initialize();
-  PersistentState::instance = PersistentState();
-  stateMachine = StateMachine();
-  CardAnimator::instance = CardAnimator();
-  Cursor::instance = Cursor();
 
   // enter main loop
   for (;;) {
