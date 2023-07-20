@@ -1,4 +1,6 @@
 /default/
+/Debug/
+/Release/
 *.layout
 *.depend
 /doxygen/
