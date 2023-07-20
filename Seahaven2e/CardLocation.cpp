@@ -3,6 +3,7 @@
 #include "CardLocation.h"
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
+#include "SHAssert.h"
 #include "Sprites.h"
 
 /// <summary>
@@ -39,31 +40,28 @@ uint8_t CardLocation::GetColumn() const {
 ///   Gets the byte offset of the location within the raster
 ///
 uint8_t CardLocation::GetX() const {
-  if (IsAce()) {
-    switch (GetAceSuit()) {
-    case Suit::Clubs:
-      return GetColumnX(0);
-    case Suit::Diamonds:
-      return GetColumnX(1);
-    case Suit::Hearts:
-      return GetColumnX(8);
-    case Suit::Spades:
-      return GetColumnX(9);
-    }
-    a2::puts("CARDLOCATION::GETX; ACEPILE");
-    a2::PAGE2OFF();
-    a2::MONITOR();
-    return 0;
-  } else if (IsTower()) {
-    return GetColumnX(3 + GetTowerIndex());
-  } else if (IsNull()) {
-    a2::puts("CARDLOCATION::GETX; NOWHERE");
-    a2::PAGE2OFF();
-    a2::MONITOR();
-    return 0;
-  } else {
-    return GetColumnX(GetColumn());
-  }
+   if (IsAce()) {
+      switch (GetAceSuit()) {
+      case Suit::Clubs:
+         return GetColumnX(0);
+      case Suit::Diamonds:
+         return GetColumnX(1);
+      case Suit::Hearts:
+         return GetColumnX(8);
+      case Suit::Spades:
+         return GetColumnX(9);
+      default:
+         assert(0);
+         return 0;
+      }
+   } else if (IsTower()) {
+      return GetColumnX(3 + GetTowerIndex());
+   } else if (IsNull()) {
+      assert(0);
+      return 0;
+   } else {
+      return GetColumnX(GetColumn());
+   }
 }
 
 /// \brief

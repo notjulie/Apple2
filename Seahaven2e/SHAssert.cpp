@@ -29,6 +29,7 @@ void DisplayNumber(uint16_t number)
 /// </summary>
 [[noreturn]] void SeahavenFail(const char *filename, uint16_t lineNumber)
 {
+   a2::PAGE2OFF();
    a2::MIXEDON();
 
    a2::CR();
