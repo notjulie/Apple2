@@ -4,7 +4,7 @@
 
 #include "StateMachine.h"
 
-#include <Apple2Lib/IO.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include "CardAnimator.h"
 #include "CardLocation.h"
@@ -19,27 +19,26 @@ using ::a2::KeyCode;
 /// Performs periodic action
 /// </summary>
 void StateMachine::Service() {
-  switch (state) {
-  case State::Uninitialized:
-    // set HGR
-    a2::HIRESON();
-    a2::TEXTOFF();
-    a2::MIXEDON();
+   switch (state) {
+   case State::Uninitialized:
+      // set HGR
+      a2::HIRESON();
+      a2::TEXTOFF();
 
-    // new game
-    NewGame();
-    break;
+      // new game
+      NewGame();
+      break;
 
-  case State::Idle:
-    ServiceIdle();
-    break;
+   case State::Idle:
+      ServiceIdle();
+      break;
 
-  case State::MoveToAces:
-    CardAnimator::instance.Service();
-    if (!CardAnimator::instance.IsAnimating())
-      EnterIdle();
-    break;
-  }
+   case State::MoveToAces:
+      CardAnimator::instance.Service();
+      if (!CardAnimator::instance.IsAnimating())
+         EnterIdle();
+      break;
+   }
 }
 
 

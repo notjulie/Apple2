@@ -7,8 +7,8 @@
 		<Option compiler="arm-elf-gcc" />
 		<Build>
 			<Target title="Release">
-				<Option output="default/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
-				<Option object_output="default" />
+				<Option output="Release/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Release" />
 				<Option type="1" />
 				<Option compiler="llvm-mos" />
 				<Option use_console_runner="0" />
@@ -26,8 +26,8 @@
 				</ExtraCommands>
 			</Target>
 			<Target title="Debug">
-				<Option output="default/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
-				<Option object_output="default" />
+				<Option output="Debug/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
+				<Option object_output="Debug" />
 				<Option type="1" />
 				<Option compiler="llvm-mos" />
 				<Option use_console_runner="0" />
@@ -69,8 +69,8 @@
 		<Unit filename="../Apple2Lib/HGRPage.cpp" />
 		<Unit filename="../Apple2Lib/HGRPage.h" />
 		<Unit filename="../Apple2Lib/HGRWord.h" />
-		<Unit filename="../Apple2Lib/IO.cpp" />
-		<Unit filename="../Apple2Lib/IO.h" />
+		<Unit filename="../Apple2Lib/MMIO.cpp" />
+		<Unit filename="../Apple2Lib/ROM.cpp" />
 		<Unit filename="../Apple2Lib/ROM.h" />
 		<Unit filename="../Apple2Lib/VBLCounter.cpp" />
 		<Unit filename="../Apple2Lib/VBLCounter.h" />
@@ -93,6 +93,8 @@
 		<Unit filename="PersistentState.cpp" />
 		<Unit filename="PersistentState.h" />
 		<Unit filename="Rank.h" />
+		<Unit filename="SHAssert.cpp" />
+		<Unit filename="SHAssert.h" />
 		<Unit filename="SavedBackground.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />

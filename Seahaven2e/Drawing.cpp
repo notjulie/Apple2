@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <Apple2Lib/HGRPage.h>
 #include <Apple2Lib/HGRWord.h>
-#include <Apple2Lib/IO.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include <C6502/Memory.h>

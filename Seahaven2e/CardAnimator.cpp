@@ -4,7 +4,7 @@
 
 #include "CardAnimator.h"
 
-#include <Apple2Lib/IO.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"

@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 #include <Apple2Lib/HGR.h>
-#include <Apple2Lib/IO.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include <C6502/Memory.h>
@@ -14,6 +14,7 @@
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
+#include "SHAssert.h"
 #include "Sprites.h"
 #include "StateMachine.h"
 

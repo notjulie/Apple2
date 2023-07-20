@@ -3,7 +3,9 @@
 // =============================================================
 
 #include "Column.h"
+
 #include <Apple2Lib/ROM.h>
+#include "SHAssert.h"
 
 
 /// <summary>
@@ -28,32 +30,23 @@ CompactCard Column::GetCard(uint8_t index) const {
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-void Column::SetCard(uint8_t row, CompactCard _card)
+void Column::SetCard(uint8_t row, CompactCard card)
 {
-  Card card(_card);
+   assert(!card.IsNull());
 
-  // the argument shouldn't be null, RemoveCard is for that
-  if (card.IsNull()) {
-    a2::puts("SETCARD is null");
-    return;
-  }
+   // if the row is 5 or greater the card must be one less than
+   // the card above it
+   if (row >= 5) {
+      assert(card == (GetCard(row - 1) - 1));
 
-  // if the row is 5 or greater the card must be one less than
-  // the card above it
-  if (row >= 5) {
-    if (card != (GetCard(row - 1) - 1)) {
-      a2::puts("SETCARD is wrong");
+      if (row >= count)
+         count = row + 1;
       return;
-    }
+   }
 
-    if (row >= count)
-      count = row + 1;
-    return;
-  }
-
-  // else just set it
-  cards[row] = card;
-  if (row >= count)
+   // else just set it
+   cards[row] = card;
+   if (row >= count)
     count = row + 1;
 }
 

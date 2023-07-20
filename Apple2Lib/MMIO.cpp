@@ -1,5 +1,5 @@
 
-#include "IO.h"
+#include "MMIO.h"
 
 #include "ROM.h"
 
@@ -25,12 +25,6 @@ namespace a2 {
       {
          return KeyCode::None;
       }
-   }
-
-   void puts(const char *s)
-   {
-      while (*s)
-         COUT(*s++);
    }
 }
 

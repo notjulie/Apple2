@@ -64,10 +64,13 @@ namespace a2 {
    /** \brief
     * Exit to monitor
     */
-   inline void MONITOR()
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winvalid-noreturn"
+   [[noreturn]] inline void MONITOR()
    {
       asm volatile ("JMP\t$FF69" :::);
    }
+#pragma GCC diagnostic pop
 
    void puts(const char *s);
 }

@@ -1,0 +1,3479 @@
+
+sh2cb.a2.elf:	file format elf32-mos
+
+Disassembly of section .text:
+
+00006004 <_start>:
+;    {
+    6004: a0 00        	ldy	#$0
+;       while (*s)
+    6006: b1 e2        	lda	($e2),y
+    6008: f0 20        	beq	$602a
+    600a: a0 01        	ldy	#$1
+    600c: a6 e2        	ldx	$e2
+    600e: 86 e4        	stx	$e4
+    6010: a6 e3        	ldx	$e3
+    6012: 86 e5        	stx	$e5
+;       while (*s)
+    6014: e6 e4        	inc	$e4
+    6016: d0 02        	bne	$601a
+    6018: e6 e5        	inc	$e5
+;       asm volatile ("JSR\t$FDED" : "+a"(c));
+    601a: 20 ed fd     	jsr	$fded
+;       while (*s)
+    601d: b1 e2        	lda	($e2),y
+    601f: a6 e4        	ldx	$e4
+    6021: 86 e2        	stx	$e2
+    6023: a6 e5        	ldx	$e5
+    6025: 86 e3        	stx	$e3
+    6027: aa           	tax
+    6028: d0 ea        	bne	$6014
+;    }
+    602a: 60           	rts
+    602b: 00           	brk
+
+0000602c <_ZN12CardAnimator14StartAnimationE11CompactCard12CardLocation>:
+; {
+    602c: 85 f0        	sta	$f0
+    602e: a5 f4        	lda	$f4
+    6030: 48           	pha
+    6031: a5 f5        	lda	$f5
+    6033: 48           	pha
+    6034: a5 f6        	lda	$f6
+    6036: 48           	pha
+    6037: a5 f7        	lda	$f7
+    6039: 48           	pha
+    603a: a5 f0        	lda	$f0
+    603c: a0 02        	ldy	#$2
+    603e: 84 f7        	sty	$f7
+    6040: 86 f5        	stx	$f5
+;   endLocation = end;
+    6042: 8e 3f 7a     	stx	$7a3f
+    6045: 85 f6        	sta	$f6
+;   CardLocation start = Game::instance.GetCardLocation(card);
+    6047: 20 58 6c     	jsr	$6c58
+    604a: 85 f4        	sta	$f4
+;   Game::instance.SetCard(start, Card());
+    604c: a2 00        	ldx	#$0
+    604e: 20 16 6d     	jsr	$6d16
+    6051: a5 f4        	lda	$f4
+;   currentX = start.GetX();
+    6053: 20 6e 62     	jsr	$626e
+    6056: 8d 40 7a     	sta	$7a40
+    6059: a4 f4        	ldy	$f4
+;   bool IsTower() const { return locationNumber > 251; }
+    605b: c0 fc        	cpy	#$fc
+    605d: a2 02        	ldx	#$2
+    605f: b0 10        	bcs	$6071
+;   bool IsAce() const { return locationNumber < 5; }
+    6061: c0 05        	cpy	#$5
+    6063: a2 02        	ldx	#$2
+    6065: 90 0a        	bcc	$6071
+    6067: a5 f4        	lda	$f4
+;   return locationNumber & 0x0F;
+    6069: 29 0f        	and	#$f
+    606b: aa           	tax
+;   inline uint8_t Y(uint8_t index) const { return y[index]; }
+    606c: bd 17 76     	lda	$7617,x
+    606f: aa           	tax
+;     return columnYLookup.Y(GetRow());
+    6070: ca           	dex
+;   currentY = start.GetY() - CardLocations::CardShadowHeight;
+    6071: 8e 41 7a     	stx	$7a41
+    6074: a5 f5        	lda	$f5
+;   targetX = end.GetX();
+    6076: 20 6e 62     	jsr	$626e
+    6079: 85 e3        	sta	$e3
+    607b: a5 f5        	lda	$f5
+    607d: a6 e3        	ldx	$e3
+;   targetX = end.GetX();
+    607f: 8e 42 7a     	stx	$7a42
+;   bool IsTower() const { return locationNumber > 251; }
+    6082: c9 fc        	cmp	#$fc
+    6084: 90 05        	bcc	$608b
+    6086: a6 f7        	ldx	$f7
+    6088: 4c 9b 60     	jmp	$609b
+;   bool IsAce() const { return locationNumber < 5; }
+    608b: c9 05        	cmp	#$5
+    608d: a6 f7        	ldx	$f7
+    608f: 86 e2        	stx	$e2
+    6091: 90 0a        	bcc	$609d
+;   return locationNumber & 0x0F;
+    6093: 29 0f        	and	#$f
+    6095: aa           	tax
+;   inline uint8_t Y(uint8_t index) const { return y[index]; }
+    6096: bd 17 76     	lda	$7617,x
+    6099: aa           	tax
+;     return columnYLookup.Y(GetRow());
+    609a: ca           	dex
+    609b: 86 e2        	stx	$e2
+    609d: a6 e2        	ldx	$e2
+;   targetY = end.GetY() - CardLocations::CardShadowHeight;
+    609f: 8e 43 7a     	stx	$7a43
+;   if (targetX > currentX) {
+    60a2: ad 40 7a     	lda	$7a40
+    60a5: c5 e3        	cmp	$e3
+    60a7: 90 08        	bcc	$60b1
+    60a9: 38           	sec
+    60aa: e5 e3        	sbc	$e3
+    60ac: a2 ff        	ldx	#$ff
+    60ae: 4c ba 60     	jmp	$60ba
+    60b1: 85 e4        	sta	$e4
+    60b3: a5 e3        	lda	$e3
+;   if (targetX > currentX) {
+    60b5: 38           	sec
+    60b6: e5 e4        	sbc	$e4
+    60b8: a2 01        	ldx	#$1
+    60ba: a8           	tay
+;     distanceX = targetX - currentX;
+    60bb: 8d 44 7a     	sta	$7a44
+;     directionX = 1;
+    60be: 8e 46 7a     	stx	$7a46
+;   if (targetY > currentY) {
+    60c1: ad 41 7a     	lda	$7a41
+    60c4: c5 e2        	cmp	$e2
+    60c6: 90 08        	bcc	$60d0
+    60c8: 38           	sec
+    60c9: e5 e2        	sbc	$e2
+    60cb: a2 ff        	ldx	#$ff
+    60cd: 4c d9 60     	jmp	$60d9
+    60d0: 85 e3        	sta	$e3
+    60d2: a5 e2        	lda	$e2
+;   if (targetY > currentY) {
+    60d4: 38           	sec
+    60d5: e5 e3        	sbc	$e3
+    60d7: a2 01        	ldx	#$1
+;     distanceY = targetY - currentY;
+    60d9: 8d 45 7a     	sta	$7a45
+;     directionY = 1;
+    60dc: 8e 47 7a     	stx	$7a47
+;     (dy >> 1);
+    60df: 4a           	lsr
+    60e0: 85 f5        	sta	$f5
+    60e2: 98           	tya
+;     (dx >> 1) +
+    60e3: 4a           	lsr
+    60e4: 85 f7        	sta	$f7
+    60e6: a2 03        	ldx	#$3
+    60e8: 98           	tya
+;     dx +
+    60e9: 20 41 74     	jsr	$7441
+;     dx +
+    60ec: 18           	clc
+    60ed: 65 f7        	adc	$f7
+    60ef: 18           	clc
+;     dx +
+    60f0: 65 f5        	adc	$f5
+;   duration = pixelDistance >> 4;
+    60f2: 4a           	lsr
+    60f3: 4a           	lsr
+    60f4: 4a           	lsr
+    60f5: 4a           	lsr
+    60f6: 8d 4b 7a     	sta	$7a4b
+;   timeLeft = duration;
+    60f9: 8d 4c 7a     	sta	$7a4c
+    60fc: a2 00        	ldx	#$0
+;   numeratorX = numeratorY = 0;
+    60fe: 8e 49 7a     	stx	$7a49
+    6101: 8e 48 7a     	stx	$7a48
+;       static uint8_t GetCounter() { return counter; }
+    6104: ae 01 79     	ldx	$7901
+;   lastVBLCount = a2::VBLCounter::GetCounter();
+    6107: 8e 4a 7a     	stx	$7a4a
+    610a: a6 f6        	ldx	$f6
+;   cardToMove = card;
+    610c: 8e 3e 7a     	stx	$7a3e
+    610f: 86 f5        	stx	$f5
+    6111: a2 fd        	ldx	#$fd
+    6113: 86 f6        	stx	$f6
+    6115: a2 78        	ldx	#$78
+    6117: 86 f7        	stx	$f7
+    6119: a4 f6        	ldy	$f6
+    611b: 84 e2        	sty	$e2
+    611d: 86 e3        	stx	$e3
+    611f: a5 f4        	lda	$f4
+;   drawing2.EraseCard(start);
+    6121: 20 fa 69     	jsr	$69fa
+;   background2X = currentX;
+    6124: ad 40 7a     	lda	$7a40
+    6127: 8d b3 79     	sta	$79b3
+;   background2Y = currentY;
+    612a: ae 41 7a     	ldx	$7a41
+    612d: 8e b4 79     	stx	$79b4
+    6130: a4 f6        	ldy	$f6
+    6132: 84 e2        	sty	$e2
+    6134: a4 f7        	ldy	$f7
+    6136: 84 e3        	sty	$e3
+    6138: a0 b6        	ldy	#$b6
+    613a: 84 e4        	sty	$e4
+    613c: a0 79        	ldy	#$79
+    613e: 84 e5        	sty	$e5
+;   drawing2.SaveCardBackground(currentX, currentY, &background2);
+    6140: 20 9a 6a     	jsr	$6a9a
+    6143: a2 01        	ldx	#$1
+;   background2Saved = true;
+    6145: 8e b5 79     	stx	$79b5
+;   drawing2.DrawCardWithShadow(card, currentX, currentY);
+    6148: ae 41 7a     	ldx	$7a41
+    614b: 86 e4        	stx	$e4
+;          return lo[index];
+    614d: a9 e7        	lda	#$e7
+    614f: 18           	clc
+    6150: 65 e4        	adc	$e4
+    6152: 85 e2        	sta	$e2
+    6154: a9 76        	lda	#$76
+    6156: 69 00        	adc	#$0
+    6158: 85 e3        	sta	$e3
+    615a: a0 00        	ldy	#$0
+    615c: b1 e2        	lda	($e2),y
+;     dx +
+    615e: 18           	clc
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    615f: 6d 40 7a     	adc	$7a40
+    6162: 85 e6        	sta	$e6
+    6164: a9 27        	lda	#$27
+    6166: 18           	clc
+;          return hi[index];
+    6167: 65 e4        	adc	$e4
+    6169: 85 e2        	sta	$e2
+    616b: a9 76        	lda	#$76
+    616d: 69 00        	adc	#$0
+    616f: 85 e3        	sta	$e3
+;   drawing2.DrawCardWithShadow(card, currentX, currentY);
+    6171: ae 40 7a     	ldx	$7a40
+;          return hi[index];
+    6174: b1 e2        	lda	($e2),y
+    6176: 18           	clc
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6177: 6d fd 78     	adc	$78fd
+    617a: 85 e7        	sta	$e7
+    617c: 98           	tya
+;     row[1] = 0;
+    617d: 91 e6        	sta	($e6),y
+    617f: c8           	iny
+    6180: 91 e6        	sta	($e6),y
+    6182: a0 03        	ldy	#$3
+    6184: 91 e6        	sta	($e6),y
+;     uint8_t *row = hgr.GetByteAddress(y++, x);
+    6186: e6 e4        	inc	$e4
+    6188: 88           	dey
+;     row[1] = 0;
+    6189: 91 e6        	sta	($e6),y
+    618b: a4 f6        	ldy	$f6
+    618d: 84 e2        	sty	$e2
+    618f: a4 f7        	ldy	$f7
+    6191: 84 e3        	sty	$e3
+    6193: a5 f5        	lda	$f5
+;   DrawCard(card, x, y);
+    6195: 20 62 67     	jsr	$6762
+;       asm volatile ("STA\t$C055" : );
+    6198: 8d 55 c0     	sta	$c055
+    619b: a2 fe        	ldx	#$fe
+    619d: 86 e2        	stx	$e2
+    619f: a2 78        	ldx	#$78
+    61a1: 86 e3        	stx	$e3
+    61a3: a5 f4        	lda	$f4
+;   drawing1.EraseCard(start);
+    61a5: 20 fa 69     	jsr	$69fa
+    61a8: a0 00        	ldy	#$0
+;   background1Saved = false;
+    61aa: 8c 2a 79     	sty	$792a
+    61ad: a2 02        	ldx	#$2
+;   state = State::Page2Visible;
+    61af: 8e 26 79     	stx	$7926
+    61b2: 8c 27 79     	sty	$7927
+    61b5: 68           	pla
+    61b6: 85 f7        	sta	$f7
+    61b8: 68           	pla
+    61b9: 85 f6        	sta	$f6
+    61bb: 68           	pla
+    61bc: 85 f5        	sta	$f5
+    61be: 68           	pla
+    61bf: 85 f4        	sta	$f4
+; }
+    61c1: 60           	rts
+
+000061c2 <_ZN12CardAnimator14UpdatePositionEv>:
+;   if (timeLeft == 0)
+    61c2: ae 4c 7a     	ldx	$7a4c
+    61c5: d0 03        	bne	$61ca
+    61c7: 4c 6d 62     	jmp	$626d
+;       static uint8_t GetCounter() { return counter; }
+    61ca: ac 01 79     	ldy	$7901
+    61cd: 84 e2        	sty	$e2
+    61cf: ac 4a 7a     	ldy	$7a4a
+    61d2: ad 44 7a     	lda	$7a44
+    61d5: 85 e3        	sta	$e3
+    61d7: ad 4b 7a     	lda	$7a4b
+    61da: 85 e4        	sta	$e4
+    61dc: ad 46 7a     	lda	$7a46
+    61df: 85 e5        	sta	$e5
+    61e1: ad 45 7a     	lda	$7a45
+    61e4: 85 e6        	sta	$e6
+    61e6: ad 47 7a     	lda	$7a47
+    61e9: 85 e7        	sta	$e7
+    61eb: ad 48 7a     	lda	$7a48
+    61ee: 85 e8        	sta	$e8
+    61f0: ad 49 7a     	lda	$7a49
+    61f3: 85 ec        	sta	$ec
+    61f5: 86 e9        	stx	$e9
+    61f7: ae 40 7a     	ldx	$7a40
+    61fa: 86 ea        	stx	$ea
+    61fc: a6 e9        	ldx	$e9
+    61fe: ad 41 7a     	lda	$7a41
+    6201: 85 eb        	sta	$eb
+    6203: a5 ec        	lda	$ec
+;   while (lastVBLCount != now) {
+    6205: c4 e2        	cpy	$e2
+    6207: d0 03        	bne	$620c
+    6209: 4c 6d 62     	jmp	$626d
+    620c: 85 e9        	sta	$e9
+    620e: a5 e8        	lda	$e8
+    6210: 18           	clc
+;     numeratorX += distanceX;
+    6211: 65 e3        	adc	$e3
+    6213: 85 e8        	sta	$e8
+;     while (numeratorX >= duration) {
+    6215: c5 e4        	cmp	$e4
+    6217: 90 1b        	bcc	$6234
+    6219: a5 e8        	lda	$e8
+    621b: 85 e8        	sta	$e8
+    621d: a5 ea        	lda	$ea
+    621f: 18           	clc
+;       currentX += directionX;
+    6220: 65 e5        	adc	$e5
+    6222: 85 ea        	sta	$ea
+    6224: a5 e8        	lda	$e8
+;       numeratorX -= duration;
+    6226: 38           	sec
+    6227: e5 e4        	sbc	$e4
+;     while (numeratorX >= duration) {
+    6229: c5 e4        	cmp	$e4
+    622b: b0 ee        	bcs	$621b
+    622d: 85 e8        	sta	$e8
+    622f: a5 ea        	lda	$ea
+;       currentX += directionX;
+    6231: 8d 40 7a     	sta	$7a40
+    6234: a5 e8        	lda	$e8
+    6236: 8d 48 7a     	sta	$7a48
+    6239: 18           	clc
+    623a: a5 e9        	lda	$e9
+;     numeratorY += distanceY;
+    623c: 65 e6        	adc	$e6
+;     while (numeratorY >= duration) {
+    623e: c5 e4        	cmp	$e4
+    6240: 90 1b        	bcc	$625d
+    6242: 84 ec        	sty	$ec
+    6244: a4 eb        	ldy	$eb
+    6246: 85 e9        	sta	$e9
+    6248: 98           	tya
+    6249: 18           	clc
+;       currentY += directionY;
+    624a: 65 e7        	adc	$e7
+    624c: a8           	tay
+    624d: a5 e9        	lda	$e9
+;       numeratorY -= duration;
+    624f: 38           	sec
+    6250: e5 e4        	sbc	$e4
+;     while (numeratorY >= duration) {
+    6252: c5 e4        	cmp	$e4
+    6254: b0 f0        	bcs	$6246
+    6256: 84 eb        	sty	$eb
+;       currentY += directionY;
+    6258: 8c 41 7a     	sty	$7a41
+    625b: a4 ec        	ldy	$ec
+    625d: 8d 49 7a     	sta	$7a49
+;     ++lastVBLCount;
+    6260: c8           	iny
+    6261: 8c 4a 7a     	sty	$7a4a
+;     if (--timeLeft == 0)
+    6264: ca           	dex
+    6265: 8e 4c 7a     	stx	$7a4c
+    6268: f0 03        	beq	$626d
+    626a: 4c 05 62     	jmp	$6205
+; }
+    626d: 60           	rts
+
+0000626e <_ZNK12CardLocation4GetXEv>:
+;   bool IsAce() const { return locationNumber < 5; }
+    626e: c9 05        	cmp	#$5
+    6270: b0 0c        	bcs	$627e
+;     switch (GetAceSuit()) {
+    6272: 18           	clc
+    6273: 69 ff        	adc	#$ff
+    6275: c9 04        	cmp	#$4
+    6277: b0 1a        	bcs	$6293
+    6279: aa           	tax
+;     switch (GetAceSuit()) {
+    627a: bd 13 76     	lda	$7613,x
+; }
+    627d: 60           	rts
+;   bool IsTower() const { return locationNumber > 251; }
+    627e: c9 fc        	cmp	#$fc
+    6280: 90 09        	bcc	$628b
+;   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
+    6282: a2 fc        	ldx	#$fc
+    6284: 20 41 74     	jsr	$7441
+    6287: 18           	clc
+    6288: 69 08        	adc	#$8
+; }
+    628a: 60           	rts
+;   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
+    628b: 4a           	lsr
+    628c: 4a           	lsr
+    628d: 29 3c        	and	#$3c
+    628f: 18           	clc
+    6290: 69 fc        	adc	#$fc
+; }
+    6292: 60           	rts
+    6293: a2 c7        	ldx	#$c7
+    6295: 86 e2        	stx	$e2
+    6297: a2 75        	ldx	#$75
+    6299: 86 e3        	stx	$e3
+;     a2::puts("CARDLOCATION::GETX; ACEPILE");
+    629b: 20 04 60     	jsr	$6004
+;       asm volatile ("STA\t$C054" : );
+    629e: 8d 54 c0     	sta	$c054
+;       asm volatile ("JMP\t$FF69" :::);
+    62a1: 4c 69 ff     	jmp	$ff69
+
+000062a4 <_ZNK6Column7GetCardEh>:
+; CompactCard Column::GetCard(uint8_t index) const {
+    62a4: 85 e4        	sta	$e4
+    62a6: a0 05        	ldy	#$5
+;   if (index >= count)
+    62a8: d1 e2        	cmp	($e2),y
+    62aa: a9 00        	lda	#$0
+    62ac: 90 03        	bcc	$62b1
+    62ae: 4c 1b 63     	jmp	$631b
+    62b1: a4 e4        	ldy	$e4
+;   if (index < 5)
+    62b3: c0 05        	cpy	#$5
+    62b5: b0 03        	bcs	$62ba
+;     return cards[index];
+    62b7: b1 e2        	lda	($e2),y
+; }
+    62b9: 60           	rts
+    62ba: 84 e4        	sty	$e4
+    62bc: a0 04        	ldy	#$4
+    62be: 98           	tya
+;   return r + (-i);
+    62bf: 38           	sec
+    62c0: e5 e4        	sbc	$e4
+    62c2: 85 e4        	sta	$e4
+;   result.rank = (Rank)card.parts.rank;
+    62c4: b1 e2        	lda	($e2),y
+    62c6: a8           	tay
+    62c7: 29 0f        	and	#$f
+    62c9: a6 e4        	ldx	$e4
+    62cb: 10 07        	bpl	$62d4
+    62cd: 85 e3        	sta	$e3
+    62cf: a2 ff        	ldx	#$ff
+    62d1: 4c d8 62     	jmp	$62d8
+    62d4: 85 e3        	sta	$e3
+    62d6: a2 00        	ldx	#$0
+    62d8: 86 e2        	stx	$e2
+    62da: 98           	tya
+    62db: 29 30        	and	#$30
+    62dd: aa           	tax
+    62de: 18           	clc
+    62df: a5 e3        	lda	$e3
+;   r = (Rank)((uint8_t)r + i);
+    62e1: 65 e4        	adc	$e4
+    62e3: a8           	tay
+    62e4: a9 00        	lda	#$0
+    62e6: 65 e2        	adc	$e2
+    62e8: 85 e2        	sta	$e2
+    62ea: 98           	tya
+;   if (r<Rank::Ace || r>Rank::King)
+    62eb: c0 01        	cpy	#$1
+    62ed: a5 e2        	lda	$e2
+    62ef: 85 e3        	sta	$e3
+    62f1: e9 00        	sbc	#$0
+    62f3: 85 e4        	sta	$e4
+    62f5: 50 06        	bvc	$62fd
+    62f7: a5 e4        	lda	$e4
+;   if (r<Rank::Ace || r>Rank::King)
+    62f9: 49 80        	eor	#$80
+    62fb: 85 e4        	sta	$e4
+    62fd: 98           	tya
+    62fe: 86 e2        	stx	$e2
+    6300: a6 e4        	ldx	$e4
+    6302: 30 11        	bmi	$6315
+    6304: a6 e3        	ldx	$e3
+    6306: d0 07        	bne	$630f
+;   if (r<Rank::Ace || r>Rank::King)
+    6308: c9 0e        	cmp	#$e
+    630a: b0 09        	bcs	$6315
+    630c: 4c 17 63     	jmp	$6317
+    630f: a6 e3        	ldx	$e3
+    6311: e0 00        	cpx	#$0
+    6313: 90 02        	bcc	$6317
+    6315: a9 00        	lda	#$0
+;   card.parts.rank = (uint8_t)_card.rank;
+    6317: 29 0f        	and	#$f
+;   card.parts.suit = (uint8_t)_card.suit;
+    6319: 05 e2        	ora	$e2
+; }
+    631b: 60           	rts
+
+0000631c <_ZN6Column7SetCardEh11CompactCard>:
+; {
+    631c: 85 f0        	sta	$f0
+    631e: a5 f4        	lda	$f4
+    6320: 48           	pha
+    6321: a5 f0        	lda	$f0
+    6323: a8           	tay
+    6324: 8a           	txa
+;   bool IsNull() const { return card.parts.rank == 0; }
+    6325: 29 0f        	and	#$f
+    6327: d0 03        	bne	$632c
+    6329: 4c e1 63     	jmp	$63e1
+    632c: 86 f4        	stx	$f4
+;    if (row >= 5) {
+    632e: c0 05        	cpy	#$5
+    6330: 98           	tya
+    6331: b0 03        	bcs	$6336
+    6333: 4c 8f 63     	jmp	$638f
+    6336: aa           	tax
+;       assert(card == (GetCard(row - 1) - 1));
+    6337: ca           	dex
+    6338: a4 e2        	ldy	$e2
+    633a: 8c d7 7a     	sty	$7ad7
+    633d: a4 e3        	ldy	$e3
+    633f: 8c d8 7a     	sty	$7ad8
+    6342: ac d7 7a     	ldy	$7ad7
+    6345: 84 e2        	sty	$e2
+    6347: ac d8 7a     	ldy	$7ad8
+    634a: 84 e3        	sty	$e3
+    634c: 8d d9 7a     	sta	$7ad9
+    634f: 8a           	txa
+;       assert(card == (GetCard(row - 1) - 1));
+    6350: 20 a4 62     	jsr	$62a4
+    6353: ae d7 7a     	ldx	$7ad7
+    6356: 86 e2        	stx	$e2
+    6358: ae d8 7a     	ldx	$7ad8
+    635b: 86 e3        	stx	$e3
+    635d: aa           	tax
+;   result.suit = (Suit)card.parts.suit;
+    635e: 29 30        	and	#$30
+    6360: 85 e4        	sta	$e4
+    6362: ad d9 7a     	lda	$7ad9
+    6365: 8d d9 7a     	sta	$7ad9
+    6368: 8a           	txa
+;   r = (Rank)((uint8_t)r + i);
+    6369: 29 0f        	and	#$f
+;   if (r<Rank::Ace || r>Rank::King)
+    636b: c9 02        	cmp	#$2
+    636d: 90 03        	bcc	$6372
+    636f: 4c bb 63     	jmp	$63bb
+    6372: a9 00        	lda	#$0
+;   card.parts.rank = (uint8_t)_card.rank;
+    6374: 29 0f        	and	#$f
+;   card.parts.suit = (uint8_t)_card.suit;
+    6376: 05 e4        	ora	$e4
+    6378: 85 e4        	sta	$e4
+    637a: a6 f4        	ldx	$f4
+;       assert(card == (GetCard(row - 1) - 1));
+    637c: e4 e4        	cpx	$e4
+    637e: f0 03        	beq	$6383
+    6380: 4c e8 63     	jmp	$63e8
+    6383: a0 05        	ldy	#$5
+    6385: ad d9 7a     	lda	$7ad9
+;       if (row >= count)
+    6388: d1 e2        	cmp	($e2),y
+    638a: b0 14        	bcs	$63a0
+    638c: 4c b7 63     	jmp	$63b7
+    638f: a8           	tay
+    6390: aa           	tax
+    6391: a5 f4        	lda	$f4
+;    cards[row] = card;
+    6393: 91 e2        	sta	($e2),y
+    6395: 8a           	txa
+    6396: a0 05        	ldy	#$5
+;    if (row >= count)
+    6398: d1 e2        	cmp	($e2),y
+    639a: 90 1b        	bcc	$63b7
+    639c: aa           	tax
+    639d: 8d d9 7a     	sta	$7ad9
+    63a0: a5 e2        	lda	$e2
+    63a2: 18           	clc
+    63a3: 69 05        	adc	#$5
+    63a5: 85 e2        	sta	$e2
+    63a7: a5 e3        	lda	$e3
+    63a9: 69 00        	adc	#$0
+    63ab: 85 e3        	sta	$e3
+    63ad: ad d9 7a     	lda	$7ad9
+    63b0: 18           	clc
+    63b1: 69 01        	adc	#$1
+    63b3: a0 00        	ldy	#$0
+    63b5: 91 e2        	sta	($e2),y
+    63b7: 68           	pla
+    63b8: 85 f4        	sta	$f4
+; }
+    63ba: 60           	rts
+    63bb: 85 e5        	sta	$e5
+    63bd: a2 00        	ldx	#$0
+    63bf: a8           	tay
+;   r = (Rank)((uint8_t)r + i);
+    63c0: 18           	clc
+    63c1: 69 ff        	adc	#$ff
+    63c3: c0 00        	cpy	#$0
+    63c5: d0 01        	bne	$63c8
+    63c7: ca           	dex
+    63c8: e0 00        	cpx	#$0
+    63ca: d0 0b        	bne	$63d7
+    63cc: aa           	tax
+;   if (r<Rank::Ace || r>Rank::King)
+    63cd: c9 0e        	cmp	#$e
+    63cf: 90 03        	bcc	$63d4
+    63d1: 4c 72 63     	jmp	$6372
+    63d4: 4c 74 63     	jmp	$6374
+    63d7: e0 00        	cpx	#$0
+    63d9: 90 03        	bcc	$63de
+    63db: 4c 72 63     	jmp	$6372
+    63de: 4c 74 63     	jmp	$6374
+;    assert(!card.IsNull());
+    63e1: a2 00        	ldx	#$0
+    63e3: a9 23        	lda	#$23
+    63e5: 20 39 72     	jsr	$7239
+;       assert(card == (GetCard(row - 1) - 1));
+    63e8: a2 00        	ldx	#$0
+    63ea: a9 28        	lda	#$28
+    63ec: 20 39 72     	jsr	$7239
+    63ef: 00           	brk
+
+000063f0 <_ZN6Cursor11SetLocationE12CardLocation>:
+;   switch (state) {
+    63f0: ae 4d 7a     	ldx	$7a4d
+    63f3: ac 4e 7a     	ldy	$7a4e
+    63f6: d0 04        	bne	$63fc
+    63f8: e0 02        	cpx	#$2
+    63fa: f0 20        	beq	$641c
+    63fc: c0 00        	cpy	#$0
+    63fe: d0 14        	bne	$6414
+;   switch (state) {
+    6400: e0 01        	cpx	#$1
+    6402: d0 10        	bne	$6414
+    6404: 8d d6 7a     	sta	$7ad6
+;     Toggle();
+    6407: 20 20 64     	jsr	$6420
+    640a: ae d6 7a     	ldx	$7ad6
+;     this->location = location;
+    640d: 8e 50 7a     	stx	$7a50
+;     Toggle();
+    6410: 20 20 64     	jsr	$6420
+; }
+    6413: 60           	rts
+    6414: c0 00        	cpy	#$0
+    6416: d0 fb        	bne	$6413
+    6418: e0 00        	cpx	#$0
+    641a: d0 f7        	bne	$6413
+;     this->location = location;
+    641c: 8d 50 7a     	sta	$7a50
+; }
+    641f: 60           	rts
+
+00006420 <_ZN6Cursor6ToggleEv>:
+;   bool IsNull() const { return locationNumber == 0; }
+    6420: ad 50 7a     	lda	$7a50
+    6423: d0 03        	bne	$6428
+    6425: 4c 78 64     	jmp	$6478
+    6428: a2 03        	ldx	#$3
+    642a: 8e d4 7a     	stx	$7ad4
+;       static uint8_t GetCounter() { return counter; }
+    642d: ae 01 79     	ldx	$7901
+;   lastToggleTime = a2::VBLCounter::GetCounter();
+    6430: 8e 4f 7a     	stx	$7a4f
+;   drawing1.ToggleCursor(location.GetX(), location.GetY());
+    6433: 20 6e 62     	jsr	$626e
+    6436: a8           	tay
+;   bool IsTower() const { return locationNumber > 251; }
+    6437: ad 50 7a     	lda	$7a50
+    643a: c9 fc        	cmp	#$fc
+    643c: b0 0e        	bcs	$644c
+;   bool IsAce() const { return locationNumber < 5; }
+    643e: c9 05        	cmp	#$5
+    6440: 90 0a        	bcc	$644c
+;   return locationNumber & 0x0F;
+    6442: 29 0f        	and	#$f
+    6444: aa           	tax
+;   inline uint8_t Y(uint8_t index) const { return y[index]; }
+    6445: bd 17 76     	lda	$7617,x
+    6448: aa           	tax
+    6449: 8e d4 7a     	stx	$7ad4
+    644c: a2 d9        	ldx	#$d9
+    644e: 86 e2        	stx	$e2
+    6450: a2 78        	ldx	#$78
+    6452: 86 e3        	stx	$e3
+    6454: 98           	tya
+    6455: aa           	tax
+    6456: 8d d5 7a     	sta	$7ad5
+    6459: ac d4 7a     	ldy	$7ad4
+    645c: 8c d4 7a     	sty	$7ad4
+    645f: 98           	tya
+;   XorSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
+    6460: 20 3c 66     	jsr	$663c
+;   XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
+    6463: 18           	clc
+    6464: ad d5 7a     	lda	$7ad5
+    6467: 69 02        	adc	#$2
+    6469: a2 eb        	ldx	#$eb
+    646b: 86 e2        	stx	$e2
+    646d: a2 78        	ldx	#$78
+    646f: 86 e3        	stx	$e3
+    6471: aa           	tax
+    6472: ad d4 7a     	lda	$7ad4
+;   XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
+    6475: 20 3c 66     	jsr	$663c
+; }
+    6478: 60           	rts
+    6479: 00           	brk
+
+0000647a <_ZN6Cursor22GetClosestColumnCardToE12CardLocation>:
+; CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
+    647a: 85 f0        	sta	$f0
+    647c: a5 f4        	lda	$f4
+    647e: 48           	pha
+    647f: a5 f5        	lda	$f5
+    6481: 48           	pha
+    6482: a5 f6        	lda	$f6
+    6484: 48           	pha
+    6485: a5 f7        	lda	$f7
+    6487: 48           	pha
+    6488: a5 f0        	lda	$f0
+    648a: a6 f8        	ldx	$f8
+    648c: 8e 17 7b     	stx	$7b17
+    648f: 85 e2        	sta	$e2
+    6491: aa           	tax
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    6492: c9 fc        	cmp	#$fc
+    6494: a2 01        	ldx	#$1
+    6496: b0 02        	bcs	$649a
+    6498: a2 00        	ldx	#$0
+    649a: 86 e3        	stx	$e3
+;   if (start.IsColumn()) {
+    649c: 4a           	lsr
+    649d: 4a           	lsr
+    649e: 4a           	lsr
+    649f: 4a           	lsr
+    64a0: 18           	clc
+    64a1: 69 ff        	adc	#$ff
+    64a3: a6 e3        	ldx	$e3
+    64a5: d0 0b        	bne	$64b2
+    64a7: aa           	tax
+    64a8: a5 e2        	lda	$e2
+    64aa: 29 0f        	and	#$f
+    64ac: 85 f7        	sta	$f7
+    64ae: 8a           	txa
+    64af: 4c bb 64     	jmp	$64bb
+    64b2: a9 02        	lda	#$2
+    64b4: 38           	sec
+    64b5: e5 e2        	sbc	$e2
+    64b7: a2 00        	ldx	#$0
+    64b9: 86 f7        	stx	$f7
+    64bb: a2 0a        	ldx	#$a
+    64bd: 85 f4        	sta	$f4
+    64bf: 86 f8        	stx	$f8
+    64c1: a6 f7        	ldx	$f7
+    64c3: 86 f6        	stx	$f6
+    64c5: a6 f7        	ldx	$f7
+    64c7: 85 f5        	sta	$f5
+;     result = GetClosestCardOnColumn(startColumn + i, startIndex);
+    64c9: 20 54 65     	jsr	$6554
+    64cc: aa           	tax
+    64cd: d0 18        	bne	$64e7
+    64cf: a6 f6        	ldx	$f6
+    64d1: a5 f4        	lda	$f4
+;     result = GetClosestCardOnColumn(startColumn - i, startIndex);
+    64d3: 20 54 65     	jsr	$6554
+    64d6: aa           	tax
+    64d7: d0 0e        	bne	$64e7
+;   for (uint8_t i=0; i<10; ++i) {
+    64d9: c6 f4        	dec	$f4
+    64db: a5 f5        	lda	$f5
+;   for (uint8_t i=0; i<10; ++i) {
+    64dd: 18           	clc
+    64de: 69 01        	adc	#$1
+    64e0: a6 f8        	ldx	$f8
+    64e2: ca           	dex
+    64e3: d0 da        	bne	$64bf
+    64e5: a9 00        	lda	#$0
+    64e7: 85 f0        	sta	$f0
+    64e9: ae 17 7b     	ldx	$7b17
+    64ec: 86 f8        	stx	$f8
+    64ee: 68           	pla
+    64ef: 85 f7        	sta	$f7
+    64f1: 68           	pla
+    64f2: 85 f6        	sta	$f6
+    64f4: 68           	pla
+    64f5: 85 f5        	sta	$f5
+    64f7: 68           	pla
+    64f8: 85 f4        	sta	$f4
+    64fa: a5 f0        	lda	$f0
+; }
+    64fc: 60           	rts
+    64fd: 00           	brk
+
+000064fe <_ZN6Cursor21GetClosestTowerCardToE12CardLocation>:
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    64fe: c9 fc        	cmp	#$fc
+    6500: b0 17        	bcs	$6519
+    6502: a0 00        	ldy	#$0
+;     if ((int8_t)startTower < 0)
+    6504: c9 40        	cmp	#$40
+    6506: 90 14        	bcc	$651c
+;   return (locationNumber>>4) - 1;
+    6508: 4a           	lsr
+    6509: 4a           	lsr
+    650a: 4a           	lsr
+    650b: 4a           	lsr
+;     startTower = start.GetColumn() - 3;
+    650c: 18           	clc
+    650d: 69 fc        	adc	#$fc
+;     if (startTower > 3)
+    650f: c9 04        	cmp	#$4
+    6511: a8           	tay
+    6512: 90 08        	bcc	$651c
+    6514: a0 03        	ldy	#$3
+    6516: 4c 1c 65     	jmp	$651c
+;   uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
+    6519: 49 ff        	eor	#$ff
+    651b: a8           	tay
+    651c: a2 04        	ldx	#$4
+    651e: 84 e3        	sty	$e3
+;   if (tower < 4)
+    6520: c0 04        	cpy	#$4
+    6522: 84 e2        	sty	$e2
+    6524: b0 09        	bcs	$652f
+    6526: a4 e2        	ldy	$e2
+;   bool IsNull() const { return card.parts.rank == 0; }
+    6528: a9 0f        	lda	#$f
+    652a: 39 89 7a     	and	$7a89,y
+    652d: d0 1b        	bne	$654a
+    652f: a4 e3        	ldy	$e3
+;   if (tower < 4)
+    6531: c0 04        	cpy	#$4
+    6533: b0 0a        	bcs	$653f
+    6535: a4 e3        	ldy	$e3
+;   bool IsNull() const { return card.parts.rank == 0; }
+    6537: a9 0f        	lda	#$f
+    6539: 39 89 7a     	and	$7a89,y
+    653c: a8           	tay
+    653d: d0 10        	bne	$654f
+;   for (uint8_t i=0; i<4; ++i) {
+    653f: c6 e3        	dec	$e3
+    6541: a4 e2        	ldy	$e2
+;   for (uint8_t i=0; i<4; ++i) {
+    6543: c8           	iny
+    6544: ca           	dex
+    6545: d0 d9        	bne	$6520
+    6547: a9 00        	lda	#$0
+; }
+    6549: 60           	rts
+    654a: a5 e2        	lda	$e2
+    654c: 4c 51 65     	jmp	$6551
+    654f: a5 e3        	lda	$e3
+    6551: 49 ff        	eor	#$ff
+; }
+    6553: 60           	rts
+
+00006554 <_ZN6Cursor22GetClosestCardOnColumnEhh>:
+; CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) {
+    6554: a0 00        	ldy	#$0
+;   if (column < 10) {
+    6556: c9 0a        	cmp	#$a
+    6558: 90 03        	bcc	$655d
+    655a: 4c c6 65     	jmp	$65c6
+    655d: 8e 18 7b     	stx	$7b18
+    6560: a2 00        	ldx	#$0
+    6562: a0 06        	ldy	#$6
+    6564: 84 e2        	sty	$e2
+    6566: 86 e3        	stx	$e3
+;   uint8_t GetCount() const { return count; }
+    6568: a2 00        	ldx	#$0
+    656a: 8d 19 7b     	sta	$7b19
+;   uint8_t GetCount() const { return count; }
+    656d: 20 67 74     	jsr	$7467
+    6570: 85 e2        	sta	$e2
+    6572: 86 e3        	stx	$e3
+    6574: 18           	clc
+;   uint8_t GetCount() const { return count; }
+    6575: a9 8d        	lda	#$8d
+    6577: 65 e2        	adc	$e2
+    6579: 85 e2        	sta	$e2
+    657b: a9 7a        	lda	#$7a
+    657d: 65 e3        	adc	$e3
+    657f: 85 e3        	sta	$e3
+    6581: a0 05        	ldy	#$5
+    6583: b1 e2        	lda	($e2),y
+    6585: 38           	sec
+    6586: 85 e3        	sta	$e3
+;   if (row > 0)
+    6588: e9 01        	sbc	#$1
+    658a: 50 02        	bvc	$658e
+    658c: 49 80        	eor	#$80
+    658e: ae 18 7b     	ldx	$7b18
+    6591: 86 e2        	stx	$e2
+    6593: a0 00        	ldy	#$0
+    6595: aa           	tax
+    6596: 30 14        	bmi	$65ac
+;     return CardLocation::Column(column, row - 1);
+    6598: c6 e3        	dec	$e3
+    659a: ae 19 7b     	ldx	$7b19
+    659d: 86 e4        	stx	$e4
+    659f: 8a           	txa
+;   return CardLocation(((column + 1) << 4) | row);
+    65a0: 0a           	asl
+    65a1: 0a           	asl
+    65a2: 0a           	asl
+    65a3: 0a           	asl
+    65a4: 18           	clc
+    65a5: 69 10        	adc	#$10
+    65a7: 05 e3        	ora	$e3
+    65a9: 4c ae 65     	jmp	$65ae
+    65ac: a9 00        	lda	#$0
+    65ae: aa           	tax
+    65af: f0 15        	beq	$65c6
+    65b1: aa           	tax
+;   return locationNumber & 0x0F;
+    65b2: 29 0f        	and	#$f
+;       if (bottomCard.GetRow() < startIndex) {
+    65b4: c5 e2        	cmp	$e2
+    65b6: 8a           	txa
+    65b7: 90 0c        	bcc	$65c5
+    65b9: ad 19 7b     	lda	$7b19
+;       if (bottomCard.GetRow() < startIndex) {
+    65bc: 0a           	asl
+    65bd: 0a           	asl
+    65be: 0a           	asl
+    65bf: 0a           	asl
+    65c0: 18           	clc
+    65c1: 69 10        	adc	#$10
+    65c3: 05 e2        	ora	$e2
+    65c5: a8           	tay
+    65c6: 98           	tya
+; }
+    65c7: 60           	rts
+
+000065c8 <_ZN6Cursor4ShowEv>:
+; void Cursor::Show() {
+    65c8: a9 00        	lda	#$0
+;   location = GetClosestCardTo(location);
+    65ca: ae 50 7a     	ldx	$7a50
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    65cd: e0 05        	cpx	#$5
+    65cf: 90 28        	bcc	$65f9
+    65d1: 8a           	txa
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    65d2: e0 fc        	cpx	#$fc
+    65d4: b0 13        	bcs	$65e9
+    65d6: 8e d0 7a     	stx	$7ad0
+;     result = GetClosestColumnCardTo(start);
+    65d9: 20 7a 64     	jsr	$647a
+    65dc: ae d0 7a     	ldx	$7ad0
+    65df: a8           	tay
+    65e0: d0 17        	bne	$65f9
+    65e2: 8a           	txa
+;       result = GetClosestTowerCardTo(start);
+    65e3: 20 fe 64     	jsr	$64fe
+    65e6: 4c f9 65     	jmp	$65f9
+    65e9: 8e d0 7a     	stx	$7ad0
+;     result = GetClosestTowerCardTo(start);
+    65ec: 20 fe 64     	jsr	$64fe
+    65ef: ae d0 7a     	ldx	$7ad0
+    65f2: a8           	tay
+    65f3: d0 04        	bne	$65f9
+    65f5: 8a           	txa
+;       result = GetClosestColumnCardTo(start);
+    65f6: 20 7a 64     	jsr	$647a
+;   location = GetClosestCardTo(location);
+    65f9: 8d 50 7a     	sta	$7a50
+;   if (state == State::Idle) {
+    65fc: ae 4d 7a     	ldx	$7a4d
+    65ff: ac 4e 7a     	ldy	$7a4e
+    6602: d0 03        	bne	$6607
+    6604: 8a           	txa
+    6605: f0 01        	beq	$6608
+; }
+    6607: 60           	rts
+;     Toggle();
+    6608: 20 20 64     	jsr	$6420
+    660b: a2 01        	ldx	#$1
+;     state = State::On;
+    660d: 8e 4d 7a     	stx	$7a4d
+    6610: ca           	dex
+    6611: 8e 4e 7a     	stx	$7a4e
+; }
+    6614: 60           	rts
+    6615: 00           	brk
+
+00006616 <_ZN7Drawing14DrawBackgroundEv>:
+; void Drawing::DrawBackground() {
+    6616: a2 00        	ldx	#$0
+    6618: a0 28        	ldy	#$28
+    661a: 84 e2        	sty	$e2
+;          return lo[index];
+    661c: bc e7 76     	ldy	$76e7,x
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    661f: 18           	clc
+    6620: 84 e4        	sty	$e4
+;          return hi[index];
+    6622: bd 27 76     	lda	$7627,x
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6625: 6d fe 78     	adc	$78fe
+    6628: 85 e5        	sta	$e5
+;       for (uint8_t y=0; y<192; ++y)
+    662a: e8           	inx
+;       asm volatile (
+    662b: a9 00        	lda	#$0
+    662d: a4 e2        	ldy	$e2
+    662f: f0 05        	beq	$6636
+    6631: 88           	dey
+    6632: 91 e4        	sta	($e4),y
+    6634: d0 fb        	bne	$6631
+;       for (uint8_t y=0; y<192; ++y)
+    6636: e0 c0        	cpx	#$c0
+    6638: d0 e2        	bne	$661c
+; }
+    663a: 60           	rts
+    663b: 00           	brk
+
+0000663c <_ZN7Drawing9XorSpriteEPKN2a27HGRWordEhhh>:
+;                 uint8_t x) {
+    663c: a8           	tay
+    663d: 86 e8        	stx	$e8
+    663f: a9 00        	lda	#$0
+    6641: 48           	pha
+    6642: 98           	tya
+    6643: aa           	tax
+    6644: 68           	pla
+    6645: 85 e6        	sta	$e6
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6647: 18           	clc
+    6648: a5 e8        	lda	$e8
+    664a: 79 e7 76     	adc	$76e7,y
+    664d: 85 e4        	sta	$e4
+;          return hi[index];
+    664f: b9 27 76     	lda	$7627,y
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6652: 18           	clc
+    6653: 6d fe 78     	adc	$78fe
+    6656: 85 e5        	sta	$e5
+    6658: a0 00        	ldy	#$0
+;     rowPointer[0] ^= sprite[i].GetLeft();
+    665a: b1 e4        	lda	($e4),y
+    665c: a4 e6        	ldy	$e6
+    665e: 84 e9        	sty	$e9
+    6660: a4 e6        	ldy	$e6
+;     rowPointer[0] ^= sprite[i].GetLeft();
+    6662: 51 e2        	eor	($e2),y
+    6664: a0 00        	ldy	#$0
+    6666: 91 e4        	sta	($e4),y
+    6668: a5 e6        	lda	$e6
+    666a: 18           	clc
+    666b: 65 e2        	adc	$e2
+    666d: 85 e6        	sta	$e6
+    666f: a5 e3        	lda	$e3
+    6671: 69 00        	adc	#$0
+    6673: 85 e7        	sta	$e7
+    6675: c8           	iny
+;     rowPointer[1] ^= sprite[i].GetRight();
+    6676: b1 e4        	lda	($e4),y
+    6678: 51 e6        	eor	($e6),y
+    667a: 91 e4        	sta	($e4),y
+;     uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
+    667c: e8           	inx
+;   for (int i=0; i < rows; ++i) {
+    667d: 18           	clc
+    667e: a5 e9        	lda	$e9
+    6680: 69 02        	adc	#$2
+    6682: 48           	pha
+    6683: 8a           	txa
+    6684: a8           	tay
+    6685: 68           	pla
+    6686: 85 e6        	sta	$e6
+;   for (int i=0; i < rows; ++i) {
+    6688: c9 12        	cmp	#$12
+    668a: f0 03        	beq	$668f
+    668c: 4c 47 66     	jmp	$6647
+; }
+    668f: 60           	rts
+
+00006690 <_ZN7Drawing11DrawCardTopE11CompactCardhh>:
+; void Drawing::DrawCardTop(CompactCard card, uint8_t x, uint8_t y) {
+    6690: 86 ec        	stx	$ec
+    6692: a4 e4        	ldy	$e4
+    6694: 85 ee        	sta	$ee
+;   Rank GetRank() const { return (Rank)card.parts.rank; }
+    6696: 29 0f        	and	#$f
+;     return *ranksLookup.Get((uint8_t)rank - 1);
+    6698: 18           	clc
+    6699: 69 ff        	adc	#$ff
+    669b: aa           	tax
+;          return (T)((hi[index]<<8) | lo[index]);
+    669c: bd 11 79     	lda	$7911,x
+    669f: 85 ef        	sta	$ef
+    66a1: 85 e4        	sta	$e4
+    66a3: bd 04 79     	lda	$7904,x
+    66a6: aa           	tax
+    66a7: 86 f2        	stx	$f2
+    66a9: 86 e5        	stx	$e5
+    66ab: 84 ed        	sty	$ed
+    66ad: 98           	tya
+    66ae: aa           	tax
+    66af: 84 e6        	sty	$e6
+    66b1: a0 00        	ldy	#$0
+    66b3: 84 e7        	sty	$e7
+    66b5: a4 ec        	ldy	$ec
+    66b7: a5 ec        	lda	$ec
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    66b9: 18           	clc
+    66ba: 7d e7 76     	adc	$76e7,x
+    66bd: 85 e8        	sta	$e8
+    66bf: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    66c1: b1 e2        	lda	($e2),y
+    66c3: 18           	clc
+    66c4: 7d 27 76     	adc	$7627,x
+    66c7: 85 e9        	sta	$e9
+    66c9: a6 e7        	ldx	$e7
+    66cb: a4 e7        	ldy	$e7
+;       uint8_t GetLeft() const { return left; }
+    66cd: b1 e4        	lda	($e4),y
+    66cf: a0 00        	ldy	#$0
+;     rowPointer[0] = sprite[i].GetLeft();
+    66d1: 91 e8        	sta	($e8),y
+    66d3: a5 ef        	lda	$ef
+    66d5: 18           	clc
+    66d6: 65 e7        	adc	$e7
+    66d8: 85 ea        	sta	$ea
+    66da: a5 f2        	lda	$f2
+    66dc: 69 00        	adc	#$0
+    66de: 85 eb        	sta	$eb
+    66e0: c8           	iny
+;       uint8_t GetRight() const { return right; }
+    66e1: b1 ea        	lda	($ea),y
+;     rowPointer[1] = sprite[i].GetRight();
+    66e3: 91 e8        	sta	($e8),y
+;     uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
+    66e5: e6 e6        	inc	$e6
+;   for (int i=0; i < rows; ++i) {
+    66e7: 18           	clc
+    66e8: a5 e7        	lda	$e7
+    66ea: 69 02        	adc	#$2
+    66ec: a6 e6        	ldx	$e6
+    66ee: 85 e7        	sta	$e7
+    66f0: c9 12        	cmp	#$12
+    66f2: f0 03        	beq	$66f7
+    66f4: 4c b5 66     	jmp	$66b5
+    66f7: a5 ee        	lda	$ee
+;   Suit GetSuit() const { return (Suit)card.parts.suit; }
+    66f9: 4a           	lsr
+    66fa: 4a           	lsr
+    66fb: 4a           	lsr
+    66fc: 4a           	lsr
+    66fd: 29 03        	and	#$3
+    66ff: aa           	tax
+;          return (T)((hi[index]<<8) | lo[index]);
+    6700: bc 22 79     	ldy	$7922,x
+    6703: 84 ee        	sty	$ee
+    6705: 84 e4        	sty	$e4
+;          return (T)((hi[index]<<8) | lo[index]);
+    6707: bd 1e 79     	lda	$791e,x
+    670a: aa           	tax
+    670b: 86 ef        	stx	$ef
+    670d: 86 e5        	stx	$e5
+;     y, x + 2);
+    670f: 18           	clc
+    6710: a5 ec        	lda	$ec
+    6712: 69 02        	adc	#$2
+    6714: 85 f2        	sta	$f2
+    6716: a6 ed        	ldx	$ed
+    6718: 86 e6        	stx	$e6
+    671a: a9 00        	lda	#$0
+    671c: 85 e7        	sta	$e7
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    671e: 18           	clc
+    671f: a5 f2        	lda	$f2
+    6721: 7d e7 76     	adc	$76e7,x
+    6724: 85 e8        	sta	$e8
+    6726: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6728: b1 e2        	lda	($e2),y
+    672a: 18           	clc
+    672b: 7d 27 76     	adc	$7627,x
+    672e: 85 e9        	sta	$e9
+    6730: a6 e7        	ldx	$e7
+    6732: 86 ec        	stx	$ec
+    6734: a4 e7        	ldy	$e7
+;       uint8_t GetLeft() const { return left; }
+    6736: b1 e4        	lda	($e4),y
+    6738: a0 00        	ldy	#$0
+;     rowPointer[0] = sprite[i].GetLeft();
+    673a: 91 e8        	sta	($e8),y
+    673c: a5 ee        	lda	$ee
+    673e: 18           	clc
+    673f: 65 e7        	adc	$e7
+    6741: 85 ea        	sta	$ea
+    6743: a5 ef        	lda	$ef
+    6745: 69 00        	adc	#$0
+    6747: 85 eb        	sta	$eb
+    6749: c8           	iny
+;       uint8_t GetRight() const { return right; }
+    674a: b1 ea        	lda	($ea),y
+;     rowPointer[1] = sprite[i].GetRight();
+    674c: 91 e8        	sta	($e8),y
+;     uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
+    674e: e6 e6        	inc	$e6
+;   for (int i=0; i < rows; ++i) {
+    6750: 18           	clc
+    6751: a5 e7        	lda	$e7
+    6753: 69 02        	adc	#$2
+    6755: a6 e6        	ldx	$e6
+    6757: 85 e7        	sta	$e7
+;   for (int i=0; i < rows; ++i) {
+    6759: c9 12        	cmp	#$12
+    675b: f0 03        	beq	$6760
+    675d: 4c 1e 67     	jmp	$671e
+; }
+    6760: 60           	rts
+    6761: 00           	brk
+
+00006762 <_ZN7Drawing8DrawCardE11CompactCardhh>:
+; void Drawing::DrawCard(CompactCard card, uint8_t x, uint8_t y) {
+    6762: 85 f0        	sta	$f0
+    6764: a5 f4        	lda	$f4
+    6766: 48           	pha
+    6767: a5 f5        	lda	$f5
+    6769: 48           	pha
+    676a: a5 f6        	lda	$f6
+    676c: 48           	pha
+    676d: a5 f7        	lda	$f7
+    676f: 48           	pha
+    6770: a5 f0        	lda	$f0
+    6772: 86 f4        	stx	$f4
+    6774: a6 e4        	ldx	$e4
+    6776: 86 f5        	stx	$f5
+    6778: a6 e2        	ldx	$e2
+    677a: 86 f6        	stx	$f6
+    677c: a6 e3        	ldx	$e3
+    677e: 86 f7        	stx	$f7
+;       return *(volatile int8_t *)(0xC019);
+    6780: ae 19 c0     	ldx	$c019
+    6783: e0 00        	cpx	#$0
+    6785: 30 08        	bmi	$678f
+;          if (previousState < 0)
+    6787: ac 00 79     	ldy	$7900
+    678a: 10 06        	bpl	$6792
+;             ++counter;
+    678c: ee 01 79     	inc	$7901
+    678f: 8e 00 79     	stx	$7900
+    6792: a6 f6        	ldx	$f6
+    6794: 86 e2        	stx	$e2
+    6796: a6 f7        	ldx	$f7
+    6798: 86 e3        	stx	$e3
+    679a: a6 f5        	ldx	$f5
+    679c: 86 e4        	stx	$e4
+    679e: a6 f4        	ldx	$f4
+;   DrawCardTop(card, x, y);
+    67a0: 20 90 66     	jsr	$6690
+;       return *(volatile int8_t *)(0xC019);
+    67a3: ae 19 c0     	ldx	$c019
+    67a6: 8a           	txa
+    67a7: 30 08        	bmi	$67b1
+;          if (previousState < 0)
+    67a9: ac 00 79     	ldy	$7900
+    67ac: 10 06        	bpl	$67b4
+;             ++counter;
+    67ae: ee 01 79     	inc	$7901
+    67b1: 8e 00 79     	stx	$7900
+;   DrawCardBottom(x, y + CardTopSpriteHeight);
+    67b4: 18           	clc
+    67b5: a5 f5        	lda	$f5
+    67b7: 69 09        	adc	#$9
+    67b9: a6 f6        	ldx	$f6
+    67bb: 86 e2        	stx	$e2
+    67bd: a6 f7        	ldx	$f7
+    67bf: 86 e3        	stx	$e3
+    67c1: aa           	tax
+    67c2: a5 f4        	lda	$f4
+    67c4: 20 e6 67     	jsr	$67e6
+;       return *(volatile int8_t *)(0xC019);
+    67c7: ae 19 c0     	ldx	$c019
+    67ca: 8a           	txa
+    67cb: 30 08        	bmi	$67d5
+;          if (previousState < 0)
+    67cd: ac 00 79     	ldy	$7900
+    67d0: 10 06        	bpl	$67d8
+;             ++counter;
+    67d2: ee 01 79     	inc	$7901
+    67d5: 8e 00 79     	stx	$7900
+    67d8: 68           	pla
+    67d9: 85 f7        	sta	$f7
+    67db: 68           	pla
+    67dc: 85 f6        	sta	$f6
+    67de: 68           	pla
+    67df: 85 f5        	sta	$f5
+    67e1: 68           	pla
+    67e2: 85 f4        	sta	$f4
+; }
+    67e4: 60           	rts
+    67e5: 00           	brk
+
+000067e6 <_ZN7Drawing14DrawCardBottomEhh>:
+; void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
+    67e6: 85 e7        	sta	$e7
+    67e8: 86 e6        	stx	$e6
+    67ea: a2 17        	ldx	#$17
+    67ec: a4 e6        	ldy	$e6
+    67ee: 84 e5        	sty	$e5
+    67f0: a5 e7        	lda	$e7
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    67f2: 18           	clc
+    67f3: a4 e6        	ldy	$e6
+    67f5: 79 e7 76     	adc	$76e7,y
+    67f8: 85 e4        	sta	$e4
+    67fa: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    67fc: b1 e2        	lda	($e2),y
+    67fe: 18           	clc
+    67ff: a4 e6        	ldy	$e6
+    6801: 79 27 76     	adc	$7627,y
+    6804: 85 e5        	sta	$e5
+;     row = hgr.GetByteAddress(y++, x);
+    6806: e6 e6        	inc	$e6
+    6808: a9 ff        	lda	#$ff
+    680a: a0 00        	ldy	#$0
+;     row[0] = 0xFF;
+    680c: 91 e4        	sta	($e4),y
+    680e: c8           	iny
+;     row[1] = 0xFF;
+    680f: 91 e4        	sta	($e4),y
+    6811: c8           	iny
+;     row[2] = 0xFF;
+    6812: 91 e4        	sta	($e4),y
+    6814: c8           	iny
+    6815: a9 bf        	lda	#$bf
+;     row[3] = 0xBF;
+    6817: 91 e4        	sta	($e4),y
+;   for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i) {
+    6819: ca           	dex
+    681a: d0 d0        	bne	$67ec
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    681c: 18           	clc
+    681d: a5 e7        	lda	$e7
+    681f: a6 e6        	ldx	$e6
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6821: 7d e7 76     	adc	$76e7,x
+    6824: a0 00        	ldy	#$0
+    6826: 85 e4        	sta	$e4
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6828: b1 e2        	lda	($e2),y
+    682a: 18           	clc
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    682b: 7d 27 76     	adc	$7627,x
+    682e: 85 e5        	sta	$e5
+    6830: a9 fe        	lda	#$fe
+;   row[0] = 0xFE;
+    6832: 91 e4        	sta	($e4),y
+    6834: c8           	iny
+    6835: a9 ff        	lda	#$ff
+;   row[1] = 0xFF;
+    6837: 91 e4        	sta	($e4),y
+    6839: c8           	iny
+;   row[2] = 0xFF;
+    683a: 91 e4        	sta	($e4),y
+    683c: c8           	iny
+    683d: a9 9f        	lda	#$9f
+;   row[3] = 0x9F;
+    683f: 91 e4        	sta	($e4),y
+; }
+    6841: 60           	rts
+
+00006842 <_ZN7Drawing11DrawAcePileE4Suith>:
+; void Drawing::DrawAcePile(Suit suit, uint8_t x) {
+    6842: 85 e3        	sta	$e3
+    6844: a6 e2        	ldx	$e2
+;                 return acePiles[(uint8_t)suit];
+    6846: a9 85        	lda	#$85
+    6848: 18           	clc
+    6849: 65 e3        	adc	$e3
+    684b: 85 e2        	sta	$e2
+    684d: a9 7a        	lda	#$7a
+    684f: a0 00        	ldy	#$0
+    6851: 69 00        	adc	#$0
+    6853: 85 e3        	sta	$e3
+    6855: b1 e2        	lda	($e2),y
+    6857: a8           	tay
+;   result.rank = (Rank)card.parts.rank;
+    6858: 29 0f        	and	#$f
+    685a: c9 00        	cmp	#$0
+    685c: f0 12        	beq	$6870
+    685e: 98           	tya
+;   card.parts.suit = (uint8_t)_card.suit;
+    685f: 29 3f        	and	#$3f
+    6861: a0 fe        	ldy	#$fe
+    6863: 84 e2        	sty	$e2
+    6865: a0 78        	ldy	#$78
+    6867: 84 e3        	sty	$e3
+    6869: a0 03        	ldy	#$3
+    686b: 84 e4        	sty	$e4
+;       DrawCard(card, x, CardLocations::TowersTop);
+    686d: 20 62 67     	jsr	$6762
+; }
+    6870: 60           	rts
+    6871: 00           	brk
+
+00006872 <_ZN7Drawing8DrawGameEv>:
+; void Drawing::DrawGame() {
+    6872: a5 f4        	lda	$f4
+    6874: 48           	pha
+    6875: a5 f5        	lda	$f5
+    6877: 48           	pha
+    6878: a5 f6        	lda	$f6
+    687a: 48           	pha
+    687b: a5 f7        	lda	$f7
+    687d: 48           	pha
+    687e: a6 f8        	ldx	$f8
+    6880: 8e 17 7b     	stx	$7b17
+    6883: a6 f9        	ldx	$f9
+    6885: 8e 18 7b     	stx	$7b18
+    6888: a6 fa        	ldx	$fa
+    688a: 8e 19 7b     	stx	$7b19
+    688d: a6 fb        	ldx	$fb
+    688f: 8e 1a 7b     	stx	$7b1a
+    6892: a6 fc        	ldx	$fc
+    6894: 8e 1b 7b     	stx	$7b1b
+    6897: a2 0c        	ldx	#$c
+    6899: 86 f6        	stx	$f6
+    689b: a2 00        	ldx	#$0
+    689d: 86 e2        	stx	$e2
+;   DrawAcePile(Suit::Clubs, 0);
+    689f: a2 00        	ldx	#$0
+    68a1: 8a           	txa
+    68a2: 20 42 68     	jsr	$6842
+    68a5: a2 04        	ldx	#$4
+    68a7: 86 e2        	stx	$e2
+;   DrawAcePile(Suit::Diamonds, 4);
+    68a9: a2 00        	ldx	#$0
+    68ab: a9 01        	lda	#$1
+    68ad: 20 42 68     	jsr	$6842
+    68b0: a2 20        	ldx	#$20
+    68b2: 86 e2        	stx	$e2
+;   DrawAcePile(Suit::Hearts, 32);
+    68b4: a2 00        	ldx	#$0
+    68b6: a9 02        	lda	#$2
+    68b8: 20 42 68     	jsr	$6842
+    68bb: a2 24        	ldx	#$24
+    68bd: 86 e2        	stx	$e2
+;   DrawAcePile(Suit::Spades, 36);
+    68bf: a2 00        	ldx	#$0
+    68c1: a9 03        	lda	#$3
+    68c3: 20 42 68     	jsr	$6842
+    68c6: a2 fe        	ldx	#$fe
+    68c8: 86 f4        	stx	$f4
+    68ca: a2 78        	ldx	#$78
+    68cc: 86 f5        	stx	$f5
+    68ce: a2 38        	ldx	#$38
+;   inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
+    68d0: bd 51 7a     	lda	$7a51,x
+    68d3: a8           	tay
+;   result.rank = (Rank)card.parts.rank;
+    68d4: 29 0f        	and	#$f
+    68d6: 84 f1        	sty	$f1
+    68d8: a4 f6        	ldy	$f6
+    68da: 84 f7        	sty	$f7
+    68dc: a4 f1        	ldy	$f1
+    68de: c9 00        	cmp	#$0
+    68e0: f0 18        	beq	$68fa
+    68e2: 98           	tya
+;   card.parts.suit = (uint8_t)_card.suit;
+    68e3: 29 3f        	and	#$3f
+    68e5: a4 f4        	ldy	$f4
+    68e7: 84 e2        	sty	$e2
+    68e9: a4 f5        	ldy	$f5
+    68eb: 84 e3        	sty	$e3
+    68ed: a0 03        	ldy	#$3
+    68ef: 84 e4        	sty	$e4
+    68f1: 86 f6        	stx	$f6
+    68f3: a6 f7        	ldx	$f7
+;       DrawCard(card, x, CardLocations::TowersTop);
+    68f5: 20 62 67     	jsr	$6762
+    68f8: a6 f6        	ldx	$f6
+;     x += 4;
+    68fa: 18           	clc
+    68fb: a5 f7        	lda	$f7
+    68fd: 69 04        	adc	#$4
+;   for (uint8_t tower=0; tower < 4; ++tower) {
+    68ff: e8           	inx
+    6900: 85 f6        	sta	$f6
+;   for (uint8_t tower=0; tower < 4; ++tower) {
+    6902: c9 1c        	cmp	#$1c
+    6904: f0 03        	beq	$6909
+    6906: 4c d0 68     	jmp	$68d0
+    6909: a9 00        	lda	#$0
+    690b: a2 fe        	ldx	#$fe
+    690d: 86 f4        	stx	$f4
+    690f: a2 78        	ldx	#$78
+    6911: 86 f5        	stx	$f5
+    6913: aa           	tax
+    6914: a8           	tay
+    6915: 86 f9        	stx	$f9
+    6917: 85 f8        	sta	$f8
+    6919: aa           	tax
+;   uint8_t GetCount() const { return count; }
+    691a: bd 92 7a     	lda	$7a92,x
+    691d: aa           	tax
+    691e: 84 fa        	sty	$fa
+    6920: 8a           	txa
+    6921: d0 03        	bne	$6926
+    6923: 4c 6d 69     	jmp	$696d
+    6926: a4 f8        	ldy	$f8
+    6928: 84 e2        	sty	$e2
+    692a: a9 8d        	lda	#$8d
+    692c: 18           	clc
+    692d: 65 f8        	adc	$f8
+    692f: 85 f6        	sta	$f6
+    6931: a9 7a        	lda	#$7a
+    6933: 69 00        	adc	#$0
+    6935: 85 f7        	sta	$f7
+    6937: a9 00        	lda	#$0
+    6939: a4 f6        	ldy	$f6
+    693b: 84 e2        	sty	$e2
+    693d: a4 f7        	ldy	$f7
+    693f: 84 e3        	sty	$e3
+    6941: 86 fb        	stx	$fb
+    6943: 85 fc        	sta	$fc
+;       DrawCardTop(column.GetCard(j), x, columnYLookup.Y(j));
+    6945: 20 a4 62     	jsr	$62a4
+    6948: a6 fc        	ldx	$fc
+    694a: 48           	pha
+;   inline uint8_t Y(uint8_t index) const { return y[index]; }
+    694b: bd 17 76     	lda	$7617,x
+    694e: aa           	tax
+    694f: 68           	pla
+    6950: a4 f4        	ldy	$f4
+    6952: 84 e2        	sty	$e2
+    6954: a4 f5        	ldy	$f5
+    6956: 84 e3        	sty	$e3
+    6958: 86 e4        	stx	$e4
+    695a: a6 fa        	ldx	$fa
+;       DrawCardTop(column.GetCard(j), x, columnYLookup.Y(j));
+    695c: 20 90 66     	jsr	$6690
+    695f: a6 fb        	ldx	$fb
+    6961: a4 fc        	ldy	$fc
+    6963: 84 e2        	sty	$e2
+;     for (uint8_t j=0; j < cardCount; ++j)
+    6965: e6 e2        	inc	$e2
+    6967: a5 e2        	lda	$e2
+;     for (uint8_t j=0; j < cardCount; ++j)
+    6969: e4 e2        	cpx	$e2
+    696b: d0 cc        	bne	$6939
+;     DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
+    696d: ca           	dex
+    696e: a9 09        	lda	#$9
+    6970: 18           	clc
+    6971: 7d 17 76     	adc	$7617,x
+    6974: a6 f4        	ldx	$f4
+    6976: 86 e2        	stx	$e2
+    6978: a6 f5        	ldx	$f5
+    697a: 86 e3        	stx	$e3
+    697c: aa           	tax
+    697d: a5 fa        	lda	$fa
+;     DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
+    697f: 20 e6 67     	jsr	$67e6
+;     x += 4;
+    6982: 18           	clc
+    6983: a5 fa        	lda	$fa
+    6985: 69 04        	adc	#$4
+    6987: a8           	tay
+    6988: a6 f9        	ldx	$f9
+;   for (uint8_t i=0; i < 10; ++i) {
+    698a: e8           	inx
+    698b: 18           	clc
+    698c: a5 f8        	lda	$f8
+    698e: 69 06        	adc	#$6
+    6990: e0 0a        	cpx	#$a
+    6992: f0 03        	beq	$6997
+    6994: 4c 15 69     	jmp	$6915
+    6997: a0 38        	ldy	#$38
+    6999: a9 0c        	lda	#$c
+    699b: a2 fe        	ldx	#$fe
+    699d: 86 f4        	stx	$f4
+    699f: a2 78        	ldx	#$78
+    69a1: 86 f5        	stx	$f5
+;   inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
+    69a3: be 51 7a     	ldx	$7a51,y
+    69a6: 85 f7        	sta	$f7
+    69a8: 8a           	txa
+;   result.rank = (Rank)card.parts.rank;
+    69a9: 29 0f        	and	#$f
+    69ab: c9 00        	cmp	#$0
+    69ad: f0 18        	beq	$69c7
+    69af: 8a           	txa
+;   card.parts.suit = (uint8_t)_card.suit;
+    69b0: 29 3f        	and	#$3f
+    69b2: a6 f4        	ldx	$f4
+    69b4: 86 e2        	stx	$e2
+    69b6: a6 f5        	ldx	$f5
+    69b8: 86 e3        	stx	$e3
+    69ba: a2 03        	ldx	#$3
+    69bc: 86 e4        	stx	$e4
+    69be: a6 f7        	ldx	$f7
+    69c0: 84 f6        	sty	$f6
+;       DrawCard(card, x, CardLocations::TowersTop);
+    69c2: 20 62 67     	jsr	$6762
+    69c5: a4 f6        	ldy	$f6
+;     x += 4;
+    69c7: 18           	clc
+    69c8: a5 f7        	lda	$f7
+    69ca: 69 04        	adc	#$4
+;   for (uint8_t tower=0; tower < 4; ++tower) {
+    69cc: c8           	iny
+    69cd: c9 1c        	cmp	#$1c
+    69cf: f0 03        	beq	$69d4
+    69d1: 4c a3 69     	jmp	$69a3
+    69d4: ae 1b 7b     	ldx	$7b1b
+    69d7: 86 fc        	stx	$fc
+    69d9: ae 1a 7b     	ldx	$7b1a
+    69dc: 86 fb        	stx	$fb
+    69de: ae 19 7b     	ldx	$7b19
+    69e1: 86 fa        	stx	$fa
+    69e3: ae 18 7b     	ldx	$7b18
+    69e6: 86 f9        	stx	$f9
+    69e8: ae 17 7b     	ldx	$7b17
+    69eb: 86 f8        	stx	$f8
+    69ed: 68           	pla
+    69ee: 85 f7        	sta	$f7
+    69f0: 68           	pla
+    69f1: 85 f6        	sta	$f6
+    69f3: 68           	pla
+    69f4: 85 f5        	sta	$f5
+    69f6: 68           	pla
+    69f7: 85 f4        	sta	$f4
+; }
+    69f9: 60           	rts
+
+000069fa <_ZN7Drawing9EraseCardE12CardLocation>:
+; void Drawing::EraseCard(CardLocation location) {
+    69fa: 85 f0        	sta	$f0
+    69fc: a5 f4        	lda	$f4
+    69fe: 48           	pha
+    69ff: a5 f5        	lda	$f5
+    6a01: 48           	pha
+    6a02: a5 f0        	lda	$f0
+    6a04: 8d d1 7a     	sta	$7ad1
+    6a07: a6 e2        	ldx	$e2
+    6a09: 86 f4        	stx	$f4
+    6a0b: a6 e3        	ldx	$e3
+    6a0d: 86 f5        	stx	$f5
+;   uint8_t x = location.GetX();
+    6a0f: 20 6e 62     	jsr	$626e
+    6a12: 85 e9        	sta	$e9
+    6a14: ad d1 7a     	lda	$7ad1
+;   bool IsTower() const { return locationNumber > 251; }
+    6a17: c9 fc        	cmp	#$fc
+    6a19: a2 03        	ldx	#$3
+    6a1b: a0 01        	ldy	#$1
+    6a1d: b0 02        	bcs	$6a21
+    6a1f: a0 00        	ldy	#$0
+    6a21: 84 e8        	sty	$e8
+    6a23: b0 15        	bcs	$6a3a
+;   bool IsAce() const { return locationNumber < 5; }
+    6a25: c9 05        	cmp	#$5
+    6a27: a2 03        	ldx	#$3
+    6a29: 90 0f        	bcc	$6a3a
+    6a2b: a4 e9        	ldy	$e9
+    6a2d: 85 e2        	sta	$e2
+;   return locationNumber & 0x0F;
+    6a2f: 29 0f        	and	#$f
+    6a31: aa           	tax
+    6a32: a5 e2        	lda	$e2
+    6a34: 48           	pha
+;   inline uint8_t Y(uint8_t index) const { return y[index]; }
+    6a35: bd 17 76     	lda	$7617,x
+    6a38: aa           	tax
+    6a39: 68           	pla
+    6a3a: 85 e6        	sta	$e6
+    6a3c: a0 21        	ldy	#$21
+    6a3e: 84 ea        	sty	$ea
+    6a40: 86 e7        	stx	$e7
+    6a42: 86 e2        	stx	$e2
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6a44: 18           	clc
+    6a45: a4 e9        	ldy	$e9
+    6a47: 84 e3        	sty	$e3
+    6a49: a5 e9        	lda	$e9
+    6a4b: 7d e7 76     	adc	$76e7,x
+    6a4e: 85 e4        	sta	$e4
+    6a50: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6a52: b1 f4        	lda	($f4),y
+    6a54: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6a56: 18           	clc
+    6a57: 7d 27 76     	adc	$7627,x
+    6a5a: 85 e5        	sta	$e5
+;     uint8_t *row = hgr.GetByteAddress(y++, x);
+    6a5c: e6 e2        	inc	$e2
+    6a5e: 98           	tya
+;     row[1] = 0;
+    6a5f: 91 e4        	sta	($e4),y
+    6a61: a6 ea        	ldx	$ea
+    6a63: 86 e3        	stx	$e3
+    6a65: c8           	iny
+;     row[1] = 0;
+    6a66: 91 e4        	sta	($e4),y
+    6a68: c8           	iny
+    6a69: 91 e4        	sta	($e4),y
+    6a6b: c8           	iny
+    6a6c: 91 e4        	sta	($e4),y
+;   for (int i=0; i<CardHeight; ++i) {
+    6a6e: c6 e3        	dec	$e3
+    6a70: a6 e2        	ldx	$e2
+    6a72: a4 e3        	ldy	$e3
+    6a74: 84 ea        	sty	$ea
+    6a76: d0 cc        	bne	$6a44
+    6a78: a6 e6        	ldx	$e6
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    6a7a: e0 05        	cpx	#$5
+    6a7c: 90 14        	bcc	$6a92
+    6a7e: a5 e8        	lda	$e8
+    6a80: d0 10        	bne	$6a92
+    6a82: a6 e7        	ldx	$e7
+;     DrawCardBottom(x, startY - CardLocations::CardShadowHeight);
+    6a84: ca           	dex
+    6a85: a4 f4        	ldy	$f4
+    6a87: 84 e2        	sty	$e2
+    6a89: a4 f5        	ldy	$f5
+    6a8b: 84 e3        	sty	$e3
+    6a8d: a5 e9        	lda	$e9
+;     DrawCardBottom(x, startY - CardLocations::CardShadowHeight);
+    6a8f: 20 e6 67     	jsr	$67e6
+    6a92: 68           	pla
+    6a93: 85 f5        	sta	$f5
+    6a95: 68           	pla
+    6a96: 85 f4        	sta	$f4
+; }
+    6a98: 60           	rts
+    6a99: 00           	brk
+
+00006a9a <_ZN7Drawing18SaveCardBackgroundEhhP15SavedBackground>:
+;               SavedBackground *background) {
+    6a9a: 85 e7        	sta	$e7
+;       return *(volatile int8_t *)(0xC019);
+    6a9c: ac 19 c0     	ldy	$c019
+    6a9f: 98           	tya
+    6aa0: 30 08        	bmi	$6aaa
+;          if (previousState < 0)
+    6aa2: ad 00 79     	lda	$7900
+    6aa5: 10 06        	bpl	$6aad
+;             ++counter;
+    6aa7: ee 01 79     	inc	$7901
+    6aaa: 8c 00 79     	sty	$7900
+    6aad: a9 00        	lda	#$0
+    6aaf: a0 22        	ldy	#$22
+    6ab1: 85 ea        	sta	$ea
+    6ab3: 86 e6        	stx	$e6
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6ab5: 18           	clc
+    6ab6: a5 e7        	lda	$e7
+    6ab8: 7d e7 76     	adc	$76e7,x
+    6abb: 85 e8        	sta	$e8
+    6abd: 84 ed        	sty	$ed
+    6abf: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6ac1: b1 e2        	lda	($e2),y
+    6ac3: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6ac5: 18           	clc
+    6ac6: 7d 27 76     	adc	$7627,x
+    6ac9: 85 e9        	sta	$e9
+;     p[0] = row[0];
+    6acb: b1 e8        	lda	($e8),y
+    6acd: a6 ea        	ldx	$ea
+    6acf: 86 ec        	stx	$ec
+    6ad1: a4 ea        	ldy	$ea
+;     p[0] = row[0];
+    6ad3: 91 e4        	sta	($e4),y
+    6ad5: a5 ea        	lda	$ea
+    6ad7: 18           	clc
+;     row = hgr.GetByteAddress(y++, x);
+    6ad8: 65 e4        	adc	$e4
+    6ada: 85 ea        	sta	$ea
+    6adc: a5 e5        	lda	$e5
+    6ade: 69 00        	adc	#$0
+    6ae0: 85 eb        	sta	$eb
+    6ae2: a0 01        	ldy	#$1
+;     p[1] = row[1];
+    6ae4: b1 e8        	lda	($e8),y
+    6ae6: 91 ea        	sta	($ea),y
+    6ae8: c8           	iny
+;     p[2] = row[2];
+    6ae9: b1 e8        	lda	($e8),y
+    6aeb: 91 ea        	sta	($ea),y
+    6aed: c8           	iny
+;     p[3] = row[3];
+    6aee: b1 e8        	lda	($e8),y
+    6af0: 91 ea        	sta	($ea),y
+    6af2: a4 ed        	ldy	$ed
+;     row = hgr.GetByteAddress(y++, x);
+    6af4: e6 e6        	inc	$e6
+;   for (uint8_t i=0; i < SavedBackground::Height; ++i) {
+    6af6: 18           	clc
+    6af7: a5 ec        	lda	$ec
+    6af9: 69 04        	adc	#$4
+    6afb: 85 ea        	sta	$ea
+    6afd: 88           	dey
+    6afe: a6 e6        	ldx	$e6
+    6b00: 98           	tya
+    6b01: f0 03        	beq	$6b06
+    6b03: 4c b5 6a     	jmp	$6ab5
+; }
+    6b06: 60           	rts
+    6b07: 00           	brk
+
+00006b08 <_ZN7Drawing17RestoreBackgroundEP15SavedBackgroundhh>:
+;                 uint8_t x, uint8_t y) {
+    6b08: 85 e7        	sta	$e7
+;       return *(volatile int8_t *)(0xC019);
+    6b0a: ac 19 c0     	ldy	$c019
+    6b0d: 98           	tya
+    6b0e: 30 08        	bmi	$6b18
+;          if (previousState < 0)
+    6b10: ad 00 79     	lda	$7900
+    6b13: 10 06        	bpl	$6b1b
+;             ++counter;
+    6b15: ee 01 79     	inc	$7901
+    6b18: 8c 00 79     	sty	$7900
+    6b1b: a9 00        	lda	#$0
+    6b1d: a0 22        	ldy	#$22
+    6b1f: 86 e6        	stx	$e6
+    6b21: 85 ec        	sta	$ec
+    6b23: 18           	clc
+;     row = hgr.GetByteAddress(y++, x);
+    6b24: 65 e4        	adc	$e4
+    6b26: 85 e8        	sta	$e8
+    6b28: a5 e5        	lda	$e5
+    6b2a: 69 00        	adc	#$0
+    6b2c: 85 e9        	sta	$e9
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6b2e: 18           	clc
+    6b2f: a5 e7        	lda	$e7
+    6b31: 7d e7 76     	adc	$76e7,x
+    6b34: 85 ea        	sta	$ea
+    6b36: 84 ed        	sty	$ed
+    6b38: a0 00        	ldy	#$0
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6b3a: b1 e2        	lda	($e2),y
+    6b3c: 18           	clc
+    6b3d: 7d 27 76     	adc	$7627,x
+    6b40: 85 eb        	sta	$eb
+    6b42: a4 ec        	ldy	$ec
+;     row[0] = p[0];
+    6b44: b1 e4        	lda	($e4),y
+    6b46: a0 00        	ldy	#$0
+    6b48: 91 ea        	sta	($ea),y
+    6b4a: c8           	iny
+;     row[1] = p[1];
+    6b4b: b1 e8        	lda	($e8),y
+    6b4d: 91 ea        	sta	($ea),y
+    6b4f: c8           	iny
+;     row[2] = p[2];
+    6b50: b1 e8        	lda	($e8),y
+    6b52: 91 ea        	sta	($ea),y
+    6b54: c8           	iny
+;     row[3] = p[3];
+    6b55: b1 e8        	lda	($e8),y
+    6b57: 91 ea        	sta	($ea),y
+    6b59: a4 ed        	ldy	$ed
+    6b5b: a5 ec        	lda	$ec
+;     row = hgr.GetByteAddress(y++, x);
+    6b5d: e6 e6        	inc	$e6
+;   for (uint8_t i=0; i < SavedBackground::Height; ++i) {
+    6b5f: 18           	clc
+    6b60: 69 04        	adc	#$4
+    6b62: 88           	dey
+    6b63: a6 e6        	ldx	$e6
+    6b65: c0 00        	cpy	#$0
+    6b67: f0 03        	beq	$6b6c
+    6b69: 4c 21 6b     	jmp	$6b21
+; }
+    6b6c: 60           	rts
+    6b6d: 00           	brk
+
+00006b6e <_ZN4Game8Shuffle8Eh>:
+; void Game::Shuffle8(uint8_t instruction) {
+    6b6e: 85 e2        	sta	$e2
+    6b70: a9 00        	lda	#$0
+    6b72: a2 34        	ldx	#$34
+    6b74: 86 e3        	stx	$e3
+    6b76: a2 51        	ldx	#$51
+    6b78: 86 e4        	stx	$e4
+    6b7a: a2 7a        	ldx	#$7a
+    6b7c: 86 e5        	stx	$e5
+    6b7e: 85 e6        	sta	$e6
+    6b80: 85 ea        	sta	$ea
+    6b82: a2 da        	ldx	#$da
+    6b84: 86 e8        	stx	$e8
+    6b86: a2 7a        	ldx	#$7a
+    6b88: 86 e9        	stx	$e9
+    6b8a: 46 e2        	lsr	$e2
+;       asm volatile (
+    6b8c: a4 e3        	ldy	$e3
+    6b8e: f0 0d        	beq	$6b9d
+    6b90: d0 04        	bne	$6b96
+    6b92: b1 e4        	lda	($e4),y
+    6b94: 91 e8        	sta	($e8),y
+    6b96: 88           	dey
+    6b97: d0 f9        	bne	$6b92
+    6b99: b1 e4        	lda	($e4),y
+    6b9b: 91 e8        	sta	($e8),y
+    6b9d: b0 34        	bcs	$6bd3
+    6b9f: a2 ff        	ldx	#$ff
+    6ba1: a0 33        	ldy	#$33
+    6ba3: a9 cc        	lda	#$cc
+    6ba5: 85 e7        	sta	$e7
+    6ba7: a9 17        	lda	#$17
+    6ba9: 86 e8        	stx	$e8
+;         index += 7;
+    6bab: aa           	tax
+    6bac: 86 e9        	stx	$e9
+    6bae: aa           	tax
+    6baf: 85 eb        	sta	$eb
+;         deck[j] = deckCopy[index];
+    6bb1: bd da 7a     	lda	$7ada,x
+    6bb4: 99 51 7a     	sta	$7a51,y
+;         index += 7;
+    6bb7: 18           	clc
+    6bb8: a5 e9        	lda	$e9
+    6bba: 69 07        	adc	#$7
+;         if (index >= 52)
+    6bbc: c9 34        	cmp	#$34
+    6bbe: 90 05        	bcc	$6bc5
+    6bc0: 18           	clc
+    6bc1: a5 eb        	lda	$eb
+    6bc3: 69 d3        	adc	#$d3
+    6bc5: 85 e9        	sta	$e9
+;       for (int j=51; j >= 0; --j) {
+    6bc7: 88           	dey
+    6bc8: e6 e7        	inc	$e7
+    6bca: d0 e2        	bne	$6bae
+    6bcc: e6 e8        	inc	$e8
+    6bce: d0 de        	bne	$6bae
+    6bd0: 4c f9 6b     	jmp	$6bf9
+    6bd3: a0 00        	ldy	#$0
+    6bd5: a2 19        	ldx	#$19
+    6bd7: 86 e7        	stx	$e7
+    6bd9: e8           	inx
+    6bda: 84 e8        	sty	$e8
+    6bdc: a4 e7        	ldy	$e7
+;         deck[index++] = deckCopy[25 - j];
+    6bde: b9 da 7a     	lda	$7ada,y
+    6be1: a4 e8        	ldy	$e8
+    6be3: 99 51 7a     	sta	$7a51,y
+;         deck[index++] = deckCopy[j + 26];
+    6be6: bd da 7a     	lda	$7ada,x
+    6be9: 99 52 7a     	sta	$7a52,y
+    6bec: a5 e8        	lda	$e8
+;         deck[index++] = deckCopy[j + 26];
+    6bee: 18           	clc
+    6bef: 69 02        	adc	#$2
+;       for (int j=0; j < 26; ++j) {
+    6bf1: e8           	inx
+    6bf2: c6 e7        	dec	$e7
+    6bf4: a8           	tay
+    6bf5: c9 34        	cmp	#$34
+    6bf7: d0 e1        	bne	$6bda
+    6bf9: a6 ea        	ldx	$ea
+;   for (int i=0; i < 8; ++i) {
+    6bfb: e8           	inx
+    6bfc: d0 02        	bne	$6c00
+    6bfe: e6 e6        	inc	$e6
+    6c00: 8a           	txa
+    6c01: a6 e6        	ldx	$e6
+    6c03: f0 03        	beq	$6c08
+    6c05: 4c 80 6b     	jmp	$6b80
+;   for (int i=0; i < 8; ++i) {
+    6c08: c9 08        	cmp	#$8
+    6c0a: f0 03        	beq	$6c0f
+    6c0c: 4c 80 6b     	jmp	$6b80
+; }
+    6c0f: 60           	rts
+
+00006c10 <_ZNK4Game7GetCardE12CardLocation>:
+;   bool IsAce() const { return locationNumber < 5; }
+    6c10: c9 05        	cmp	#$5
+    6c12: b0 08        	bcs	$6c1c
+;     return acePiles[(uint8_t)location.GetAceSuit()];
+    6c14: 18           	clc
+    6c15: 69 ff        	adc	#$ff
+    6c17: aa           	tax
+;     return acePiles[(uint8_t)location.GetAceSuit()];
+    6c18: bd 85 7a     	lda	$7a85,x
+; }
+    6c1b: 60           	rts
+;   bool IsTower() const { return locationNumber > 251; }
+    6c1c: c9 fc        	cmp	#$fc
+    6c1e: 90 07        	bcc	$6c27
+;   uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
+    6c20: 49 ff        	eor	#$ff
+    6c22: aa           	tax
+;     return towers[location.GetTowerIndex()];
+    6c23: bd 89 7a     	lda	$7a89,x
+; }
+    6c26: 60           	rts
+    6c27: 8d 17 7b     	sta	$7b17
+;   return (locationNumber>>4) - 1;
+    6c2a: 4a           	lsr
+    6c2b: 4a           	lsr
+    6c2c: 4a           	lsr
+    6c2d: 4a           	lsr
+    6c2e: a2 00        	ldx	#$0
+    6c30: 18           	clc
+    6c31: 69 ff        	adc	#$ff
+    6c33: a0 06        	ldy	#$6
+    6c35: 84 e2        	sty	$e2
+    6c37: 86 e3        	stx	$e3
+;     return columns[location.GetColumn()].GetCard(location.GetRow());
+    6c39: a2 00        	ldx	#$0
+    6c3b: 20 67 74     	jsr	$7467
+    6c3e: 85 e2        	sta	$e2
+    6c40: 86 e3        	stx	$e3
+    6c42: 18           	clc
+;     return columns[location.GetColumn()].GetCard(location.GetRow());
+    6c43: a9 8d        	lda	#$8d
+    6c45: 65 e2        	adc	$e2
+    6c47: 85 e2        	sta	$e2
+    6c49: a9 7a        	lda	#$7a
+    6c4b: 65 e3        	adc	$e3
+    6c4d: 85 e3        	sta	$e3
+    6c4f: ad 17 7b     	lda	$7b17
+;   return locationNumber & 0x0F;
+    6c52: 29 0f        	and	#$f
+;     return columns[location.GetColumn()].GetCard(location.GetRow());
+    6c54: 4c a4 62     	jmp	$62a4
+    6c57: 00           	brk
+
+00006c58 <_ZN4Game15GetCardLocationE11CompactCard>:
+; CardLocation Game::GetCardLocation(CompactCard card) {
+    6c58: 85 e2        	sta	$e2
+;   bool IsNull() const { return card.parts.rank == 0; }
+    6c5a: 29 0f        	and	#$f
+    6c5c: 85 e3        	sta	$e3
+    6c5e: a9 00        	lda	#$0
+    6c60: a6 e3        	ldx	$e3
+    6c62: d0 03        	bne	$6c67
+    6c64: 4c 03 6d     	jmp	$6d03
+    6c67: a2 00        	ldx	#$0
+    6c69: a5 e2        	lda	$e2
+    6c6b: 86 e4        	stx	$e4
+;     if (card == towers[i])
+    6c6d: dd 89 7a     	cmp	$7a89,x
+    6c70: d0 03        	bne	$6c75
+    6c72: 4c 04 6d     	jmp	$6d04
+    6c75: a6 e4        	ldx	$e4
+;   for (uint8_t i=0; i<4; ++i)
+    6c77: e8           	inx
+    6c78: e0 04        	cpx	#$4
+    6c7a: d0 ed        	bne	$6c69
+    6c7c: a2 8d        	ldx	#$8d
+    6c7e: 86 e4        	stx	$e4
+    6c80: a2 7a        	ldx	#$7a
+    6c82: 86 e5        	stx	$e5
+    6c84: a9 00        	lda	#$0
+    6c86: aa           	tax
+    6c87: 86 e9        	stx	$e9
+    6c89: 85 ea        	sta	$ea
+    6c8b: aa           	tax
+    6c8c: bd 92 7a     	lda	$7a92,x
+    6c8f: aa           	tax
+    6c90: 8a           	txa
+    6c91: d0 03        	bne	$6c96
+    6c93: 4c e5 6c     	jmp	$6ce5
+    6c96: 86 e6        	stx	$e6
+    6c98: a0 00        	ldy	#$0
+    6c9a: 86 e7        	stx	$e7
+    6c9c: 98           	tya
+    6c9d: 85 e8        	sta	$e8
+;   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
+    6c9f: b1 e4        	lda	($e4),y
+;     if (cards[i] == card)
+    6ca1: c5 e2        	cmp	$e2
+    6ca3: d0 03        	bne	$6ca8
+    6ca5: 4c e0 6c     	jmp	$6ce0
+;   for (int i=0; i<count; ++i)
+    6ca8: c8           	iny
+    6ca9: a5 e7        	lda	$e7
+;   for (int i=0; i<count; ++i)
+    6cab: c6 e7        	dec	$e7
+    6cad: c9 00        	cmp	#$0
+    6caf: d0 02        	bne	$6cb3
+    6cb1: c6 e8        	dec	$e8
+    6cb3: a5 e8        	lda	$e8
+    6cb5: d0 e8        	bne	$6c9f
+    6cb7: a5 e7        	lda	$e7
+    6cb9: d0 e4        	bne	$6c9f
+;   if (count <= 5)
+    6cbb: e0 06        	cpx	#$6
+    6cbd: 90 26        	bcc	$6ce5
+    6cbf: a6 ea        	ldx	$ea
+;   result.rank = (Rank)card.parts.rank;
+    6cc1: bd 91 7a     	lda	$7a91,x
+    6cc4: aa           	tax
+;   if (card.GetSuit() != fifthCard.GetSuit())
+    6cc5: 45 e2        	eor	$e2
+    6cc7: 29 30        	and	#$30
+    6cc9: d0 1a        	bne	$6ce5
+    6ccb: 8a           	txa
+;   result.rank = (Rank)card.parts.rank;
+    6ccc: 29 0f        	and	#$f
+;   return (int8_t)r1 - (int8_t)r2;
+    6cce: 38           	sec
+    6ccf: e5 e3        	sbc	$e3
+    6cd1: aa           	tax
+    6cd2: 30 11        	bmi	$6ce5
+;   int8_t index = 4 + offsetToCard;
+    6cd4: 18           	clc
+    6cd5: 69 04        	adc	#$4
+;   if (index >= count)
+    6cd7: c5 e6        	cmp	$e6
+    6cd9: 85 e6        	sta	$e6
+    6cdb: b0 08        	bcs	$6ce5
+    6cdd: 4c 09 6d     	jmp	$6d09
+    6ce0: 84 e6        	sty	$e6
+    6ce2: 98           	tya
+    6ce3: 10 24        	bpl	$6d09
+    6ce5: a5 e4        	lda	$e4
+;   for (uint8_t i=0; i<10; ++i) {
+    6ce7: 18           	clc
+    6ce8: 69 06        	adc	#$6
+    6cea: 85 e4        	sta	$e4
+    6cec: a5 e5        	lda	$e5
+    6cee: 69 00        	adc	#$0
+    6cf0: 85 e5        	sta	$e5
+    6cf2: a6 e9        	ldx	$e9
+    6cf4: e8           	inx
+    6cf5: 18           	clc
+    6cf6: a5 ea        	lda	$ea
+    6cf8: 69 06        	adc	#$6
+    6cfa: e0 0a        	cpx	#$a
+    6cfc: f0 03        	beq	$6d01
+    6cfe: 4c 87 6c     	jmp	$6c87
+    6d01: a9 00        	lda	#$0
+; }
+    6d03: 60           	rts
+    6d04: a5 e4        	lda	$e4
+    6d06: 49 ff        	eor	#$ff
+; }
+    6d08: 60           	rts
+    6d09: a5 e9        	lda	$e9
+;   return CardLocation(((column + 1) << 4) | row);
+    6d0b: 0a           	asl
+    6d0c: 0a           	asl
+    6d0d: 0a           	asl
+    6d0e: 0a           	asl
+    6d0f: 18           	clc
+    6d10: 69 10        	adc	#$10
+    6d12: 05 e6        	ora	$e6
+; }
+    6d14: 60           	rts
+    6d15: 00           	brk
+
+00006d16 <_ZN4Game7SetCardE12CardLocation11CompactCard>:
+; void Game::SetCard(CardLocation location, CompactCard card) {
+    6d16: 86 e2        	stx	$e2
+    6d18: aa           	tax
+;   bool IsAce() const { return locationNumber < 5; }
+    6d19: c9 05        	cmp	#$5
+    6d1b: b0 07        	bcs	$6d24
+;     acePiles[(uint8_t)location.GetAceSuit()] = card;
+    6d1d: ca           	dex
+    6d1e: a5 e2        	lda	$e2
+;     acePiles[(uint8_t)location.GetAceSuit()] = card;
+    6d20: 9d 85 7a     	sta	$7a85,x
+; }
+    6d23: 60           	rts
+    6d24: 8a           	txa
+;   bool IsTower() const { return locationNumber > 251; }
+    6d25: e0 fc        	cpx	#$fc
+    6d27: 90 0a        	bcc	$6d33
+    6d29: 8a           	txa
+;   uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
+    6d2a: 49 ff        	eor	#$ff
+    6d2c: aa           	tax
+    6d2d: a5 e2        	lda	$e2
+;     towers[location.GetTowerIndex()] = card;
+    6d2f: 9d 89 7a     	sta	$7a89,x
+; }
+    6d32: 60           	rts
+    6d33: a4 e2        	ldy	$e2
+    6d35: 8c d2 7a     	sty	$7ad2
+    6d38: 8a           	txa
+    6d39: 8e d3 7a     	stx	$7ad3
+;   return (locationNumber>>4) - 1;
+    6d3c: 4a           	lsr
+    6d3d: 4a           	lsr
+    6d3e: 4a           	lsr
+    6d3f: 4a           	lsr
+    6d40: a2 00        	ldx	#$0
+    6d42: 18           	clc
+    6d43: 69 ff        	adc	#$ff
+    6d45: a0 06        	ldy	#$6
+    6d47: 84 e2        	sty	$e2
+    6d49: 86 e3        	stx	$e3
+;     columns[location.GetColumn()].SetCard(location.GetRow(), card);
+    6d4b: a2 00        	ldx	#$0
+    6d4d: 20 67 74     	jsr	$7467
+    6d50: 85 e2        	sta	$e2
+    6d52: 86 e3        	stx	$e3
+    6d54: 18           	clc
+;     columns[location.GetColumn()].SetCard(location.GetRow(), card);
+    6d55: a9 8d        	lda	#$8d
+    6d57: 65 e2        	adc	$e2
+    6d59: 85 e2        	sta	$e2
+    6d5b: a9 7a        	lda	#$7a
+    6d5d: 65 e3        	adc	$e3
+    6d5f: 85 e3        	sta	$e3
+    6d61: ad d3 7a     	lda	$7ad3
+;   return locationNumber & 0x0F;
+    6d64: 29 0f        	and	#$f
+    6d66: ae d2 7a     	ldx	$7ad2
+;     columns[location.GetColumn()].SetCard(location.GetRow(), card);
+    6d69: 4c 1c 63     	jmp	$631c
+
+00006d6c <main>:
+; extern "C" int main() {
+    6d6c: a5 f4        	lda	$f4
+    6d6e: 48           	pha
+    6d6f: a5 f5        	lda	$f5
+    6d71: 48           	pha
+    6d72: a5 f6        	lda	$f6
+    6d74: 48           	pha
+    6d75: a5 f7        	lda	$f7
+    6d77: 48           	pha
+    6d78: a6 f8        	ldx	$f8
+    6d7a: 8e 11 7b     	stx	$7b11
+    6d7d: a6 f9        	ldx	$f9
+    6d7f: 8e 12 7b     	stx	$7b12
+    6d82: a6 fa        	ldx	$fa
+    6d84: 8e 13 7b     	stx	$7b13
+    6d87: a6 fb        	ldx	$fb
+    6d89: 8e 14 7b     	stx	$7b14
+    6d8c: a6 fc        	ldx	$fc
+    6d8e: 8e 15 7b     	stx	$7b15
+    6d91: a6 fd        	ldx	$fd
+    6d93: 8e 16 7b     	stx	$7b16
+    6d96: a0 ef        	ldy	#$ef
+    6d98: a2 00        	ldx	#$0
+    6d9a: a9 77        	lda	#$77
+;          hi[index] = ((uint16_t)value) >> 8;
+    6d9c: 9d 04 79     	sta	$7904,x
+    6d9f: 85 e2        	sta	$e2
+    6da1: 98           	tya
+;          lo[index] = (uint8_t)(uint16_t)value;
+    6da2: 9d 11 79     	sta	$7911,x
+;   for (uint8_t i=0; i < 13; ++i)
+    6da5: e8           	inx
+    6da6: 18           	clc
+    6da7: 69 12        	adc	#$12
+    6da9: a8           	tay
+    6daa: a5 e2        	lda	$e2
+    6dac: 69 00        	adc	#$0
+    6dae: e0 0d        	cpx	#$d
+    6db0: d0 ea        	bne	$6d9c
+    6db2: a2 00        	ldx	#$0
+    6db4: a0 a7        	ldy	#$a7
+    6db6: a9 77        	lda	#$77
+;          hi[index] = ((uint16_t)value) >> 8;
+    6db8: 9d 1e 79     	sta	$791e,x
+    6dbb: 85 e2        	sta	$e2
+    6dbd: 98           	tya
+;          lo[index] = (uint8_t)(uint16_t)value;
+    6dbe: 9d 22 79     	sta	$7922,x
+;   for (uint8_t i=0; i < 4; ++i)
+    6dc1: e8           	inx
+    6dc2: 18           	clc
+    6dc3: 69 12        	adc	#$12
+    6dc5: a8           	tay
+    6dc6: a5 e2        	lda	$e2
+    6dc8: 69 00        	adc	#$0
+    6dca: e0 04        	cpx	#$4
+    6dcc: d0 ea        	bne	$6db8
+    6dce: a2 00        	ldx	#$0
+;   PersistentState::instance = PersistentState();
+    6dd0: 8e ca 7a     	stx	$7aca
+    6dd3: 8e cb 7a     	stx	$7acb
+;   stateMachine = StateMachine();
+    6dd6: 8e 02 79     	stx	$7902
+    6dd9: 8e 03 79     	stx	$7903
+;   CardAnimator::instance = CardAnimator();
+    6ddc: 8e 26 79     	stx	$7926
+    6ddf: 8e 27 79     	stx	$7927
+;   Cursor::instance = Cursor();
+    6de2: 8e 4d 7a     	stx	$7a4d
+    6de5: 8e 4e 7a     	stx	$7a4e
+    6de8: 8e 4f 7a     	stx	$7a4f
+    6deb: 8e 50 7a     	stx	$7a50
+    6dee: a2 fe        	ldx	#$fe
+    6df0: 86 f4        	stx	$f4
+    6df2: a2 78        	ldx	#$78
+    6df4: 86 f5        	stx	$f5
+    6df6: a2 2b        	ldx	#$2b
+    6df8: 86 f6        	stx	$f6
+    6dfa: a2 79        	ldx	#$79
+    6dfc: 86 f7        	stx	$f7
+    6dfe: a2 fd        	ldx	#$fd
+    6e00: 86 f8        	stx	$f8
+    6e02: a2 78        	ldx	#$78
+    6e04: 86 f9        	stx	$f9
+    6e06: a2 b6        	ldx	#$b6
+    6e08: 86 fa        	stx	$fa
+    6e0a: a2 79        	ldx	#$79
+    6e0c: 86 fb        	stx	$fb
+;       return *(volatile int8_t *)(0xC019);
+    6e0e: ae 19 c0     	ldx	$c019
+    6e11: 8a           	txa
+    6e12: 30 08        	bmi	$6e1c
+;          if (previousState < 0)
+    6e14: ac 00 79     	ldy	$7900
+    6e17: 10 06        	bpl	$6e1f
+;             ++counter;
+    6e19: ee 01 79     	inc	$7901
+    6e1c: 8e 00 79     	stx	$7900
+;    switch (state) {
+    6e1f: ae 02 79     	ldx	$7902
+    6e22: ac 03 79     	ldy	$7903
+    6e25: f0 03        	beq	$6e2a
+    6e27: 4c e9 6e     	jmp	$6ee9
+    6e2a: e0 02        	cpx	#$2
+    6e2c: f0 03        	beq	$6e31
+    6e2e: 4c e9 6e     	jmp	$6ee9
+;   switch (state) {
+    6e31: ac 26 79     	ldy	$7926
+    6e34: ae 27 79     	ldx	$7927
+    6e37: f0 03        	beq	$6e3c
+    6e39: 4c 2d 6f     	jmp	$6f2d
+    6e3c: c0 02        	cpy	#$2
+    6e3e: f0 03        	beq	$6e43
+    6e40: 4c 2d 6f     	jmp	$6f2d
+;     if (background1Saved) {
+    6e43: ae 2a 79     	ldx	$792a
+    6e46: f0 1e        	beq	$6e66
+;       drawing1.RestoreBackground(&background1, background1X, background1Y);
+    6e48: ad 28 79     	lda	$7928
+    6e4b: ae 29 79     	ldx	$7929
+    6e4e: a4 f4        	ldy	$f4
+    6e50: 84 e2        	sty	$e2
+    6e52: a4 f5        	ldy	$f5
+    6e54: 84 e3        	sty	$e3
+    6e56: a4 f6        	ldy	$f6
+    6e58: 84 e4        	sty	$e4
+    6e5a: a4 f7        	ldy	$f7
+    6e5c: 84 e5        	sty	$e5
+    6e5e: 20 08 6b     	jsr	$6b08
+    6e61: a2 00        	ldx	#$0
+;       background1Saved = false;
+    6e63: 8e 2a 79     	stx	$792a
+;     UpdatePosition();
+    6e66: 20 c2 61     	jsr	$61c2
+;     background1X = currentX;
+    6e69: ad 40 7a     	lda	$7a40
+    6e6c: 8d 28 79     	sta	$7928
+;     background1Y = currentY;
+    6e6f: ae 41 7a     	ldx	$7a41
+    6e72: 8e 29 79     	stx	$7929
+    6e75: a4 f4        	ldy	$f4
+    6e77: 84 e2        	sty	$e2
+    6e79: a4 f5        	ldy	$f5
+    6e7b: 84 e3        	sty	$e3
+    6e7d: a4 f6        	ldy	$f6
+    6e7f: 84 e4        	sty	$e4
+    6e81: a4 f7        	ldy	$f7
+    6e83: 84 e5        	sty	$e5
+;     drawing1.SaveCardBackground(currentX, currentY, &background1);
+    6e85: 20 9a 6a     	jsr	$6a9a
+    6e88: a2 01        	ldx	#$1
+;     background1Saved = true;
+    6e8a: 8e 2a 79     	stx	$792a
+;     drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
+    6e8d: ae 3e 7a     	ldx	$7a3e
+    6e90: 86 e5        	stx	$e5
+    6e92: ae 41 7a     	ldx	$7a41
+    6e95: 86 e4        	stx	$e4
+;          return lo[index];
+    6e97: a9 e7        	lda	#$e7
+    6e99: 18           	clc
+    6e9a: 65 e4        	adc	$e4
+    6e9c: 85 e2        	sta	$e2
+    6e9e: a9 76        	lda	#$76
+    6ea0: 69 00        	adc	#$0
+    6ea2: 85 e3        	sta	$e3
+;          return hi[index];
+    6ea4: a9 27        	lda	#$27
+    6ea6: 18           	clc
+    6ea7: 65 e4        	adc	$e4
+    6ea9: 85 e6        	sta	$e6
+    6eab: a9 76        	lda	#$76
+    6ead: 69 00        	adc	#$0
+    6eaf: 85 e7        	sta	$e7
+    6eb1: a0 00        	ldy	#$0
+;          return lo[index];
+    6eb3: b1 e2        	lda	($e2),y
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6eb5: 18           	clc
+    6eb6: 6d 40 7a     	adc	$7a40
+    6eb9: 85 e2        	sta	$e2
+;     drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
+    6ebb: ae 40 7a     	ldx	$7a40
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6ebe: 18           	clc
+;          return hi[index];
+    6ebf: b1 e6        	lda	($e6),y
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6ec1: 6d fe 78     	adc	$78fe
+    6ec4: 85 e3        	sta	$e3
+;     uint8_t *row = hgr.GetByteAddress(y++, x);
+    6ec6: e6 e4        	inc	$e4
+    6ec8: 98           	tya
+;     row[1] = 0;
+    6ec9: 91 e2        	sta	($e2),y
+    6ecb: c8           	iny
+    6ecc: 91 e2        	sta	($e2),y
+    6ece: c8           	iny
+    6ecf: 91 e2        	sta	($e2),y
+    6ed1: c8           	iny
+    6ed2: 91 e2        	sta	($e2),y
+    6ed4: a4 f4        	ldy	$f4
+    6ed6: 84 e2        	sty	$e2
+    6ed8: a4 f5        	ldy	$f5
+    6eda: 84 e3        	sty	$e3
+    6edc: a5 e5        	lda	$e5
+;   DrawCard(card, x, y);
+    6ede: 20 62 67     	jsr	$6762
+    6ee1: a0 01        	ldy	#$1
+;       asm volatile ("STA\t$C054" : );
+    6ee3: 8d 54 c0     	sta	$c054
+    6ee6: 4c 5f 70     	jmp	$705f
+    6ee9: 98           	tya
+    6eea: d0 29        	bne	$6f15
+;    switch (state) {
+    6eec: e0 01        	cpx	#$1
+    6eee: d0 25        	bne	$6f15
+;       static uint8_t GetCounter() { return counter; }
+    6ef0: ad 01 79     	lda	$7901
+;   uint8_t sinceLastToggle = a2::VBLCounter::GetCounter() - lastToggleTime;
+    6ef3: 38           	sec
+    6ef4: ed 4f 7a     	sbc	$7a4f
+;   switch (state) {
+    6ef7: ae 4d 7a     	ldx	$7a4d
+    6efa: ac 4e 7a     	ldy	$7a4e
+    6efd: f0 03        	beq	$6f02
+    6eff: 4c e8 6f     	jmp	$6fe8
+    6f02: e0 02        	cpx	#$2
+    6f04: f0 03        	beq	$6f09
+    6f06: 4c e8 6f     	jmp	$6fe8
+    6f09: a2 01        	ldx	#$1
+;     if (sinceLastToggle >= 15) {
+    6f0b: c9 0f        	cmp	#$f
+    6f0d: 90 03        	bcc	$6f12
+    6f0f: 4c f6 6f     	jmp	$6ff6
+    6f12: 4c 05 70     	jmp	$7005
+    6f15: 98           	tya
+    6f16: f0 03        	beq	$6f1b
+    6f18: 4c 0e 6e     	jmp	$6e0e
+    6f1b: 8a           	txa
+    6f1c: f0 03        	beq	$6f21
+    6f1e: 4c 0e 6e     	jmp	$6e0e
+;       asm volatile ("STA\t$C057" : );
+    6f21: 8d 57 c0     	sta	$c057
+;       asm volatile ("STA\t$C050" : );
+    6f24: 8d 50 c0     	sta	$c050
+    6f27: 20 7e 72     	jsr	$727e
+    6f2a: 4c 0e 6e     	jmp	$6e0e
+    6f2d: 8a           	txa
+    6f2e: f0 03        	beq	$6f33
+    6f30: 4c 69 70     	jmp	$7069
+;   switch (state) {
+    6f33: c0 01        	cpy	#$1
+    6f35: f0 03        	beq	$6f3a
+    6f37: 4c 69 70     	jmp	$7069
+;     if (timeLeft == 0) {
+    6f3a: ae 4c 7a     	ldx	$7a4c
+    6f3d: d0 03        	bne	$6f42
+    6f3f: 4c 54 70     	jmp	$7054
+;     if (background2Saved) {
+    6f42: ae b5 79     	ldx	$79b5
+    6f45: f0 1e        	beq	$6f65
+;       drawing2.RestoreBackground(&background2, background2X, background2Y);
+    6f47: ad b3 79     	lda	$79b3
+    6f4a: ae b4 79     	ldx	$79b4
+    6f4d: a4 f8        	ldy	$f8
+    6f4f: 84 e2        	sty	$e2
+    6f51: a4 f9        	ldy	$f9
+    6f53: 84 e3        	sty	$e3
+    6f55: a4 fa        	ldy	$fa
+    6f57: 84 e4        	sty	$e4
+    6f59: a4 fb        	ldy	$fb
+    6f5b: 84 e5        	sty	$e5
+    6f5d: 20 08 6b     	jsr	$6b08
+    6f60: a2 00        	ldx	#$0
+;       background2Saved = false;
+    6f62: 8e b5 79     	stx	$79b5
+;     UpdatePosition();
+    6f65: 20 c2 61     	jsr	$61c2
+;     background2X = currentX;
+    6f68: ad 40 7a     	lda	$7a40
+    6f6b: 8d b3 79     	sta	$79b3
+;     background2Y = currentY;
+    6f6e: ae 41 7a     	ldx	$7a41
+    6f71: 8e b4 79     	stx	$79b4
+    6f74: a4 f8        	ldy	$f8
+    6f76: 84 e2        	sty	$e2
+    6f78: a4 f9        	ldy	$f9
+    6f7a: 84 e3        	sty	$e3
+    6f7c: a4 fa        	ldy	$fa
+    6f7e: 84 e4        	sty	$e4
+    6f80: a4 fb        	ldy	$fb
+    6f82: 84 e5        	sty	$e5
+;     drawing2.SaveCardBackground(currentX, currentY, &background2);
+    6f84: 20 9a 6a     	jsr	$6a9a
+    6f87: a2 01        	ldx	#$1
+;     background2Saved = true;
+    6f89: 8e b5 79     	stx	$79b5
+;     drawing2.DrawCardWithShadow(cardToMove, currentX, currentY);
+    6f8c: ae 3e 7a     	ldx	$7a3e
+    6f8f: 86 e5        	stx	$e5
+    6f91: ae 41 7a     	ldx	$7a41
+    6f94: 86 e4        	stx	$e4
+;          return lo[index];
+    6f96: a9 e7        	lda	#$e7
+    6f98: 18           	clc
+    6f99: 65 e4        	adc	$e4
+    6f9b: 85 e2        	sta	$e2
+    6f9d: a9 76        	lda	#$76
+    6f9f: 69 00        	adc	#$0
+    6fa1: 85 e3        	sta	$e3
+;          return hi[index];
+    6fa3: a9 27        	lda	#$27
+    6fa5: 18           	clc
+    6fa6: 65 e4        	adc	$e4
+    6fa8: 85 e6        	sta	$e6
+    6faa: a9 76        	lda	#$76
+    6fac: 69 00        	adc	#$0
+;     drawing2.DrawCardWithShadow(cardToMove, currentX, currentY);
+    6fae: ae 40 7a     	ldx	$7a40
+    6fb1: 85 e7        	sta	$e7
+    6fb3: a0 00        	ldy	#$0
+;          return lo[index];
+    6fb5: b1 e2        	lda	($e2),y
+;                (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+    6fb7: 18           	clc
+    6fb8: 6d 40 7a     	adc	$7a40
+    6fbb: 85 e2        	sta	$e2
+;          return hi[index];
+    6fbd: b1 e6        	lda	($e6),y
+;                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+    6fbf: 18           	clc
+    6fc0: 6d fd 78     	adc	$78fd
+    6fc3: 85 e3        	sta	$e3
+;     uint8_t *row = hgr.GetByteAddress(y++, x);
+    6fc5: e6 e4        	inc	$e4
+    6fc7: 98           	tya
+;     row[1] = 0;
+    6fc8: 91 e2        	sta	($e2),y
+    6fca: c8           	iny
+    6fcb: 91 e2        	sta	($e2),y
+    6fcd: c8           	iny
+    6fce: 91 e2        	sta	($e2),y
+    6fd0: c8           	iny
+    6fd1: 91 e2        	sta	($e2),y
+    6fd3: a4 f8        	ldy	$f8
+    6fd5: 84 e2        	sty	$e2
+    6fd7: a4 f9        	ldy	$f9
+    6fd9: 84 e3        	sty	$e3
+    6fdb: a5 e5        	lda	$e5
+;   DrawCard(card, x, y);
+    6fdd: 20 62 67     	jsr	$6762
+    6fe0: a0 02        	ldy	#$2
+;       asm volatile ("STA\t$C055" : );
+    6fe2: 8d 55 c0     	sta	$c055
+    6fe5: 4c 5f 70     	jmp	$705f
+    6fe8: c0 00        	cpy	#$0
+    6fea: d0 19        	bne	$7005
+;   switch (state) {
+    6fec: e0 01        	cpx	#$1
+    6fee: d0 15        	bne	$7005
+    6ff0: a2 02        	ldx	#$2
+;     if (sinceLastToggle >= 30) {
+    6ff2: c9 1e        	cmp	#$1e
+    6ff4: 90 0f        	bcc	$7005
+    6ff6: 86 fc        	stx	$fc
+    6ff8: 20 20 64     	jsr	$6420
+    6ffb: a6 fc        	ldx	$fc
+    6ffd: 8e 4d 7a     	stx	$7a4d
+    7000: a2 00        	ldx	#$0
+    7002: 8e 4e 7a     	stx	$7a4e
+;       int8_t b = *(volatile int8_t *)KBD;
+    7005: ad 00 c0     	lda	$c000
+    7008: aa           	tax
+    7009: 30 03        	bmi	$700e
+    700b: 4c 0e 6e     	jmp	$6e0e
+;          asm volatile ("BIT\t$C010" : );
+    700e: 2c 10 c0     	bit	$c010
+;          return (KeyCode)(0x7F & b);
+    7011: 29 7f        	and	#$7f
+    7013: aa           	tax
+    7014: d0 03        	bne	$7019
+    7016: 4c 0e 6e     	jmp	$6e0e
+;   switch (key) {
+    7019: c9 08        	cmp	#$8
+    701b: d0 03        	bne	$7020
+    701d: 4c 0e 6e     	jmp	$6e0e
+    7020: c9 0a        	cmp	#$a
+    7022: d0 03        	bne	$7027
+    7024: 4c 0e 6e     	jmp	$6e0e
+    7027: c9 0b        	cmp	#$b
+    7029: f0 59        	beq	$7084
+    702b: c9 15        	cmp	#$15
+    702d: d0 03        	bne	$7032
+    702f: 4c 0e 6e     	jmp	$6e0e
+    7032: c9 43        	cmp	#$43
+    7034: d0 03        	bne	$7039
+    7036: 4c e7 70     	jmp	$70e7
+    7039: c9 54        	cmp	#$54
+    703b: d0 03        	bne	$7040
+    703d: 4c 83 71     	jmp	$7183
+    7040: c9 52        	cmp	#$52
+    7042: d0 03        	bne	$7047
+    7044: 4c a3 71     	jmp	$71a3
+    7047: c9 4e        	cmp	#$4e
+    7049: d0 03        	bne	$704e
+    704b: 4c 27 6f     	jmp	$6f27
+;       asm volatile ("JSR\t$FDDA" : "+a"(b));
+    704e: 20 da fd     	jsr	$fdda
+    7051: 4c 0e 6e     	jmp	$6e0e
+;       Game::instance.SetCard(endLocation, cardToMove);
+    7054: ad 3f 7a     	lda	$7a3f
+    7057: ae 3e 7a     	ldx	$7a3e
+    705a: 20 16 6d     	jsr	$6d16
+    705d: a0 00        	ldy	#$0
+    705f: 8c 26 79     	sty	$7926
+    7062: a2 00        	ldx	#$0
+    7064: 8e 27 79     	stx	$7927
+    7067: a2 00        	ldx	#$0
+    7069: 8a           	txa
+    706a: f0 03        	beq	$706f
+    706c: 4c 0e 6e     	jmp	$6e0e
+    706f: 98           	tya
+    7070: f0 03        	beq	$7075
+    7072: 4c 0e 6e     	jmp	$6e0e
+    7075: a2 01        	ldx	#$1
+;   state = State::Idle;
+    7077: 8e 02 79     	stx	$7902
+    707a: ca           	dex
+    707b: 8e 03 79     	stx	$7903
+;   Cursor::instance.Show();
+    707e: 20 c8 65     	jsr	$65c8
+    7081: 4c 0e 6e     	jmp	$6e0e
+;   CardLocation result = *this;
+    7084: ae 50 7a     	ldx	$7a50
+    7087: 86 e4        	stx	$e4
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    7089: e0 05        	cpx	#$5
+    708b: b0 03        	bcs	$7090
+    708d: 4c c5 71     	jmp	$71c5
+    7090: a6 e4        	ldx	$e4
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    7092: e0 fc        	cpx	#$fc
+    7094: 90 03        	bcc	$7099
+    7096: 4c c5 71     	jmp	$71c5
+    7099: a6 e4        	ldx	$e4
+    709b: 86 e2        	stx	$e2
+;   return (locationNumber>>4) - 1;
+    709d: 46 e2        	lsr	$e2
+    709f: 46 e2        	lsr	$e2
+    70a1: 46 e2        	lsr	$e2
+    70a3: 46 e2        	lsr	$e2
+    70a5: a5 e2        	lda	$e2
+;     switch (column)
+    70a7: 38           	sec
+    70a8: e9 04        	sbc	#$4
+    70aa: a4 e4        	ldy	$e4
+    70ac: c9 04        	cmp	#$4
+    70ae: a2 01        	ldx	#$1
+    70b0: b0 02        	bcs	$70b4
+    70b2: a2 00        	ldx	#$0
+    70b4: 86 e3        	stx	$e3
+    70b6: a6 e2        	ldx	$e2
+;   return (locationNumber>>4) - 1;
+    70b8: ca           	dex
+    70b9: a5 e4        	lda	$e4
+;   return locationNumber & 0x0F;
+    70bb: 29 0f        	and	#$f
+    70bd: a4 e3        	ldy	$e3
+    70bf: d0 03        	bne	$70c4
+    70c1: 4c b2 71     	jmp	$71b2
+    70c4: 85 e3        	sta	$e3
+    70c6: a5 e2        	lda	$e2
+;     switch (column)
+    70c8: 38           	sec
+    70c9: e9 08        	sbc	#$8
+    70cb: c9 03        	cmp	#$3
+    70cd: 90 0c        	bcc	$70db
+    70cf: a5 e2        	lda	$e2
+;     switch (column)
+    70d1: 38           	sec
+    70d2: e9 01        	sbc	#$1
+    70d4: c9 03        	cmp	#$3
+    70d6: 90 03        	bcc	$70db
+    70d8: 4c c5 71     	jmp	$71c5
+    70db: a5 e3        	lda	$e3
+    70dd: d0 03        	bne	$70e2
+    70df: 4c c5 71     	jmp	$71c5
+    70e2: a4 e3        	ldy	$e3
+    70e4: 4c b6 71     	jmp	$71b6
+;   CardLocation GetLocation() const { return location; }
+    70e7: ad 50 7a     	lda	$7a50
+    70ea: aa           	tax
+    70eb: d0 03        	bne	$70f0
+    70ed: 4c 0e 6e     	jmp	$6e0e
+;   Card card = Game::instance.GetCard(location);
+    70f0: 20 10 6c     	jsr	$6c10
+    70f3: 85 fc        	sta	$fc
+;   result.rank = (Rank)card.parts.rank;
+    70f5: 29 0f        	and	#$f
+    70f7: aa           	tax
+    70f8: d0 03        	bne	$70fd
+    70fa: 4c 0e 6e     	jmp	$6e0e
+    70fd: a6 fc        	ldx	$fc
+    70ff: a8           	tay
+    7100: a5 fc        	lda	$fc
+;   result.suit = (Suit)card.parts.suit;
+    7102: 29 30        	and	#$30
+    7104: 85 e2        	sta	$e2
+;   if (r<Rank::Ace || r>Rank::King)
+    7106: c0 0d        	cpy	#$d
+    7108: a2 01        	ldx	#$1
+    710a: b0 02        	bcs	$710e
+    710c: a2 00        	ldx	#$0
+    710e: 86 e3        	stx	$e3
+    7110: a5 fc        	lda	$fc
+;   r = (Rank)((uint8_t)r + i);
+    7112: 18           	clc
+    7113: 69 01        	adc	#$1
+    7115: a2 00        	ldx	#$0
+    7117: a4 e3        	ldy	$e3
+    7119: d0 03        	bne	$711e
+    711b: 29 0f        	and	#$f
+    711d: aa           	tax
+    711e: 8a           	txa
+;   card.parts.suit = (uint8_t)_card.suit;
+    711f: 05 e2        	ora	$e2
+;   CardLocation locationAboveTarget = Game::instance.GetCardLocation(card + 1);
+    7121: 20 58 6c     	jsr	$6c58
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    7124: c9 05        	cmp	#$5
+    7126: b0 03        	bcs	$712b
+    7128: 4c 0e 6e     	jmp	$6e0e
+    712b: 85 fd        	sta	$fd
+    712d: aa           	tax
+;   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+    712e: c9 fc        	cmp	#$fc
+    7130: 90 03        	bcc	$7135
+    7132: 4c 0e 6e     	jmp	$6e0e
+    7135: a5 fd        	lda	$fd
+;   return (locationNumber>>4) - 1;
+    7137: 4a           	lsr
+    7138: 4a           	lsr
+    7139: 4a           	lsr
+    713a: 4a           	lsr
+    713b: 18           	clc
+    713c: 69 ff        	adc	#$ff
+;   if (columnIndex >= 10)
+    713e: c9 0a        	cmp	#$a
+    7140: 90 03        	bcc	$7145
+    7142: 4c 0e 6e     	jmp	$6e0e
+    7145: a2 06        	ldx	#$6
+    7147: 86 e2        	stx	$e2
+    7149: a2 00        	ldx	#$0
+    714b: 86 e3        	stx	$e3
+;   uint8_t GetCount() const { return count; }
+    714d: 20 67 74     	jsr	$7467
+    7150: 85 e2        	sta	$e2
+    7152: 86 e3        	stx	$e3
+;   uint8_t GetCount() const { return count; }
+    7154: a9 8d        	lda	#$8d
+    7156: 18           	clc
+    7157: 65 e2        	adc	$e2
+    7159: 85 e2        	sta	$e2
+    715b: a9 7a        	lda	#$7a
+    715d: 65 e3        	adc	$e3
+    715f: 85 e3        	sta	$e3
+    7161: a0 05        	ldy	#$5
+    7163: b1 e2        	lda	($e2),y
+    7165: 85 e2        	sta	$e2
+    7167: a5 fd        	lda	$fd
+;   return locationNumber & 0x0F;
+    7169: 29 0f        	and	#$f
+;     return columns[columnIndex].GetCount() == location.GetRow() + 1;
+    716b: 18           	clc
+    716c: 69 01        	adc	#$1
+;   if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
+    716e: c5 e2        	cmp	$e2
+    7170: f0 03        	beq	$7175
+    7172: 4c 0e 6e     	jmp	$6e0e
+    7175: a5 fd        	lda	$fd
+;   return CardLocation(((column + 1) << 4) | row);
+    7177: 29 f0        	and	#$f0
+    7179: 05 e2        	ora	$e2
+    717b: aa           	tax
+    717c: a5 fc        	lda	$fc
+;   card.parts.suit = (uint8_t)_card.suit;
+    717e: 29 3f        	and	#$3f
+    7180: 4c 93 71     	jmp	$7193
+;   CardLocation GetLocation() const { return location; }
+    7183: ad 50 7a     	lda	$7a50
+    7186: aa           	tax
+    7187: d0 03        	bne	$718c
+    7189: 4c 0e 6e     	jmp	$6e0e
+;   Card card = Game::instance.GetCard(location);
+    718c: 20 10 6c     	jsr	$6c10
+;   card.parts.suit = (uint8_t)_card.suit;
+    718f: 29 3f        	and	#$3f
+;   CardAnimator::instance.StartAnimation(
+    7191: a2 ff        	ldx	#$ff
+    7193: 20 2c 60     	jsr	$602c
+    7196: a2 02        	ldx	#$2
+    7198: 8e 02 79     	stx	$7902
+    719b: a2 00        	ldx	#$0
+    719d: 8e 03 79     	stx	$7903
+    71a0: 4c 0e 6e     	jmp	$6e0e
+;     drawing1.DrawBackground();
+    71a3: 20 16 66     	jsr	$6616
+;     drawing1.DrawGame();
+    71a6: 20 72 68     	jsr	$6872
+;       asm volatile ("STA\t$C054" : );
+    71a9: 8d 54 c0     	sta	$c054
+;     Cursor::instance.Show();
+    71ac: 20 c8 65     	jsr	$65c8
+    71af: 4c 0e 6e     	jmp	$6e0e
+    71b2: a8           	tay
+    71b3: f0 18        	beq	$71cd
+    71b5: a8           	tay
+    71b6: 88           	dey
+    71b7: 84 e2        	sty	$e2
+    71b9: 8a           	txa
+    71ba: 0a           	asl
+    71bb: 0a           	asl
+    71bc: 0a           	asl
+    71bd: 0a           	asl
+    71be: 18           	clc
+    71bf: 69 10        	adc	#$10
+    71c1: 05 e2        	ora	$e2
+    71c3: 85 e4        	sta	$e4
+    71c5: a5 e4        	lda	$e4
+;   SetLocation(location.Up());
+    71c7: 20 f0 63     	jsr	$63f0
+    71ca: 4c 0e 6e     	jmp	$6e0e
+;      return CardLocation(index ^ 0xFF); }
+    71cd: a9 03        	lda	#$3
+    71cf: 38           	sec
+    71d0: e5 e2        	sbc	$e2
+    71d2: 4c c3 71     	jmp	$71c3
+
+000071d5 <_Z13DisplayNumbert>:
+; {
+    71d5: 48           	pha
+    71d6: 8a           	txa
+    71d7: a8           	tay
+    71d8: 68           	pla
+    71d9: e0 00        	cpx	#$0
+    71db: d0 09        	bne	$71e6
+    71dd: aa           	tax
+;    while (number > 10)
+    71de: c9 0b        	cmp	#$b
+    71e0: b0 09        	bcs	$71eb
+    71e2: 8a           	txa
+    71e3: 4c 32 72     	jmp	$7232
+    71e6: aa           	tax
+    71e7: c0 00        	cpy	#$0
+    71e9: 90 f7        	bcc	$71e2
+    71eb: a5 f4        	lda	$f4
+    71ed: 48           	pha
+    71ee: a5 f5        	lda	$f5
+    71f0: 48           	pha
+    71f1: 18           	clc
+    71f2: 86 f5        	stx	$f5
+    71f4: 8a           	txa
+;    while (number > 10)
+    71f5: 69 f5        	adc	#$f5
+    71f7: 85 e4        	sta	$e4
+    71f9: 98           	tya
+    71fa: 69 ff        	adc	#$ff
+    71fc: a2 0a        	ldx	#$a
+    71fe: a0 00        	ldy	#$0
+    7200: 86 e2        	stx	$e2
+    7202: 84 e3        	sty	$e3
+    7204: aa           	tax
+    7205: a5 e4        	lda	$e4
+    7207: 20 af 74     	jsr	$74af
+    720a: 85 f4        	sta	$f4
+;    while (number > 10)
+    720c: a2 f6        	ldx	#$f6
+    720e: 20 41 74     	jsr	$7441
+    7211: 85 e2        	sta	$e2
+;    while (number > 10)
+    7213: 18           	clc
+    7214: a5 f5        	lda	$f5
+    7216: 69 f6        	adc	#$f6
+    7218: 18           	clc
+    7219: 65 e2        	adc	$e2
+    721b: 85 f5        	sta	$f5
+    721d: e6 f4        	inc	$f4
+;       DisplayNumber(dividend);
+    721f: a2 00        	ldx	#$0
+    7221: a5 f4        	lda	$f4
+    7223: 20 d5 71     	jsr	$71d5
+    7226: a5 f5        	lda	$f5
+    7228: 85 f0        	sta	$f0
+    722a: 68           	pla
+    722b: 85 f5        	sta	$f5
+    722d: 68           	pla
+    722e: 85 f4        	sta	$f4
+    7230: a5 f0        	lda	$f0
+;    a2::COUT('0' + number);
+    7232: 18           	clc
+    7233: 69 30        	adc	#$30
+;       asm volatile ("JSR\t$FDED" : "+a"(c));
+    7235: 20 ed fd     	jsr	$fded
+; }
+    7238: 60           	rts
+
+00007239 <_Z12SeahavenFailPKct>:
+; {
+    7239: 85 e2        	sta	$e2
+    723b: 86 e3        	stx	$e3
+    723d: a2 01        	ldx	#$1
+;       asm volatile ("STA\t$C053" : );
+    723f: 8d 53 c0     	sta	$c053
+;       asm volatile ("JSR\t$FC62" :::"a", "y" );
+    7242: 20 62 fc     	jsr	$fc62
+    7245: a9 41        	lda	#$41
+;       asm volatile ("JSR\t$FDED" : "+a"(c));
+    7247: 20 ed fd     	jsr	$fded
+;       while (*s)
+    724a: bd b9 75     	lda	$75b9,x
+    724d: e8           	inx
+    724e: e0 0e        	cpx	#$e
+    7250: d0 f5        	bne	$7247
+    7252: a6 e3        	ldx	$e3
+    7254: a5 e2        	lda	$e2
+;    DisplayNumber(lineNumber);
+    7256: 20 d5 71     	jsr	$71d5
+    7259: a2 01        	ldx	#$1
+;       asm volatile ("JSR\t$FDED" : "+a"(c));
+    725b: a9 2c        	lda	#$2c
+    725d: 20 ed fd     	jsr	$fded
+    7260: a9 43        	lda	#$43
+;       if (c>='a' && c<='z')
+    7262: c9 61        	cmp	#$61
+    7264: 90 06        	bcc	$726c
+    7266: c9 7b        	cmp	#$7b
+    7268: b0 02        	bcs	$726c
+;          c &= ~0x20;
+    726a: 29 df        	and	#$df
+;       asm volatile ("JSR\t$FDED" : "+a"(c));
+    726c: 20 ed fd     	jsr	$fded
+;    while (*filename)
+    726f: bd e3 75     	lda	$75e3,x
+    7272: e8           	inx
+    7273: e0 30        	cpx	#$30
+    7275: d0 eb        	bne	$7262
+;       asm volatile ("JSR\t$FC9C" :::"a", "y" );
+    7277: 20 9c fc     	jsr	$fc9c
+;       asm volatile ("JMP\t$FF69" :::);
+    727a: 4c 69 ff     	jmp	$ff69
+    727d: 00           	brk
+
+0000727e <_ZN12StateMachine7NewGameEv>:
+; void StateMachine::NewGame() {
+    727e: a5 f4        	lda	$f4
+    7280: 48           	pha
+    7281: a5 f5        	lda	$f5
+    7283: 48           	pha
+    7284: a5 f6        	lda	$f6
+    7286: 48           	pha
+    7287: a5 f7        	lda	$f7
+    7289: 48           	pha
+    728a: a6 f8        	ldx	$f8
+    728c: 8e 0e 7b     	stx	$7b0e
+    728f: a6 f9        	ldx	$f9
+    7291: 8e 0f 7b     	stx	$7b0f
+    7294: a6 fa        	ldx	$fa
+    7296: 8e 10 7b     	stx	$7b10
+;   uint16_t GetNextGameSeed() { return ++gameSeed; }
+    7299: ae ca 7a     	ldx	$7aca
+    729c: ac cb 7a     	ldy	$7acb
+    729f: e8           	inx
+    72a0: d0 01        	bne	$72a3
+    72a2: c8           	iny
+    72a3: 8a           	txa
+    72a4: 48           	pha
+    72a5: 98           	tya
+    72a6: aa           	tax
+    72a7: 68           	pla
+    72a8: 85 f4        	sta	$f4
+;   uint16_t GetNextGameSeed() { return ++gameSeed; }
+    72aa: 8d ca 7a     	sta	$7aca
+    72ad: 8c cb 7a     	sty	$7acb
+    72b0: a9 00        	lda	#$0
+    72b2: a8           	tay
+    72b3: 85 e3        	sta	$e3
+;   result.card.parts.suit = cardNumber & 3;
+    72b5: 29 30        	and	#$30
+    72b7: 85 e2        	sta	$e2
+    72b9: 98           	tya
+;   result.card.parts.rank = 1 + (cardNumber >> 2);
+    72ba: 4a           	lsr
+    72bb: 4a           	lsr
+    72bc: 18           	clc
+    72bd: 69 01        	adc	#$1
+    72bf: 29 0f        	and	#$f
+    72c1: 05 e2        	ora	$e2
+;     deck[i] = CompactCard::FromOrdinal(i);
+    72c3: 99 51 7a     	sta	$7a51,y
+;   for (uint8_t i=0; i < 52; ++i)
+    72c6: c8           	iny
+    72c7: 18           	clc
+    72c8: a5 e3        	lda	$e3
+    72ca: 69 10        	adc	#$10
+    72cc: c0 34        	cpy	#$34
+    72ce: d0 e3        	bne	$72b3
+    72d0: a0 51        	ldy	#$51
+    72d2: 84 f6        	sty	$f6
+    72d4: a0 7a        	ldy	#$7a
+    72d6: 84 f7        	sty	$f7
+    72d8: 8a           	txa
+;   Shuffle8(instruction >> 8);
+    72d9: 20 6e 6b     	jsr	$6b6e
+    72dc: a5 f4        	lda	$f4
+;   Shuffle8((uint8_t)instruction);
+    72de: 20 6e 6b     	jsr	$6b6e
+    72e1: a2 00        	ldx	#$0
+    72e3: 86 f8        	stx	$f8
+    72e5: a2 00        	ldx	#$0
+    72e7: 86 f9        	stx	$f9
+    72e9: a6 f8        	ldx	$f8
+    72eb: 86 e2        	stx	$e2
+;     columns[column].Clear();
+    72ed: a9 8d        	lda	#$8d
+    72ef: 18           	clc
+    72f0: 65 e2        	adc	$e2
+    72f2: 85 f4        	sta	$f4
+    72f4: a9 7a        	lda	#$7a
+    72f6: 69 00        	adc	#$0
+    72f8: 85 f5        	sta	$f5
+    72fa: a9 00        	lda	#$0
+;   void Clear() { count = 0; }
+    72fc: 9d 92 7a     	sta	$7a92,x
+    72ff: a8           	tay
+;       columns[column].Append(deck[cardIndex++]);
+    7300: b1 f6        	lda	($f6),y
+    7302: 85 e4        	sta	$e4
+    7304: a6 f8        	ldx	$f8
+;   void Append(CompactCard card) { SetCard(count, card); }
+    7306: bd 92 7a     	lda	$7a92,x
+    7309: a6 f4        	ldx	$f4
+    730b: 86 e2        	stx	$e2
+    730d: a6 f5        	ldx	$f5
+    730f: 86 e3        	stx	$e3
+    7311: a6 e4        	ldx	$e4
+    7313: 84 fa        	sty	$fa
+    7315: 20 1c 63     	jsr	$631c
+    7318: a4 fa        	ldy	$fa
+;     for (uint8_t row=0; row < 5; ++row) {
+    731a: c8           	iny
+    731b: c0 05        	cpy	#$5
+    731d: d0 e1        	bne	$7300
+    731f: a5 f6        	lda	$f6
+;   for (uint8_t column=0; column < 10; ++column) {
+    7321: 18           	clc
+    7322: 69 05        	adc	#$5
+    7324: 85 f6        	sta	$f6
+    7326: a5 f7        	lda	$f7
+    7328: 69 00        	adc	#$0
+    732a: 85 f7        	sta	$f7
+    732c: a6 f9        	ldx	$f9
+    732e: e8           	inx
+    732f: 18           	clc
+    7330: a5 f8        	lda	$f8
+    7332: 69 06        	adc	#$6
+    7334: 85 f8        	sta	$f8
+    7336: e0 0a        	cpx	#$a
+    7338: f0 03        	beq	$733d
+    733a: 4c e7 72     	jmp	$72e7
+    733d: a0 00        	ldy	#$0
+;   towers[0] = Card();
+    733f: 8c 89 7a     	sty	$7a89
+;   towers[1] = deck[cardIndex++];
+    7342: ae 83 7a     	ldx	$7a83
+    7345: 8e 8a 7a     	stx	$7a8a
+;   towers[2] = deck[cardIndex++];
+    7348: ae 84 7a     	ldx	$7a84
+    734b: 8e 8b 7a     	stx	$7a8b
+;   towers[3] = Card();
+    734e: 8c 8c 7a     	sty	$7a8c
+;   acePiles[0] = Card();
+    7351: 8c 85 7a     	sty	$7a85
+    7354: 8c 86 7a     	sty	$7a86
+    7357: 8c 87 7a     	sty	$7a87
+    735a: 8c 88 7a     	sty	$7a88
+;   drawing1.DrawBackground();
+    735d: 20 16 66     	jsr	$6616
+;   drawing1.DrawGame();
+    7360: 20 72 68     	jsr	$6872
+;       asm volatile ("STA\t$C054" : );
+    7363: 8d 54 c0     	sta	$c054
+;   void CopyTo(Drawing *target) { hgr.CopyTo(target->hgr); }
+    7366: ae fd 78     	ldx	$78fd
+    7369: a0 00        	ldy	#$0
+    736b: 84 e2        	sty	$e2
+    736d: 86 e3        	stx	$e3
+;       uint8_t *src = (uint8_t *)(pageOffset << 8);
+    736f: ae fe 78     	ldx	$78fe
+    7372: 84 e6        	sty	$e6
+    7374: 86 e7        	stx	$e7
+    7376: a2 f0        	ldx	#$f0
+    7378: 86 e4        	stx	$e4
+    737a: a2 20        	ldx	#$20
+    737c: a5 e2        	lda	$e2
+;          dest += 256;
+    737e: 18           	clc
+    737f: 69 00        	adc	#$0
+    7381: 85 e5        	sta	$e5
+    7383: a4 e3        	ldy	$e3
+    7385: 84 e8        	sty	$e8
+;       asm volatile (
+    7387: a4 e4        	ldy	$e4
+    7389: f0 0d        	beq	$7398
+    738b: d0 04        	bne	$7391
+    738d: b1 e6        	lda	($e6),y
+    738f: 91 e2        	sta	($e2),y
+    7391: 88           	dey
+    7392: d0 f9        	bne	$738d
+    7394: b1 e6        	lda	($e6),y
+    7396: 91 e2        	sta	($e2),y
+    7398: a4 e5        	ldy	$e5
+    739a: 84 e2        	sty	$e2
+    739c: a5 e3        	lda	$e3
+;          dest += 256;
+    739e: 69 01        	adc	#$1
+    73a0: 85 e3        	sta	$e3
+    73a2: a5 e6        	lda	$e6
+;          src += 256;
+    73a4: 18           	clc
+    73a5: 69 00        	adc	#$0
+    73a7: 85 e6        	sta	$e6
+    73a9: a5 e7        	lda	$e7
+;          src += 256;
+    73ab: 69 01        	adc	#$1
+    73ad: 85 e7        	sta	$e7
+;       for (uint8_t i=0; i<32; ++i)
+    73af: ca           	dex
+    73b0: d0 ca        	bne	$737c
+    73b2: a2 00        	ldx	#$0
+;   state = State::Idle;
+    73b4: 8e 26 79     	stx	$7926
+    73b7: 8e 27 79     	stx	$7927
+;     result = GetClosestColumnCardTo(start);
+    73ba: a9 5f        	lda	#$5f
+    73bc: 20 7a 64     	jsr	$647a
+    73bf: aa           	tax
+    73c0: d0 05        	bne	$73c7
+;       result = GetClosestTowerCardTo(start);
+    73c2: a9 5f        	lda	#$5f
+    73c4: 20 fe 64     	jsr	$64fe
+;   SetLocation(GetClosestCardTo(location));
+    73c7: 20 f0 63     	jsr	$63f0
+    73ca: a2 01        	ldx	#$1
+    73cc: 86 e2        	stx	$e2
+    73ce: a6 e2        	ldx	$e2
+;     if (towers[i].GetRank() == Rank::Ace)
+    73d0: ca           	dex
+;   Rank GetRank() const { return (Rank)card.parts.rank; }
+    73d1: a9 0f        	lda	#$f
+    73d3: 3d 89 7a     	and	$7a89,x
+;     if (towers[i].GetRank() == Rank::Ace)
+    73d6: c9 01        	cmp	#$1
+    73d8: f0 18        	beq	$73f2
+    73da: a6 e2        	ldx	$e2
+;   for (int i=0; i < 4; ++i) {
+    73dc: e8           	inx
+    73dd: 86 e2        	stx	$e2
+;   for (int i=0; i < 4; ++i) {
+    73df: e0 05        	cpx	#$5
+    73e1: d0 eb        	bne	$73ce
+    73e3: a2 01        	ldx	#$1
+;   state = State::Idle;
+    73e5: 8e 02 79     	stx	$7902
+    73e8: ca           	dex
+    73e9: 8e 03 79     	stx	$7903
+;   Cursor::instance.Show();
+    73ec: 20 c8 65     	jsr	$65c8
+    73ef: 4c 25 74     	jmp	$7425
+;   Card card = Game::instance.GetCard(startLocation);
+    73f2: 38           	sec
+    73f3: a9 00        	lda	#$0
+    73f5: e5 e2        	sbc	$e2
+    73f7: 20 10 6c     	jsr	$6c10
+    73fa: 85 e2        	sta	$e2
+;   result.rank = (Rank)card.parts.rank;
+    73fc: 29 0f        	and	#$f
+    73fe: 85 e3        	sta	$e3
+    7400: a5 e2        	lda	$e2
+;   result.suit = (Suit)card.parts.suit;
+    7402: 4a           	lsr
+    7403: 4a           	lsr
+    7404: 4a           	lsr
+    7405: 4a           	lsr
+    7406: 29 03        	and	#$3
+    7408: 85 e2        	sta	$e2
+    740a: aa           	tax
+;   card.parts.suit = (uint8_t)_card.suit;
+    740b: 06 e2        	asl	$e2
+    740d: 06 e2        	asl	$e2
+    740f: 06 e2        	asl	$e2
+    7411: 06 e2        	asl	$e2
+    7413: a5 e3        	lda	$e3
+    7415: 05 e2        	ora	$e2
+;     return CardLocation(1 + (uint8_t)suit); }
+    7417: e8           	inx
+;   CardAnimator::instance.StartAnimation(
+    7418: 20 2c 60     	jsr	$602c
+    741b: a2 02        	ldx	#$2
+;   state = State::MoveToAces;
+    741d: 8e 02 79     	stx	$7902
+    7420: a2 00        	ldx	#$0
+    7422: 8e 03 79     	stx	$7903
+    7425: ae 10 7b     	ldx	$7b10
+    7428: 86 fa        	stx	$fa
+    742a: ae 0f 7b     	ldx	$7b0f
+    742d: 86 f9        	stx	$f9
+    742f: ae 0e 7b     	ldx	$7b0e
+    7432: 86 f8        	stx	$f8
+    7434: 68           	pla
+    7435: 85 f7        	sta	$f7
+    7437: 68           	pla
+    7438: 85 f6        	sta	$f6
+    743a: 68           	pla
+    743b: 85 f5        	sta	$f5
+    743d: 68           	pla
+    743e: 85 f4        	sta	$f4
+; }
+    7440: 60           	rts
+
+00007441 <__mulqi3>:
+    7441: e0 00        	cpx	#$0
+    7443: f0 1f        	beq	$7464
+    7445: 85 e4        	sta	$e4
+    7447: 86 e2        	stx	$e2
+    7449: a2 00        	ldx	#$0
+    744b: 8a           	txa
+    744c: a8           	tay
+    744d: a5 e2        	lda	$e2
+    744f: 29 01        	and	#$1
+    7451: 86 e3        	stx	$e3
+    7453: f0 04        	beq	$7459
+    7455: a5 e4        	lda	$e4
+    7457: 85 e3        	sta	$e3
+    7459: 98           	tya
+    745a: 18           	clc
+    745b: 65 e3        	adc	$e3
+    745d: 06 e4        	asl	$e4
+    745f: 46 e2        	lsr	$e2
+    7461: d0 e9        	bne	$744c
+    7463: 60           	rts
+    7464: a9 00        	lda	#$0
+    7466: 60           	rts
+
+00007467 <__mulhi3>:
+    7467: a4 e3        	ldy	$e3
+    7469: d0 04        	bne	$746f
+    746b: a4 e2        	ldy	$e2
+    746d: f0 3c        	beq	$74ab
+    746f: 85 e7        	sta	$e7
+    7471: 86 e4        	stx	$e4
+    7473: a9 00        	lda	#$0
+    7475: aa           	tax
+    7476: 85 e8        	sta	$e8
+    7478: a5 e2        	lda	$e2
+    747a: 29 01        	and	#$1
+    747c: a0 00        	ldy	#$0
+    747e: 84 e5        	sty	$e5
+    7480: 84 e6        	sty	$e6
+    7482: d0 03        	bne	$7487
+    7484: a8           	tay
+    7485: f0 08        	beq	$748f
+    7487: a4 e7        	ldy	$e7
+    7489: 84 e5        	sty	$e5
+    748b: a4 e4        	ldy	$e4
+    748d: 84 e6        	sty	$e6
+    748f: a5 e8        	lda	$e8
+    7491: 18           	clc
+    7492: 65 e5        	adc	$e5
+    7494: a8           	tay
+    7495: 8a           	txa
+    7496: 65 e6        	adc	$e6
+    7498: aa           	tax
+    7499: 98           	tya
+    749a: 06 e7        	asl	$e7
+    749c: 26 e4        	rol	$e4
+    749e: 46 e3        	lsr	$e3
+    74a0: 66 e2        	ror	$e2
+    74a2: a4 e3        	ldy	$e3
+    74a4: d0 d0        	bne	$7476
+    74a6: a4 e2        	ldy	$e2
+    74a8: d0 cc        	bne	$7476
+    74aa: 60           	rts
+    74ab: a9 00        	lda	#$0
+    74ad: aa           	tax
+    74ae: 60           	rts
+
+000074af <__udivhi3>:
+    74af: a4 e3        	ldy	$e3
+    74b1: d0 07        	bne	$74ba
+    74b3: a4 e2        	ldy	$e2
+    74b5: d0 03        	bne	$74ba
+    74b7: 4c b0 75     	jmp	$75b0
+    74ba: 85 e6        	sta	$e6
+    74bc: 8a           	txa
+    74bd: a8           	tay
+    74be: e4 e3        	cpx	$e3
+    74c0: d0 0d        	bne	$74cf
+    74c2: a2 00        	ldx	#$0
+    74c4: 86 e7        	stx	$e7
+    74c6: a6 e6        	ldx	$e6
+    74c8: e4 e2        	cpx	$e2
+    74ca: b0 0e        	bcs	$74da
+    74cc: 4c b4 75     	jmp	$75b4
+    74cf: a2 00        	ldx	#$0
+    74d1: 86 e7        	stx	$e7
+    74d3: c4 e3        	cpy	$e3
+    74d5: b0 03        	bcs	$74da
+    74d7: 4c b4 75     	jmp	$75b4
+    74da: a9 01        	lda	#$1
+    74dc: a6 e3        	ldx	$e3
+    74de: 10 03        	bpl	$74e3
+    74e0: 4c b6 75     	jmp	$75b6
+    74e3: a2 00        	ldx	#$0
+    74e5: 84 f1        	sty	$f1
+    74e7: a4 e2        	ldy	$e2
+    74e9: 84 e4        	sty	$e4
+    74eb: a4 e3        	ldy	$e3
+    74ed: 84 e5        	sty	$e5
+    74ef: a4 f1        	ldy	$f1
+    74f1: 06 e4        	asl	$e4
+    74f3: 26 e5        	rol	$e5
+    74f5: c4 e5        	cpy	$e5
+    74f7: d0 0d        	bne	$7506
+    74f9: 84 e8        	sty	$e8
+    74fb: a4 e6        	ldy	$e6
+    74fd: c4 e4        	cpy	$e4
+    74ff: a4 e8        	ldy	$e8
+    7501: b0 07        	bcs	$750a
+    7503: 4c 20 75     	jmp	$7520
+    7506: c4 e5        	cpy	$e5
+    7508: 90 16        	bcc	$7520
+    750a: e8           	inx
+    750b: 84 f1        	sty	$f1
+    750d: a4 e4        	ldy	$e4
+    750f: 84 e2        	sty	$e2
+    7511: a4 e5        	ldy	$e5
+    7513: 84 e3        	sty	$e3
+    7515: a4 f1        	ldy	$f1
+    7517: e6 e5        	inc	$e5
+    7519: c6 e5        	dec	$e5
+    751b: 10 d4        	bpl	$74f1
+    751d: 4c 2c 75     	jmp	$752c
+    7520: 84 f1        	sty	$f1
+    7522: a4 e2        	ldy	$e2
+    7524: 84 e4        	sty	$e4
+    7526: a4 e3        	ldy	$e3
+    7528: 84 e5        	sty	$e5
+    752a: a4 f1        	ldy	$f1
+    752c: e0 00        	cpx	#$0
+    752e: d0 03        	bne	$7533
+    7530: 4c b6 75     	jmp	$75b6
+    7533: 98           	tya
+    7534: a0 00        	ldy	#$0
+    7536: 84 e7        	sty	$e7
+    7538: 38           	sec
+    7539: a8           	tay
+    753a: a5 e6        	lda	$e6
+    753c: e5 e4        	sbc	$e4
+    753e: 85 e8        	sta	$e8
+    7540: 98           	tya
+    7541: e5 e5        	sbc	$e5
+    7543: a8           	tay
+    7544: a9 01        	lda	#$1
+    7546: 46 e5        	lsr	$e5
+    7548: 66 e4        	ror	$e4
+    754a: c4 e5        	cpy	$e5
+    754c: 48           	pha
+    754d: a9 01        	lda	#$1
+    754f: b0 02        	bcs	$7553
+    7551: a9 00        	lda	#$0
+    7553: 85 e6        	sta	$e6
+    7555: 68           	pla
+    7556: 84 e9        	sty	$e9
+    7558: c4 e5        	cpy	$e5
+    755a: d0 0f        	bne	$756b
+    755c: a4 e8        	ldy	$e8
+    755e: c4 e4        	cpy	$e4
+    7560: 90 0d        	bcc	$756f
+    7562: a4 e4        	ldy	$e4
+    7564: 84 e3        	sty	$e3
+    7566: a4 e5        	ldy	$e5
+    7568: 4c 73 75     	jmp	$7573
+    756b: a4 e6        	ldy	$e6
+    756d: d0 f3        	bne	$7562
+    756f: a0 00        	ldy	#$0
+    7571: 84 e3        	sty	$e3
+    7573: 84 e2        	sty	$e2
+    7575: a4 e9        	ldy	$e9
+    7577: c4 e5        	cpy	$e5
+    7579: d0 0c        	bne	$7587
+    757b: a4 e8        	ldy	$e8
+    757d: c4 e4        	cpy	$e4
+    757f: a0 01        	ldy	#$1
+    7581: b0 02        	bcs	$7585
+    7583: a0 00        	ldy	#$0
+    7585: 84 e6        	sty	$e6
+    7587: a4 e6        	ldy	$e6
+    7589: f0 05        	beq	$7590
+    758b: a0 01        	ldy	#$1
+    758d: 4c 92 75     	jmp	$7592
+    7590: a0 00        	ldy	#$0
+    7592: 84 e6        	sty	$e6
+    7594: 85 ea        	sta	$ea
+    7596: 06 ea        	asl	$ea
+    7598: 26 e7        	rol	$e7
+    759a: 38           	sec
+    759b: a5 e8        	lda	$e8
+    759d: e5 e3        	sbc	$e3
+    759f: 85 e8        	sta	$e8
+    75a1: a5 e9        	lda	$e9
+    75a3: e5 e2        	sbc	$e2
+    75a5: a8           	tay
+    75a6: a5 ea        	lda	$ea
+    75a8: 05 e6        	ora	$e6
+    75aa: ca           	dex
+    75ab: f0 09        	beq	$75b6
+    75ad: 4c 46 75     	jmp	$7546
+    75b0: a2 00        	ldx	#$0
+    75b2: 86 e7        	stx	$e7
+    75b4: a9 00        	lda	#$0
+    75b6: a6 e7        	ldx	$e7
+    75b8: 60           	rts

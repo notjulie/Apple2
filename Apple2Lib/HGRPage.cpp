@@ -1,7 +1,7 @@
 
 #include "HGRPage.h"
 #include <C6502/Memory.h>
-#include "IO.h"
+#include "MMIO.h"
 #include "ROM.h"
 
 namespace a2 {
