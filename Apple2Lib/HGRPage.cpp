@@ -27,11 +27,11 @@ namespace a2 {
    {
       uint8_t *dest = (uint8_t *)(target.pageOffset << 8);
       uint8_t *src = (uint8_t *)(pageOffset << 8);
-      for (uint8_t i=0; i<32; ++i)
+      for (uint8_t i=0; i<64; ++i)
       {
-         c6502::memcpy8(dest, src, 240);
-         dest += 256;
-         src += 256;
+         c6502::memcpy8(dest, src, 128);
+         dest += 128;
+         src += 128;
       }
    }
 }
