@@ -6,7 +6,7 @@
 		<Option pch_mode="2" />
 		<Option compiler="arm-elf-gcc" />
 		<Build>
-			<Target title="default">
+			<Target title="Release">
 				<Option output="default/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
 				<Option object_output="default" />
 				<Option type="1" />
@@ -14,6 +14,26 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add directory=".." />
+				</Compiler>
+				<Linker>
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libcrt.a" />
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libc.a" />
+					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot;' />
+				</ExtraCommands>
+			</Target>
+			<Target title="Debug">
+				<Option output="default/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
+				<Option object_output="default" />
+				<Option type="1" />
+				<Option compiler="llvm-mos" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-Os" />
+					<Add option="-DDEBUG" />
 					<Add directory=".." />
 				</Compiler>
 				<Linker>
