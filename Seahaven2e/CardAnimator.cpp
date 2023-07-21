@@ -7,10 +7,16 @@
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
+#include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
 
+
+/// <summary>
+/// Our global instance
+/// </summary>
 CardAnimator CardAnimator::instance;
+
 
 /// <summary>
 /// Draws the game as it currently sits; we are responsible for
@@ -29,6 +35,9 @@ void CardAnimator::DrawGame() {
 
   // both pages are the same and up to date
   state = State::Idle;
+
+  // and the cursor is no more
+  Cursor::instance.CursorHasBeenObliterated();
 }
 
 
@@ -41,6 +50,9 @@ void CardAnimator::StartAnimation(
 {
   // save parameters
   endLocation = end;
+
+  // step 0: hide the cursor
+  Cursor::instance.Hide();
 
   // step 1: remove the card from its current position
   CardLocation start = Game::instance.GetCardLocation(card);

@@ -15,6 +15,15 @@ Cursor Cursor::instance;
 
 
 /// <summary>
+/// Adjusts our state when the animator has overwritten the cursor
+/// </summary>
+void Cursor::CursorHasBeenObliterated()
+{
+   state = State::Idle;
+}
+
+
+/// <summary>
 /// Sets the cursor location to the bottom card on column 4, adjusting
 /// as needed if the column is empty
 /// </summary>
@@ -59,6 +68,19 @@ void Cursor::Left()
 void Cursor::Right()
 {
   SetAndAdjustLocation(location.Right());
+}
+
+
+/// <summary>
+/// Hides the cursor
+/// </summary>
+void Cursor::Hide()
+{
+   if (state == State::On)
+   {
+      Toggle();
+      state = State::Idle;
+   }
 }
 
 
