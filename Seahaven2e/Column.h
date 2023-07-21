@@ -15,6 +15,7 @@ class Column {
  public:
   void Clear() { count = 0; }
   void Append(CompactCard card) { SetCard(count, card); }
+  void RemoveCard(uint8_t row);
 
   CompactCard GetCard(uint8_t index) const;
   uint8_t GetCount() const { return count; }

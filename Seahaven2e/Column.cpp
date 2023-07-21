@@ -32,6 +32,7 @@ CompactCard Column::GetCard(uint8_t index) const {
 /// </summary>
 void Column::SetCard(uint8_t row, CompactCard card)
 {
+   // the card can't be null... that's what remove card is for
    assert(!card.IsNull());
 
    // if the row is 5 or greater the card must be one less than
@@ -49,6 +50,18 @@ void Column::SetCard(uint8_t row, CompactCard card)
    if (row >= count)
     count = row + 1;
 }
+
+
+/// <summary>
+/// Removes the card at the given row
+/// </summary>
+void Column::RemoveCard(uint8_t row)
+{
+   // it has to be the bottom card
+   assert(row == count - 1);
+   --count;
+}
+
 
 /// <summary>
 /// Gets the index of the card within this column; returns -1 if we don't

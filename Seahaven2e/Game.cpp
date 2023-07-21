@@ -8,8 +8,14 @@
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
 #include "CardLocation.h"
+#include "SHAssert.h"
 
+
+/// <summary>
+/// Our global instance
+/// </summary>
 Game Game::instance;
+
 
 /** \brief
  * Shuffles and deals out a new game
@@ -137,14 +143,47 @@ bool Game::IsBottomOfColumn(CardLocation location) const {
     return columns[columnIndex].GetCount() == location.GetRow() + 1;
 }
 
-void Game::SetCard(CardLocation location, CompactCard card) {
-  if (location.IsAce()) {
-    acePiles[(uint8_t)location.GetAceSuit()] = card;
-  } else if (location.IsTower()) {
-    towers[location.GetTowerIndex()] = card;
-  } else if (location.IsColumn()) {
-    columns[location.GetColumn()].SetCard(location.GetRow(), card);
-  }
+
+/// <summary>
+/// Sets the card at the given location
+/// </summary>
+void Game::SetCard(CardLocation location, CompactCard card)
+{
+   // the card can't be null, that's what remove card is for
+   assert(!card.IsNull());
+
+   if (location.IsAce())
+   {
+      acePiles[(uint8_t)location.GetAceSuit()] = card;
+   }
+   else if (location.IsTower())
+   {
+      towers[location.GetTowerIndex()] = card;
+   }
+   else if (location.IsColumn())
+   {
+      columns[location.GetColumn()].SetCard(location.GetRow(), card);
+   }
+}
+
+
+/// <summary>
+/// Removes the card from the given location
+/// </summary>
+void Game::RemoveCard(CardLocation location)
+{
+   if (location.IsAce())
+   {
+      acePiles[(uint8_t)location.GetAceSuit()] = CompactCard::Null();
+   }
+   else if (location.IsTower())
+   {
+      towers[location.GetTowerIndex()] = CompactCard::Null();
+   }
+   else if (location.IsColumn())
+   {
+      columns[location.GetColumn()].RemoveCard(location.GetRow());
+   }
 }
 
 

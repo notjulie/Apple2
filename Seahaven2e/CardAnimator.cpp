@@ -56,7 +56,7 @@ void CardAnimator::StartAnimation(
 
   // step 1: remove the card from its current position
   CardLocation start = Game::instance.GetCardLocation(card);
-  Game::instance.SetCard(start, CompactCard::Null());
+  Game::instance.RemoveCard(start);
 
   // set the bounds of the animation
   currentX = start.GetX();

@@ -17,15 +17,17 @@ class Game {
  public:
   void Shuffle16(uint16_t instruction);
 
+  CompactCard GetCard(CardLocation location) const;
+  void SetCard(CardLocation location, CompactCard card);
+  void RemoveCard(CardLocation location);
+
   inline Column &GetColumn(uint8_t index) { return columns[index];}
   inline CompactCard GetAcePileCard(Suit suit) const {
                 return acePiles[(uint8_t)suit];
               }
   inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
 
-  CompactCard GetCard(CardLocation location) const;
   CardLocation GetCardToMoveToAce() const;
-  void SetCard(CardLocation location, CompactCard card);
   CardLocation GetBottomColumnCardLocation(uint8_t column);
   CardLocation GetCardLocation(CompactCard card);
   CompactCard GetTowerCard(uint8_t tower);
