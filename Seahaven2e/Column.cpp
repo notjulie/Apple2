@@ -23,7 +23,7 @@ CompactCard Column::GetCard(uint8_t index) const {
   // anything beyond the array is a card stacked on the last card of the array
   Card result = cards[4];
   result -= (index - 4);
-  return result;
+  return CompactCard(result);
 }
 
 
@@ -37,7 +37,7 @@ void Column::SetCard(uint8_t row, CompactCard card)
    // if the row is 5 or greater the card must be one less than
    // the card above it
    if (row >= 5) {
-      assert(card == (GetCard(row - 1) - 1));
+      assert(card == CompactCard(GetCard(row - 1) - 1));
 
       if (row >= count)
          count = row + 1;

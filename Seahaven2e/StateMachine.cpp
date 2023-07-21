@@ -117,7 +117,7 @@ void StateMachine::MoveToColumn()
     return;
 
   // get the location of the card above it
-  CardLocation locationAboveTarget = Game::instance.GetCardLocation(card + 1);
+  CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
   if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
     return;
 
@@ -126,7 +126,7 @@ void StateMachine::MoveToColumn()
 
   // start the animation
   CardAnimator::instance.StartAnimation(
-      card,
+      CompactCard(card),
       targetLocation
     );
   state = State::MoveToAces;
@@ -147,7 +147,7 @@ void StateMachine::MoveToTower()
 
   // start the animation
   CardAnimator::instance.StartAnimation(
-      card,
+      CompactCard(card),
       CardLocation::Tower(0)
     );
   state = State::MoveToAces;
@@ -195,7 +195,7 @@ bool StateMachine::CheckAcesToMove() {
     return false;
 
   // get the card
-  Card card = Game::instance.GetCard(startLocation);
+  CompactCard card = Game::instance.GetCard(startLocation);
 
   // start the animation
   CardAnimator::instance.StartAnimation(

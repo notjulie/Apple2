@@ -115,7 +115,7 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 
 
 void Drawing::DrawAcePile(Suit suit, uint8_t x) {
-  Card card = Game::instance.GetAcePileCard(suit);
+  CompactCard card = Game::instance.GetAcePileCard(suit);
   if (!card.IsNull()) {
       DrawCard(card, x, CardLocations::TowersTop);
   }
@@ -129,7 +129,7 @@ void Drawing::DrawAcePiles() {
   uint8_t x = TowersLeft;
 
   for (uint8_t tower=0; tower < 4; ++tower) {
-    Card card = Game::instance.GetTower(tower);
+    CompactCard card = Game::instance.GetTower(tower);
     if (!card.IsNull()) {
       DrawCard(card, x, CardLocations::TowersTop);
     }
@@ -141,7 +141,7 @@ void Drawing::DrawTowers() {
   uint8_t x = TowersLeft;
 
   for (uint8_t tower=0; tower < 4; ++tower) {
-    Card card = Game::instance.GetTower(tower);
+    CompactCard card = Game::instance.GetTower(tower);
     if (!card.IsNull()) {
       DrawCard(card, x, CardLocations::TowersTop);
     }

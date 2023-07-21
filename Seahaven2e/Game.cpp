@@ -34,15 +34,15 @@ void Game::Shuffle16(uint16_t instruction) {
     }
   }
 
-  towers[0] = Card();
+  towers[0] = CompactCard::Null();
   towers[1] = deck[cardIndex++];
   towers[2] = deck[cardIndex++];
-  towers[3] = Card();
+  towers[3] = CompactCard::Null();
 
-  acePiles[0] = Card();
-  acePiles[1] = Card();
-  acePiles[2] = Card();
-  acePiles[3] = Card();
+  acePiles[0] = CompactCard::Null();
+  acePiles[1] = CompactCard::Null();
+  acePiles[2] = CompactCard::Null();
+  acePiles[3] = CompactCard::Null();
 }
 
 void Game::Shuffle8(uint8_t instruction) {

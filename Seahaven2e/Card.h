@@ -45,7 +45,7 @@ class CompactCard {
 public:
   CompactCard() {}
   constexpr CompactCard(Suit suit, Rank rank) : card(rank, suit) {}
-  CompactCard(Card card);
+  explicit CompactCard(Card card);
 
   operator Card() const;
 
