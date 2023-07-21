@@ -85,7 +85,11 @@ class CardLocation {
   uint8_t GetX() const;
   uint8_t GetY() const;
 
+  // cursor movement helpers
   CardLocation Up() const;
+  CardLocation Down() const;
+  CardLocation Left() const;
+  CardLocation Right() const;
 
   static inline CardLocation AcePile(Suit suit) {
     return CardLocation(1 + (uint8_t)suit); }

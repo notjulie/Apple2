@@ -19,9 +19,9 @@ class Cursor {
   void Service();
 
   void Up();
-  void Down() {}
-  void Left() {}
-  void Right() {}
+  void Down();
+  void Left();
+  void Right();
 
   CardLocation GetLocation() const { return location; }
 

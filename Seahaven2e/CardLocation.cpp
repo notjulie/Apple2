@@ -81,6 +81,9 @@ uint8_t CardLocation::GetY() const {
 }
 
 
+/// <summary>
+/// Returns the location up from this location (as if the user had hit the up arrow)
+/// </summary>
 CardLocation CardLocation::Up() const
 {
   CardLocation result = *this;
@@ -119,5 +122,75 @@ CardLocation CardLocation::Up() const
   }
 
   return result;
+}
+
+
+/// <summary>
+/// Returns the location down from this location (as if the user had hit the down arrow)
+/// </summary>
+CardLocation CardLocation::Down() const
+{
+   if (IsColumn())
+   {
+      uint8_t column = GetColumn();
+      uint8_t row = GetRow();
+      if (row < CardLocations::MaxColumnCards - 1)
+         ++row;
+      return Column(column, row);
+   }
+   else if (IsTower())
+   {
+      return Column(GetTowerIndex() + 3, 0);
+   }
+   else
+   {
+      return CardLocation::Null();
+   }
+}
+
+
+/// <summary>
+/// Returns the location left from this location (as if the user had hit the left arrow)
+/// </summary>
+CardLocation CardLocation::Left() const
+{
+   if (IsColumn())
+   {
+      uint8_t column = GetColumn();
+      uint8_t row = GetRow();
+      if (column > 0)
+         return Column(column - 1, row);
+   }
+   else if (IsTower())
+   {
+      uint8_t towerIndex;
+      if ((towerIndex = GetTowerIndex()) > 0)
+         return Tower(towerIndex - 1);
+   }
+
+   return *this;
+}
+
+
+/// <summary>
+/// Returns the location right from this location (as if the user had hit the right arrow)
+/// </summary>
+CardLocation CardLocation::Right() const
+{
+   if (IsColumn())
+   {
+      uint8_t column = GetColumn();
+      uint8_t row = GetRow();
+      if (column < 9)
+         return Column(column + 1, row);
+   }
+   else if (IsTower())
+   {
+      uint8_t towerIndex;
+      if ((towerIndex = GetTowerIndex()) < 3)
+         return Tower(towerIndex + 1);
+   }
+
+   return *this;
 }
 

@@ -4,11 +4,15 @@
 
 #include "Cursor.h"
 
-//#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Drawing.h"
 
+
+/// <summary>
+/// Our global instance
+/// </summary>
 Cursor Cursor::instance;
+
 
 /// <summary>
 /// Sets the cursor location to the bottom card on column 4, adjusting
@@ -27,7 +31,34 @@ void Cursor::SetCursorLocationToDefault() {
 /// </summary>
 void Cursor::Up()
 {
-  SetLocation(location.Up());
+  SetAndAdjustLocation(location.Up());
+}
+
+
+/// <summary>
+/// Moves the cursor down
+/// </summary>
+void Cursor::Down()
+{
+  SetAndAdjustLocation(location.Down());
+}
+
+
+/// <summary>
+/// Moves the cursor left
+/// </summary>
+void Cursor::Left()
+{
+  SetAndAdjustLocation(location.Left());
+}
+
+
+/// <summary>
+/// Moves the cursor right
+/// </summary>
+void Cursor::Right()
+{
+  SetAndAdjustLocation(location.Right());
 }
 
 
