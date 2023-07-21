@@ -121,32 +121,35 @@ void Drawing::DrawAcePile(Suit suit, uint8_t x) {
   }
 }
 
-void Drawing::DrawAcePiles() {
-  DrawAcePile(Suit::Clubs, 0);
-  DrawAcePile(Suit::Diamonds, 4);
-  DrawAcePile(Suit::Hearts, 32);
-  DrawAcePile(Suit::Spades, 36);
-  uint8_t x = TowersLeft;
 
-  for (uint8_t tower=0; tower < 4; ++tower) {
-    CompactCard card = Game::instance.GetTower(tower);
-    if (!card.IsNull()) {
-      DrawCard(card, x, CardLocations::TowersTop);
-    }
-    x += 4;
-  }
+/// <summary>
+/// Draws the ace piles
+/// </summary>
+void Drawing::DrawAcePiles()
+{
+   DrawAcePile(Suit::Clubs, 0);
+   DrawAcePile(Suit::Diamonds, 4);
+   DrawAcePile(Suit::Hearts, 32);
+   DrawAcePile(Suit::Spades, 36);
 }
 
-void Drawing::DrawTowers() {
-  uint8_t x = TowersLeft;
 
-  for (uint8_t tower=0; tower < 4; ++tower) {
-    CompactCard card = Game::instance.GetTower(tower);
-    if (!card.IsNull()) {
-      DrawCard(card, x, CardLocations::TowersTop);
-    }
-    x += 4;
-  }
+/// <summary>
+/// Draws the towers
+/// </summary>
+void Drawing::DrawTowers()
+{
+   uint8_t x = TowersLeft;
+
+   for (uint8_t tower=0; tower < 4; ++tower)
+   {
+      CompactCard card = Game::instance.GetTower(tower);
+      if (!card.IsNull())
+      {
+         DrawCard(card, x, CardLocations::TowersTop);
+      }
+      x += 4;
+   }
 }
 
 /// <summary>
