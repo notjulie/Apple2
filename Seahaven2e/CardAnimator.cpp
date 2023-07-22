@@ -4,8 +4,6 @@
 
 #include "CardAnimator.h"
 
-#include <Apple2Lib/MMIO.h>
-#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Cursor.h"
 #include "Drawing.h"
@@ -19,25 +17,35 @@ CardAnimator CardAnimator::instance;
 
 
 /// <summary>
+/// Initializes a new instance of class CardAnimator
+/// </summary>
+CardAnimator::CardAnimator()
+{
+   // all items that need to be initialized are done so inline in
+   // the declaration
+}
+
+
+/// <summary>
 /// Draws the game as it currently sits; we are responsible for
 /// this since we maintain the states of the HGR pages
 /// </summary>
-void CardAnimator::DrawGame() {
-  // draw to page 1
-  drawing1.DrawBackground();
-  drawing1.DrawGame();
+void CardAnimator::DrawGame()
+{
+   // draw to page 1
+   page1.DrawGame();
 
-  // show page 1
-  a2::PAGE2OFF();
+   // show page 1
+   page1.Show();
 
-  // copy to the offscreen buffer
-  drawing1.CopyTo(&drawing2);
+   // copy to the offscreen buffer
+   page2.CopyFrom(page1);
 
-  // both pages are the same and up to date
-  state = State::Idle;
+   // both pages are the same and up to date
+   state = State::Idle;
 
-  // and the cursor is no more
-  Cursor::instance.CursorHasBeenObliterated();
+   // and the cursor is no more
+   Cursor::instance.CursorHasBeenObliterated();
 }
 
 
@@ -48,64 +56,60 @@ void CardAnimator::StartAnimation(
       CompactCard card,
       CardLocation end)
 {
-  // save parameters
-  endLocation = end;
+   // save parameters
+   endLocation = end;
 
-  // step 0: hide the cursor
-  Cursor::instance.Hide();
+   // step 0: hide the cursor
+   Cursor::instance.Hide();
 
-  // step 1: remove the card from its current position
-  CardLocation start = Game::instance.GetCardLocation(card);
-  Game::instance.RemoveCard(start);
+   // step 1: remove the card from its current position
+   CardLocation start = Game::instance.GetCardLocation(card);
+   Game::instance.RemoveCard(start);
 
-  // set the bounds of the animation
-  currentX = start.GetX();
-  currentY = start.GetY() - CardLocations::CardShadowHeight;
-  targetX = end.GetX();
-  targetY = end.GetY() - CardLocations::CardShadowHeight;
-  if (targetX > currentX) {
-    distanceX = targetX - currentX;
-    directionX = 1;
-  } else {
-    distanceX = currentX - targetX;
-    directionX = -1;
-  }
-  if (targetY > currentY) {
-    distanceY = targetY - currentY;
-    directionY = 1;
-  } else {
-    distanceY = currentY - targetY;
-    directionY = -1;
-  }
+   // set the bounds of the animation
+   currentX = start.GetX();
+   currentY = start.GetY() - CardLocations::CardShadowHeight;
+   targetX = end.GetX();
+   targetY = end.GetY() - CardLocations::CardShadowHeight;
+   if (targetX > currentX) {
+      distanceX = targetX - currentX;
+      directionX = 1;
+   } else {
+      distanceX = currentX - targetX;
+      directionX = -1;
+   }
+   if (targetY > currentY) {
+      distanceY = targetY - currentY;
+      directionY = 1;
+   } else {
+      distanceY = currentY - targetY;
+      directionY = -1;
+   }
 
-  // calculate the duration
-  uint8_t pixelDistance = CalculatePixelDistance(distanceX, distanceY);
-  duration = pixelDistance >> 4;
+   // calculate the duration
+   uint8_t pixelDistance = CalculatePixelDistance(distanceX, distanceY);
+   duration = pixelDistance >> 2;
 
-  timeLeft = duration;
-  numeratorX = numeratorY = 0;
-  lastVBLCount = a2::VBLCounter::GetCounter();
-  cardToMove = card;
+   timeLeft = duration;
+   numeratorX = numeratorY = 0;
+   lastVBLCount = a2::VBLCounter::GetCounter();
+   cardToMove = card;
 
-  // draw the game without the card on page 2
-  drawing2.EraseCard(start);
+   // draw the game without the card on page 2
+   page2.EraseCard(start);
 
-  // draw the card at its original position, saving the background
-  background2X = currentX;
-  background2Y = currentY;
-  drawing2.SaveCardBackground(currentX, currentY, &background2);
-  background2Saved = true;
-  drawing2.DrawCardWithShadow(card, currentX, currentY);
+   // draw the card at its original position, saving the background
+   page2.MoveCard(cardToMove, currentX, currentY);
 
-  // switch to page 2
-  a2::PAGE2ON();
+   // switch to page 2
+   page2.Show();
+   showingPage1 = false;
 
-  // draw the game without the card on page 1
-  drawing1.EraseCard(start);
-  background1Saved = false;
+   // draw the game without the card on page 1
+   page1.EraseCard(start);
 
-  // set the state
-  state = State::Page2Visible;
+   // set the state
+   state = State::Animating;
 }
 
 
@@ -131,41 +135,24 @@ void CardAnimator::Service() {
   case State::Idle:
     break;
 
-  case State::Page1Visible:
+  case State::Animating:
     if (timeLeft == 0) {
       Game::instance.SetCard(endLocation, cardToMove);
       state = State::Idle;
       break;
     }
-    if (background2Saved) {
-      drawing2.RestoreBackground(&background2, background2X, background2Y);
-      background2Saved = false;
-    }
     UpdatePosition();
-    background2X = currentX;
-    background2Y = currentY;
-    drawing2.SaveCardBackground(currentX, currentY, &background2);
-    background2Saved = true;
-    drawing2.DrawCardWithShadow(cardToMove, currentX, currentY);
-    a2::PAGE2ON();
-    state = State::Page2Visible;
-    break;
-
-  case State::Page2Visible:
-    if (background1Saved) {
-      drawing1.RestoreBackground(&background1, background1X, background1Y);
-      background1Saved = false;
-    }
-    UpdatePosition();
-    background1X = currentX;
-    background1Y = currentY;
-    drawing1.SaveCardBackground(currentX, currentY, &background1);
-    background1Saved = true;
-    drawing1.DrawCardWithShadow(cardToMove, currentX, currentY);
-    a2::PAGE2OFF();
-    state = State::Page1Visible;
+    GetOffscreenPage()->MoveCard(cardToMove, currentX, currentY);
+    SwapPages();
     break;
   }
+}
+
+
+void CardAnimator::SwapPages()
+{
+   showingPage1 = !showingPage1;
+   GetOnscreenPage()->Show();
 }
 
 
@@ -197,4 +184,49 @@ void CardAnimator::UpdatePosition() {
     if (--timeLeft == 0)
       break;
   }
+}
+
+
+/// ========================================================================
+/// ========================================================================
+///     class AnimationPage
+/// ========================================================================
+/// ========================================================================
+
+void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
+{
+   // if we have a saved background we need to restore it
+   if (backgroundSaved)
+   {
+      drawing->RestoreBackground(&background, backgroundX, backgroundY);
+      backgroundSaved = false;
+   }
+
+   // save the background at the new location
+   backgroundX = x;
+   backgroundY = y;
+   drawing->SaveCardBackground(x, y, &background);
+   backgroundSaved = true;
+   drawing->DrawCardWithShadow(card, x, y);
+}
+
+
+void AnimationPage::DrawGame()
+{
+   drawing->DrawBackground();
+   drawing->DrawGame();
+   backgroundSaved = false;
+}
+
+
+void AnimationPage::CopyFrom(AnimationPage &from)
+{
+   from.drawing->CopyTo(drawing);
+   backgroundSaved = false;
+}
+
+
+void AnimationPage::EraseCard(CardLocation location)
+{
+   drawing->EraseCard(location);
 }
