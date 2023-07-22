@@ -36,7 +36,8 @@ void StateMachine::Service() {
    case State::Animating:
       CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
-         EnterIdle();
+         if (!CheckAcesToMove())
+            EnterIdle();
       break;
    }
 }
