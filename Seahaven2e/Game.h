@@ -14,35 +14,34 @@
  * Represents the game as a whole
  */
 class Game {
- public:
-  void Shuffle16(uint16_t instruction);
+public:
+   void Shuffle16(uint16_t instruction);
 
-  CompactCard GetCard(CardLocation location) const;
-  void SetCard(CardLocation location, CompactCard card);
-  void RemoveCard(CardLocation location);
+   CompactCard GetCard(CardLocation location) const;
+   void SetCard(CardLocation location, CompactCard card);
+   void RemoveCard(CardLocation location);
 
-  inline Column &GetColumn(uint8_t index) { return columns[index];}
-  inline CompactCard GetAcePileCard(Suit suit) const {
-                return acePiles[(uint8_t)suit];
-              }
-  inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
+   inline Column &GetColumn(uint8_t index) { return columns[index];}
+   Rank GetAcePileRank(Suit suit) const { return acePiles[(uint8_t)suit]; }
+   inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
 
-  CardLocation GetCardToMoveToAce() const;
-  CardLocation GetBottomColumnCardLocation(uint8_t column);
-  CardLocation GetCardLocation(CompactCard card);
-  CompactCard GetTowerCard(uint8_t tower);
+   CardLocation GetCardToMoveToAce() const;
+   CardLocation GetBottomColumnCardLocation(uint8_t column) const;
+   CardLocation GetCardLocation(CompactCard card);
+   CompactCard GetTowerCard(uint8_t tower);
 
-  bool IsBottomOfColumn(CardLocation location) const;
+   bool IsBottomOfColumn(CardLocation location) const;
 
- public:
+public:
   static Game instance;
 
- private:
-  void Shuffle8(uint8_t instruction);
+private:
+   bool CanMoveToAce(CompactCard card) const;
+   void Shuffle8(uint8_t instruction);
 
- private:
+private:
   CompactCard deck[52];
-  CompactCard acePiles[4];
+  Rank acePiles[4];
   CompactCard towers[4];
   Column columns[10];
 };

@@ -27,7 +27,7 @@ class StateMachine {
   enum class State {
     Uninitialized,
     Idle,
-    MoveToAces
+    Animating
   };
 
  private:

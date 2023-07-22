@@ -115,10 +115,11 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 
 
 void Drawing::DrawAcePile(Suit suit, uint8_t x) {
-  CompactCard card = Game::instance.GetAcePileCard(suit);
-  if (!card.IsNull()) {
-      DrawCard(card, x, CardLocations::TowersTop);
-  }
+   Rank rank = Game::instance.GetAcePileRank(suit);
+   if (rank != Rank::Null)
+   {
+      DrawCard(CompactCard(suit, rank), x, CardLocations::TowersTop);
+   }
 }
 
 

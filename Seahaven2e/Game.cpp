@@ -45,10 +45,10 @@ void Game::Shuffle16(uint16_t instruction) {
   towers[2] = deck[cardIndex++];
   towers[3] = CompactCard::Null();
 
-  acePiles[0] = CompactCard::Null();
-  acePiles[1] = CompactCard::Null();
-  acePiles[2] = CompactCard::Null();
-  acePiles[3] = CompactCard::Null();
+  acePiles[0] = Rank::Null;
+  acePiles[1] = Rank::Null;
+  acePiles[2] = Rank::Null;
+  acePiles[3] = Rank::Null;
 }
 
 void Game::Shuffle8(uint8_t instruction) {
@@ -80,31 +80,46 @@ void Game::Shuffle8(uint8_t instruction) {
   }
 }
 
-/** \brief
- * Gets the location of the first card that needs to move to the
- * aces.
- */
-CardLocation Game::GetCardToMoveToAce() const {
-  // TODO(RER): for the moment all I do is look for an ace on the towers
-  // just for a starting point
-  for (int i=0; i < 4; ++i) {
-    if (towers[i].GetRank() == Rank::Ace)
-      return CardLocation::Tower(i);
-  }
 
-  return CardLocation::Null();
+/// <summary>
+/// Gets the location of the first card that needs to move to the aces.
+/// </summary>
+CardLocation Game::GetCardToMoveToAce() const {
+   // look at the towers
+   for (int i=0; i < 4; ++i)
+   {
+      if (CanMoveToAce(towers[i]))
+         return CardLocation::Tower(i);
+   }
+
+   // look at the columns
+   for (int i=0; i<10; ++i)
+   {
+      CardLocation location = GetBottomColumnCardLocation(i);
+      CompactCard card = GetCard(location);
+      if (CanMoveToAce(card))
+         return location;
+   }
+
+   return CardLocation::Null();
 }
 
-CompactCard Game::GetCard(CardLocation location) const {
-  if (location.IsAce()) {
-    return acePiles[(uint8_t)location.GetAceSuit()];
-  } else if (location.IsTower()) {
-    return towers[location.GetTowerIndex()];
-  } else if (location.IsColumn()) {
-    return columns[location.GetColumn()].GetCard(location.GetRow());
-  } else {
-    return CompactCard::Null();
-  }
+
+/// <summary>
+/// Gets the card at the given location
+/// </summary>
+CompactCard Game::GetCard(CardLocation location) const
+{
+   if (location.IsAce()) {
+      Suit suit = location.GetAceSuit();
+      return CompactCard(suit, acePiles[(uint8_t)suit]);
+   } else if (location.IsTower()) {
+      return towers[location.GetTowerIndex()];
+   } else if (location.IsColumn()) {
+      return columns[location.GetColumn()].GetCard(location.GetRow());
+   } else {
+      return CompactCard::Null();
+   }
 }
 
 
@@ -154,7 +169,7 @@ void Game::SetCard(CardLocation location, CompactCard card)
 
    if (location.IsAce())
    {
-      acePiles[(uint8_t)location.GetAceSuit()] = card;
+      acePiles[(uint8_t)location.GetAceSuit()] = card.GetRank();
    }
    else if (location.IsTower())
    {
@@ -174,7 +189,7 @@ void Game::RemoveCard(CardLocation location)
 {
    if (location.IsAce())
    {
-      acePiles[(uint8_t)location.GetAceSuit()] = CompactCard::Null();
+      acePiles[(uint8_t)location.GetAceSuit()] = Rank::Null;
    }
    else if (location.IsTower())
    {
@@ -187,12 +202,25 @@ void Game::RemoveCard(CardLocation location)
 }
 
 
-CardLocation Game::GetBottomColumnCardLocation(uint8_t column) {
-  int8_t row = columns[column].GetCount();
-  if (row > 0)
-    return CardLocation::Column(column, row - 1);
-  else
-    return CardLocation::Null();
+/// <summary>
+/// Returns true if the given card can be moved to an ace
+/// </summary>
+bool Game::CanMoveToAce(CompactCard card) const
+{
+   if (card.IsNull())
+      return false;
+   else
+      return card.GetRank() - acePiles[(uint8_t)card.GetSuit()] == 1;
+}
+
+
+CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
+{
+   int8_t row = columns[column].GetCount();
+   if (row > 0)
+      return CardLocation::Column(column, row - 1);
+   else
+      return CardLocation::Null();
 }
 
 

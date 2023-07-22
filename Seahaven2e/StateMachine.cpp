@@ -33,7 +33,7 @@ void StateMachine::Service() {
       ServiceIdle();
       break;
 
-   case State::MoveToAces:
+   case State::Animating:
       CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
          EnterIdle();
@@ -129,7 +129,7 @@ void StateMachine::MoveToColumn()
       CompactCard(card),
       targetLocation
     );
-  state = State::MoveToAces;
+  state = State::Animating;
 }
 
 
@@ -150,7 +150,7 @@ void StateMachine::MoveToTower()
       CompactCard(card),
       CardLocation::Tower(0)
     );
-  state = State::MoveToAces;
+  state = State::Animating;
 }
 
 
@@ -201,7 +201,7 @@ bool StateMachine::CheckAcesToMove() {
   CardAnimator::instance.StartAnimation(
       card,
       CardLocation::AcePile(card.GetSuit()));
-  state = State::MoveToAces;
+  state = State::Animating;
   return true;
 }
 
