@@ -34,4 +34,17 @@ namespace a2 {
          src += 128;
       }
    }
+
+   void HGRPage::Show() const
+   {
+      if (pageOffset == Page2MemoryPage)
+      {
+         a2::PAGE2ON();
+      }
+      else
+      {
+         a2::PAGE2OFF();
+      }
+   }
+
 }

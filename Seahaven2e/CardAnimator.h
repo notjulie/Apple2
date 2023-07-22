@@ -24,6 +24,8 @@ public:
    void EraseCard(CardLocation location);
    void MoveCard(CompactCard card, uint8_t x, uint8_t y);
 
+   void Show() { drawing->Show(); }
+
 private:
    // construction parameters
    Drawing *drawing;
@@ -60,26 +62,25 @@ private:
     Idle,
 
     /// <summary>
-    /// Animating, page 1 visible
+    /// Animating
     /// </summary>
-    Page1Visible,
-
-    /// <summary>
-    /// Animating, page 1 visible
-    /// </summary>
-    Page2Visible
+    Animating
   };
 
 private:
   static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
+  AnimationPage *GetOffscreenPage() { return showingPage1 ? &page2 : &page1; }
+  AnimationPage *GetOnscreenPage() { return showingPage1 ? &page1 : &page2; }
+  void SwapPages();
   void UpdatePosition();
 
 private:
-   // operating state... the one thing that needs to be initialized
+   // operating state... needs to be initialized
    // by the constructor
    State state = State::Idle;
+   bool showingPage1 = true;
 
-   // our animation page 1 and 2
+   // our animation page 1 and 2, initialized by constructor
    AnimationPage page1 = AnimationPage(&drawing1);
    AnimationPage page2 = AnimationPage(&drawing2);
 

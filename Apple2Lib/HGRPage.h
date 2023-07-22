@@ -69,11 +69,15 @@ namespace a2 {
 
       void Fill(uint8_t value) const;
       void CopyTo(HGRPage target) const;
+      void Show() const;
 
-      static constexpr HGRPage HGR() { return HGRPage(0x20); }
-      static constexpr HGRPage HGR2() { return HGRPage(0x40); }
+      static constexpr HGRPage HGR() { return HGRPage(Page1MemoryPage); }
+      static constexpr HGRPage HGR2() { return HGRPage(Page2MemoryPage); }
 
    private:
+      static constexpr uint8_t Page1MemoryPage = 0x20; // address 0x2000
+      static constexpr uint8_t Page2MemoryPage = 0x40; // address 0x4000
+
       uint8_t pageOffset;
 
    private:
