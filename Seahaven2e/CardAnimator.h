@@ -26,6 +26,8 @@ public:
 
    void Show() { drawing->Show(); }
 
+   Drawing *GetDrawing() { return drawing; }
+
 private:
    // construction parameters
    Drawing *drawing;
@@ -51,6 +53,8 @@ public:
    void StartAnimation(CompactCard card, CardLocation end);
    void Service();
 
+   AnimationPage *GetOnscreenPage() { return showingPage1 ? &page1 : &page2; }
+
 public:
   static CardAnimator instance;
 
@@ -68,11 +72,10 @@ private:
   };
 
 private:
-  static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
-  AnimationPage *GetOffscreenPage() { return showingPage1 ? &page2 : &page1; }
-  AnimationPage *GetOnscreenPage() { return showingPage1 ? &page1 : &page2; }
-  void SwapPages();
-  void UpdatePosition();
+   static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
+   AnimationPage *GetOffscreenPage() { return showingPage1 ? &page2 : &page1; }
+   void SwapPages();
+   void UpdatePosition();
 
 private:
    // operating state... needs to be initialized

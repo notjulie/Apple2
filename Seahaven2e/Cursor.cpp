@@ -5,6 +5,7 @@
 #include "Cursor.h"
 
 #include <Apple2Lib/VBLCounter.h>
+#include "CardAnimator.h"
 #include "Drawing.h"
 
 
@@ -140,11 +141,16 @@ void Cursor::Service() {
   }
 }
 
-void Cursor::Toggle() {
-  if (location.IsNull())
-    return;
-  lastToggleTime = a2::VBLCounter::GetCounter();
-  drawing1.ToggleCursor(location.GetX(), location.GetY());
+
+/// <summary>
+/// Toggles the cursor
+/// </summary>
+void Cursor::Toggle()
+{
+   if (location.IsNull())
+      return;
+   lastToggleTime = a2::VBLCounter::GetCounter();
+   CardAnimator::instance.GetOnscreenPage()->GetDrawing()->ToggleCursor(location.GetX(), location.GetY());
 }
 
 
