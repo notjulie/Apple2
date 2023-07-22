@@ -7,21 +7,52 @@
 
 #include "Card.h"
 #include "CardLocation.h"
+#include "Drawing.h"
 #include "SavedBackground.h"
 
+
+/// <summary>
+/// Wrapper around HGRPage with support for animation
+/// </summary>
+class AnimationPage
+{
+public:
+   AnimationPage(Drawing *drawing) : drawing(drawing) {}
+
+   void CopyFrom(AnimationPage &from);
+   void DrawGame();
+   void EraseCard(CardLocation location);
+   void MoveCard(CompactCard card, uint8_t x, uint8_t y);
+
+private:
+   // construction parameters
+   Drawing *drawing;
+
+   // saved background for this page; relevant only in animating states,
+   // doesn't need to be cleared by constructor
+   uint8_t backgroundX;
+   uint8_t backgroundY;
+   bool backgroundSaved;
+   SavedBackground background;
+};
+
+
+/// <summary>
+/// Class responsible for maintaining the state of our animations
+/// </summary>
 class CardAnimator {
- public:
-  CardAnimator() {}
+public:
+   CardAnimator();
 
-  void DrawGame();
-  bool IsAnimating() { return state != State::Idle; }
-  void StartAnimation(CompactCard card, CardLocation end);
-  void Service();
+   void DrawGame();
+   bool IsAnimating() { return state != State::Idle; }
+   void StartAnimation(CompactCard card, CardLocation end);
+   void Service();
 
- public:
+public:
   static CardAnimator instance;
 
- private:
+private:
   enum class State {
     /// <summary>
     /// Both HGR pages the same and up to date
@@ -39,41 +70,31 @@ class CardAnimator {
     Page2Visible
   };
 
- private:
+private:
   static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
   void UpdatePosition();
 
- private:
-  // operating state... the one thing that needs to be initialized
-  // by the constructor
-  State state = State::Idle;
+private:
+   // operating state... the one thing that needs to be initialized
+   // by the constructor
+   State state = State::Idle;
 
-  // saved background for graphics page 1; relevant only in animating states,
-  // don't need to be cleared by constructor
-  uint8_t background1X;
-  uint8_t background1Y;
-  bool background1Saved;
-  SavedBackground background1;
+   // our animation page 1 and 2
+   AnimationPage page1 = AnimationPage(&drawing1);
+   AnimationPage page2 = AnimationPage(&drawing2);
 
-  // saved background for graphics page 2; relevant only in animating states,
-  // don't need to be cleared by constructor
-  uint8_t background2X;
-  uint8_t background2Y;
-  bool background2Saved;
-  SavedBackground background2;
-
-  // the animation in progress; relevant only in animating states
-  // don't need to be cleared by constructor
-  CompactCard cardToMove;
-  CardLocation endLocation;
-  uint8_t currentX, currentY;
-  uint8_t targetX, targetY;
-  uint8_t distanceX, distanceY;
-  int8_t directionX, directionY;
-  uint8_t numeratorX, numeratorY;
-  uint8_t lastVBLCount;
-  uint8_t duration;
-  uint8_t timeLeft;
+   // the animation in progress; relevant only in animating states
+   // don't need to be cleared by constructor
+   CompactCard cardToMove;
+   CardLocation endLocation;
+   uint8_t currentX, currentY;
+   uint8_t targetX, targetY;
+   uint8_t distanceX, distanceY;
+   int8_t directionX, directionY;
+   uint8_t numeratorX, numeratorY;
+   uint8_t lastVBLCount;
+   uint8_t duration;
+   uint8_t timeLeft;
 };
 
 #endif  // SEAHAVEN2E_CARDANIMATOR_H_
