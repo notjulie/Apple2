@@ -5,40 +5,9 @@
 #ifndef SEAHAVEN2E_CARDANIMATOR_H_
 #define SEAHAVEN2E_CARDANIMATOR_H_
 
+#include "AnimationPage.h"
 #include "Card.h"
 #include "CardLocation.h"
-#include "Drawing.h"
-#include "SavedBackground.h"
-
-
-/// <summary>
-/// Wrapper around HGRPage with support for animation
-/// </summary>
-class AnimationPage
-{
-public:
-   AnimationPage(Drawing *drawing) : drawing(drawing) {}
-
-   void CopyFrom(AnimationPage &from);
-   void DrawGame();
-   void EraseCard(CardLocation location);
-   void MoveCard(CompactCard card, uint8_t x, uint8_t y);
-
-   void Show() { drawing->Show(); }
-
-   Drawing *GetDrawing() { return drawing; }
-
-private:
-   // construction parameters
-   Drawing *drawing;
-
-   // saved background for this page; relevant only in animating states,
-   // doesn't need to be cleared by constructor
-   uint8_t backgroundX;
-   uint8_t backgroundY;
-   bool backgroundSaved;
-   SavedBackground background;
-};
 
 
 /// <summary>

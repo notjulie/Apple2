@@ -130,22 +130,39 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
 /// \brief
 ///   Updates the state of the animation
 ///
-void CardAnimator::Service() {
-  switch (state) {
-  case State::Idle:
-    break;
+void CardAnimator::Service()
+{
+   AnimationPage *page;
 
-  case State::Animating:
-    if (timeLeft == 0) {
-      Game::instance.SetCard(endLocation, cardToMove);
-      state = State::Idle;
+   switch (state) {
+   case State::Idle:
       break;
-    }
-    UpdatePosition();
-    GetOffscreenPage()->MoveCard(cardToMove, currentX, currentY);
-    SwapPages();
-    break;
-  }
+
+   case State::Animating:
+      // update the position, move the card
+      UpdatePosition();
+      page = GetOffscreenPage();
+      page->MoveCard(cardToMove, currentX, currentY);
+      SwapPages();
+
+      // if we're done...
+      if (timeLeft == 0)
+      {
+         // end the animation on the onscreen page
+         page->EndAnimation();
+
+         // finish the animation on the offscreen page
+         page = GetOffscreenPage();
+         page->MoveCard(cardToMove, currentX, currentY);
+         page->EndAnimation();
+
+         // update the game object and our state
+         Game::instance.SetCard(endLocation, cardToMove);
+         state = State::Idle;
+         break;
+      }
+      break;
+   }
 }
 
 
@@ -186,47 +203,3 @@ void CardAnimator::UpdatePosition() {
   }
 }
 
-
-/// ========================================================================
-/// ========================================================================
-///     class AnimationPage
-/// ========================================================================
-/// ========================================================================
-
-void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
-{
-   // if we have a saved background we need to restore it
-   if (backgroundSaved)
-   {
-      drawing->RestoreBackground(&background, backgroundX, backgroundY);
-      backgroundSaved = false;
-   }
-
-   // save the background at the new location
-   backgroundX = x;
-   backgroundY = y;
-   drawing->SaveCardBackground(x, y, &background);
-   backgroundSaved = true;
-   drawing->DrawCardWithShadow(card, x, y);
-}
-
-
-void AnimationPage::DrawGame()
-{
-   drawing->DrawBackground();
-   drawing->DrawGame();
-   backgroundSaved = false;
-}
-
-
-void AnimationPage::CopyFrom(AnimationPage &from)
-{
-   from.drawing->CopyTo(drawing);
-   backgroundSaved = false;
-}
-
-
-void AnimationPage::EraseCard(CardLocation location)
-{
-   drawing->EraseCard(location);
-}
