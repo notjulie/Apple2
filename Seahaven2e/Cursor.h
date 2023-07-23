@@ -53,6 +53,7 @@ private:
    // state variables that only matter in non-idle states
    uint8_t lastToggleTime;
    CardLocation location;
+   uint8_t x, y;
 };
 
 #endif  // SEAHAVEN2E_CURSOR_H_

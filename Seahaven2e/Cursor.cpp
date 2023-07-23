@@ -89,35 +89,39 @@ void Cursor::Hide()
 /// Shows the cursor at its current location... if the current location does not
 /// have a card on it we shuffle the cursor to a spot that does
 /// </summary>
-void Cursor::Show() {
-  location = GetClosestCardTo(location);
-  if (state == State::Idle) {
-    Toggle();
-    state = State::On;
-  }
+void Cursor::Show()
+{
+   SetAndAdjustLocation(location);
+   if (state == State::Idle)
+   {
+      Toggle();
+      state = State::On;
+   }
 }
 
 /// <summary>
 /// Starts showing the cursor at the given location
 /// </summary>
-void Cursor::SetLocation(CardLocation location) {
-  switch (state) {
-  case State::Idle:
-  case State::Off:
-    this->location = location;
-    break;
+void Cursor::SetLocation(CardLocation location)
+{
+   // turn it off if it's on
+   if (state == State::On)
+      Toggle();
 
-  case State::On:
-    Toggle();
-    this->location = location;
-    Toggle();
-    break;
+   // set the location
+   this->location = location;
+   x = location.GetX();
+   y = location.GetY();
 
-  default:
-    break;
-  }
+   // turn it back on if it's supposed to be
+   if (state == State::On)
+      Toggle();
 }
 
+
+/// <summary>
+/// Performs periodic actions
+/// </summary>
 void Cursor::Service() {
   uint8_t sinceLastToggle = a2::VBLCounter::GetCounter() - lastToggleTime;
 
@@ -150,14 +154,15 @@ void Cursor::Toggle()
    if (location.IsNull())
       return;
    lastToggleTime = a2::VBLCounter::GetCounter();
-   CardAnimator::instance.GetOnscreenPage()->GetDrawing()->ToggleCursor(location.GetX(), location.GetY());
+   CardAnimator::instance.GetOnscreenPage()->GetDrawing()->ToggleCursor(x, y);
 }
 
 
 /// <summary>
 /// Gets the location of the card closest to the given location
 /// </summary>
-CardLocation Cursor::GetClosestCardTo(CardLocation start) {
+CardLocation Cursor::GetClosestCardTo(CardLocation start)
+{
   CardLocation result = CardLocation::Null();
 
   if (start.IsColumn()) {
@@ -261,6 +266,11 @@ CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
 }
 
 
-void Cursor::SetAndAdjustLocation(CardLocation location) {
-  SetLocation(GetClosestCardTo(location));
+/// <summary>
+/// Sets the location, adjusting to the nearest card if the location
+/// is empty
+/// </summary>
+void Cursor::SetAndAdjustLocation(CardLocation location)
+{
+   SetLocation(GetClosestCardTo(location));
 }
