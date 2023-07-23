@@ -153,19 +153,19 @@ void Drawing::DrawTowers()
 /// <summary>
 /// Draws all the columns
 /// </summary>
-void Drawing::DrawColumns() {
-  uint8_t x = 0;
+void Drawing::DrawColumns()
+{
+   uint8_t x = 0;
 
-  for (uint8_t i=0; i < 10; ++i) {
-    Column &column = Game::instance.GetColumn(i);
-    uint8_t cardCount = column.GetCount();
+   for (uint8_t column=0; column < 10; ++column)
+   {
+      uint8_t cardCount = Game::instance.GetNumberOfCardsOnColumn(column);
+      for (uint8_t row=0; row < cardCount; ++row)
+         DrawCardTop(Game::instance.GetColumnCard(column, row), x, columnYLookup.Y(row));
 
-    for (uint8_t j=0; j < cardCount; ++j)
-      DrawCardTop(column.GetCard(j), x, columnYLookup.Y(j));
+      DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
 
-    DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
-
-    x += 4;
+      x += 4;
   }
 }
 

@@ -231,3 +231,14 @@ CompactCard Game::GetTowerCard(uint8_t tower) {
     return CompactCard::Null();
 }
 
+
+uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column)
+{
+   return columns[column].GetCount();
+}
+
+
+CompactCard Game::GetColumnCard(uint8_t column, uint8_t row)
+{
+   return columns[column].GetCard(row);
+}
