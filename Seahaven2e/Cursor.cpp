@@ -154,7 +154,7 @@ void Cursor::Toggle()
    if (location.IsNull())
       return;
    lastToggleTime = a2::VBLCounter::GetCounter();
-   CardAnimator::instance.GetOnscreenPage()->GetDrawing()->ToggleCursor(x, y);
+   CardAnimator::instance.GetOnscreenPage()->GetDrawing().ToggleCursor(x, y);
 }
 
 

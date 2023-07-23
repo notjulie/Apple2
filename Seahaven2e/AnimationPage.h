@@ -14,7 +14,8 @@
 class AnimationPage
 {
 public:
-   AnimationPage(Drawing *drawing) : drawing(drawing) {}
+   AnimationPage() {}
+   void Initialize(Drawing drawing) { this->drawing = drawing; }
 
    void CopyFrom(AnimationPage &from);
    void DrawGame();
@@ -22,13 +23,13 @@ public:
    void EraseCard(CardLocation location);
    void MoveCard(CompactCard card, uint8_t x, uint8_t y);
 
-   void Show() { drawing->Show(); }
+   void Show() { drawing.Show(); }
 
-   Drawing *GetDrawing() { return drawing; }
+   Drawing GetDrawing() { return drawing; }
 
 private:
    // construction parameters
-   Drawing *drawing;
+   Drawing drawing;
 
    // saved background for this page; relevant only in animating states,
    // doesn't need to be cleared by constructor

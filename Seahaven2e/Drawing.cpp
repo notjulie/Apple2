@@ -21,9 +21,6 @@
 static const uint8_t TowersLeft = 12;
 
 
-Drawing drawing1(a2::HGRPage::HGR());
-Drawing drawing2(a2::HGRPage::HGR2());
-
 void Drawing::DrawBackground() {
   hgr.Fill(0);
 }
@@ -242,4 +239,20 @@ void Drawing::RestoreBackground(
     row[3] = p[3];
     p += 4;
   }
+}
+
+
+Drawing Drawing::Page1()
+{
+   Drawing result;
+   result.hgr = a2::HGRPage::HGR();
+   return result;
+}
+
+
+Drawing Drawing::Page2()
+{
+   Drawing result;
+   result.hgr = a2::HGRPage::HGR2();
+   return result;
 }

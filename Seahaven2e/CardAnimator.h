@@ -16,6 +16,7 @@
 class CardAnimator {
 public:
    CardAnimator();
+   void Initialize();
 
    void DrawGame();
    bool IsAnimating() { return state != State::Idle; }
@@ -47,14 +48,13 @@ private:
    void UpdatePosition();
 
 private:
-   // operating state... needs to be initialized
-   // by the constructor
-   State state = State::Idle;
-   bool showingPage1 = true;
+   // operating state
+   State state;
+   bool showingPage1;
 
-   // our animation page 1 and 2, initialized by constructor
-   AnimationPage page1 = AnimationPage(&drawing1);
-   AnimationPage page2 = AnimationPage(&drawing2);
+   // our animation page 1 and 2
+   AnimationPage page1;
+   AnimationPage page2;
 
    // the animation in progress; relevant only in animating states
    // don't need to be cleared by constructor

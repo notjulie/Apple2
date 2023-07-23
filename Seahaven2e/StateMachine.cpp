@@ -80,14 +80,6 @@ void StateMachine::ServiceIdle() {
     MoveToColumn();
     break;
 
-  case (KeyCode)'R':
-    // debug command to redraw
-    drawing1.DrawBackground();
-    drawing1.DrawGame();
-    a2::PAGE2OFF();
-    Cursor::instance.Show();
-    break;
-
   case (KeyCode)'T':
     MoveToTower();
     break;

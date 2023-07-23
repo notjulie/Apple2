@@ -17,13 +17,25 @@ CardAnimator CardAnimator::instance;
 
 
 /// <summary>
-/// Initializes a new instance of class CardAnimator
+/// Constructor... leaves the object uninitialized; Initialize
+/// must be called
 /// </summary>
 CardAnimator::CardAnimator()
 {
-   // all items that need to be initialized are done so inline in
-   // the declaration
 }
+
+
+/// <summary>
+/// Performs one-time initialization
+/// </summary>
+void CardAnimator::Initialize()
+{
+   state = State::Idle;
+   showingPage1 = true;
+   page1.Initialize(Drawing::Page1());
+   page2.Initialize(Drawing::Page2());
+}
+
 
 
 /// <summary>

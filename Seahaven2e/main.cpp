@@ -29,7 +29,7 @@ extern "C" int main() {
   Sprites::Initialize();
   PersistentState::instance = PersistentState();
   stateMachine = StateMachine();
-  CardAnimator::instance = CardAnimator();
+  CardAnimator::instance.Initialize();
   Cursor::instance = Cursor();
 
   // enter main loop

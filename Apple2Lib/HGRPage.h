@@ -13,11 +13,6 @@ namespace a2 {
     */
    class HGRPage {
    public:
-      constexpr HGRPage(uint8_t _pageOffset)
-         : pageOffset(_pageOffset)
-      {
-      }
-
       /** \brief
        * Initializes a new instance of class HGRRowTable
        */
@@ -71,8 +66,9 @@ namespace a2 {
       void CopyTo(HGRPage target) const;
       void Show() const;
 
-      static constexpr HGRPage HGR() { return HGRPage(Page1MemoryPage); }
-      static constexpr HGRPage HGR2() { return HGRPage(Page2MemoryPage); }
+   public:
+      static HGRPage HGR();
+      static HGRPage HGR2();
 
    private:
       static constexpr uint8_t Page1MemoryPage = 0x20; // address 0x2000
