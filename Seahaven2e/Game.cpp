@@ -31,14 +31,16 @@ void Game::Shuffle16(uint16_t instruction) {
   // shuffle 8 times according to low byte
   Shuffle8((uint8_t)instruction);
 
-  // deal
-  uint8_t cardIndex = 0;
-  for (uint8_t column=0; column < 10; ++column) {
-    columns[column].Clear();
-    for (uint8_t row=0; row < 5; ++row) {
-      columns[column].Append(deck[cardIndex++]);
-    }
-  }
+   // deal
+   uint8_t cardIndex = 0;
+   for (uint8_t column=0; column < 10; ++column)
+   {
+      for (uint8_t index=column; index < 50; index += 10)
+      {
+         columnCards[index] = deck[cardIndex++];
+      }
+      columnCounts[column] = 5;
+   }
 
   towers[0] = CompactCard::Null();
   towers[1] = deck[cardIndex++];
@@ -116,7 +118,7 @@ CompactCard Game::GetCard(CardLocation location) const
    } else if (location.IsTower()) {
       return towers[location.GetTowerIndex()];
    } else if (location.IsColumn()) {
-      return columns[location.GetColumn()].GetCard(location.GetRow());
+      return GetColumnCard(location.GetColumn(), location.GetRow());
    } else {
       return CompactCard::Null();
    }
@@ -126,36 +128,39 @@ CompactCard Game::GetCard(CardLocation location) const
 /// <summary>
 /// Gets the location of the given card
 /// </summary>
-CardLocation Game::GetCardLocation(CompactCard card) {
-  if (card.IsNull())
-    return CardLocation::Null();
+CardLocation Game::GetCardLocation(CompactCard card)
+{
+   if (card.IsNull())
+      return CardLocation::Null();
 
-  for (uint8_t i=0; i<4; ++i)
-    if (card == towers[i])
-      return CardLocation::Tower(i);
+   for (uint8_t i=0; i<4; ++i)
+      if (card == towers[i])
+         return CardLocation::Tower(i);
 
-  for (uint8_t i=0; i<10; ++i) {
-    int8_t index = columns[i].GetCardIndex(card);
-    if (index >= 0)
-      return CardLocation::Column(i, index);
-  }
+   for (uint8_t column=0; column<10; ++column)
+   {
+      int8_t index = GetColumnCardIndex(column, card);
+      if (index >= 0)
+         return CardLocation::Column(column, index);
+   }
 
-  return CardLocation::Null();
+   return CardLocation::Null();
 }
 
 
 /// <summary>
 /// Returns true if the given location is the bottom card on a column
 /// <summary>
-bool Game::IsBottomOfColumn(CardLocation location) const {
-  if (!location.IsColumn())
-    return false;
+bool Game::IsBottomOfColumn(CardLocation location) const
+{
+   if (!location.IsColumn())
+      return false;
 
-  uint8_t columnIndex = location.GetColumn();
-  if (columnIndex >= 10)
-    return false;
-  else
-    return columns[columnIndex].GetCount() == location.GetRow() + 1;
+   uint8_t columnIndex = location.GetColumn();
+   if (columnIndex >= 10)
+      return false;
+   else
+      return columnCounts[location.GetColumn()] == location.GetRow() + 1;
 }
 
 
@@ -177,7 +182,7 @@ void Game::SetCard(CardLocation location, CompactCard card)
    }
    else if (location.IsColumn())
    {
-      columns[location.GetColumn()].SetCard(location.GetRow(), card);
+      SetColumnCard(location.GetColumn(), location.GetRow(), card);
    }
 }
 
@@ -197,7 +202,7 @@ void Game::RemoveCard(CardLocation location)
    }
    else if (location.IsColumn())
    {
-      columns[location.GetColumn()].RemoveCard(location.GetRow());
+      RemoveColumnCard(location.GetColumn(), location.GetRow());
    }
 }
 
@@ -216,7 +221,7 @@ bool Game::CanMoveToAce(CompactCard card) const
 
 CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
 {
-   int8_t row = columns[column].GetCount();
+   int8_t row = columnCounts[column];
    if (row > 0)
       return CardLocation::Column(column, row - 1);
    else
@@ -232,13 +237,101 @@ CompactCard Game::GetTowerCard(uint8_t tower) {
 }
 
 
-uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column)
+uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column) const
 {
-   return columns[column].GetCount();
+   return columnCounts[column];
 }
 
 
-CompactCard Game::GetColumnCard(uint8_t column, uint8_t row)
+CompactCard Game::GetColumnCard(uint8_t column, uint8_t row) const
 {
-   return columns[column].GetCard(row);
+   assert(row <= columnCounts[column]);
+
+   // if it's in our array of cards return what's in the array
+   if (row < 5)
+      return columnCards[column + (row<<3) + row + row];
+
+   // anything beyond the array is a card stacked on the last card of the array
+   Card result = columnCards[40 + column];
+   result -= (row - 4);
+   return CompactCard(result);
 }
+
+/// <summary>
+/// Removes the card at the given row
+/// </summary>
+void Game::RemoveColumnCard(uint8_t column, uint8_t row)
+{
+   // it has to be the bottom card
+   assert(row == columnCounts[column] - 1);
+   columnCounts[column]--;
+}
+
+
+/// <summary>
+/// Gets the index of the card within this column; returns -1 if we don't
+/// have that card
+/// </summary>
+int8_t Game::GetColumnCardIndex(uint8_t column, CompactCard card)
+{
+   uint8_t count = columnCounts[column];
+
+   // first check to see if we have it stored as-is
+   {
+      uint8_t index = column;
+      for (int i=0; i<count; ++i)
+      {
+         if (columnCards[index] == card)
+            return i;
+         index += 10;
+      }
+   }
+
+   // if we don't have more than 5 cards then it's not here
+   if (count <= 5)
+      return -1;
+
+   // a count of >5 means that the 5th card has cards on top of it, which
+   // must be of the same suit as the 5th card, and of descending rank
+   Card fifthCard = GetColumnCard(column, 4);
+   if (card.GetSuit() != fifthCard.GetSuit())
+      return -1;
+   int8_t offsetToCard = fifthCard.GetRank() - card.GetRank();
+   if (offsetToCard < 0)
+      return -1;
+
+   int8_t index = 4 + offsetToCard;
+   if (index >= count)
+      return -1;
+   else
+      return index;
+}
+
+
+/// <summary>
+/// Sets the card at the given location
+/// </summary>
+void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
+{
+   // the card can't be null... that's what remove card is for
+   assert(!card.IsNull());
+
+   uint8_t count = columnCounts[column];
+
+   // if the row is 5 or greater the card must be one less than
+   // the card above it
+   if (row >= 5) {
+      assert(card == CompactCard(GetColumnCard(column, row - 1) - 1));
+
+      if (row >= count)
+         count = row + 1;
+      return;
+   }
+
+   // else just set it
+   columnCards[column + (row<<3) + row + row] = card;
+   if (row >= columnCounts[column])
+      columnCounts[column] = row + 1;
+}
+
+

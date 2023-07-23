@@ -7,7 +7,6 @@
 
 #include "Card.h"
 #include "CardLocation.h"
-#include "Column.h"
 
 
 /** \brief
@@ -30,8 +29,8 @@ public:
    CompactCard GetTowerCard(uint8_t tower);
 
    // column card access
-   uint8_t GetNumberOfCardsOnColumn(uint8_t column);
-   CompactCard GetColumnCard(uint8_t column, uint8_t row);
+   uint8_t GetNumberOfCardsOnColumn(uint8_t column) const;
+   CompactCard GetColumnCard(uint8_t column, uint8_t row) const;
 
    bool IsBottomOfColumn(CardLocation location) const;
 
@@ -40,13 +39,17 @@ public:
 
 private:
    bool CanMoveToAce(CompactCard card) const;
+   int8_t GetColumnCardIndex(uint8_t column, CompactCard card);
+   void RemoveColumnCard(uint8_t column, uint8_t row);
+   void SetColumnCard(uint8_t column, uint8_t row, CompactCard card);
    void Shuffle8(uint8_t instruction);
 
 private:
-  CompactCard deck[52];
-  Rank acePiles[4];
-  CompactCard towers[4];
-  Column columns[10];
+   CompactCard deck[52];
+   Rank acePiles[4];
+   CompactCard towers[4];
+   uint8_t columnCounts[10];
+   CompactCard columnCards[50];
 };
 
 #endif  // SEAHAVEN2E_GAME_H_
