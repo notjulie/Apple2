@@ -6,16 +6,22 @@
 #define SEAHAVEN2E_PERSISTENTSTATE_H_
 
 #include <stdint.h>
+#include "UndoJournal.h"
+
 
 class PersistentState {
- public:
-  uint16_t GetNextGameSeed() { return ++gameSeed; }
+public:
+   uint16_t GetNextGameSeed() { return ++gameSeed; }
 
- public:
-  static PersistentState instance;
+   // undo related
+   void LogMove(CompactCard card, CardLocation location) { undoJournal.LogMove(card, location); }
 
- private:
-  uint16_t gameSeed = 0;
+public:
+   static PersistentState instance;
+
+private:
+   uint16_t gameSeed = 0;
+   UndoJournal undoJournal;
 };
 
 #endif  // SEAHAVEN2E_PERSISTENTSTATE_H_

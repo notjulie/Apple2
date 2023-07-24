@@ -7,11 +7,11 @@
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include "CardAnimator.h"
-#include "CardLocation.h"
 #include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
+#include "SHAssert.h"
 
 using ::a2::KeyCode;
 
@@ -100,29 +100,24 @@ void StateMachine::ServiceIdle() {
 /// </summary>
 void StateMachine::MoveToColumn()
 {
-  CardLocation location = Cursor::instance.GetLocation();
-  if (location.IsNull())
-    return;
+   CardLocation location = Cursor::instance.GetLocation();
+   assert(!location.IsNull());
 
-  // get the card
-  Card card = Game::instance.GetCard(location);
-  if (card.IsNull())
-    return;
+   // get the card
+   Card card = Game::instance.GetCard(location);
+   if (card.IsNull())
+      return;
 
-  // get the location of the card above it
-  CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
-  if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
-    return;
+   // get the location of the card above it
+   CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
+   if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
+      return;
 
-  // the target location is one below that
-  CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
+   // the target location is one below that
+   CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
 
-  // start the animation
-  CardAnimator::instance.StartAnimation(
-      CompactCard(card),
-      targetLocation
-    );
-  state = State::Animating;
+   // start the animation
+   MoveCard(CompactCard(card), targetLocation);
 }
 
 
@@ -131,21 +126,23 @@ void StateMachine::MoveToColumn()
 /// </summary>
 void StateMachine::MoveToTower()
 {
-  CardLocation location = Cursor::instance.GetLocation();
-  if (location.IsNull())
-    return;
-
-  // get the card
-  Card card = Game::instance.GetCard(location);
+   CardLocation location = Cursor::instance.GetLocation();
+   assert(!location.IsNull());
 
   // start the animation
-  CardAnimator::instance.StartAnimation(
-      CompactCard(card),
-      CardLocation::Tower(0)
-    );
-  state = State::Animating;
+  MoveCard(Game::instance.GetCard(location), CardLocation::Tower(0));
 }
 
+
+/// <summary>
+/// Moves the given card, adding it to the undo journal
+/// </summary>
+void StateMachine::MoveCard(CompactCard card, CardLocation location)
+{
+   CardAnimator::instance.StartAnimation(card, location);
+   PersistentState::instance.LogMove(card, location);
+   state = State::Animating;
+}
 
 /// <summary>
 ///   Starts a new game
@@ -191,10 +188,7 @@ bool StateMachine::CheckAcesToMove() {
   CompactCard card = Game::instance.GetCard(startLocation);
 
   // start the animation
-  CardAnimator::instance.StartAnimation(
-      card,
-      CardLocation::AcePile(card.GetSuit()));
-  state = State::Animating;
+  MoveCard(card, CardLocation::AcePile(card.GetSuit()));
   return true;
 }
 

@@ -22,7 +22,8 @@
 					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot;' />
+					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
+					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Debug">
@@ -42,7 +43,7 @@
 					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot;' />
+					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
 				</ExtraCommands>
 			</Target>
 		</Build>
@@ -76,13 +77,14 @@
 		<Unit filename="../Apple2Lib/VBLCounter.h" />
 		<Unit filename="../C6502/LookupTable.h" />
 		<Unit filename="../C6502/Memory.h" />
+		<Unit filename="AnimationPage.cpp" />
+		<Unit filename="AnimationPage.h" />
 		<Unit filename="Card.cpp" />
 		<Unit filename="Card.h" />
 		<Unit filename="CardAnimator.cpp" />
 		<Unit filename="CardAnimator.h" />
 		<Unit filename="CardLocation.cpp" />
 		<Unit filename="CardLocation.h" />
-		<Unit filename="Column.cpp" />
 		<Unit filename="Column.h" />
 		<Unit filename="Cursor.cpp" />
 		<Unit filename="Cursor.h" />
@@ -101,6 +103,7 @@
 		<Unit filename="StateMachine.cpp" />
 		<Unit filename="StateMachine.h" />
 		<Unit filename="Suit.h" />
+		<Unit filename="UndoJournal.h" />
 		<Unit filename="ld/target.ld" />
 		<Unit filename="main.cpp" />
 		<Extensions>

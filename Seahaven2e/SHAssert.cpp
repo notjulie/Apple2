@@ -12,7 +12,7 @@ void DisplayNumber(uint16_t number)
 {
    // split, slowly, into dividend and remainder
    uint8_t dividend = 0;
-   while (number > 10)
+   while (number >= 10)
    {
       number -= 10;
       ++dividend;
