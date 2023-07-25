@@ -53,44 +53,48 @@ void StateMachine::ServiceIdle() {
   // check for user input
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wswitch"
-  KeyCode key = a2::getKey();
-  switch (key) {
-  case (KeyCode)'N':
-    // new game...
-    NewGame();
-    break;
+   KeyCode key = a2::getKey();
+   switch (key) {
+   case (KeyCode)'N':
+      // new game...
+      NewGame();
+      break;
 
-  case KeyCode::Up:
-    Cursor::instance.Up();
-    break;
+   case KeyCode::Up:
+      Cursor::instance.Up();
+      break;
 
-  case KeyCode::Down:
-    Cursor::instance.Down();
-    break;
+   case KeyCode::Down:
+      Cursor::instance.Down();
+      break;
 
-  case KeyCode::Left:
-    Cursor::instance.Left();
-    break;
+   case KeyCode::Left:
+      Cursor::instance.Left();
+      break;
 
-  case KeyCode::Right:
-    Cursor::instance.Right();
-    break;
+   case KeyCode::Right:
+      Cursor::instance.Right();
+      break;
 
-  case (KeyCode)'C':
-    MoveToColumn();
-    break;
+   case (KeyCode)'C':
+      MoveToColumn();
+      break;
 
-  case (KeyCode)'T':
-    MoveToTower();
-    break;
+   case (KeyCode)'T':
+      MoveToTower();
+      break;
 
-  case KeyCode::None:
-    break;
+   case (KeyCode)'Z':
+      Undo();
+      break;
 
-  default:
-    a2::PRBYTE((uint8_t)key);
-    break;
-  }
+   case KeyCode::None:
+      break;
+
+   default:
+      a2::PRBYTE((uint8_t)key);
+      break;
+   }
 #pragma GCC diagnostic pop
 }
 
@@ -139,8 +143,11 @@ void StateMachine::MoveToTower()
 /// </summary>
 void StateMachine::MoveCard(CompactCard card, CardLocation location)
 {
+   // log
+   PersistentState::instance.LogMove(card, Game::instance.GetCardLocation(card), location);
+
+   // start animating
    CardAnimator::instance.StartAnimation(card, location);
-   PersistentState::instance.LogMove(card, location);
    state = State::Animating;
 }
 
@@ -192,3 +199,17 @@ bool StateMachine::CheckAcesToMove() {
   return true;
 }
 
+
+/// <summary>
+/// Undoes a move if possible
+/// </summary>
+void StateMachine::Undo()
+{
+   CompactCard card;
+   CardLocation location;
+   if (PersistentState::instance.PopUndo(card, location))
+   {
+      CardAnimator::instance.StartAnimation(card, location);
+      state = State::Animating;
+   }
+}

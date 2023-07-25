@@ -14,7 +14,8 @@ public:
    uint16_t GetNextGameSeed() { return ++gameSeed; }
 
    // undo related
-   void LogMove(CompactCard card, CardLocation location) { undoJournal.LogMove(card, location); }
+   void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation) { undoJournal.LogMove(card, startLocation, endLocation); }
+   bool PopUndo(CompactCard &card, CardLocation &location) { return undoJournal.PopUndo(card, location); }
 
 public:
    static PersistentState instance;

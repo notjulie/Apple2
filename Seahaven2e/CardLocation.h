@@ -69,42 +69,44 @@ constexpr ColumnYLookup columnYLookup;
 // ==========================================================
 
 class CardLocation {
- public:
-  CardLocation() = default; // we are uninitialized until assigned
+public:
+   CardLocation() = default;
+   static CardLocation FromUint8(uint8_t i) { return CardLocation(i); }
+   uint8_t AsUint8() const { return locationNumber; }
 
-  bool IsNull() const { return locationNumber == 0; }
-  bool IsAce() const { return locationNumber < 5; }
-  bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
-  bool IsTower() const { return locationNumber > 251; }
+   bool IsNull() const { return locationNumber == 0; }
+   bool IsAce() const { return locationNumber < 5; }
+   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
+   bool IsTower() const { return locationNumber > 251; }
 
-  Suit GetAceSuit() const { return (Suit)(locationNumber - 1); }
-  uint8_t GetColumn() const;
-  uint8_t GetRow() const;
-  uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
+   Suit GetAceSuit() const { return (Suit)(locationNumber - 1); }
+   uint8_t GetColumn() const;
+   uint8_t GetRow() const;
+   uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
 
-  uint8_t GetX() const;
-  uint8_t GetY() const;
+   uint8_t GetX() const;
+   uint8_t GetY() const;
 
-  // cursor movement helpers
-  CardLocation Up() const;
-  CardLocation Down() const;
-  CardLocation Left() const;
-  CardLocation Right() const;
+   // cursor movement helpers
+   CardLocation Up() const;
+   CardLocation Down() const;
+   CardLocation Left() const;
+   CardLocation Right() const;
 
-  static inline CardLocation AcePile(Suit suit) {
+   static inline CardLocation AcePile(Suit suit) {
     return CardLocation(1 + (uint8_t)suit); }
-  static CardLocation Column(uint8_t column, uint8_t index);
-  static inline CardLocation Tower(uint8_t index) {
+   static CardLocation Column(uint8_t column, uint8_t index);
+   static inline CardLocation Tower(uint8_t index) {
      return CardLocation(index ^ 0xFF); }
-  static constexpr CardLocation Null() {
+   static constexpr CardLocation Null() {
     return CardLocation(0); }
 
- private:
-  constexpr CardLocation(uint8_t locationNumber) : locationNumber(locationNumber) {}
-  static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
+private:
+   constexpr CardLocation(uint8_t locationNumber) : locationNumber(locationNumber) {}
+   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
 
- private:
-  uint8_t locationNumber;
+private:
+   uint8_t locationNumber;
 };
 
 

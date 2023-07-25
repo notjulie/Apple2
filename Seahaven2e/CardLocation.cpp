@@ -6,6 +6,7 @@
 #include "SHAssert.h"
 #include "Sprites.h"
 
+
 /// <summary>
 /// Creates a CardLocation representing the given column and row
 /// </summary>

@@ -1,3 +1,7 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
+
 
 #ifndef UNDOJOURNAL_H
 #define UNDOJOURNAL_H
@@ -7,7 +11,17 @@
 
 class UndoJournal {
 public:
-   void LogMove(CompactCard card, CardLocation location) {}
+   void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation);
+   bool PopUndo(CompactCard &card, CardLocation &location);
+
+private:
+   static constexpr uint8_t JournalMaxLength = 150;
+
+private:
+   uint8_t entryCount = 0;
+   uint8_t currentPosition = 0;
+   CompactCard cards[JournalMaxLength];
+   uint8_t locations[JournalMaxLength];
 };
 
 #endif // UNDOJOURNAL_H

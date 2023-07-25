@@ -12,29 +12,28 @@
 /// The top level state machine for the game
 /// </summary>
 class StateMachine {
- public:
-  constexpr StateMachine() {}
+public:
+   void Service();
 
-  void Service();
+private:
+   bool CheckAcesToMove();
+   void EnterIdle();
+   void MoveCard(CompactCard card, CardLocation location);
+   void MoveToColumn();
+   void MoveToTower();
+   void NewGame();
+   void ServiceIdle();
+   void Undo();
 
- private:
-  bool CheckAcesToMove();
-  void NewGame();
-  void EnterIdle();
-  void MoveToColumn();
-  void MoveToTower();
-  void ServiceIdle();
-  void MoveCard(CompactCard card, CardLocation location);
+private:
+   enum class State {
+      Uninitialized,
+      Idle,
+      Animating
+   };
 
- private:
-  enum class State {
-    Uninitialized,
-    Idle,
-    Animating
-  };
-
- private:
-  State state = State::Uninitialized;
+private:
+   State state = State::Uninitialized;
 };
 
 
