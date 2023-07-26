@@ -142,7 +142,7 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
 /// \brief
 ///   Updates the state of the animation
 ///
-void CardAnimator::Service()
+__attribute__((noinline)) void CardAnimator::Service()
 {
    AnimationPage *page;
 

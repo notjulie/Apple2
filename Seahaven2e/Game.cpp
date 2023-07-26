@@ -17,19 +17,20 @@
 Game Game::instance;
 
 
-/** \brief
- * Shuffles and deals out a new game
- */
-void Game::Shuffle16(uint16_t instruction) {
-  // create unshuffled deck
-  for (uint8_t i=0; i < 52; ++i)
+/// <summary>
+/// Shuffles and deals out a new game
+/// </summary>
+__attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
+{
+   // create unshuffled deck
+   for (uint8_t i=0; i < 52; ++i)
     deck[i] = CompactCard::FromOrdinal(i);
 
-  // shuffle 8 times according to high byte
-  Shuffle8(instruction >> 8);
+   // shuffle 8 times according to high byte
+   Shuffle8(instruction >> 8);
 
-  // shuffle 8 times according to low byte
-  Shuffle8((uint8_t)instruction);
+   // shuffle 8 times according to low byte
+   Shuffle8((uint8_t)instruction);
 
    // deal
    uint8_t cardIndex = 0;
@@ -42,15 +43,15 @@ void Game::Shuffle16(uint16_t instruction) {
       columnCounts[column] = 5;
    }
 
-  towers[0] = CompactCard::Null();
-  towers[1] = deck[cardIndex++];
-  towers[2] = deck[cardIndex++];
-  towers[3] = CompactCard::Null();
+   towers[0] = CompactCard::Null();
+   towers[1] = deck[cardIndex++];
+   towers[2] = deck[cardIndex++];
+   towers[3] = CompactCard::Null();
 
-  acePiles[0] = Rank::Null;
-  acePiles[1] = Rank::Null;
-  acePiles[2] = Rank::Null;
-  acePiles[3] = Rank::Null;
+   acePiles[0] = Rank::Null;
+   acePiles[1] = Rank::Null;
+   acePiles[2] = Rank::Null;
+   acePiles[3] = Rank::Null;
 }
 
 void Game::Shuffle8(uint8_t instruction) {
