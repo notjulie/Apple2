@@ -246,12 +246,13 @@ const CardTopSprite Sprites::cursorRight = {
 };
 
 
-void Sprites::Initialize() {
-  const CardTopSprite *rankSprite = &ranks[0];
-  for (uint8_t i=0; i < 13; ++i)
-    ranksLookup.Set(i, rankSprite++);
+__attribute__((noinline)) void Sprites::Initialize()
+{
+   const CardTopSprite *rankSprite = &ranks[0];
+   for (uint8_t i=0; i < 13; ++i)
+      ranksLookup.Set(i, rankSprite++);
 
-  const CardTopSprite *suitSprite = &suits[0];
-  for (uint8_t i=0; i < 4; ++i)
-    suitsLookup.Set(i, suitSprite++);
+   const CardTopSprite *suitSprite = &suits[0];
+   for (uint8_t i=0; i < 4; ++i)
+      suitsLookup.Set(i, suitSprite++);
 }

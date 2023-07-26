@@ -46,7 +46,8 @@ void StateMachine::Service() {
 /// <summary>
 /// Performs periodic actions during Idle state
 /// </summary>
-void StateMachine::ServiceIdle() {
+__attribute__((noinline)) void StateMachine::ServiceIdle()
+{
   // give the cursor its timeslice
   Cursor::instance.Service();
 
