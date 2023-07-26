@@ -41,14 +41,19 @@ void UndoJournal::LogMove(CompactCard card, CardLocation startLocation, CardLoca
 /// </summary>
 bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
 {
+   // if we can undo, pre-decrement to the new position
    if (currentPosition == 0)
       return false;
    --currentPosition;
 
+   // get the card to move and its current location
    card = cards[currentPosition];
-   location = CardLocation::FromUint8(
-      locations[currentPosition] ^ Game::instance.GetCardLocation(card).AsUint8()
-      );
+   CardLocation currentLocation = Game::instance.GetCardLocation(card);
+   assert(!currentLocation.IsNull());
+
+   // get the target location; given the current location we get that by XORing
+   // that location with the stored location integers
+   location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
    return true;
 }
 
@@ -59,14 +64,20 @@ bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
 /// </summary>
 bool UndoJournal::PopRedo(CompactCard &card, CardLocation &location)
 {
+   // see if we have something to redo
    if (currentPosition >= entryCount)
       return false;
 
+   // get the card to move and its current location
    card = cards[currentPosition];
-   location = CardLocation::FromUint8(
-      locations[currentPosition] ^ Game::instance.GetCardLocation(card).AsUint8()
-      );
+   CardLocation currentLocation = Game::instance.GetCardLocation(card);
+   assert(!currentLocation.IsNull());
 
+   // get the target location; given the current location we get that by XORing
+   // that location with the stored location integers
+   location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
+
+   // update the position and done
    ++currentPosition;
    return true;
 }

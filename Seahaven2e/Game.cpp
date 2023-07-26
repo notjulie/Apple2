@@ -316,15 +316,17 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
    // the card can't be null... that's what remove card is for
    assert(!card.IsNull());
 
-   uint8_t count = columnCounts[column];
-
    // if the row is 5 or greater the card must be one less than
    // the card above it
-   if (row >= 5) {
-      assert(card == CompactCard(GetColumnCard(column, row - 1) - 1));
+   if (row >= 5)
+   {
+      #ifdef DEBUG
+         CompactCard bottomCard = GetColumnCard(column, row - 1);
+         assert(bottomCard.GetSuit() == card.GetSuit());
+         assert(bottomCard.GetRank() == card.GetRank() + (uint8_t)1);
+      #endif
 
-      if (row >= count)
-         count = row + 1;
+      ++columnCounts[column];
       return;
    }
 
