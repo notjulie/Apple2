@@ -35,7 +35,10 @@ void UndoJournal::LogMove(CompactCard card, CardLocation startLocation, CardLoca
 }
 
 
-
+/// <summary>
+/// Pulls a move to undo off of the journal; returns false if there
+/// was nothing to undo.
+/// </summary>
 bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
 {
    if (currentPosition == 0)
@@ -46,5 +49,24 @@ bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
    location = CardLocation::FromUint8(
       locations[currentPosition] ^ Game::instance.GetCardLocation(card).AsUint8()
       );
+   return true;
+}
+
+
+/// <summary>
+/// Pulls a move to redo off of the journal; returns false if there
+/// was nothing to redo.
+/// </summary>
+bool UndoJournal::PopRedo(CompactCard &card, CardLocation &location)
+{
+   if (currentPosition >= entryCount)
+      return false;
+
+   card = cards[currentPosition];
+   location = CardLocation::FromUint8(
+      locations[currentPosition] ^ Game::instance.GetCardLocation(card).AsUint8()
+      );
+
+   ++currentPosition;
    return true;
 }

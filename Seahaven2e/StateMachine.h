@@ -23,6 +23,7 @@ private:
    void MoveToTower();
    void NewGame();
    void ServiceIdle();
+   void Redo();
    void Undo();
 
 private:

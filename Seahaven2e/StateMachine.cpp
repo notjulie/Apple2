@@ -88,6 +88,10 @@ void StateMachine::ServiceIdle() {
       Undo();
       break;
 
+   case (KeyCode)'Y':
+      Redo();
+      break;
+
    case KeyCode::None:
       break;
 
@@ -133,8 +137,8 @@ void StateMachine::MoveToTower()
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());
 
-  // start the animation
-  MoveCard(Game::instance.GetCard(location), CardLocation::Tower(0));
+   // start the animation
+   MoveCard(Game::instance.GetCard(location), CardLocation::Tower(0));
 }
 
 
@@ -144,7 +148,7 @@ void StateMachine::MoveToTower()
 void StateMachine::MoveCard(CompactCard card, CardLocation location)
 {
    // log
-   PersistentState::instance.LogMove(card, Game::instance.GetCardLocation(card), location);
+   PersistentState::instance.UndoJournal.LogMove(card, Game::instance.GetCardLocation(card), location);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, location);
@@ -207,7 +211,22 @@ void StateMachine::Undo()
 {
    CompactCard card;
    CardLocation location;
-   if (PersistentState::instance.PopUndo(card, location))
+   if (PersistentState::instance.UndoJournal.PopUndo(card, location))
+   {
+      CardAnimator::instance.StartAnimation(card, location);
+      state = State::Animating;
+   }
+}
+
+
+/// <summary>
+/// Redoes a move if possible
+/// </summary>
+void StateMachine::Redo()
+{
+   CompactCard card;
+   CardLocation location;
+   if (PersistentState::instance.UndoJournal.PopRedo(card, location))
    {
       CardAnimator::instance.StartAnimation(card, location);
       state = State::Animating;

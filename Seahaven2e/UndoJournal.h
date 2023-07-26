@@ -12,6 +12,7 @@
 class UndoJournal {
 public:
    void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation);
+   bool PopRedo(CompactCard &card, CardLocation &location);
    bool PopUndo(CompactCard &card, CardLocation &location);
 
 private:
