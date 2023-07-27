@@ -107,7 +107,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 /// <summary>
 /// Moves the currently selected card to a column
 /// </summary>
-void StateMachine::MoveToColumn()
+__attribute__((noinline)) void StateMachine::MoveToColumn()
 {
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());
@@ -133,7 +133,7 @@ void StateMachine::MoveToColumn()
 /// <summary>
 /// Moves the currently selected card to a tower
 /// </summary>
-void StateMachine::MoveToTower()
+__attribute__((noinline)) void StateMachine::MoveToTower()
 {
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());

@@ -85,7 +85,7 @@ uint8_t CardLocation::GetY() const {
 /// <summary>
 /// Returns the location up from this location (as if the user had hit the up arrow)
 /// </summary>
-CardLocation CardLocation::Up() const
+__attribute__((noinline)) CardLocation CardLocation::Up() const
 {
   CardLocation result = *this;
 
@@ -129,7 +129,7 @@ CardLocation CardLocation::Up() const
 /// <summary>
 /// Returns the location down from this location (as if the user had hit the down arrow)
 /// </summary>
-CardLocation CardLocation::Down() const
+__attribute__((noinline)) CardLocation CardLocation::Down() const
 {
    if (IsColumn())
    {
@@ -153,7 +153,7 @@ CardLocation CardLocation::Down() const
 /// <summary>
 /// Returns the location left from this location (as if the user had hit the left arrow)
 /// </summary>
-CardLocation CardLocation::Left() const
+__attribute__((noinline)) CardLocation CardLocation::Left() const
 {
    if (IsColumn())
    {
@@ -176,7 +176,7 @@ CardLocation CardLocation::Left() const
 /// <summary>
 /// Returns the location right from this location (as if the user had hit the right arrow)
 /// </summary>
-CardLocation CardLocation::Right() const
+__attribute__((noinline)) CardLocation CardLocation::Right() const
 {
    if (IsColumn())
    {
