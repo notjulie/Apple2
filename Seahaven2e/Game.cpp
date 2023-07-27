@@ -131,13 +131,16 @@ CompactCard Game::GetCard(CardLocation location) const
 /// </summary>
 CardLocation Game::GetCardLocation(CompactCard card)
 {
+   // null cards are nowhere
    if (card.IsNull())
       return CardLocation::Null();
 
+   // see if it's on a tower
    for (uint8_t i=0; i<4; ++i)
       if (card == towers[i])
          return CardLocation::Tower(i);
 
+   // see if it's on column
    for (uint8_t column=0; column<10; ++column)
    {
       int8_t index = GetColumnCardIndex(column, card);
@@ -145,6 +148,13 @@ CardLocation Game::GetCardLocation(CompactCard card)
          return CardLocation::Column(column, index);
    }
 
+   // see if it's on an ace pile
+   Rank rank = card.GetRank();
+   for (uint8_t i=0; i<4; ++i)
+      if (acePiles[i] >= rank)
+         return CardLocation::AcePile((Suit)i);
+
+   // else it's nowhere
    return CardLocation::Null();
 }
 
