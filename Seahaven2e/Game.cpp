@@ -205,7 +205,7 @@ void Game::RemoveCard(CardLocation location)
 {
    if (location.IsAce())
    {
-      acePiles[(uint8_t)location.GetAceSuit()] = Rank::Null;
+      acePiles[(uint8_t)location.GetAceSuit()] = acePiles[(uint8_t)location.GetAceSuit()] - 1;
    }
    else if (location.IsTower())
    {

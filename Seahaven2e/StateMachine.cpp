@@ -210,11 +210,10 @@ bool StateMachine::CheckAcesToMove() {
 /// </summary>
 void StateMachine::Undo()
 {
-   CompactCard card;
-   CardLocation location;
-   if (PersistentState::instance.UndoJournal.PopUndo(card, location))
+   UndoInstruction undo = PersistentState::instance.UndoJournal.PopUndo();
+   if (!undo.card.IsNull())
    {
-      CardAnimator::instance.StartAnimation(card, location);
+      CardAnimator::instance.StartAnimation(undo.card, undo.location);
       state = State::Animating;
    }
 }
@@ -225,11 +224,10 @@ void StateMachine::Undo()
 /// </summary>
 void StateMachine::Redo()
 {
-   CompactCard card;
-   CardLocation location;
-   if (PersistentState::instance.UndoJournal.PopRedo(card, location))
+   UndoInstruction redo = PersistentState::instance.UndoJournal.PopRedo();
+   if (!redo.card.IsNull())
    {
-      CardAnimator::instance.StartAnimation(card, location);
+      CardAnimator::instance.StartAnimation(redo.card, redo.location);
       state = State::Animating;
    }
 }

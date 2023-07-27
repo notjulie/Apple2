@@ -2,6 +2,7 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include "UndoJournal.h"
 #include "Game.h"
@@ -39,22 +40,27 @@ void UndoJournal::LogMove(CompactCard card, CardLocation startLocation, CardLoca
 /// Pulls a move to undo off of the journal; returns false if there
 /// was nothing to undo.
 /// </summary>
-bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
+UndoInstruction UndoJournal::PopUndo()
 {
+   UndoInstruction result;
+
    // if we can undo, pre-decrement to the new position
    if (currentPosition == 0)
-      return false;
+   {
+      result.card = CompactCard::Null();
+      return result;
+   }
    --currentPosition;
 
    // get the card to move and its current location
-   card = cards[currentPosition];
-   CardLocation currentLocation = Game::instance.GetCardLocation(card);
+   result.card = cards[currentPosition];
+   CardLocation currentLocation = Game::instance.GetCardLocation(result.card);
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing
    // that location with the stored location integers
-   location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
-   return true;
+   result.location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
+   return result;
 }
 
 
@@ -62,22 +68,27 @@ bool UndoJournal::PopUndo(CompactCard &card, CardLocation &location)
 /// Pulls a move to redo off of the journal; returns false if there
 /// was nothing to redo.
 /// </summary>
-bool UndoJournal::PopRedo(CompactCard &card, CardLocation &location)
+UndoInstruction UndoJournal::PopRedo()
 {
+   UndoInstruction result;
+
    // see if we have something to redo
    if (currentPosition >= entryCount)
-      return false;
+   {
+      result.card = CompactCard::Null();
+      return result;
+   }
 
    // get the card to move and its current location
-   card = cards[currentPosition];
-   CardLocation currentLocation = Game::instance.GetCardLocation(card);
+   result.card = cards[currentPosition];
+   CardLocation currentLocation = Game::instance.GetCardLocation(result.card);
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing
    // that location with the stored location integers
-   location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
+   result.location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
 
    // update the position and done
    ++currentPosition;
-   return true;
+   return result;
 }

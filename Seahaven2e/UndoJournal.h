@@ -9,11 +9,17 @@
 #include "Card.h"
 #include "CardLocation.h"
 
+struct UndoInstruction
+{
+   CompactCard card;
+   CardLocation location;
+};
+
 class UndoJournal {
 public:
    void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation);
-   bool PopRedo(CompactCard &card, CardLocation &location);
-   bool PopUndo(CompactCard &card, CardLocation &location);
+   UndoInstruction PopRedo();
+   UndoInstruction PopUndo();
 
 private:
    static constexpr uint8_t JournalMaxLength = 150;
