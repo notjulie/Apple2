@@ -28,7 +28,7 @@ void Cursor::CursorHasBeenObliterated()
 /// Sets the cursor location to the bottom card on column 4, adjusting
 /// as needed if the column is empty
 /// </summary>
-void Cursor::SetCursorLocationToDefault() {
+__attribute__((noinline)) void Cursor::SetCursorLocationToDefault() {
   // just set it to the bottomest of the bottom on column 4 and
   // let our cursor adjustment logic handle it from there
   CardLocation defaultLocation = CardLocation::Column(4, CardLocations::MaxColumnCards - 1);
@@ -75,7 +75,7 @@ void Cursor::Right()
 /// <summary>
 /// Hides the cursor
 /// </summary>
-void Cursor::Hide()
+__attribute__((noinline)) void Cursor::Hide()
 {
    if (state == State::On)
    {
@@ -89,7 +89,7 @@ void Cursor::Hide()
 /// Shows the cursor at its current location... if the current location does not
 /// have a card on it we shuffle the cursor to a spot that does
 /// </summary>
-void Cursor::Show()
+__attribute__((noinline)) void Cursor::Show()
 {
    SetAndAdjustLocation(location);
    if (state == State::Idle)
@@ -102,7 +102,7 @@ void Cursor::Show()
 /// <summary>
 /// Starts showing the cursor at the given location
 /// </summary>
-void Cursor::SetLocation(CardLocation location)
+__attribute__((noinline)) void Cursor::SetLocation(CardLocation location)
 {
    // turn it off if it's on
    if (state == State::On)
@@ -122,7 +122,7 @@ void Cursor::SetLocation(CardLocation location)
 /// <summary>
 /// Performs periodic actions
 /// </summary>
-void Cursor::Service() {
+__attribute__((noinline)) void Cursor::Service() {
   uint8_t sinceLastToggle = a2::VBLCounter::GetCounter() - lastToggleTime;
 
   switch (state) {
@@ -149,7 +149,7 @@ void Cursor::Service() {
 /// <summary>
 /// Toggles the cursor
 /// </summary>
-void Cursor::Toggle()
+__attribute__((noinline)) void Cursor::Toggle()
 {
    if (location.IsNull())
       return;
