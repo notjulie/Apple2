@@ -212,15 +212,21 @@ bool StateMachine::CheckAcesToMove() {
 /// </summary>
 void StateMachine::BeginUndo()
 {
+   // see if there's something to undo
    UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
-   if (!undo.IsNull())
-   {
-      PersistentState::instance.UndoJournal.PopUndo();
+   if (undo.IsNull())
+      return;
 
-      currentUndoGroup = undo.GetGroup();
-      CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
-      state = State::Animating;
-   }
+   // tell the journal that we're actually undoing it
+   PersistentState::instance.UndoJournal.PopUndo();
+
+   // save the group... we keep undoing until we hit something that
+   // belongs to a different group
+   currentUndoGroup = undo.GetGroup();
+
+   // start it a-mmoving
+   CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
+   state = State::Animating;
 }
 
 

@@ -52,12 +52,21 @@ Card operator+(Card card, int8_t i) {
 //          class CompactCard
 // ======================================================================
 
-CompactCard::CompactCard(Card _card) {
+
+/// <summary>
+/// Initializes an instance of CompactCard from a Card
+/// </summary>
+CompactCard::CompactCard(Card _card)
+{
   card.asInt = 0;
   card.parts.rank = (uint8_t)_card.rank;
   card.parts.suit = (uint8_t)_card.suit;
 }
 
+
+/// <summary>
+/// Conversion operator from CompactCard to Card
+/// </summary>
 CompactCard::operator Card() const
 {
   Card result;
@@ -66,6 +75,12 @@ CompactCard::operator Card() const
   return result;
 }
 
+
+/// <summary>
+/// Creates a CompactCard instance from a number from 0 to 51; how we
+/// map the cards to those numbers is arbitrary as long as it's consistent
+/// with ToOrdinal()
+/// </summary>
 CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
 {
    CompactCard result;
@@ -74,9 +89,15 @@ CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
    return result;
 }
 
+
+/// <summary>
+/// Maps a CompactCard instance to a number from 0 to 51; how we
+/// map the cards to those numbers is arbitrary as long as it's consistent
+/// with FromOrdinal()
+/// </summary>
 uint8_t CompactCard::ToOrdinal() const
 {
    return
-      (card.parts.rank << 2) |
+      ((card.parts.rank - 1) << 2) |
       (card.parts.suit & 3);
 }
