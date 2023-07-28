@@ -52,6 +52,7 @@ public:
   Rank GetRank() const { return (Rank)card.parts.rank; }
   Suit GetSuit() const { return (Suit)card.parts.suit; }
   bool IsNull() const { return card.parts.rank == 0; }
+  uint8_t ToOrdinal() const;
 
   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
 

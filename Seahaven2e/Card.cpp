@@ -66,9 +66,17 @@ CompactCard::operator Card() const
   return result;
 }
 
-CompactCard CompactCard::FromOrdinal(uint8_t cardNumber) {
-  CompactCard result;
-  result.card.parts.suit = cardNumber & 3;
-  result.card.parts.rank = 1 + (cardNumber >> 2);
-  return result;
+CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
+{
+   CompactCard result;
+   result.card.parts.suit = cardNumber & 3;
+   result.card.parts.rank = 1 + (cardNumber >> 2);
+   return result;
+}
+
+uint8_t CompactCard::ToOrdinal() const
+{
+   return
+      (card.parts.rank << 2) |
+      (card.parts.suit & 3);
 }

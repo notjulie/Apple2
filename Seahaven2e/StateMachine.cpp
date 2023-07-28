@@ -86,11 +86,11 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       break;
 
    case (KeyCode)'Z':
-      Undo();
+      BeginUndo();
       break;
 
    case (KeyCode)'Y':
-      Redo();
+      BeginRedo();
       break;
 
    case KeyCode::None:
@@ -126,6 +126,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
 
    // start the animation
+   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
    MoveCard(CompactCard(card), targetLocation);
 }
 
@@ -139,6 +140,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
    assert(!location.IsNull());
 
    // start the animation
+   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
    MoveCard(Game::instance.GetCard(location), CardLocation::Tower(0));
 }
 
@@ -149,7 +151,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
 void StateMachine::MoveCard(CompactCard card, CardLocation location)
 {
    // log
-   PersistentState::instance.UndoJournal.LogMove(card, Game::instance.GetCardLocation(card), location);
+   PersistentState::instance.UndoJournal.LogMove(currentUndoGroup, card, Game::instance.GetCardLocation(card), location);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, location);
@@ -208,12 +210,15 @@ bool StateMachine::CheckAcesToMove() {
 /// <summary>
 /// Undoes a move if possible
 /// </summary>
-void StateMachine::Undo()
+void StateMachine::BeginUndo()
 {
-   UndoInstruction undo = PersistentState::instance.UndoJournal.PopUndo();
-   if (!undo.card.IsNull())
+   UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
+   if (!undo.IsNull())
    {
-      CardAnimator::instance.StartAnimation(undo.card, undo.location);
+      PersistentState::instance.UndoJournal.PopUndo();
+
+      currentUndoGroup = undo.GetGroup();
+      CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
       state = State::Animating;
    }
 }
@@ -222,12 +227,14 @@ void StateMachine::Undo()
 /// <summary>
 /// Redoes a move if possible
 /// </summary>
-void StateMachine::Redo()
+void StateMachine::BeginRedo()
 {
-   UndoInstruction redo = PersistentState::instance.UndoJournal.PopRedo();
-   if (!redo.card.IsNull())
+   UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
+   if (!redo.IsNull())
    {
-      CardAnimator::instance.StartAnimation(redo.card, redo.location);
+      PersistentState::instance.UndoJournal.PopRedo();
+
+      CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
       state = State::Animating;
    }
 }

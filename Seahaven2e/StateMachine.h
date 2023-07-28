@@ -7,6 +7,7 @@
 
 #include "Card.h"
 #include "CardLocation.h"
+#include "UndoJournal.h"
 
 /// <summary>
 /// The top level state machine for the game
@@ -23,8 +24,8 @@ private:
    void MoveToTower();
    void NewGame();
    void ServiceIdle();
-   void Redo();
-   void Undo();
+   void BeginRedo();
+   void BeginUndo();
 
 private:
    enum class State {
@@ -35,6 +36,7 @@ private:
 
 private:
    State state = State::Uninitialized;
+   UndoGroupID currentUndoGroup;
 };
 
 
