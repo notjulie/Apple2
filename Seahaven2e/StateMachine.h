@@ -26,12 +26,16 @@ private:
    void ServiceIdle();
    void BeginRedo();
    void BeginUndo();
+   void RedoNext();
+   void UndoNext();
 
 private:
    enum class State {
       Uninitialized,
       Idle,
-      Animating
+      Animating,
+      Undoing,
+      Redoing
    };
 
 private:

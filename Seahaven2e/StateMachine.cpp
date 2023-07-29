@@ -39,6 +39,18 @@ void StateMachine::Service() {
          if (!CheckAcesToMove())
             EnterIdle();
       break;
+
+   case State::Undoing:
+      CardAnimator::instance.Service();
+      if (!CardAnimator::instance.IsAnimating())
+         UndoNext();
+      break;
+
+   case State::Redoing:
+      CardAnimator::instance.Service();
+      if (!CardAnimator::instance.IsAnimating())
+         RedoNext();
+      break;
    }
 }
 
@@ -226,7 +238,7 @@ void StateMachine::BeginUndo()
 
    // start it a-mmoving
    CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
-   state = State::Animating;
+   state = State::Undoing;
 }
 
 
@@ -240,7 +252,48 @@ void StateMachine::BeginRedo()
    {
       PersistentState::instance.UndoJournal.PopRedo();
 
+      // save the group... we keep undoing until we hit something that
+      // belongs to a different group
+      currentUndoGroup = redo.GetGroup();
+
       CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
-      state = State::Animating;
+      state = State::Redoing;
    }
 }
+
+
+/// <summary>
+/// Starts moving the next card to redo if there are more in the current group
+/// </summary>
+void StateMachine::RedoNext()
+{
+   UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
+   if (!redo.IsNull() && redo.GetGroup() == currentUndoGroup)
+   {
+      PersistentState::instance.UndoJournal.PopRedo();
+      CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
+   }
+   else
+   {
+      state = State::Idle;
+   }
+}
+
+
+/// <summary>
+/// Starts moving the next card to undo if there are more in the current group
+/// </summary>
+void StateMachine::UndoNext()
+{
+   UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
+   if (!undo.IsNull() && undo.GetGroup() == currentUndoGroup)
+   {
+      PersistentState::instance.UndoJournal.PopUndo();
+      CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
+   }
+   else
+   {
+      state = State::Idle;
+   }
+}
+
