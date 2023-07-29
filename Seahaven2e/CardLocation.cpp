@@ -8,32 +8,24 @@
 
 
 /// <summary>
-/// Creates a CardLocation representing the given column and row
-/// </summary>
-CardLocation CardLocation::Column(uint8_t column, uint8_t row) {
-  // this only works if the maximum column cards is no greater than 16
-  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
-  return CardLocation(((column + 1) << 4) | row);
-}
-
-
-/// <summary>
 /// Gets the row associated with a column location
 /// </summary>
-uint8_t CardLocation::GetRow() const {
-  // this only works if the maximum column cards is no greater than 16
-  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
-  return locationNumber & 0x0F;
+uint8_t CardLocation::GetRow() const
+{
+   // this only works if the maximum column cards is no greater than 16
+   static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
+   return value.parts.index;
 }
 
 
 /// <summary>
 /// Gets the column associated with a column location
 /// </summary>
-uint8_t CardLocation::GetColumn() const {
-  // this only works if the maximum column cards is no greater than 16
-  static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
-  return (locationNumber>>4) - 1;
+uint8_t CardLocation::GetColumn() const
+{
+   // this only works if the maximum column cards is no greater than 16
+   static_assert(CardLocations::MaxColumnCards <= 16, "column index won't fit in four bits");
+   return value.parts.region;
 }
 
 

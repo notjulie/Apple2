@@ -69,20 +69,28 @@ constexpr ColumnYLookup columnYLookup;
 // ==========================================================
 
 class CardLocation {
+private:
+   enum class Region : uint8_t {
+      Tower = 15,
+      Ace = 14,
+      Null = 13
+   };
+
 public:
    CardLocation() = default;
+
    static CardLocation FromUint8(uint8_t i) { return CardLocation(i); }
-   uint8_t AsUint8() const { return locationNumber; }
+   uint8_t AsUint8() const { return value.location_number; }
 
-   bool IsNull() const { return locationNumber == 0; }
-   bool IsAce() const { return locationNumber < 5; }
-   bool IsColumn() const { return locationNumber>=5 && locationNumber <=251; }
-   bool IsTower() const { return locationNumber > 251; }
+   bool IsNull() const { return value.parts.region == (uint8_t)Region::Null; }
+   bool IsAce() const { return value.parts.region == (uint8_t)Region::Ace; }
+   bool IsColumn() const { return value.parts.region < 10; }
+   bool IsTower() const { return value.parts.region == (uint8_t)Region::Tower; }
 
-   Suit GetAceSuit() const { return (Suit)(locationNumber - 1); }
+   Suit GetAceSuit() const { return (Suit)value.parts.index; }
    uint8_t GetColumn() const;
    uint8_t GetRow() const;
-   uint8_t GetTowerIndex() const { return locationNumber ^ 0xFF; }
+   uint8_t GetTowerIndex() const { return value.parts.index; }
 
    uint8_t GetX() const;
    uint8_t GetY() const;
@@ -93,24 +101,28 @@ public:
    CardLocation Left() const;
    CardLocation Right() const;
 
-   static inline CardLocation AcePile(Suit suit) {
-    return CardLocation(1 + (uint8_t)suit); }
-   static CardLocation Column(uint8_t column, uint8_t index);
-   static inline CardLocation Tower(uint8_t index) {
-     return CardLocation(index ^ 0xFF); }
-   static constexpr CardLocation Null() {
-    return CardLocation(0); }
+   static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, (uint8_t)suit); }
+   static CardLocation Column(uint8_t column, uint8_t index) { return CardLocation((Region)column, index); }
+   static inline CardLocation Tower(uint8_t index) { return CardLocation(Region::Tower, index); }
+   static constexpr CardLocation Null() { return CardLocation(Region::Null, 0); }
 
 private:
    static constexpr uint8_t ColumnXValues[10] = {0, 4, 8, 12, 16, 20, 24, 28, 32, 36};
 
 private:
-   constexpr CardLocation(uint8_t locationNumber) : locationNumber(locationNumber) {}
+   constexpr CardLocation(Region region, uint8_t index) : value() { value.parts.region = (uint8_t)region; value.parts.index = index; }
+   constexpr CardLocation(uint8_t locationNumber) : value() { value.location_number = locationNumber; }
    static constexpr uint8_t GetColumnX(uint8_t column) { return ColumnXValues[column]; }
 
 private:
-   uint8_t locationNumber;
+   union {
+      struct {
+         uint8_t index : 4;
+         uint8_t region : 4;
+      } parts;
+      uint8_t location_number;
+   } value;
 };
-
+static_assert(sizeof(CardLocation)==1, "CardLocation is supposed to be small");
 
 #endif  // SEAHAVEN2E_CARDLOCATION_H_
