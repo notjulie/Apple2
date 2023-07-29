@@ -12,12 +12,21 @@
 /// <summary>
 /// Memory area for saving the image behind a card during animation
 /// </summary>
-struct SavedBackground {
+class SavedBackground
+{
+public:
+   void SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y);
+   void RestoreBackground();
+   void Forget() { backgroundSaved = false; }
+
+private:
    static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;
 
-   void SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y);
-   void RestoreBackground(a2::HGRPage hgr, uint8_t x, uint8_t y);
-
+private:
+   a2::HGRPage backgroundHGR;
+   uint8_t backgroundX;
+   uint8_t backgroundY;
+   bool backgroundSaved;
    uint8_t pixels[4 * Height];
 };
 

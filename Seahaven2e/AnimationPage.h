@@ -33,9 +33,6 @@ private:
 
    // saved background for this page; relevant only in animating states,
    // doesn't need to be cleared by constructor
-   uint8_t backgroundX;
-   uint8_t backgroundY;
-   bool backgroundSaved;
    SavedBackground background;
 };
 
