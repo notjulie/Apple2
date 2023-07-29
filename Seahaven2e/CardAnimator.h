@@ -23,7 +23,7 @@ public:
    void StartAnimation(CompactCard card, CardLocation end);
    void Service();
 
-   AnimationPage *GetOnscreenPage() { return showingPage1 ? &page1 : &page2; }
+   AnimationPage GetOnscreenPage() const { return onscreenPage; }
 
 public:
   static CardAnimator instance;
@@ -43,18 +43,16 @@ private:
 
 private:
    static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
-   AnimationPage *GetOffscreenPage() { return showingPage1 ? &page2 : &page1; }
    void SwapPages();
    void UpdatePosition();
 
 private:
    // operating state
    State state;
-   bool showingPage1;
 
-   // our animation page 1 and 2
-   AnimationPage page1;
-   AnimationPage page2;
+   // our animation pages
+   AnimationPage offscreenPage;
+   AnimationPage onscreenPage;
 
    // the animation in progress; relevant only in animating states
    // don't need to be cleared by constructor

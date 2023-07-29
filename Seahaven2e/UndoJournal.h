@@ -29,6 +29,8 @@ enum class UndoGroupID : int8_t {
 /// </summary>
 class CardAndGroup {
 public:
+   CardAndGroup() {}
+
    CompactCard GetCard() const { return CompactCard::FromOrdinal(cardOrdinal); }
    UndoGroupID GetGroupID() const { return (UndoGroupID)group; }
 
@@ -62,6 +64,8 @@ struct UndoInstruction
 /// </summary>
 class UndoJournal {
 public:
+   UndoJournal() {}
+
    UndoGroupID StartNewUndo();
    void LogMove(UndoGroupID groupID, CompactCard card, CardLocation startLocation, CardLocation endLocation);
    UndoInstruction PeekRedo() const;

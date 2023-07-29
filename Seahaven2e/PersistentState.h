@@ -11,6 +11,8 @@
 
 class PersistentState {
 public:
+   PersistentState() {}
+
    uint16_t GetNextGameSeed() { return ++gameSeed; }
 
 public:

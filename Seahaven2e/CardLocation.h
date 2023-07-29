@@ -102,8 +102,11 @@ public:
     return CardLocation(0); }
 
 private:
+   static constexpr uint8_t ColumnXValues[10] = {0, 4, 8, 12, 16, 20, 24, 28, 32, 36};
+
+private:
    constexpr CardLocation(uint8_t locationNumber) : locationNumber(locationNumber) {}
-   static constexpr uint8_t GetColumnX(uint8_t column) { return column << 2; }
+   static constexpr uint8_t GetColumnX(uint8_t column) { return ColumnXValues[column]; }
 
 private:
    uint8_t locationNumber;

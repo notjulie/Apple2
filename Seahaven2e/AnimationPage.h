@@ -15,7 +15,6 @@ class AnimationPage
 {
 public:
    AnimationPage() {}
-   void Initialize(Drawing drawing) { this->drawing = drawing; }
 
    void CopyFrom(AnimationPage &from);
    void DrawGame();
@@ -23,18 +22,28 @@ public:
    void EraseCard(CardLocation location);
    void MoveCard(CompactCard card, uint8_t x, uint8_t y);
 
-   void Show() { drawing.Show(); }
+   void Show() { GetDrawing().Show(); }
+   Drawing GetDrawing();
+   SavedBackground &GetBackground() { return page==0 ? background1 : background2; }
 
-   Drawing GetDrawing() { return drawing; }
+public:
+   static AnimationPage Page1() { return AnimationPage(0); }
+   static AnimationPage Page2() { return AnimationPage(1); }
+
+private:
+   AnimationPage(uint8_t page) : page(page) {}
 
 private:
    // construction parameters
-   Drawing drawing;
+   uint8_t page;
 
-   // saved background for this page; relevant only in animating states,
-   // doesn't need to be cleared by constructor
-   SavedBackground background;
+   // our saved backgrounds
+   static SavedBackground background1;
+   static SavedBackground background2;
 };
 
+// this is just a wrapper around an index so that we can try to
+// minimize our passing around of pointers... make sure of that
+static_assert(sizeof(AnimationPage) == 1, "AnimationPage is too big");
 
 #endif // ANIMATIONPAGE_h

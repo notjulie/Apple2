@@ -31,9 +31,8 @@ CardAnimator::CardAnimator()
 void CardAnimator::Initialize()
 {
    state = State::Idle;
-   showingPage1 = true;
-   page1.Initialize(Drawing::Page1());
-   page2.Initialize(Drawing::Page2());
+   onscreenPage = AnimationPage::Page1();
+   offscreenPage = AnimationPage::Page2();
 }
 
 
@@ -44,14 +43,14 @@ void CardAnimator::Initialize()
 /// </summary>
 void CardAnimator::DrawGame()
 {
-   // draw to page 1
-   page1.DrawGame();
+   // draw to offscreen page
+   offscreenPage.DrawGame();
 
-   // show page 1
-   page1.Show();
+   // show
+   SwapPages();
 
    // copy to the offscreen buffer
-   page2.CopyFrom(page1);
+   offscreenPage.CopyFrom(onscreenPage);
 
    // both pages are the same and up to date
    state = State::Idle;
@@ -107,18 +106,17 @@ void CardAnimator::StartAnimation(
    lastVBLCount = a2::VBLCounter::GetCounter();
    cardToMove = card;
 
-   // draw the game without the card on page 2
-   page2.EraseCard(start);
+   // draw the game without the card
+   offscreenPage.EraseCard(start);
 
    // draw the card at its original position, saving the background
-   page2.MoveCard(cardToMove, currentX, currentY);
+   offscreenPage.MoveCard(cardToMove, currentX, currentY);
 
-   // switch to page 2
-   page2.Show();
-   showingPage1 = false;
+   // switch
+   SwapPages();
 
-   // draw the game without the card on page 1
-   page1.EraseCard(start);
+   // draw the game without the card
+   offscreenPage.EraseCard(start);
 
    // set the state
    state = State::Animating;
@@ -130,12 +128,15 @@ void CardAnimator::StartAnimation(
 /// </summary>
 uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
   // 3.5x + y
-  return
+  /*return
     (dx >> 1) +
     dx +
     dx +
     dx +
     (dy >> 1);
+    */
+    // TODO
+    return dx + dy;
 }
 
 
@@ -144,8 +145,6 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
 ///
 __attribute__((noinline)) void CardAnimator::Service()
 {
-   AnimationPage *page;
-
    switch (state) {
    case State::Idle:
       break;
@@ -153,20 +152,18 @@ __attribute__((noinline)) void CardAnimator::Service()
    case State::Animating:
       // update the position, move the card
       UpdatePosition();
-      page = GetOffscreenPage();
-      page->MoveCard(cardToMove, currentX, currentY);
+      offscreenPage.MoveCard(cardToMove, currentX, currentY);
       SwapPages();
 
       // if we're done...
       if (timeLeft == 0)
       {
          // end the animation on the onscreen page
-         page->EndAnimation();
+         onscreenPage.EndAnimation();
 
          // finish the animation on the offscreen page
-         page = GetOffscreenPage();
-         page->MoveCard(cardToMove, currentX, currentY);
-         page->EndAnimation();
+         offscreenPage.MoveCard(cardToMove, currentX, currentY);
+         offscreenPage.EndAnimation();
 
          // update the game object and our state
          Game::instance.SetCard(endLocation, cardToMove);
@@ -180,8 +177,11 @@ __attribute__((noinline)) void CardAnimator::Service()
 
 void CardAnimator::SwapPages()
 {
-   showingPage1 = !showingPage1;
-   GetOnscreenPage()->Show();
+   AnimationPage temp = onscreenPage;
+   onscreenPage = offscreenPage;
+   offscreenPage = temp;
+
+   onscreenPage.Show();
 }
 
 

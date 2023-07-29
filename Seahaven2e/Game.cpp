@@ -18,6 +18,12 @@ Game Game::instance;
 
 
 /// <summary>
+/// look up table for avoiding multiplying by 10
+/// </summary>
+static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
+
+
+/// <summary>
 /// Shuffles and deals out a new game
 /// </summary>
 __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
@@ -260,7 +266,7 @@ CompactCard Game::GetColumnCard(uint8_t column, uint8_t row) const
 
    // if it's in our array of cards return what's in the array
    if (row < 5)
-      return columnCards[column + (row<<3) + row + row];
+      return columnCards[column + rowOffset[row]];
 
    // anything beyond the array is a card stacked on the last card of the array
    Card result = columnCards[40 + column];
@@ -342,7 +348,7 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
    }
 
    // else just set it
-   columnCards[column + (row<<3) + row + row] = card;
+   columnCards[column + rowOffset[row]] = card;
    if (row >= columnCounts[column])
       columnCounts[column] = row + 1;
 }
