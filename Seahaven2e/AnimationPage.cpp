@@ -13,14 +13,14 @@ void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
    // if we have a saved background we need to restore it
    if (backgroundSaved)
    {
-      drawing.RestoreBackground(&background, backgroundX, backgroundY);
+      background.RestoreBackground(drawing.GetHGRPage(), backgroundX, backgroundY);
       backgroundSaved = false;
    }
 
    // save the background at the new location
    backgroundX = x;
    backgroundY = y;
-   drawing.SaveCardBackground(x, y, &background);
+   background.SaveCardBackground(drawing.GetHGRPage(), x, y);
    backgroundSaved = true;
    drawing.DrawCardWithShadow(card, x, y);
 }

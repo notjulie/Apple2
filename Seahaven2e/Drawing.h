@@ -21,14 +21,11 @@ public:
    void DrawTowers();
 
    void EraseCard(CardLocation location);
-
-   void CopyTo(Drawing target) { hgr.CopyTo(target.hgr); }
-
-   void SaveCardBackground(uint8_t x, uint8_t y, SavedBackground *background);
-   void RestoreBackground(SavedBackground *background, uint8_t x, uint8_t y);
-
    void ToggleCursor(uint8_t x, uint8_t y);
 
+   // dispatchers to the HGRPage
+   a2::HGRPage GetHGRPage() const { return hgr; }
+   void CopyTo(Drawing target) { hgr.CopyTo(target.hgr); }
    void Show() { hgr.Show(); }
 
 public:

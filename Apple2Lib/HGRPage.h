@@ -79,6 +79,10 @@ namespace a2 {
    private:
       static c6502::Lookup16Bit<uint16_t, 192> rowPointers;
    };
+
+   // the idea here is to be able to pass it around by reference, so
+   // keep it small
+   static_assert(sizeof(HGRPage) == 1, "HGRPage is supposed to be lean");
 }
 
 #endif // HGRROWTABLE_H
