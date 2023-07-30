@@ -17,17 +17,24 @@ public:
    void Service();
 
 private:
-   bool CheckAcesToMove();
-   void EnterIdle();
-   void MoveCard(CompactCard card, CardLocation location);
+   // user commands
    void MoveToColumn();
    void MoveToTower();
    void NewGame();
-   void ServiceIdle();
    void BeginRedo();
    void BeginUndo();
+
+   // state machine
+   bool CheckAcesToMove();
+   void EnterIdle();
+   void ServiceIdle();
    void RedoNext();
    void UndoNext();
+
+   // card movement
+   void MoveCard(CompactCard card, CardLocation location);
+   void MoveColumnToColumn(CardLocation from, CardLocation to);
+   void NextColumnToColumnMove();
 
 private:
    enum class State {
@@ -35,12 +42,20 @@ private:
       Idle,
       Animating,
       Undoing,
-      Redoing
+      Redoing,
+      MovingColumnToColumn
    };
 
 private:
    State state = State::Uninitialized;
    UndoGroupID currentUndoGroup;
+
+   // move in progress details
+   CompactCard cardsToMove[5];
+   CardLocation startLocations[5];
+   CardLocation endLocations[5];
+   uint8_t numberOfCardsToMove;
+   uint8_t cardBeingMoved;
 };
 
 

@@ -51,6 +51,12 @@ void StateMachine::Service() {
       if (!CardAnimator::instance.IsAnimating())
          RedoNext();
       break;
+
+   case State::MovingColumnToColumn:
+      CardAnimator::instance.Service();
+      if (!CardAnimator::instance.IsAnimating())
+         NextColumnToColumnMove();
+      break;
    }
 }
 
@@ -121,6 +127,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 /// </summary>
 __attribute__((noinline)) void StateMachine::MoveToColumn()
 {
+   // grab the cursor location
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());
 
@@ -129,13 +136,22 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    if (card.IsNull())
       return;
 
-   // get the location of the card above it
+   // get the location of the card one rank higher and verify that it's the bottom
+   // of a column
    CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
    if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
       return;
 
    // the target location is one below that
    CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
+
+   // if we are moving column to column it gets slightly complicated if multiple
+   // cards are moving, so pop off to our handling for that
+   if (location.IsColumn())
+   {
+      MoveColumnToColumn(location, targetLocation);
+      return;
+   }
 
    // start the animation
    currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
@@ -297,3 +313,53 @@ void StateMachine::UndoNext()
    }
 }
 
+
+/// <summary>
+/// Attempts to move a group of one to five cards from one column to
+/// another.  The locations have been verified, but the rest of the details
+/// of the move have not.
+/// </summary>
+void StateMachine::MoveColumnToColumn(CardLocation from, CardLocation to)
+{
+   // figure out if we have a valid group to move and how big it is
+   numberOfCardsToMove = Game::instance.GetSizeOfMoveToColumnGroup(from);
+   if (numberOfCardsToMove == 0)
+      return;
+
+   // make sure we have the tower space to allow it
+   if (numberOfCardsToMove > Game::instance.GetNumberOfAvailableTowers() + 1)
+      return;
+
+   // make a list of the cards to move; we can afford the 15 bytes
+   for (int i=0; i<numberOfCardsToMove; ++i)
+   {
+      cardsToMove[i] = Game::instance.GetCard(from);
+      startLocations[i] = from;
+      endLocations[i] = to;
+
+      from = from.Down();
+      to = to.Down();
+   }
+
+   // we move the cards from bottom up
+   cardBeingMoved = numberOfCardsToMove;
+   NextColumnToColumnMove();
+}
+
+
+void StateMachine::NextColumnToColumnMove()
+{
+   // if we are out of cards to move we need to finally update
+   // the game
+   if (cardBeingMoved == 0)
+   {
+      assert(0);
+      EnterIdle();
+      return;
+   }
+
+   // next
+   --cardBeingMoved;
+   MoveCard(cardsToMove[cardBeingMoved], endLocations[cardBeingMoved]);
+   state = State::MovingColumnToColumn;
+}

@@ -31,6 +31,8 @@ public:
    // column card access
    uint8_t GetNumberOfCardsOnColumn(uint8_t column) const;
    CompactCard GetColumnCard(uint8_t column, uint8_t row) const;
+   uint8_t GetSizeOfMoveToColumnGroup(CardLocation location) const;
+   uint8_t GetNumberOfAvailableTowers() const;
 
    bool IsBottomOfColumn(CardLocation location) const;
 

@@ -354,3 +354,45 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
 }
 
 
+/// <summary>
+/// Looks at the column location and determines if it is the top
+/// of a group of cards that can be moved together and if so how
+/// many are in the group.
+/// </summary>
+uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation location) const
+{
+   assert(location.IsColumn());
+
+   uint8_t column = location.GetColumn();
+   uint8_t row = location.GetRow();
+   uint8_t count = columnCounts[column];
+   Card topCard = GetColumnCard(column, row);
+
+   // confirm that all cards below form a straight flush
+   for (uint8_t i=row + 1; i<count; ++i)
+   {
+      Card card = GetColumnCard(column, i);
+      if (card.GetSuit() != topCard.GetSuit())
+         return 0;
+      if (topCard.GetRank() - card.GetRank() != i - row)
+         return 0;
+   }
+
+   // if so we're good
+   return count - row;
+}
+
+
+/// <summary>
+/// Get the number of available towers
+/// </summary>
+uint8_t Game::GetNumberOfAvailableTowers() const
+{
+   uint8_t towerCount = 0;
+   for (int i=0; i<4; ++i)
+      if (towers[i].IsNull())
+         ++towerCount;
+
+
+   return towerCount;
+}
