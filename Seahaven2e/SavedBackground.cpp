@@ -32,6 +32,13 @@ __attribute__((noinline)) void SavedBackground::SaveCardBackground(a2::HGRPage h
 }
 
 
+void SavedBackground::RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y)
+{
+   RestoreBackground();
+   SaveCardBackground(hgr, x, y);
+}
+
+
 /// <summary>
 /// Restores a region of the HGR page from the SavedBackground object
 /// </summary>

@@ -8,26 +8,21 @@
 SavedBackground AnimationPage::background1;
 SavedBackground AnimationPage::background2;
 
-SavedBackground *AnimationPage::backgrounds[2];
 constexpr Drawing AnimationPage::drawings[2];
-
-
-void AnimationPage::Initialize()
-{
-   backgrounds[0] = &background1;
-   backgrounds[1] = &background2;
-}
 
 
 __attribute__((noinline)) void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
 {
    Drawing drawing = GetDrawing();
 
-   // restore the background
-   GetBackground().RestoreBackground();
+   // restore the background at the old position and save the
+   // background at the new position
+   if (page == 0)
+       background1.RestoreAndSave(drawing.GetHGRPage(), x, y);
+   else
+       background2.RestoreAndSave(drawing.GetHGRPage(), x, y);
 
-   // save the background at the new location
-   GetBackground().SaveCardBackground(drawing.GetHGRPage(), x, y);
+   // draw the card at the new position
    drawing.DrawCardWithShadow(card, x, y);
 }
 
@@ -38,14 +33,14 @@ __attribute__((noinline)) void AnimationPage::DrawGame()
 
    drawing.DrawBackground();
    drawing.DrawGame();
-   GetBackground().Forget();
+   ForgetBackground();
 }
 
 
 void AnimationPage::CopyFrom(AnimationPage &from)
 {
    from.GetDrawing().CopyTo(GetDrawing());
-   GetBackground().Forget();
+   ForgetBackground();
 }
 
 
@@ -62,7 +57,15 @@ void AnimationPage::EndAnimation()
 {
    // basically we just need to tell ourself not to overwrite
    // the card we just moved next time we're called
-   GetBackground().Forget();
+   ForgetBackground();
+}
+
+__attribute__((noinline)) void AnimationPage::ForgetBackground()
+{
+   if (page == 0)
+      background1.Forget();
+   else
+      background2.Forget();
 }
 
 

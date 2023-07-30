@@ -14,9 +14,6 @@
 class AnimationPage
 {
 public:
-   static void Initialize();
-
-public:
    AnimationPage() {}
 
    void CopyFrom(AnimationPage &from);
@@ -24,10 +21,10 @@ public:
    void EndAnimation();
    void EraseCard(CardLocation location);
    void MoveCard(CompactCard card, uint8_t x, uint8_t y);
+   void ForgetBackground();
 
    void Show() { GetDrawing().Show(); }
    Drawing GetDrawing() { return drawings[page]; }
-   SavedBackground &GetBackground() { return *backgrounds[page]; }
 
 public:
    static AnimationPage Page1() { return AnimationPage(0); }
@@ -45,7 +42,6 @@ private:
    static SavedBackground background2;
 
    // our lookups
-   static SavedBackground *backgrounds[2];
    static constexpr Drawing drawings[2] = { Drawing::Page1(), Drawing::Page2() };
 };
 

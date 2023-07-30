@@ -18,6 +18,7 @@ public:
    void SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y);
    void RestoreBackground();
    void Forget() { backgroundSaved = false; }
+   void RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y);
 
 private:
    static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;
