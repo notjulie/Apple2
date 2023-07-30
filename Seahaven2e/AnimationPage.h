@@ -14,6 +14,9 @@
 class AnimationPage
 {
 public:
+   static void Initialize();
+
+public:
    AnimationPage() {}
 
    void CopyFrom(AnimationPage &from);
@@ -23,8 +26,8 @@ public:
    void MoveCard(CompactCard card, uint8_t x, uint8_t y);
 
    void Show() { GetDrawing().Show(); }
-   Drawing GetDrawing();
-   SavedBackground &GetBackground() { return page==0 ? background1 : background2; }
+   Drawing GetDrawing() { return drawings[page]; }
+   SavedBackground &GetBackground() { return *backgrounds[page]; }
 
 public:
    static AnimationPage Page1() { return AnimationPage(0); }
@@ -40,6 +43,10 @@ private:
    // our saved backgrounds
    static SavedBackground background1;
    static SavedBackground background2;
+
+   // our lookups
+   static SavedBackground *backgrounds[2];
+   static constexpr Drawing drawings[2] = { Drawing::Page1(), Drawing::Page2() };
 };
 
 // this is just a wrapper around an index so that we can try to

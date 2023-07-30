@@ -215,18 +215,3 @@ void Drawing::EraseCard(CardLocation location) {
    }
 }
 
-
-Drawing Drawing::Page1()
-{
-   Drawing result;
-   result.hgr = a2::HGRPage::HGR();
-   return result;
-}
-
-
-Drawing Drawing::Page2()
-{
-   Drawing result;
-   result.hgr = a2::HGRPage::HGR2();
-   return result;
-}

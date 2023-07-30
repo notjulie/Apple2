@@ -8,6 +8,16 @@
 SavedBackground AnimationPage::background1;
 SavedBackground AnimationPage::background2;
 
+SavedBackground *AnimationPage::backgrounds[2];
+constexpr Drawing AnimationPage::drawings[2];
+
+
+void AnimationPage::Initialize()
+{
+   backgrounds[0] = &background1;
+   backgrounds[1] = &background2;
+}
+
 
 void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
 {
@@ -56,10 +66,3 @@ void AnimationPage::EndAnimation()
 }
 
 
-/// <summary>
-/// Geta our drawing page
-/// </summary>
-Drawing AnimationPage::GetDrawing()
-{
-   return page==0 ? Drawing::Page1() : Drawing::Page2();
-}

@@ -26,6 +26,7 @@ static StateMachine stateMachine;
  */
 extern "C" int main() {
   // call initializers
+  AnimationPage::Initialize();
   Sprites::Initialize();
   PersistentState::instance = PersistentState();
   stateMachine = StateMachine();

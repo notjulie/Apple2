@@ -29,23 +29,24 @@ public:
    void Show() { hgr.Show(); }
 
 public:
-   static Drawing Page1();
-   static Drawing Page2();
+   static constexpr Drawing Page1() { return Drawing(a2::HGRPage::HGR()); }
+   static constexpr Drawing Page2() { return Drawing(a2::HGRPage::HGR2()); }
 
 private:
-  void DrawAcePile(Suit suit, uint8_t x);
-  void DrawCardBottom(uint8_t x, uint8_t y);
-  void DrawCardTop(CompactCard card, uint8_t x, uint8_t y);
-  void DrawColumns();
-  void DrawSprite(
+   constexpr Drawing(a2::HGRPage hgr) : hgr(hgr) {}
+   void DrawAcePile(Suit suit, uint8_t x);
+   void DrawCardBottom(uint8_t x, uint8_t y);
+   void DrawCardTop(CompactCard card, uint8_t x, uint8_t y);
+   void DrawColumns();
+   void DrawSprite(
           const a2::HGRWord *sprite,
           uint8_t rows,
           uint8_t y,
           uint8_t x);
-  void XorSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
+   void XorSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:
-  a2::HGRPage hgr;
+   a2::HGRPage hgr;
 };
 
 // I pass these around by value because they are just a byte indicating the page

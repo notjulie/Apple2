@@ -47,18 +47,4 @@ namespace a2 {
       }
    }
 
-   HGRPage HGRPage::HGR()
-   {
-      HGRPage result;
-      result.pageOffset = Page1MemoryPage;
-      return result;
-   }
-
-   HGRPage HGRPage::HGR2()
-   {
-      HGRPage result;
-      result.pageOffset = Page2MemoryPage;
-      return result;
-   }
-
 }
