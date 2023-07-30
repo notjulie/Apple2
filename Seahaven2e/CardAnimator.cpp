@@ -41,7 +41,7 @@ void CardAnimator::Initialize()
 /// Draws the game as it currently sits; we are responsible for
 /// this since we maintain the states of the HGR pages
 /// </summary>
-void CardAnimator::DrawGame()
+__attribute__((noinline)) void CardAnimator::DrawGame()
 {
    // draw to offscreen page
    offscreenPage.DrawGame();

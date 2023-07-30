@@ -173,7 +173,7 @@ void Drawing::DrawColumns()
 /// <summary>
 /// Draws all cards
 /// </summary>
-void Drawing::DrawGame()
+__attribute__((noinline)) void Drawing::DrawGame()
 {
   DrawAcePiles();
   DrawColumns();

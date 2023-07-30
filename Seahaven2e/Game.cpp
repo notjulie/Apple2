@@ -184,7 +184,7 @@ bool Game::IsBottomOfColumn(CardLocation location) const
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-void Game::SetCard(CardLocation location, CompactCard card)
+__attribute__((noinline)) void Game::SetCard(CardLocation location, CompactCard card)
 {
    // the card can't be null, that's what remove card is for
    assert(!card.IsNull());

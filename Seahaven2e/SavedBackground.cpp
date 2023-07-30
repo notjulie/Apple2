@@ -9,7 +9,7 @@
 /// <summary>
 /// Saves a region from an HGR page to the SavedBackground object
 /// </summary>
-void SavedBackground::SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y)
+__attribute__((noinline)) void SavedBackground::SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y)
 {
    a2::VBLCounter::Update();
 
@@ -35,7 +35,7 @@ void SavedBackground::SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y)
 /// <summary>
 /// Restores a region of the HGR page from the SavedBackground object
 /// </summary>
-void SavedBackground::RestoreBackground()
+__attribute__((noinline)) void SavedBackground::RestoreBackground()
 {
    if (!backgroundSaved)
       return;

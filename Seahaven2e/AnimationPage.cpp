@@ -19,7 +19,7 @@ void AnimationPage::Initialize()
 }
 
 
-void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
+__attribute__((noinline)) void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
 {
    Drawing drawing = GetDrawing();
 
@@ -32,7 +32,7 @@ void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
 }
 
 
-void AnimationPage::DrawGame()
+__attribute__((noinline)) void AnimationPage::DrawGame()
 {
    Drawing drawing = GetDrawing();
 
