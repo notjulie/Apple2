@@ -21,6 +21,7 @@ public:
    void DrawGame();
    bool IsAnimating() { return state != State::Idle; }
    void StartAnimation(CompactCard card, CardLocation end);
+   void StartMoveColumnToColumn(CardLocation from, CardLocation to);
    void Service();
 
    AnimationPage GetOnscreenPage() const { return onscreenPage; }
@@ -36,15 +37,21 @@ private:
     Idle,
 
     /// <summary>
-    /// Animating
+    /// Simple animation
     /// </summary>
-    Animating
+    Animating,
+
+    /// <summary>
+    /// Moving multiple cards from one column to another
+    /// </summary>
+    MovingColumnToColumn
   };
 
 private:
    static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
    void SwapPages();
    void UpdatePosition();
+   void NextColumnToColumnMove();
 
 private:
    // operating state
@@ -66,6 +73,13 @@ private:
    uint8_t lastVBLCount;
    uint8_t duration;
    uint8_t timeLeft;
+
+   // multiple column-to-column move in progress details
+   CompactCard cardsToMove[5];
+   CardLocation startLocations[5];
+   CardLocation endLocations[5];
+   uint8_t numberOfCardsToMove;
+   uint8_t cardBeingMoved;
 };
 
 #endif  // SEAHAVEN2E_CARDANIMATOR_H_

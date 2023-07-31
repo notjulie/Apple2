@@ -33,8 +33,6 @@ private:
 
    // card movement
    void MoveCard(CompactCard card, CardLocation location);
-   void MoveColumnToColumn(CardLocation from, CardLocation to);
-   void NextColumnToColumnMove();
 
 private:
    enum class State {
@@ -42,20 +40,12 @@ private:
       Idle,
       Animating,
       Undoing,
-      Redoing,
-      MovingColumnToColumn
+      Redoing
    };
 
 private:
    State state = State::Uninitialized;
    UndoGroupID currentUndoGroup;
-
-   // move in progress details
-   CompactCard cardsToMove[5];
-   CardLocation startLocations[5];
-   CardLocation endLocations[5];
-   uint8_t numberOfCardsToMove;
-   uint8_t cardBeingMoved;
 };
 
 
