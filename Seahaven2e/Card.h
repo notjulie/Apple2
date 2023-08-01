@@ -43,37 +43,40 @@ Card operator+(Card card, int8_t i);
 /// </summary>
 class CompactCard {
 public:
-  CompactCard() {}
-  constexpr CompactCard(Suit suit, Rank rank) : card(rank, suit) {}
-  explicit CompactCard(Card card);
+   CompactCard() {}
+   CompactCard(Suit suit, Rank rank);
+   explicit CompactCard(Card card);
 
-  operator Card() const;
+   operator Card() const;
 
-  Rank GetRank() const { return (Rank)card.parts.rank; }
-  Suit GetSuit() const { return (Suit)card.parts.suit; }
-  bool IsNull() const { return card.parts.rank == 0; }
-  uint8_t ToOrdinal() const;
+   Rank GetRank() const { return (Rank)card.parts.rank; }
+   Suit GetSuit() const { return (Suit)card.parts.suit; }
+   bool IsNull() const { return card.parts.rank == 0; }
+   uint8_t ToOrdinal() const;
 
-  bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
+   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
 
-  static CompactCard FromOrdinal(uint8_t ordinal);
-  static constexpr CompactCard Null() { return CompactCard(Suit::Clubs, Rank::Null); }
-
-private:
-  union CardDetails {
-    CardDetails() {}
-    constexpr CardDetails(Rank rank, Suit suit) : parts(rank, suit) {}
-    struct Parts {
-      constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suit((uint8_t)suit) {}
-      uint8_t rank : 4;
-      uint8_t suit : 2;
-    } parts;
-    uint8_t asInt;
-  };
-  static_assert(sizeof(CardDetails)==1, "CardDetails wrong size");
+   static CompactCard FromOrdinal(uint8_t ordinal);
+   static constexpr CompactCard Null() { return CardDetails(Rank::Null, Suit::Clubs); }
 
 private:
-  CardDetails card;
+   union CardDetails {
+      CardDetails() {}
+      constexpr CardDetails(Rank rank, Suit suit) : parts(rank, suit) {}
+      struct Parts {
+         constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suit((uint8_t)suit) {}
+         uint8_t rank : 4;
+         uint8_t suit : 2;
+      } parts;
+      uint8_t asInt;
+   };
+   static_assert(sizeof(CardDetails)==1, "CardDetails wrong size");
+
+private:
+   constexpr CompactCard(CardDetails cardDetails) : card(cardDetails) {}
+
+private:
+   CardDetails card;
 };
 
 #endif  // SEAHAVEN2E_CARD_H_

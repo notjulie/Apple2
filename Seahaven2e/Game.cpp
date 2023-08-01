@@ -359,7 +359,7 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
 /// of a group of cards that can be moved together and if so how
 /// many are in the group.
 /// </summary>
-uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation location) const
+__attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation location) const
 {
    assert(location.IsColumn());
 

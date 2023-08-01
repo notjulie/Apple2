@@ -53,6 +53,14 @@ Card operator+(Card card, int8_t i) {
 // ======================================================================
 
 
+
+CompactCard::CompactCard(Suit suit, Rank rank)
+   :
+      card(rank, suit)
+{
+}
+
+
 /// <summary>
 /// Initializes an instance of CompactCard from a Card
 /// </summary>
