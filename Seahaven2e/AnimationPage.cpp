@@ -26,6 +26,20 @@ __attribute__((noinline)) void AnimationPage::MoveCard(CompactCard card, uint8_t
    drawing.DrawCardWithShadow(card, x, y);
 }
 
+void AnimationPage::MoveCardTop(CompactCard card, uint8_t x, uint8_t y)
+{
+   Drawing drawing = GetDrawing();
+
+   // restore the background at the old position and save the
+   // background at the new position
+   if (page == 0)
+       background1.RestoreAndSave(drawing.GetHGRPage(), x, y);
+   else
+       background2.RestoreAndSave(drawing.GetHGRPage(), x, y);
+
+   // draw the card at the new position
+   drawing.DrawCardTopWithShadow(card, x, y);
+}
 
 __attribute__((noinline)) void AnimationPage::DrawGame()
 {

@@ -84,6 +84,24 @@ void Drawing::DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y) {
   DrawCard(card, x, y);
 }
 
+
+/// <summary>
+/// Draws the top of a card with its shadow
+/// </summary>
+void Drawing::DrawCardTopWithShadow(CompactCard card, uint8_t x, uint8_t y) {
+  // draw the shadow
+  for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
+    uint8_t *row = hgr.GetByteAddress(y++, x);
+    row[0] = 0;
+    row[1] = 0;
+    row[2] = 0;
+    row[3] = 0;
+  }
+
+  // draw the card top
+  DrawCardTop(card, x, y);
+}
+
 void Drawing::DrawCard(CompactCard card, uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
   DrawCardTop(card, x, y);

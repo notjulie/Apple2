@@ -16,6 +16,7 @@ public:
    void DrawBackground();
    void DrawCard(CompactCard card, uint8_t x, uint8_t y);
    void DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y);
+   void DrawCardTopWithShadow(CompactCard card, uint8_t x, uint8_t y);
    void DrawGame();
    void DrawAcePiles();
    void DrawTowers();

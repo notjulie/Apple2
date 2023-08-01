@@ -182,12 +182,26 @@ __attribute__((noinline)) void CardAnimator::Service()
       // if we're done...
       if (timeLeft == 0)
       {
-         // end the animation on the onscreen page
-         onscreenPage.EndAnimation();
+         // so the trick is that for every card except the first one
+         // we only draw the card top when it gets to its final location
+         if (cardBeingMoved == numberOfCardsToMove - 1)
+         {
+            // end the animation on the onscreen page
+            onscreenPage.EndAnimation();
 
-         // finish the animation on the offscreen page
-         offscreenPage.MoveCard(cardToMove, currentX, currentY);
-         offscreenPage.EndAnimation();
+            // finish the animation on the offscreen page
+            offscreenPage.MoveCard(cardToMove, currentX, currentY);
+            offscreenPage.EndAnimation();
+         }
+         else
+         {
+            offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+            offscreenPage.EndAnimation();
+            SwapPages();
+
+            offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+            offscreenPage.EndAnimation();
+         }
 
          // next move
          NextColumnToColumnMove();
