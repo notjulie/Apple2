@@ -255,13 +255,22 @@ void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
 }
 
 
+/// <summary>
+/// Checks to see if there are more cards to move and either starts
+/// moving the next one or wraps things up and goes back to State::Idle
+/// </summary>
 void CardAnimator::NextColumnToColumnMove()
 {
    // if we are out of cards to move we need to finally update
    // the game
    if (cardBeingMoved == 0)
    {
-      assert(0);
+      // actually move them... remember that columns like to have cards
+      // added and removed lick a stack
+      for (int i=0; i<numberOfCardsToMove; ++i)
+         Game::instance.SetCard(endLocations[i], cardsToMove[i]);
+
+      // done
       state = State::Idle;
       return;
    }
