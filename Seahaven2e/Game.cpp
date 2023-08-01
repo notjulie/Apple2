@@ -207,7 +207,7 @@ __attribute__((noinline)) void Game::SetCard(CardLocation location, CompactCard 
 /// <summary>
 /// Removes the card from the given location
 /// </summary>
-void Game::RemoveCard(CardLocation location)
+__attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 {
    if (location.IsAce())
    {

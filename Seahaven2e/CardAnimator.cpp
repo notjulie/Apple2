@@ -174,42 +174,47 @@ __attribute__((noinline)) void CardAnimator::Service()
       break;
 
    case State::MovingColumnToColumn:
-      // update the position, move the card
-      UpdatePosition();
-      offscreenPage.MoveCard(cardToMove, currentX, currentY);
-      SwapPages();
-
-      // if we're done...
-      if (timeLeft == 0)
-      {
-         // so the trick is that for every card except the first one
-         // we only draw the card top when it gets to its final location
-         if (cardBeingMoved == numberOfCardsToMove - 1)
-         {
-            // end the animation on the onscreen page
-            onscreenPage.EndAnimation();
-
-            // finish the animation on the offscreen page
-            offscreenPage.MoveCard(cardToMove, currentX, currentY);
-            offscreenPage.EndAnimation();
-         }
-         else
-         {
-            offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
-            offscreenPage.EndAnimation();
-            SwapPages();
-
-            offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
-            offscreenPage.EndAnimation();
-         }
-
-         // next move
-         NextColumnToColumnMove();
-      }
+      ServiceColumnToColumnMove();
       break;
    }
 }
 
+
+__attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
+{
+   // update the position, move the card
+   UpdatePosition();
+   offscreenPage.MoveCard(cardToMove, currentX, currentY);
+   SwapPages();
+
+   // if we're done...
+   if (timeLeft == 0)
+   {
+      // so the trick is that for every card except the first one
+      // we only draw the card top when it gets to its final location
+      if (cardBeingMoved == numberOfCardsToMove - 1)
+      {
+         // end the animation on the onscreen page
+         onscreenPage.EndAnimation();
+
+         // finish the animation on the offscreen page
+         offscreenPage.MoveCard(cardToMove, currentX, currentY);
+         offscreenPage.EndAnimation();
+      }
+      else
+      {
+         offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+         offscreenPage.EndAnimation();
+         SwapPages();
+
+         offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+         offscreenPage.EndAnimation();
+      }
+
+      // next move
+      NextColumnToColumnMove();
+   }
+}
 
 
 void CardAnimator::SwapPages()
@@ -227,7 +232,7 @@ void CardAnimator::SwapPages()
 /// another.  The locations have been verified, but the rest of the details
 /// of the move have not.
 /// </summary>
-void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
+__attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
 {
    // figure out if we have a valid group to move and how big it is
    numberOfCardsToMove = Game::instance.GetSizeOfMoveToColumnGroup(from);

@@ -52,6 +52,7 @@ private:
    void SwapPages();
    void UpdatePosition();
    void NextColumnToColumnMove();
+   void ServiceColumnToColumnMove();
 
 private:
    // operating state
