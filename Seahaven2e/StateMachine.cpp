@@ -18,7 +18,7 @@ using ::a2::KeyCode;
 /// <summary>
 /// Performs periodic action
 /// </summary>
-void StateMachine::Service() {
+__attribute__((noinline)) void StateMachine::Service() {
    switch (state) {
    case State::Uninitialized:
       // set HGR
