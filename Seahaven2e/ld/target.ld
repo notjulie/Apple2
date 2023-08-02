@@ -2,9 +2,21 @@
  *
  */
 
+
+/*=============================================================================
+// So here's how I put the program together:
+//    6000: JMP main
+//    6003: 00
+//    6004: JMP exit
+//    6007: 00
+//    6008: actual origin of linked output
+// I put a handy exit function in there so that I can pop into the debugger
+// and jump to it to clean up the screen and put me back at the BASIC prompt.
+//=============================================================================*/
+
 MEMORY {
-   /* origin is at 3 beyond 0x6000 to account for the JMP main instruction */
-   ram (rw) : ORIGIN = 0x6004, LENGTH = 0x35FC
+   /* origin is at 0x6008... see above */
+   ram (rw) : ORIGIN = 0x6008, LENGTH = 0x35FC
 }
 
 SECTIONS {
@@ -30,14 +42,24 @@ __stack = 0x9FFF;
 
 
 OUTPUT_FORMAT {
-    /* Tells AppleWin where to place the file's contents. */
+    /* This is not part of the executable, it's just a couple bytes
+    // that go in the binary file to tell the receiver where to load
+    // it.  This is a format that I use with my hacked version of the
+    // AppleWin emulator. */
     SHORT(0x6000)
 
-    /* JMP to main */
+    /* JMP main, see above for details */
     BYTE(0x4C)
     SHORT(main)
     BYTE(0x00)
 
-    /* the program */
+    /* JMP exit, see above for details */
+    BYTE(0x4C)
+    SHORT(exit)
+    BYTE(0x00)
+
+    /* so we started at 0x6000 (per the first two bytes above) and
+    // added 8 bytes of JMP instructions, so no we are at 0x6008, which is
+    // what we declared as the ORIGIN earlier */
     TRIM(ram)
 }
