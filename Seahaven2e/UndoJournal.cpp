@@ -12,7 +12,7 @@
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
-void UndoJournal::LogMove(UndoGroupID groupID, CompactCard card, CardLocation startLocation, CardLocation endLocation)
+__attribute__((noinline)) void UndoJournal::LogMove(UndoGroupID groupID, CompactCard card, CardLocation startLocation, CardLocation endLocation)
 {
    // we can't redo beyond the current point... truncate the journal
    // at the current position
