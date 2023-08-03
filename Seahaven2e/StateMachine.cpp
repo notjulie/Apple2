@@ -139,17 +139,19 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    // the target location is one below that
    CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
 
+   // start a new undo group
+   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
+
    // if we are moving column to column it gets slightly complicated if multiple
    // cards are moving, so pop off to our handling for that
    if (location.IsColumn())
    {
-      CardAnimator::instance.StartMoveColumnToColumn(location, targetLocation);
+      CardAnimator::instance.StartMoveColumnToColumn(currentUndoGroup, location, targetLocation);
       state = State::Animating;
       return;
    }
 
    // start the animation
-   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
    MoveCard(CompactCard(card), targetLocation);
 }
 

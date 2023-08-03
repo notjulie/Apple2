@@ -9,6 +9,7 @@
 #include "Drawing.h"
 #include "Game.h"
 #include "SHAssert.h"
+#include "PersistentState.h"
 
 
 /// <summary>
@@ -232,7 +233,7 @@ void CardAnimator::SwapPages()
 /// another.  The locations have been verified, but the rest of the details
 /// of the move have not.
 /// </summary>
-__attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
+__attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(UndoGroupID groupID, CardLocation from, CardLocation to)
 {
    // figure out if we have a valid group to move and how big it is
    numberOfCardsToMove = Game::instance.GetSizeOfMoveToColumnGroup(from);
@@ -249,6 +250,13 @@ __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocatio
       cardsToMove[i] = Game::instance.GetCard(from);
       startLocations[i] = from;
       endLocations[i] = to;
+
+      PersistentState::instance.UndoJournal.LogMove(
+               groupID,
+               cardsToMove[i],
+               from,
+               to
+               );
 
       from = from.Down();
       to = to.Down();
