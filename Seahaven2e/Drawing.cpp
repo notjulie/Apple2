@@ -141,7 +141,7 @@ void Drawing::DrawAcePile(Suit suit, uint8_t x) {
 /// <summary>
 /// Draws the ace piles
 /// </summary>
-void Drawing::DrawAcePiles()
+__attribute__((noinline)) void Drawing::DrawAcePiles()
 {
    DrawAcePile(Suit::Clubs, 0);
    DrawAcePile(Suit::Diamonds, 4);
