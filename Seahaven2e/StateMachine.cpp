@@ -256,7 +256,19 @@ void StateMachine::BeginUndo()
    // belongs to a different group
    currentUndoGroup = undo.GetGroup();
 
-   // start it a-mmoving
+   // if this is a column-to-column move treat it as such
+   if (undo.location.IsColumn())
+   {
+      CardLocation startLocation = Game::instance.GetCardLocation(undo.GetCard());
+      if (startLocation.IsColumn())
+      {
+         CardAnimator::instance.StartMoveColumnToColumn(startLocation, undo.location);
+         state = State::Animating;
+         return;
+      }
+   }
+
+   // start it a-moving
    CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
    state = State::Undoing;
 }
@@ -275,6 +287,18 @@ void StateMachine::BeginRedo()
       // save the group... we keep undoing until we hit something that
       // belongs to a different group
       currentUndoGroup = redo.GetGroup();
+
+      // if this is a column-to-column move treat it as such
+      if (redo.location.IsColumn())
+      {
+         CardLocation startLocation = Game::instance.GetCardLocation(redo.GetCard());
+         if (startLocation.IsColumn())
+         {
+            CardAnimator::instance.StartMoveColumnToColumn(startLocation, redo.location);
+            state = State::Animating;
+            return;
+         }
+      }
 
       CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
       state = State::Redoing;
