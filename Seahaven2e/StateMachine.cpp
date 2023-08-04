@@ -242,7 +242,7 @@ bool StateMachine::CheckAcesToMove() {
 /// <summary>
 /// Undoes a move if possible
 /// </summary>
-void StateMachine::BeginUndo()
+__attribute__((noinline)) void StateMachine::BeginUndo()
 {
    // see if there's something to undo
    UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
@@ -277,7 +277,7 @@ void StateMachine::BeginUndo()
 /// <summary>
 /// Redoes a move if possible
 /// </summary>
-void StateMachine::BeginRedo()
+__attribute__((noinline)) void StateMachine::BeginRedo()
 {
    UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
    if (!redo.IsNull())
