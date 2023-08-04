@@ -22,7 +22,7 @@ public:
    void DrawGame();
    bool IsAnimating() { return state != State::Idle; }
    void StartAnimation(CompactCard card, CardLocation end);
-   void StartMoveColumnToColumn(UndoGroupID groupID, CardLocation from, CardLocation to);
+   void StartMoveColumnToColumn(CardLocation from, CardLocation to);
    void Service();
 
    AnimationPage GetOnscreenPage() const { return onscreenPage; }

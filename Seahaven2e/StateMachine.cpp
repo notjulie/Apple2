@@ -146,7 +146,14 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    // cards are moving, so pop off to our handling for that
    if (location.IsColumn())
    {
-      CardAnimator::instance.StartMoveColumnToColumn(currentUndoGroup, location, targetLocation);
+      PersistentState::instance.UndoJournal.LogMove(
+               currentUndoGroup,
+               CompactCard(card),
+               location,
+               targetLocation
+               );
+
+      CardAnimator::instance.StartMoveColumnToColumn(location, targetLocation);
       state = State::Animating;
       return;
    }
