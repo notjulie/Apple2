@@ -31,22 +31,27 @@ public:
   static CardAnimator instance;
 
 private:
-  enum class State {
-    /// <summary>
-    /// Both HGR pages the same and up to date
-    /// </summary>
-    Idle,
+   enum class State {
+      /// <summary>
+      /// Both HGR pages the same and up to date
+      /// </summary>
+      Idle,
 
-    /// <summary>
-    /// Simple animation
-    /// </summary>
-    Animating,
+      /// <summary>
+      /// Simple animation
+      /// </summary>
+      Animating,
 
-    /// <summary>
-    /// Moving multiple cards from one column to another
-    /// </summary>
-    MovingColumnToColumn
-  };
+      /// <summary>
+      /// Moving multiple cards from one column to another
+      /// </summary>
+      MovingColumnToColumn
+   };
+
+   enum class Coordinate {
+      X,
+      Y
+   };
 
 private:
    static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
@@ -54,6 +59,8 @@ private:
    void UpdatePosition();
    void NextColumnToColumnMove();
    void ServiceColumnToColumnMove();
+   void StartPositionTracker(uint8_t i);
+   void UpdatePositionTracker(uint8_t i);
 
 private:
    // operating state
@@ -67,14 +74,16 @@ private:
    // don't need to be cleared by constructor
    CompactCard cardToMove;
    CardLocation endLocation;
-   uint8_t currentX, currentY;
-   uint8_t targetX, targetY;
-   uint8_t distanceX, distanceY;
-   int8_t directionX, directionY;
-   uint8_t numeratorX, numeratorY;
    uint8_t lastVBLCount;
    uint8_t duration;
    uint8_t timeLeft;
+
+   // our coordinate trackers
+   uint8_t currentPosition[2];
+   uint8_t targetPosition[2];
+   uint8_t distance[2];
+   uint8_t direction[2];
+   uint8_t numerator[2];
 
    // multiple column-to-column move in progress details
    CompactCard cardsToMove[5];

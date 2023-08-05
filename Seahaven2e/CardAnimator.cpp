@@ -80,31 +80,18 @@ void CardAnimator::StartAnimation(
    Game::instance.RemoveCard(start);
 
    // set the bounds of the animation
-   currentX = start.GetX();
-   currentY = start.GetY() - CardLocations::CardShadowHeight;
-   targetX = end.GetX();
-   targetY = end.GetY() - CardLocations::CardShadowHeight;
-   if (targetX > currentX) {
-      distanceX = targetX - currentX;
-      directionX = 1;
-   } else {
-      distanceX = currentX - targetX;
-      directionX = -1;
-   }
-   if (targetY > currentY) {
-      distanceY = targetY - currentY;
-      directionY = 1;
-   } else {
-      distanceY = currentY - targetY;
-      directionY = -1;
-   }
+   currentPosition[(uint8_t)Coordinate::X] = start.GetX();
+   currentPosition[(uint8_t)Coordinate::Y] = start.GetY() - CardLocations::CardShadowHeight;
+   targetPosition[(uint8_t)Coordinate::X] = end.GetX();
+   targetPosition[(uint8_t)Coordinate::Y] = end.GetY() - CardLocations::CardShadowHeight;
+   StartPositionTracker((uint8_t)Coordinate::X);
+   StartPositionTracker((uint8_t)Coordinate::Y);
 
    // calculate the duration
-   uint8_t pixelDistance = CalculatePixelDistance(distanceX, distanceY);
+   uint8_t pixelDistance = CalculatePixelDistance(distance[(uint8_t)Coordinate::X], distance[(uint8_t)Coordinate::Y]);
    duration = pixelDistance >> 2;
 
    timeLeft = duration;
-   numeratorX = numeratorY = 0;
    lastVBLCount = a2::VBLCounter::GetCounter();
    cardToMove = card;
 
@@ -112,7 +99,11 @@ void CardAnimator::StartAnimation(
    offscreenPage.EraseCard(start);
 
    // draw the card at its original position, saving the background
-   offscreenPage.MoveCard(cardToMove, currentX, currentY);
+   offscreenPage.MoveCard(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
 
    // switch
    SwapPages();
@@ -122,6 +113,23 @@ void CardAnimator::StartAnimation(
 
    // set the state
    state = State::Animating;
+}
+
+
+
+__attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
+{
+   if (targetPosition[i] > currentPosition[i])
+   {
+      distance[i] = targetPosition[i] - currentPosition[i];
+      direction[i] = 1;
+   }
+   else
+   {
+      distance[i] = currentPosition[i] - targetPosition[i];
+      direction[i] = -1;
+   }
+   numerator[i] = 0;
 }
 
 
@@ -154,7 +162,11 @@ __attribute__((noinline)) void CardAnimator::Service()
    case State::Animating:
       // update the position, move the card
       UpdatePosition();
-      offscreenPage.MoveCard(cardToMove, currentX, currentY);
+      offscreenPage.MoveCard(
+            cardToMove,
+            currentPosition[(uint8_t)Coordinate::X],
+            currentPosition[(uint8_t)Coordinate::Y]
+            );
       SwapPages();
 
       // if we're done...
@@ -164,7 +176,11 @@ __attribute__((noinline)) void CardAnimator::Service()
          onscreenPage.EndAnimation();
 
          // finish the animation on the offscreen page
-         offscreenPage.MoveCard(cardToMove, currentX, currentY);
+         offscreenPage.MoveCard(
+               cardToMove,
+               currentPosition[(uint8_t)Coordinate::X],
+               currentPosition[(uint8_t)Coordinate::Y]
+               );
          offscreenPage.EndAnimation();
 
          // update the game object and our state
@@ -185,7 +201,11 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
 {
    // update the position, move the card
    UpdatePosition();
-   offscreenPage.MoveCard(cardToMove, currentX, currentY);
+   offscreenPage.MoveCard(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
    SwapPages();
 
    // if we're done...
@@ -199,16 +219,28 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
          onscreenPage.EndAnimation();
 
          // finish the animation on the offscreen page
-         offscreenPage.MoveCard(cardToMove, currentX, currentY);
+         offscreenPage.MoveCard(
+               cardToMove,
+               currentPosition[(uint8_t)Coordinate::X],
+               currentPosition[(uint8_t)Coordinate::Y]
+               );
          offscreenPage.EndAnimation();
       }
       else
       {
-         offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+         offscreenPage.MoveCardTop(
+               cardToMove,
+               currentPosition[(uint8_t)Coordinate::X],
+               currentPosition[(uint8_t)Coordinate::Y]
+               );
          offscreenPage.EndAnimation();
          SwapPages();
 
-         offscreenPage.MoveCardTop(cardToMove, currentX, currentY);
+         offscreenPage.MoveCardTop(
+               cardToMove,
+               currentPosition[(uint8_t)Coordinate::X],
+               currentPosition[(uint8_t)Coordinate::Y]
+               );
          offscreenPage.EndAnimation();
       }
 
@@ -292,29 +324,31 @@ void CardAnimator::NextColumnToColumnMove()
 ///   Calculates the new position
 ///
 void CardAnimator::UpdatePosition() {
-  if (timeLeft == 0)
-    return;
+   if (timeLeft == 0)
+      return;
 
-  // snapshot the time
-  uint8_t now = a2::VBLCounter::GetCounter();
+   // snapshot the time
+   uint8_t now = a2::VBLCounter::GetCounter();
 
-  // step once for each tick of the clock
-  while (lastVBLCount != now) {
-    numeratorX += distanceX;
-    while (numeratorX >= duration) {
-      currentX += directionX;
-      numeratorX -= duration;
-    }
+   // step once for each tick of the clock
+   while (lastVBLCount != now)
+   {
+      UpdatePositionTracker((uint8_t)Coordinate::X);
+      UpdatePositionTracker((uint8_t)Coordinate::Y);
 
-    numeratorY += distanceY;
-    while (numeratorY >= duration) {
-      currentY += directionY;
-      numeratorY -= duration;
-    }
-
-    ++lastVBLCount;
-    if (--timeLeft == 0)
-      break;
-  }
+      ++lastVBLCount;
+      if (--timeLeft == 0)
+         break;
+   }
 }
 
+
+__attribute__((noinline)) void CardAnimator::UpdatePositionTracker(uint8_t i)
+{
+   numerator[i] += distance[i];
+   while (numerator[i] >= duration)
+   {
+      currentPosition[i] += direction[i];
+      numerator[i] -= duration;
+   }
+}

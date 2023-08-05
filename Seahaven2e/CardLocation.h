@@ -82,7 +82,7 @@ public:
    static CardLocation FromUint8(uint8_t i) { return CardLocation(i); }
    uint8_t AsUint8() const { return value.location_number; }
 
-   bool IsNull() const { return value.parts.region == (uint8_t)Region::Null; }
+   bool IsNull() const { return value.location_number == Null().value.location_number; }
    bool IsAce() const { return value.parts.region == (uint8_t)Region::Ace; }
    bool IsColumn() const { return value.parts.region < 10; }
    bool IsTower() const { return value.parts.region == (uint8_t)Region::Tower; }
