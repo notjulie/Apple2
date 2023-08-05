@@ -136,17 +136,39 @@ __attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
 /// <summary>
 /// Calculates an approximate hypotenuse
 /// </summary>
-uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy) {
-  // 3.5x + y
-  /*return
-    (dx >> 1) +
-    dx +
-    dx +
-    dx +
-    (dy >> 1);
-    */
-    // TODO
-    return dx + dy;
+uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy)
+{
+   // So for starters each x location is 7 pixels, y = 1 pixels, so
+   // I want 7 * dx for the x distance.  But also I need to divide both
+   // by two so we can be sure to fit the result into a byte
+
+   // and the compiler tries to get clever and isn't really on operations
+   // like this, so we go manual on some of this
+   uint8_t xPixels;
+   asm volatile (
+      "TXA\n"
+      "LSR\n"
+      "STA\t%0\n"
+
+      "TXA\n"
+      "ASL\n"
+      "ASL\n"
+      "SEC\n"
+      "SBC\t%0\n"
+      "STA\t%0\n"
+   : "=r"(xPixels) // outputs
+   : "x"(dx) // input
+   : "a"// clobbers
+   );
+
+   dy >>= 1;
+
+   // I approximate the distance as the larger leg +
+   // half of the smaller leg
+   if (dy > xPixels)
+      return dy + (xPixels>>1);
+   else
+      return xPixels + (dy>>1);
 }
 
 
