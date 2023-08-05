@@ -22,7 +22,7 @@ public:
    void DrawTowers();
 
    void EraseCard(CardLocation location);
-   void ToggleCursor(uint8_t x, uint8_t y);
+   void ToggleCursor(CardLocation location);
 
    // dispatchers to the HGRPage
    a2::HGRPage GetHGRPage() const { return hgr; }

@@ -61,9 +61,16 @@ void Drawing::DrawCardTop(CompactCard card, uint8_t x, uint8_t y) {
 }
 
 
-void Drawing::ToggleCursor(uint8_t x, uint8_t y) {
-  XorSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
-  XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
+/// <summary>
+/// Toggles the state of the cursor drawn at the current location
+/// </summary>
+void Drawing::ToggleCursor(CardLocation location)
+{
+   uint8_t x = location.GetX();
+   uint8_t y = location.GetY();
+
+   XorSprite(Sprites::cursorLeft, CardTopSpriteHeight, y, x);
+   XorSprite(Sprites::cursorRight, CardTopSpriteHeight, y, x + 2);
 }
 
 

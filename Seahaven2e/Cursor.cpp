@@ -110,8 +110,6 @@ __attribute__((noinline)) void Cursor::SetLocation(CardLocation location)
 
    // set the location
    this->location = location;
-   x = location.GetX();
-   y = location.GetY();
 
    // turn it back on if it's supposed to be
    if (state == State::On)
@@ -154,7 +152,7 @@ __attribute__((noinline)) void Cursor::Toggle()
    if (location.IsNull())
       return;
    lastToggleTime = a2::VBLCounter::GetCounter();
-   CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(x, y);
+   CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(location);
 }
 
 
