@@ -32,7 +32,7 @@ uint8_t CardLocation::GetColumn() const
 /// \brief
 ///   Gets the byte offset of the location within the raster
 ///
-uint8_t CardLocation::GetX() const {
+__attribute__((noinline)) uint8_t CardLocation::GetX() const {
    if (IsAce()) {
       switch (GetAceSuit()) {
       case Suit::Clubs:
@@ -60,7 +60,7 @@ uint8_t CardLocation::GetX() const {
 /// \brief
 ///   Gets the Y coordinate of the location
 ///
-uint8_t CardLocation::GetY() const {
+__attribute__((noinline)) uint8_t CardLocation::GetY() const {
    if (IsTower() || IsAce())
    {
       return CardLocations::TowersTop;
