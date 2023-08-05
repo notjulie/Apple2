@@ -228,7 +228,7 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 /// Gets the card location of the open column closest to the given
 /// column
 /// </summary>
-CardLocation Game::GetClosestOpenColumnToColumn(uint8_t column) const
+__attribute__((noinline)) CardLocation Game::GetClosestOpenColumnToColumn(uint8_t column) const
 {
    // expand our search radius until we find something
    for (int i=0; i<10; ++i)
@@ -260,7 +260,7 @@ CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower) const
 /// Gets the card location of the open tower closest to the given
 /// column
 /// </summary>
-CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column) const
+__attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column) const
 {
    // start from the tower nearest the column
    int8_t tower = (int8_t)column - 3;
