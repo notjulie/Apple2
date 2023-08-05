@@ -219,10 +219,10 @@ void Drawing::EraseCard(CardLocation location) {
    }
 
    // special cases
-   if (location.IsColumn())
+   if (location.IsColumn() && location.GetRow()>0)
    {
-     // if this was a column card we'll need to redraw the card above it, or at least
-     // its lower part
+      // if this was a column card and there was one above it we'll need to
+      // redraw the card above it, or at least its lower part
       DrawCardBottom(x, startY - CardLocations::CardShadowHeight);
    }
    else if (location.IsAce())

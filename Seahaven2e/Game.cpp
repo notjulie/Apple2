@@ -230,11 +230,17 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 /// </summary>
 CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column) const
 {
+   // start from the tower nearest the column
    int8_t tower = (int8_t)column - 3;
+   if (tower<0)
+      tower = 0;
+   else if (tower > 3)
+      tower = 3;
 
+   // expand our search radius until we find something
    for (int i=0; i<4; ++i)
    {
-      uint8_t t = tower - i;
+      int8_t t = tower - i;
       if (t>=0 && t<4 && towers[t].IsNull())
          return CardLocation::Tower(t);
 

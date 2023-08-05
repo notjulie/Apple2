@@ -61,16 +61,16 @@ uint8_t CardLocation::GetX() const {
 ///   Gets the Y coordinate of the location
 ///
 uint8_t CardLocation::GetY() const {
-  if (IsTower() || IsAce()) {
-    return CardLocations::TowersTop;
-  } else if (IsColumn()) {
-    return columnYLookup.Y(GetRow());
-  } else {
-    a2::puts("CARDLOCATION::GETY; NOWHERE");
-    a2::PAGE2OFF();
-    a2::MONITOR();
-    return 0;
-  }
+   if (IsTower() || IsAce())
+   {
+      return CardLocations::TowersTop;
+   } else if (IsColumn())
+   {
+      return columnYLookup.Y(GetRow());
+   } else
+   {
+       assert(0);
+   }
 }
 
 

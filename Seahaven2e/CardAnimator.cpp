@@ -5,6 +5,7 @@
 #include "CardAnimator.h"
 
 #include <Apple2Lib/VBLCounter.h>
+#include <Apple2Lib/ROM.h>
 #include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
