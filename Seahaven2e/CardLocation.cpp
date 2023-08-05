@@ -69,7 +69,8 @@ uint8_t CardLocation::GetY() const {
       return columnYLookup.Y(GetRow());
    } else
    {
-       assert(0);
+      assert(0);
+      return 0;
    }
 }
 
