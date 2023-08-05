@@ -1,65 +1,38 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
 #ifndef HGRPAGE_H
 #define HGRPAGE_H
 
 #include <stdint.h>
-#include <C6502/LookupTable.h>
+#include "HGRAddressCalculator.h"
 
 namespace a2 {
 
-   /** \brief
-    * Look up table that returns the address of a row in a HGR page given its
-    * Y coordinate
-    */
+   /// <summary>
+   /// One-byte representation of a HGRPage with some handy utilities,
+   /// the main one being the ability to calculate quickly the address
+   /// of any row.
+   /// </summary>
    class HGRPage {
    public:
       HGRPage() {}
 
-      /** \brief
-       * Initializes a new instance of class HGRRowTable
-       */
-      static constexpr c6502::Lookup16Bit<uint16_t, 192> GetLookupTable()
-      {
-         c6502::Lookup16Bit<uint16_t, 192> rowPointers;
-
-         uint8_t index = 0;
-         for (uint8_t i=0; i<120; i+=40)
-         {
-            for (uint8_t j=0; j<8; ++j)
-            {
-               for (uint8_t k=0; k<8; ++k)
-               {
-                  uint16_t rowOffset =
-                     i |
-                     (j << 7) |
-                     (k << 10)
-                  ;
-
-                  rowPointers.Set(index++, rowOffset);
-               }
-            }
-         }
-
-         return rowPointers;
-      }
-
-      /** \brief
-       * Returns the address of the given row
-       */
+      /// <summary>
+      /// Returns the address of the given row
+      /// </summary>
       inline uint8_t *GetRowAddress(uint8_t row) const {
          return GetByteAddress(row, 0);
       }
 
-      /** \brief
-       * Returns the address of the byte at the given offset
-       */
+      /// <summary>
+      /// Returns the address of the byte at the given offset
+      /// </summary>
       inline uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
-         // NOTE: this has a cheat... it adds the offset to the low byte
-         // but does not add the carry to the high byte, which is an important
-         // performance improvement
          return (uint8_t *)
             (
-               (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) |
+               (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) +
                ((pageOffset + rowPointers.GetHighByte(row)) << 8)
             );
       }
@@ -82,7 +55,7 @@ namespace a2 {
       uint8_t pageOffset;
 
    private:
-      static c6502::Lookup16Bit<uint16_t, 192> rowPointers;
+      static const HGRAddressCalculator rowPointers;
    };
 
    // the idea here is to be able to pass it around by reference, so

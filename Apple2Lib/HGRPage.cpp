@@ -1,3 +1,6 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
 #include "HGRPage.h"
 #include <C6502/Memory.h>
@@ -6,7 +9,7 @@
 
 namespace a2 {
 
-   c6502::Lookup16Bit<uint16_t, 192> HGRPage::rowPointers = HGRPage::GetLookupTable();
+   const HGRAddressCalculator HGRPage::rowPointers = HGRAddressCalculator();
 
    /// \brief
    ///   Fills the entire HGR window with the given value
