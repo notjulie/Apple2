@@ -6,6 +6,7 @@
 
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
+#include "Audio.h"
 #include "CardAnimator.h"
 #include "Cursor.h"
 #include "Drawing.h"
@@ -50,6 +51,12 @@ __attribute__((noinline)) void StateMachine::Service() {
       CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
          RedoNext();
+      break;
+
+   case State::MovingToTower:
+      CardAnimator::instance.Service();
+      if (!CardAnimator::instance.IsAnimating())
+         StartNextMoveToTower();
       break;
    }
 }
@@ -168,12 +175,68 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 /// </summary>
 __attribute__((noinline)) void StateMachine::MoveToTower()
 {
-   CardLocation location = Cursor::instance.GetLocation();
-   assert(!location.IsNull());
+   CardLocation moveToTowerEnd = Cursor::instance.GetLocation();
+   assert(!moveToTowerEnd.IsNull());
 
-   // start the animation
+   // if this is not a column location do an error beep and exit
+   if (!moveToTowerEnd.IsColumn())
+   {
+      Audio::ErrorBeep();
+      return;
+   }
+
+   // figure out just how many cards we're dealing with
+   CardLocation moveToTowerStart = Game::instance.GetBottomColumnCardLocation(moveToTowerEnd.GetColumn());
+   uint8_t numberOfCardsToMove = 1 + moveToTowerStart.GetRow() - moveToTowerEnd.GetRow();
+
+   // see if we have enough towers for them
+   if (Game::instance.GetNumberOfAvailableTowers() < numberOfCardsToMove)
+   {
+      Audio::ErrorBeep();
+      return;
+   }
+
+   // start a new undo
    currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
-   MoveCard(Game::instance.GetCard(location), CardLocation::Tower(0));
+
+   // save the parameters of the move
+   moveToTowerColumn = moveToTowerEnd.GetColumn();
+   moveToTowerCurrentRow = moveToTowerStart.GetRow();
+   moveToTowerEndRow = moveToTowerEnd.GetRow();
+
+   // go
+   StartNextMoveToTower();
+}
+
+
+/// <summary>
+/// Moves the next column to tower move
+/// </summary>
+void StateMachine::StartNextMoveToTower()
+{
+   // never mind if we're done
+   if (moveToTowerCurrentRow < moveToTowerEndRow)
+   {
+      if (!CheckAcesToMove())
+         EnterIdle();
+      return;
+   }
+
+   // grab the vitals of the start position
+   CardLocation start = CardLocation::Column(moveToTowerColumn, moveToTowerCurrentRow);
+   CompactCard card = Game::instance.GetCard(start);
+
+   // get the end location
+   CardLocation end = Game::instance.GetClosestOpenTowerToColumn(moveToTowerColumn);
+   assert(!end.IsNull());
+
+   // log
+   PersistentState::instance.UndoJournal.LogMove(currentUndoGroup, card, start, end);
+
+   // start animating
+   CardAnimator::instance.StartAnimation(card, end);
+   --moveToTowerCurrentRow;
+   state = State::MovingToTower;
 }
 
 

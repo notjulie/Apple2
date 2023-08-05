@@ -33,6 +33,7 @@ private:
 
    // card movement
    void MoveCard(CompactCard card, CardLocation location);
+   void StartNextMoveToTower();
 
 private:
    enum class State {
@@ -40,12 +41,16 @@ private:
       Idle,
       Animating,
       Undoing,
-      Redoing
+      Redoing,
+      MovingToTower
    };
 
 private:
    State state = State::Uninitialized;
    UndoGroupID currentUndoGroup;
+   uint8_t moveToTowerColumn;
+   uint8_t moveToTowerCurrentRow;
+   uint8_t moveToTowerEndRow;
 };
 
 

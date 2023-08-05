@@ -225,6 +225,29 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 
 
 /// <summary>
+/// Gets the card location of the open tower closest to the given
+/// column
+/// </summary>
+CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column) const
+{
+   int8_t tower = (int8_t)column - 3;
+
+   for (int i=0; i<4; ++i)
+   {
+      uint8_t t = tower - i;
+      if (t>=0 && t<4 && towers[t].IsNull())
+         return CardLocation::Tower(t);
+
+      t = tower + i;
+      if (t>=0 && t<4 && towers[t].IsNull())
+         return CardLocation::Tower(t);
+   }
+
+   return CardLocation::Null();
+}
+
+
+/// <summary>
 /// Returns true if the given card can be moved to an ace
 /// </summary>
 bool Game::CanMoveToAce(CompactCard card) const

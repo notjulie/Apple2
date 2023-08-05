@@ -6,6 +6,24 @@
 
 namespace a2 {
 
+   /// <summary>
+   /// This subroutine sends a bell (CTRL G) character to the current output device. It leaves the
+   /// accumulator holding $87.
+   /// </summary>
+   inline void BELL()
+   {
+      asm volatile ("JSR\t$FF3A" ::: "a");
+   }
+
+   /// <summary>
+   /// This subroutine beeps the Apple’s speaker for .1 second at lKHz. It scrambles the A and X
+   /// registers.
+   /// </summary>
+   inline void BELLI()
+   {
+      asm volatile ("JSR\t$FBDD" ::: "a","x");
+   }
+
    /** \brief
     * Sends a character of information
     * to the currently active output device (the address for the output
