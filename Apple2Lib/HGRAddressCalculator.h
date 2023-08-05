@@ -10,10 +10,16 @@
 namespace a2 {
 
    /// <summary>
-   ///
+   /// Single-instance (publicly static) class for calculating the addresses
+   /// of row offsets in a HGR page.  It uses a global constexpr instance
+   /// with lookup tables and a little bit of assembly to keep things
+   /// lean and quick.
    /// </summary>
    class HGRAddressCalculator {
-   public:
+   private:
+      /// <summary>
+      /// our constructor for our lookup tables
+      /// </summary>
       constexpr HGRAddressCalculator()
          :
             lowLookup(),
@@ -48,9 +54,11 @@ namespace a2 {
          }
       }
 
-
-
-      uint8_t GetLowByte(uint8_t row) const {
+   public:
+      /// <summary>
+      /// Gets the low byte of the offset to the given row
+      /// </summary>
+      static uint8_t GetLowByte(uint8_t row) {
          uint8_t result;
 
          // the compiler is not very smart about using the accumulator
@@ -68,16 +76,22 @@ namespace a2 {
          : // clobbers
          );
 
-         return lowLookup[result];
+         return instance.lowLookup[result];
       }
 
-      uint8_t GetHighByte(uint8_t row) const {
-         return highLookup[row&0x3F];
+      /// <summary>
+      /// Gets the high byte of the offset to the given row
+      /// </summary>
+      static uint8_t GetHighByte(uint8_t row) {
+         return instance.highLookup[row&0x3F];
       }
 
    private:
       uint8_t lowLookup[24];
       uint8_t highLookup[64];
+
+   private:
+      static const HGRAddressCalculator instance;
    };
 
 }

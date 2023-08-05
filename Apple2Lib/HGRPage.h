@@ -32,8 +32,8 @@ namespace a2 {
       inline uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
          return (uint8_t *)
             (
-               (uint8_t)(rowPointers.GetLowByte(row) + byteOffset) +
-               ((pageOffset + rowPointers.GetHighByte(row)) << 8)
+               (uint8_t)(HGRAddressCalculator::GetLowByte(row) + byteOffset) +
+               ((pageOffset + HGRAddressCalculator::GetHighByte(row)) << 8)
             );
       }
 
@@ -53,9 +53,6 @@ namespace a2 {
       static constexpr uint8_t Page2MemoryPage = 0x40; // address 0x4000
 
       uint8_t pageOffset;
-
-   private:
-      static const HGRAddressCalculator rowPointers;
    };
 
    // the idea here is to be able to pass it around by reference, so

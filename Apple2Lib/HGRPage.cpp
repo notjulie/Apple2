@@ -9,8 +9,6 @@
 
 namespace a2 {
 
-   const HGRAddressCalculator HGRPage::rowPointers = HGRAddressCalculator();
-
    /// \brief
    ///   Fills the entire HGR window with the given value
    ///
