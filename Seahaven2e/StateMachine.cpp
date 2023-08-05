@@ -134,17 +134,37 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 
    // get the card
    Card card = Game::instance.GetCard(location);
-   if (card.IsNull())
-      return;
+   assert(!card.IsNull());
 
-   // get the location of the card one rank higher and verify that it's the bottom
-   // of a column
-   CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
-   if (!Game::instance.IsBottomOfColumn(locationAboveTarget))
-      return;
+   // locate the target location
+   CardLocation targetLocation = CardLocation::Null();
+   if (card.GetRank() == Rank::King)
+   {
+      if (location.IsTower())
+         targetLocation = Game::instance.GetClosestOpenColumnToTower(location.GetTowerIndex());
+      else if (location.IsColumn())
+         targetLocation = Game::instance.GetClosestOpenColumnToColumn(location.GetColumn());
+      else
+         assert(0);
+   }
+   else
+   {
+      // get the location of the card one rank higher and verify that it's the bottom
+      // of a column
+      CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
+      if (Game::instance.IsBottomOfColumn(locationAboveTarget))
+      {
+         // the target location is one below that
+         targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
+      }
+   }
 
-   // the target location is one below that
-   CardLocation targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
+   // complain if we don't have a landing spot
+   if (targetLocation.IsNull())
+   {
+      Audio::ErrorBeep();
+      return;
+   }
 
    // start a new undo group
    currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();

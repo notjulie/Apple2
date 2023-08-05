@@ -27,6 +27,8 @@ public:
    CardLocation GetBottomColumnCardLocation(uint8_t column) const;
    CardLocation GetCardLocation(CompactCard card);
    CardLocation GetClosestOpenTowerToColumn(uint8_t column) const;
+   CardLocation GetClosestOpenColumnToColumn(uint8_t column) const;
+   CardLocation GetClosestOpenColumnToTower(uint8_t tower) const;
    CompactCard GetTowerCard(uint8_t tower);
 
    // column card access
