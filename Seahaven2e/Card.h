@@ -33,12 +33,14 @@ public:
 private:
    uint8_t cardNumber;
 
-   friend Card operator-(Card card, uint8_t diff) {
+   // the compiler goes loony for some reason if this is inlined... it just
+   // completely adds useless size to the image
+   friend __attribute__((noinline)) Card operator-(Card card, uint8_t diff) {
       Card result;
       result.cardNumber = card.cardNumber - diff;
       return result;
    }
-   friend Card operator+(Card card, uint8_t diff) {
+   friend __attribute__((noinline)) Card operator+(Card card, uint8_t diff) {
       Card result;
       result.cardNumber = card.cardNumber + diff;
       return result;
