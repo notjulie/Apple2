@@ -7,6 +7,7 @@
 #include <Apple2Lib/VBLCounter.h>
 #include "CardAnimator.h"
 #include "Drawing.h"
+#include "SHAssert.h"
 
 
 /// <summary>
@@ -28,11 +29,11 @@ void Cursor::CursorHasBeenObliterated()
 /// Sets the cursor location to the bottom card on column 4, adjusting
 /// as needed if the column is empty
 /// </summary>
-__attribute__((noinline)) void Cursor::SetCursorLocationToDefault() {
-  // just set it to the bottomest of the bottom on column 4 and
-  // let our cursor adjustment logic handle it from there
-  CardLocation defaultLocation = CardLocation::Column(4, CardLocations::MaxColumnCards - 1);
-  SetAndAdjustLocation(defaultLocation);
+__attribute__((noinline)) void Cursor::SetCursorLocationToDefault()
+{
+   gridRow = 255;
+   gridColumn = 4;
+   AdjustColumn();
 }
 
 
@@ -41,7 +42,16 @@ __attribute__((noinline)) void Cursor::SetCursorLocationToDefault() {
 /// </summary>
 void Cursor::Up()
 {
-  SetAndAdjustLocation(location.Up());
+   // get the current location
+   CardLocation location = GetLocation();
+
+   // update the gridRow
+   gridRow = location.GetGridRow();
+   if (gridRow > 0)
+      --gridRow;
+
+   // update the display
+   UpdateDisplayLocation();
 }
 
 
@@ -50,7 +60,22 @@ void Cursor::Up()
 /// </summary>
 void Cursor::Down()
 {
-  SetAndAdjustLocation(location.Down());
+   // get the current location
+   CardLocation location = GetLocation();
+
+   // update the gridRow
+   gridRow = location.GetGridRow();
+   if (gridRow < 255)
+      ++gridRow;
+
+   // if that didn't change the location then set the row to the
+   // max so that we just ride along the bottom as we cursor left and
+   // right
+   if (location == GetLocation())
+      gridRow = 255;
+
+   // update the display
+   UpdateDisplayLocation();
 }
 
 
@@ -59,8 +84,17 @@ void Cursor::Down()
 /// </summary>
 void Cursor::Left()
 {
-  SetAndAdjustLocation(location.Left());
+   while (gridColumn > 0)
+   {
+      --gridColumn;
+      if (!GetLocation().IsNull())
+         break;
+   }
+
+   // update the display
+   UpdateDisplayLocation();
 }
+
 
 
 /// <summary>
@@ -68,7 +102,15 @@ void Cursor::Left()
 /// </summary>
 void Cursor::Right()
 {
-  SetAndAdjustLocation(location.Right());
+   while (gridColumn < 9)
+   {
+      ++gridColumn;
+      if (!GetLocation().IsNull())
+         break;
+   }
+
+   // update the display
+   UpdateDisplayLocation();
 }
 
 
@@ -80,8 +122,8 @@ __attribute__((noinline)) void Cursor::Hide()
    if (state == State::On)
    {
       Toggle();
-      state = State::Idle;
    }
+   state = State::Idle;
 }
 
 
@@ -91,29 +133,12 @@ __attribute__((noinline)) void Cursor::Hide()
 /// </summary>
 __attribute__((noinline)) void Cursor::Show()
 {
-   SetAndAdjustLocation(location);
    if (state == State::Idle)
    {
+      currentDisplayLocation = GetLocation();
       Toggle();
       state = State::On;
    }
-}
-
-/// <summary>
-/// Starts showing the cursor at the given location
-/// </summary>
-__attribute__((noinline)) void Cursor::SetLocation(CardLocation location)
-{
-   // turn it off if it's on
-   if (state == State::On)
-      Toggle();
-
-   // set the location
-   this->location = location;
-
-   // turn it back on if it's supposed to be
-   if (state == State::On)
-      Toggle();
 }
 
 
@@ -149,10 +174,8 @@ __attribute__((noinline)) void Cursor::Service() {
 /// </summary>
 __attribute__((noinline)) void Cursor::Toggle()
 {
-   if (location.IsNull())
-      return;
    lastToggleTime = a2::VBLCounter::GetCounter();
-   CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(location);
+   CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(currentDisplayLocation);
 }
 
 
@@ -265,10 +288,90 @@ CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
 
 
 /// <summary>
-/// Sets the location, adjusting to the nearest card if the location
-/// is empty
+/// Moves the cursor to the nearest column with something on it
+/// if the current column is empty
 /// </summary>
-void Cursor::SetAndAdjustLocation(CardLocation location)
+void Cursor::AdjustColumn()
 {
-   SetLocation(GetClosestCardTo(location));
+   uint8_t startColumn = gridColumn;
+
+   // adjust the scan radius until we find something
+   for (uint8_t i=0; i<9; ++i)
+   {
+      int8_t c = (int8_t)startColumn - i;
+      if (c >= 0)
+      {
+         gridColumn = c;
+         if (!GetLocation().IsNull())
+            return;
+      }
+
+      c = startColumn  + i;
+      if (c < 10)
+      {
+         gridColumn = c;
+         if (!GetLocation().IsNull())
+            return;
+      }
+   }
 }
+
+
+/// <summary>
+/// Converts the current row/column setting to a card location
+/// </summary>
+CardLocation Cursor::GetLocation() const
+{
+   // see how many cards are on the column... that tells us the max row
+   uint8_t maxRow = Game::instance.GetNumberOfCardsOnColumn(gridColumn);
+   uint8_t row = gridRow;
+   if (row > maxRow)
+      row = maxRow;
+
+   // row zero is the tower, if there's one on this grid column
+   if (row == 0)
+   {
+      int8_t tower = (int8_t)gridColumn - 3;
+      if (tower>=0 && tower<4 && !Game::instance.GetTower(tower).IsNull())
+         return CardLocation::Tower(tower);
+      if (maxRow == 0)
+          return CardLocation::Null();
+      row = 1;
+   }
+
+   return CardLocation::Column(gridColumn, row - 1);
+}
+
+
+void Cursor::UpdateDisplayLocation()
+{
+   CardLocation location = GetLocation();
+   switch (state)
+   {
+   case State::Idle:
+      break;
+
+   case State::Off:
+      if (location != currentDisplayLocation)
+      {
+         currentDisplayLocation = GetLocation();
+         Toggle();
+         state = State::On;
+      }
+      break;
+
+   case State::On:
+      if (location != currentDisplayLocation)
+      {
+         Toggle();
+         currentDisplayLocation = GetLocation();
+         Toggle();
+      }
+      break;
+
+   default:
+      assert(0);
+      break;
+   }
+}
+

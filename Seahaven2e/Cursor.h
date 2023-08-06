@@ -25,7 +25,7 @@ public:
    void Left();
    void Right();
 
-   CardLocation GetLocation() const { return location; }
+   CardLocation GetLocation() const;
 
 public:
    static Cursor instance;
@@ -38,13 +38,13 @@ private:
    };
 
 private:
+   void AdjustColumn();
    CardLocation GetClosestCardTo(CardLocation start);
    CardLocation GetClosestColumnCardTo(CardLocation start);
    CardLocation GetClosestTowerCardTo(CardLocation start);
    CardLocation GetClosestCardOnColumn(uint8_t column, uint8_t startIndex);
-   void SetLocation(CardLocation location);
-   void SetAndAdjustLocation(CardLocation location);
    void Toggle();
+   void UpdateDisplayLocation();
 
 private:
    // state must be initialized by constructor
@@ -52,7 +52,9 @@ private:
 
    // state variables that only matter in non-idle states
    uint8_t lastToggleTime;
-   CardLocation location;
+   CardLocation currentDisplayLocation;
+   uint8_t gridRow;
+   uint8_t gridColumn;
 };
 
 #endif  // SEAHAVEN2E_CURSOR_H_

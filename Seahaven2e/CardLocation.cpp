@@ -18,6 +18,27 @@ uint8_t CardLocation::GetRow() const
 }
 
 
+bool CardLocation::operator==(CardLocation location) const
+{
+   return value.location_number == location.value.location_number;
+}
+
+
+bool CardLocation::operator!=(CardLocation location) const
+{
+   return value.location_number != location.value.location_number;
+}
+
+
+uint8_t CardLocation::GetGridRow() const
+{
+   if (IsColumn())
+      return GetRow() + 1;
+   else
+      return 0;
+}
+
+
 /// <summary>
 /// Gets the column associated with a column location
 /// </summary>
