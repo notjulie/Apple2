@@ -11,7 +11,7 @@ SavedBackground AnimationPage::background2;
 constexpr Drawing AnimationPage::drawings[2];
 
 
-__attribute__((noinline)) void AnimationPage::MoveCard(CompactCard card, uint8_t x, uint8_t y)
+__attribute__((noinline)) void AnimationPage::MoveCard(Card card, uint8_t x, uint8_t y)
 {
    Drawing drawing = GetDrawing();
 
@@ -26,7 +26,7 @@ __attribute__((noinline)) void AnimationPage::MoveCard(CompactCard card, uint8_t
    drawing.DrawCardWithShadow(card, x, y);
 }
 
-void AnimationPage::MoveCardTop(CompactCard card, uint8_t x, uint8_t y)
+void AnimationPage::MoveCardTop(Card card, uint8_t x, uint8_t y)
 {
    Drawing drawing = GetDrawing();
 

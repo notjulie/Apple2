@@ -6,13 +6,13 @@
 
 
 /// <summary>
-/// Creates a CompactCard instance from a number from 0 to 51; how we
+/// Creates a Card instance from a number from 0 to 51; how we
 /// map the cards to those numbers is arbitrary as long as it's consistent
 /// with ToOrdinal()
 /// </summary>
-CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
+Card Card::FromOrdinal(uint8_t cardNumber)
 {
-   return CompactCard(
+   return Card(
       Suit::FromOrdinal(cardNumber & 3),
       (Rank)(1 + (cardNumber >> 2))
       );
@@ -20,11 +20,11 @@ CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
 
 
 /// <summary>
-/// Maps a CompactCard instance to a number from 0 to 51; how we
+/// Maps a Card instance to a number from 0 to 51; how we
 /// map the cards to those numbers is arbitrary as long as it's consistent
 /// with FromOrdinal()
 /// </summary>
-uint8_t CompactCard::ToOrdinal() const
+uint8_t Card::ToOrdinal() const
 {
    return
       (((uint8_t)GetRank() - 1) << 2) +

@@ -14,10 +14,10 @@
 /// A single-byte representation of card that's handy for storage of card arrays
 /// or for passing around as a function parameter.
 /// </summary>
-class CompactCard {
+class Card {
 public:
-   CompactCard() {}
-   constexpr CompactCard(Suit suit, Rank rank)
+   Card() {}
+   constexpr Card(Suit suit, Rank rank)
       : cardNumber((uint8_t)rank + (uint8_t)suit.numericValue) {}
 
    Rank GetRank() const { return (Rank)(cardNumber & 0x0F); }
@@ -25,21 +25,21 @@ public:
    bool IsNull() const { return (cardNumber & 0x0F) == 0; }
    uint8_t ToOrdinal() const;
 
-   bool operator==(CompactCard c) { return cardNumber == c.cardNumber; }
+   bool operator==(Card c) const { return cardNumber == c.cardNumber; }
 
-   static CompactCard FromOrdinal(uint8_t ordinal);
-   static constexpr CompactCard Null() { return CompactCard(Suit::Clubs(), Rank::Null); }
+   static Card FromOrdinal(uint8_t ordinal);
+   static constexpr Card Null() { return Card(Suit::Clubs(), Rank::Null); }
 
 private:
    uint8_t cardNumber;
 
-   friend CompactCard operator-(CompactCard card, uint8_t diff) {
-      CompactCard result;
+   friend Card operator-(Card card, uint8_t diff) {
+      Card result;
       result.cardNumber = card.cardNumber - diff;
       return result;
    }
-   friend CompactCard operator+(CompactCard card, uint8_t diff) {
-      CompactCard result;
+   friend Card operator+(Card card, uint8_t diff) {
+      Card result;
       result.cardNumber = card.cardNumber + diff;
       return result;
    }

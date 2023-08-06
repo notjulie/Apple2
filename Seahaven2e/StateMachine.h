@@ -32,7 +32,7 @@ private:
    void UndoNext();
 
    // card movement
-   void MoveCard(CompactCard card, CardLocation location);
+   void MoveCard(Card card, CardLocation location);
    void StartNextMoveToTower();
 
 private:

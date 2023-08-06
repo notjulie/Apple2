@@ -12,7 +12,7 @@
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
-__attribute__((noinline)) void UndoJournal::LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation)
+__attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation startLocation, CardLocation endLocation)
 {
    // we can't redo beyond the current point... truncate the journal
    // at the current position
@@ -54,7 +54,7 @@ UndoInstruction UndoJournal::PeekUndo() const
    // get the card to move
    uint8_t position = currentPosition - 1;
    result.cardAndGroup = cards[position];
-   CompactCard card = result.GetCard();
+   Card card = result.GetCard();
 
    // get its current location
    CardLocation currentLocation = Game::instance.GetCardLocation(card);

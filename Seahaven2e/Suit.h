@@ -62,7 +62,7 @@ private:
 private:
    NumericValue numericValue;
 
-friend class CompactCard;
+friend class Card;
 };
 static_assert(sizeof(Suit)==1, "Suit should be a byte");
 

@@ -31,10 +31,10 @@ class CardAndGroup {
 public:
    CardAndGroup() {}
 
-   CompactCard GetCard() const { return CompactCard::FromOrdinal(cardOrdinal); }
+   Card GetCard() const { return Card::FromOrdinal(cardOrdinal); }
    UndoGroupID GetGroupID() const { return (UndoGroupID)group; }
 
-   void SetCard(CompactCard card) { cardOrdinal = card.ToOrdinal(); }
+   void SetCard(Card card) { cardOrdinal = card.ToOrdinal(); }
    void SetGroup(UndoGroupID groupID) { group = (uint8_t)groupID; }
 
 private:
@@ -52,7 +52,7 @@ struct UndoInstruction
    CardLocation location;
 
    bool IsNull() const;
-   CompactCard GetCard() const { return cardAndGroup.GetCard(); }
+   Card GetCard() const { return cardAndGroup.GetCard(); }
    UndoGroupID GetGroup() const { return cardAndGroup.GetGroupID(); }
 
    static UndoInstruction Null();
@@ -67,7 +67,7 @@ public:
    UndoJournal() {}
 
    void StartNewUndo();
-   void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation);
+   void LogMove(Card card, CardLocation startLocation, CardLocation endLocation);
    UndoInstruction PeekRedo() const;
    UndoInstruction PeekUndo() const;
    void PopRedo();

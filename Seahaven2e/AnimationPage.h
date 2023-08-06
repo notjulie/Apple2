@@ -20,8 +20,8 @@ public:
    void DrawGame();
    void EndAnimation();
    void EraseCard(CardLocation location);
-   void MoveCard(CompactCard card, uint8_t x, uint8_t y);
-   void MoveCardTop(CompactCard card, uint8_t x, uint8_t y);
+   void MoveCard(Card card, uint8_t x, uint8_t y);
+   void MoveCardTop(Card card, uint8_t x, uint8_t y);
    void ForgetBackground();
 
    void Show() { GetDrawing().Show(); }

@@ -66,7 +66,7 @@ __attribute__((noinline)) void CardAnimator::DrawGame()
 ///   Starts an animation of a card from one position to another
 /// </summary>
 void CardAnimator::StartAnimation(
-      CompactCard card,
+      Card card,
       CardLocation end)
 {
    // save parameters

@@ -52,7 +52,7 @@ void Drawing::XorSprite(
 }
 
 
-void Drawing::DrawCardTop(CompactCard card, uint8_t x, uint8_t y) {
+void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y) {
   DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
   DrawSprite(
     Sprites::GetSuitSprite(card.GetSuit()),
@@ -77,7 +77,7 @@ void Drawing::ToggleCursor(CardLocation location)
 /// <summary>
 /// Draws a card with its shadow
 /// </summary>
-void Drawing::DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y) {
+void Drawing::DrawCardWithShadow(Card card, uint8_t x, uint8_t y) {
   // draw the shadow
   for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
     uint8_t *row = hgr.GetByteAddress(y++, x);
@@ -95,7 +95,7 @@ void Drawing::DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y) {
 /// <summary>
 /// Draws the top of a card with its shadow
 /// </summary>
-void Drawing::DrawCardTopWithShadow(CompactCard card, uint8_t x, uint8_t y) {
+void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y) {
   // draw the shadow
   for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
     uint8_t *row = hgr.GetByteAddress(y++, x);
@@ -109,7 +109,7 @@ void Drawing::DrawCardTopWithShadow(CompactCard card, uint8_t x, uint8_t y) {
   DrawCardTop(card, x, y);
 }
 
-void Drawing::DrawCard(CompactCard card, uint8_t x, uint8_t y) {
+void Drawing::DrawCard(Card card, uint8_t x, uint8_t y) {
   a2::VBLCounter::Update();
   DrawCardTop(card, x, y);
   a2::VBLCounter::Update();
@@ -141,7 +141,7 @@ void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
    Rank rank = Game::instance.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
-      DrawCard(CompactCard(Suit::FromOrdinal(suitOrdinal), rank), x, CardLocations::TowersTop);
+      DrawCard(Card(Suit::FromOrdinal(suitOrdinal), rank), x, CardLocations::TowersTop);
    }
 }
 
@@ -167,7 +167,7 @@ void Drawing::DrawTowers()
 
    for (uint8_t tower=0; tower < 4; ++tower)
    {
-      CompactCard card = Game::instance.GetTower(tower);
+      Card card = Game::instance.GetTower(tower);
       if (!card.IsNull())
       {
          DrawCard(card, x, CardLocations::TowersTop);

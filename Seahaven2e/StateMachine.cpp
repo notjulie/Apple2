@@ -133,7 +133,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    assert(!location.IsNull());
 
    // get the card
-   CompactCard card = Game::instance.GetCard(location);
+   Card card = Game::instance.GetCard(location);
    assert(!card.IsNull());
 
    // locate the target location
@@ -174,7 +174,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    if (location.IsColumn())
    {
       PersistentState::instance.UndoJournal.LogMove(
-               CompactCard(card),
+               Card(card),
                location,
                targetLocation
                );
@@ -185,7 +185,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    }
 
    // start the animation
-   MoveCard(CompactCard(card), targetLocation);
+   MoveCard(Card(card), targetLocation);
 }
 
 
@@ -243,7 +243,7 @@ void StateMachine::StartNextMoveToTower()
 
    // grab the vitals of the start position
    CardLocation start = CardLocation::Column(moveToTowerColumn, moveToTowerCurrentRow);
-   CompactCard card = Game::instance.GetCard(start);
+   Card card = Game::instance.GetCard(start);
 
    // get the end location
    CardLocation end = Game::instance.GetClosestOpenTowerToColumn(moveToTowerColumn);
@@ -262,7 +262,7 @@ void StateMachine::StartNextMoveToTower()
 /// <summary>
 /// Moves the given card, adding it to the undo journal
 /// </summary>
-void StateMachine::MoveCard(CompactCard card, CardLocation location)
+void StateMachine::MoveCard(Card card, CardLocation location)
 {
    // log
    PersistentState::instance.UndoJournal.LogMove(card, Game::instance.GetCardLocation(card), location);
@@ -313,7 +313,7 @@ bool StateMachine::CheckAcesToMove() {
     return false;
 
   // get the card
-  CompactCard card = Game::instance.GetCard(startLocation);
+  Card card = Game::instance.GetCard(startLocation);
 
   // start the animation
   MoveCard(card, CardLocation::AcePile(card.GetSuit()));

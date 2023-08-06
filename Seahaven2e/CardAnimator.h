@@ -21,7 +21,7 @@ public:
 
    void DrawGame();
    bool IsAnimating() { return state != State::Idle; }
-   void StartAnimation(CompactCard card, CardLocation end);
+   void StartAnimation(Card card, CardLocation end);
    void StartMoveColumnToColumn(CardLocation from, CardLocation to);
    void Service();
 
@@ -72,7 +72,7 @@ private:
 
    // the animation in progress; relevant only in animating states
    // don't need to be cleared by constructor
-   CompactCard cardToMove;
+   Card cardToMove;
    CardLocation endLocation;
    uint8_t lastVBLCount;
    uint8_t duration;
@@ -86,7 +86,7 @@ private:
    uint8_t numerator[2];
 
    // multiple column-to-column move in progress details
-   CompactCard cardsToMove[5];
+   Card cardsToMove[5];
    CardLocation startLocations[5];
    CardLocation endLocations[5];
    uint8_t numberOfCardsToMove;

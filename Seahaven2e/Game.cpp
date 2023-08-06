@@ -30,7 +30,7 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
 {
    // create unshuffled deck
    for (uint8_t i=0; i < 52; ++i)
-    deck[i] = CompactCard::FromOrdinal(i);
+    deck[i] = Card::FromOrdinal(i);
 
    // shuffle 8 times according to high byte
    Shuffle8(instruction >> 8);
@@ -49,10 +49,10 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
       columnCounts[column] = 5;
    }
 
-   towers[0] = CompactCard::Null();
+   towers[0] = Card::Null();
    towers[1] = deck[cardIndex++];
    towers[2] = deck[cardIndex++];
-   towers[3] = CompactCard::Null();
+   towers[3] = Card::Null();
 
    acePiles[0] = Rank::Null;
    acePiles[1] = Rank::Null;
@@ -61,7 +61,7 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
 }
 
 void Game::Shuffle8(uint8_t instruction) {
-  CompactCard deckCopy[52];
+  Card deckCopy[52];
   uint8_t index;
 
   // we have two types of shuffling, and we choose one each time through
@@ -105,7 +105,7 @@ CardLocation Game::GetCardToMoveToAce() const {
    for (int i=0; i<10; ++i)
    {
       CardLocation location = GetBottomColumnCardLocation(i);
-      CompactCard card = GetCard(location);
+      Card card = GetCard(location);
       if (CanMoveToAce(card))
          return location;
    }
@@ -117,17 +117,17 @@ CardLocation Game::GetCardToMoveToAce() const {
 /// <summary>
 /// Gets the card at the given location
 /// </summary>
-CompactCard Game::GetCard(CardLocation location) const
+Card Game::GetCard(CardLocation location) const
 {
    if (location.IsAce()) {
       uint8_t suitOrdinal = location.GetAceSuitOrdinal();
-      return CompactCard(Suit::FromOrdinal(suitOrdinal), acePiles[suitOrdinal]);
+      return Card(Suit::FromOrdinal(suitOrdinal), acePiles[suitOrdinal]);
    } else if (location.IsTower()) {
       return towers[location.GetTowerIndex()];
    } else if (location.IsColumn()) {
       return GetColumnCard(location.GetColumn(), location.GetRow());
    } else {
-      return CompactCard::Null();
+      return Card::Null();
    }
 }
 
@@ -135,7 +135,7 @@ CompactCard Game::GetCard(CardLocation location) const
 /// <summary>
 /// Gets the location of the given card
 /// </summary>
-CardLocation Game::GetCardLocation(CompactCard card)
+CardLocation Game::GetCardLocation(Card card)
 {
    // null cards are nowhere
    if (card.IsNull())
@@ -184,7 +184,7 @@ bool Game::IsBottomOfColumn(CardLocation location) const
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-__attribute__((noinline)) void Game::SetCard(CardLocation location, CompactCard card)
+__attribute__((noinline)) void Game::SetCard(CardLocation location, Card card)
 {
    // the card can't be null, that's what remove card is for
    assert(!card.IsNull());
@@ -216,7 +216,7 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
    }
    else if (location.IsTower())
    {
-      towers[location.GetTowerIndex()] = CompactCard::Null();
+      towers[location.GetTowerIndex()] = Card::Null();
    }
    else if (location.IsColumn())
    {
@@ -289,7 +289,7 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t
 /// <summary>
 /// Returns true if the given card can be moved to an ace
 /// </summary>
-bool Game::CanMoveToAce(CompactCard card) const
+bool Game::CanMoveToAce(Card card) const
 {
    if (card.IsNull())
       return false;
@@ -308,11 +308,11 @@ CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
 }
 
 
-CompactCard Game::GetTowerCard(uint8_t tower) {
+Card Game::GetTowerCard(uint8_t tower) {
   if (tower < 4)
     return towers[tower];
   else
-    return CompactCard::Null();
+    return Card::Null();
 }
 
 
@@ -322,7 +322,7 @@ uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column) const
 }
 
 
-CompactCard Game::GetColumnCard(uint8_t column, uint8_t row) const
+Card Game::GetColumnCard(uint8_t column, uint8_t row) const
 {
    assert(row <= columnCounts[column]);
 
@@ -349,7 +349,7 @@ void Game::RemoveColumnCard(uint8_t column, uint8_t row)
 /// Gets the index of the card within this column; returns -1 if we don't
 /// have that card
 /// </summary>
-int8_t Game::GetColumnCardIndex(uint8_t column, CompactCard card)
+int8_t Game::GetColumnCardIndex(uint8_t column, Card card)
 {
    uint8_t count = columnCounts[column];
 
@@ -370,7 +370,7 @@ int8_t Game::GetColumnCardIndex(uint8_t column, CompactCard card)
 
    // a count of >5 means that the 5th card has cards on top of it, which
    // must be of the same suit as the 5th card, and of descending rank
-   CompactCard fifthCard = GetColumnCard(column, 4);
+   Card fifthCard = GetColumnCard(column, 4);
    if (card.GetSuit() != fifthCard.GetSuit())
       return -1;
    int8_t offsetToCard = fifthCard.GetRank() - card.GetRank();
@@ -388,7 +388,7 @@ int8_t Game::GetColumnCardIndex(uint8_t column, CompactCard card)
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
+void Game::SetColumnCard(uint8_t column, uint8_t row, Card card)
 {
    // the card can't be null... that's what remove card is for
    assert(!card.IsNull());
@@ -398,7 +398,7 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, CompactCard card)
    if (row >= 5)
    {
       #ifdef DEBUG
-         CompactCard bottomCard = GetColumnCard(column, row - 1);
+         Card bottomCard = GetColumnCard(column, row - 1);
          assert(bottomCard.GetSuit() == card.GetSuit());
          assert(bottomCard.GetRank() == card.GetRank() + (uint8_t)1);
       #endif
@@ -426,12 +426,12 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
    uint8_t column = location.GetColumn();
    uint8_t row = location.GetRow();
    uint8_t count = columnCounts[column];
-   CompactCard topCard = GetColumnCard(column, row);
+   Card topCard = GetColumnCard(column, row);
 
    // confirm that all cards below form a straight flush
    for (uint8_t i=row + 1; i<count; ++i)
    {
-      CompactCard card = GetColumnCard(column, i);
+      Card card = GetColumnCard(column, i);
       if (card.GetSuit() != topCard.GetSuit())
          return 0;
       if (topCard.GetRank() - card.GetRank() != i - row)

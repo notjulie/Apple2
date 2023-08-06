@@ -273,7 +273,7 @@ CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
 
   for (uint8_t i=0; i<4; ++i) {
     uint8_t tower = startTower + i;
-    CompactCard card = Game::instance.GetTowerCard(tower);
+    Card card = Game::instance.GetTowerCard(tower);
     if (!card.IsNull())
       return CardLocation::Tower(tower);
 

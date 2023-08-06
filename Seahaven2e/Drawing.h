@@ -14,9 +14,9 @@
 class Drawing {
 public:
    void DrawBackground();
-   void DrawCard(CompactCard card, uint8_t x, uint8_t y);
-   void DrawCardWithShadow(CompactCard card, uint8_t x, uint8_t y);
-   void DrawCardTopWithShadow(CompactCard card, uint8_t x, uint8_t y);
+   void DrawCard(Card card, uint8_t x, uint8_t y);
+   void DrawCardWithShadow(Card card, uint8_t x, uint8_t y);
+   void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y);
    void DrawGame();
    void DrawAcePiles();
    void DrawTowers();
@@ -37,7 +37,7 @@ private:
    constexpr Drawing(a2::HGRPage hgr) : hgr(hgr) {}
    void DrawAcePile(uint8_t suitOrdinal, uint8_t x);
    void DrawCardBottom(uint8_t x, uint8_t y);
-   void DrawCardTop(CompactCard card, uint8_t x, uint8_t y);
+   void DrawCardTop(Card card, uint8_t x, uint8_t y);
    void DrawColumns();
    void DrawSprite(
           const a2::HGRWord *sprite,
