@@ -89,7 +89,7 @@ void CardAnimator::StartAnimation(
 
    // calculate the duration
    uint8_t pixelDistance = CalculatePixelDistance(distance[(uint8_t)Coordinate::X], distance[(uint8_t)Coordinate::Y]);
-   duration = pixelDistance >> 2;
+   duration = pixelDistance >> 4;
 
    timeLeft = duration;
    lastVBLCount = a2::VBLCounter::GetCounter();
