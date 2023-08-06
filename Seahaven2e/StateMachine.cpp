@@ -116,7 +116,9 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       break;
 
    default:
-      a2::PRBYTE((uint8_t)key);
+      #ifdef DEBUG
+         a2::PRBYTE((uint8_t)key);
+      #endif
       break;
    }
 #pragma GCC diagnostic pop
@@ -391,7 +393,7 @@ __attribute__((noinline)) void StateMachine::BeginRedo()
 /// <summary>
 /// Starts moving the next card to redo if there are more in the current group
 /// </summary>
-void StateMachine::RedoNext()
+__attribute__((noinline)) void StateMachine::RedoNext()
 {
    UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
    if (!redo.IsNull() && redo.GetGroup() == currentUndoGroup)
@@ -409,7 +411,7 @@ void StateMachine::RedoNext()
 /// <summary>
 /// Starts moving the next card to undo if there are more in the current group
 /// </summary>
-void StateMachine::UndoNext()
+__attribute__((noinline)) void StateMachine::UndoNext()
 {
    UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
    if (!undo.IsNull() && undo.GetGroup() == currentUndoGroup)
