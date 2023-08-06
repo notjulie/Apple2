@@ -331,9 +331,7 @@ CompactCard Game::GetColumnCard(uint8_t column, uint8_t row) const
       return columnCards[column + rowOffset[row]];
 
    // anything beyond the array is a card stacked on the last card of the array
-   Card result = columnCards[40 + column];
-   result -= (row - 4);
-   return CompactCard(result);
+   return columnCards[40 + column] - (row - 4);
 }
 
 /// <summary>
@@ -372,7 +370,7 @@ int8_t Game::GetColumnCardIndex(uint8_t column, CompactCard card)
 
    // a count of >5 means that the 5th card has cards on top of it, which
    // must be of the same suit as the 5th card, and of descending rank
-   Card fifthCard = GetColumnCard(column, 4);
+   CompactCard fifthCard = GetColumnCard(column, 4);
    if (card.GetSuit() != fifthCard.GetSuit())
       return -1;
    int8_t offsetToCard = fifthCard.GetRank() - card.GetRank();
@@ -428,12 +426,12 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
    uint8_t column = location.GetColumn();
    uint8_t row = location.GetRow();
    uint8_t count = columnCounts[column];
-   Card topCard = GetColumnCard(column, row);
+   CompactCard topCard = GetColumnCard(column, row);
 
    // confirm that all cards below form a straight flush
    for (uint8_t i=row + 1; i<count; ++i)
    {
-      Card card = GetColumnCard(column, i);
+      CompactCard card = GetColumnCard(column, i);
       if (card.GetSuit() != topCard.GetSuit())
          return 0;
       if (topCard.GetRank() - card.GetRank() != i - row)

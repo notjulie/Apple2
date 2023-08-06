@@ -10,33 +10,6 @@
 #include "Suit.h"
 
 
-/** \brief
- * Represents a card in our game table
- */
-class Card {
-friend class CompactCard;
-
- public:
-  Card() : rank(Rank::Null) {}
-
-  inline Rank GetRank() const { return rank; }
-  inline Suit GetSuit() const { return suit; }
-  inline bool IsNull() const { return rank == Rank::Null; }
-
-  Card &operator-=(int8_t i);
-  Card &operator+=(int8_t i);
-  bool operator==(Card c) const { return c.suit==suit && c.rank==rank; }
-  bool operator!=(Card c) const { return !operator==(c); }
-
- private:
-  Suit suit;
-  Rank rank;
-};
-
-Card operator-(Card card, int8_t i);
-Card operator+(Card card, int8_t i);
-
-
 /// <summary>
 /// A single-byte representation of card that's handy for storage of card arrays
 /// or for passing around as a function parameter.
@@ -46,9 +19,6 @@ public:
    CompactCard() {}
    constexpr CompactCard(Suit suit, Rank rank)
       : cardNumber((uint8_t)rank + (uint8_t)suit.numericValue) {}
-   explicit CompactCard(Card card);
-
-   operator Card() const;
 
    Rank GetRank() const { return (Rank)(cardNumber & 0x0F); }
    Suit GetSuit() const { return Suit::FromNumericValue((Suit::NumericValue)(cardNumber & 0xF0)); }
@@ -62,6 +32,18 @@ public:
 
 private:
    uint8_t cardNumber;
+
+   friend CompactCard operator-(CompactCard card, uint8_t diff) {
+      CompactCard result;
+      result.cardNumber = card.cardNumber - diff;
+      return result;
+   }
+   friend CompactCard operator+(CompactCard card, uint8_t diff) {
+      CompactCard result;
+      result.cardNumber = card.cardNumber + diff;
+      return result;
+   }
 };
+
 
 #endif  // SEAHAVEN2E_CARD_H_

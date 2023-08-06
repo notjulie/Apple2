@@ -133,7 +133,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    assert(!location.IsNull());
 
    // get the card
-   Card card = Game::instance.GetCard(location);
+   CompactCard card = Game::instance.GetCard(location);
    assert(!card.IsNull());
 
    // locate the target location
@@ -151,7 +151,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    {
       // get the location of the card one rank higher and verify that it's the bottom
       // of a column
-      CardLocation locationAboveTarget = Game::instance.GetCardLocation(CompactCard(card + 1));
+      CardLocation locationAboveTarget = Game::instance.GetCardLocation(card + 1);
       if (Game::instance.IsBottomOfColumn(locationAboveTarget))
       {
          // the target location is one below that
