@@ -53,22 +53,12 @@ Card operator+(Card card, int8_t i) {
 // ======================================================================
 
 
-
-CompactCard::CompactCard(Suit suit, Rank rank)
-   :
-      card(rank, suit)
-{
-}
-
-
 /// <summary>
 /// Initializes an instance of CompactCard from a Card
 /// </summary>
 CompactCard::CompactCard(Card _card)
 {
-  card.asInt = 0;
-  card.parts.rank = (uint8_t)_card.rank;
-  card.parts.suitOrdinal = _card.suit.GetOrdinal();
+   cardNumber = (uint8_t)_card.rank + (uint8_t)_card.suit.numericValue;
 }
 
 
@@ -78,8 +68,8 @@ CompactCard::CompactCard(Card _card)
 CompactCard::operator Card() const
 {
   Card result;
-  result.rank = (Rank)card.parts.rank;
-  result.suit = Suit::FromOrdinal(card.parts.suitOrdinal);
+  result.rank = GetRank();
+  result.suit = GetSuit();
   return result;
 }
 
@@ -91,10 +81,10 @@ CompactCard::operator Card() const
 /// </summary>
 CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
 {
-   CompactCard result;
-   result.card.parts.suitOrdinal = cardNumber & 3;
-   result.card.parts.rank = 1 + (cardNumber >> 2);
-   return result;
+   return CompactCard(
+      Suit::FromOrdinal(cardNumber & 3),
+      (Rank)(1 + (cardNumber >> 2))
+      );
 }
 
 
@@ -106,6 +96,6 @@ CompactCard CompactCard::FromOrdinal(uint8_t cardNumber)
 uint8_t CompactCard::ToOrdinal() const
 {
    return
-      ((card.parts.rank - 1) << 2) |
-      (card.parts.suitOrdinal & 3);
+      (((uint8_t)GetRank() - 1) << 2) +
+      GetSuit().GetOrdinal();
 }

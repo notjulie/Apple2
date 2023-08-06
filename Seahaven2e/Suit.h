@@ -53,9 +53,16 @@ private:
 
 private:
    constexpr Suit(NumericValue value) : numericValue(value) {}
+   static Suit FromNumericValue(NumericValue numericValue) {
+      Suit result;
+      result.numericValue = numericValue;
+      return result;
+   }
 
 private:
    NumericValue numericValue;
+
+friend class CompactCard;
 };
 static_assert(sizeof(Suit)==1, "Suit should be a byte");
 

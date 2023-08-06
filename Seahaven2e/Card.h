@@ -44,39 +44,24 @@ Card operator+(Card card, int8_t i);
 class CompactCard {
 public:
    CompactCard() {}
-   CompactCard(Suit suit, Rank rank);
+   constexpr CompactCard(Suit suit, Rank rank)
+      : cardNumber((uint8_t)rank + (uint8_t)suit.numericValue) {}
    explicit CompactCard(Card card);
 
    operator Card() const;
 
-   Rank GetRank() const { return (Rank)card.parts.rank; }
-   Suit GetSuit() const { return Suit::FromOrdinal(card.parts.suitOrdinal); }
-   bool IsNull() const { return card.parts.rank == 0; }
+   Rank GetRank() const { return (Rank)(cardNumber & 0x0F); }
+   Suit GetSuit() const { return Suit::FromNumericValue((Suit::NumericValue)(cardNumber & 0xF0)); }
+   bool IsNull() const { return (cardNumber & 0x0F) == 0; }
    uint8_t ToOrdinal() const;
 
-   bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
+   bool operator==(CompactCard c) { return cardNumber == c.cardNumber; }
 
    static CompactCard FromOrdinal(uint8_t ordinal);
-   static constexpr CompactCard Null() { return CardDetails(Rank::Null, Suit::Clubs()); }
+   static constexpr CompactCard Null() { return CompactCard(Suit::Clubs(), Rank::Null); }
 
 private:
-   union CardDetails {
-      CardDetails() {}
-      constexpr CardDetails(Rank rank, Suit suit) : parts(rank, suit) {}
-      struct Parts {
-         constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suitOrdinal(suit.GetOrdinal()) {}
-         uint8_t rank : 4;
-         uint8_t suitOrdinal : 2;
-      } parts;
-      uint8_t asInt;
-   };
-   static_assert(sizeof(CardDetails)==1, "CardDetails wrong size");
-
-private:
-   constexpr CompactCard(CardDetails cardDetails) : card(cardDetails) {}
-
-private:
-   CardDetails card;
+   uint8_t cardNumber;
 };
 
 #endif  // SEAHAVEN2E_CARD_H_
