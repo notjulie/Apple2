@@ -403,7 +403,7 @@ __attribute__((noinline)) void StateMachine::RedoNext()
    }
    else
    {
-      state = State::Idle;
+      EnterIdle();
    }
 }
 
@@ -421,7 +421,7 @@ __attribute__((noinline)) void StateMachine::UndoNext()
    }
    else
    {
-      state = State::Idle;
+      EnterIdle();
    }
 }
 
