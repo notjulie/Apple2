@@ -55,14 +55,14 @@ uint8_t CardLocation::GetColumn() const
 ///
 __attribute__((noinline)) uint8_t CardLocation::GetX() const {
    if (IsAce()) {
-      switch (GetAceSuit()) {
-      case Suit::Clubs:
+      switch (GetAceSuitOrdinal()) {
+      case Suit::Clubs().GetOrdinal():
          return GetColumnX(0);
-      case Suit::Diamonds:
+      case Suit::Diamonds().GetOrdinal():
          return GetColumnX(1);
-      case Suit::Hearts:
+      case Suit::Hearts().GetOrdinal():
          return GetColumnX(8);
-      case Suit::Spades:
+      case Suit::Spades().GetOrdinal():
          return GetColumnX(9);
       default:
          assert(0);

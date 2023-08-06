@@ -136,11 +136,12 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 }
 
 
-void Drawing::DrawAcePile(Suit suit, uint8_t x) {
-   Rank rank = Game::instance.GetAcePileRank(suit);
+void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
+{
+   Rank rank = Game::instance.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
-      DrawCard(CompactCard(suit, rank), x, CardLocations::TowersTop);
+      DrawCard(CompactCard(Suit::FromOrdinal(suitOrdinal), rank), x, CardLocations::TowersTop);
    }
 }
 
@@ -150,10 +151,10 @@ void Drawing::DrawAcePile(Suit suit, uint8_t x) {
 /// </summary>
 __attribute__((noinline)) void Drawing::DrawAcePiles()
 {
-   DrawAcePile(Suit::Clubs, 0);
-   DrawAcePile(Suit::Diamonds, 4);
-   DrawAcePile(Suit::Hearts, 32);
-   DrawAcePile(Suit::Spades, 36);
+   DrawAcePile(Suit::Clubs().GetOrdinal(), 0);
+   DrawAcePile(Suit::Diamonds().GetOrdinal(), 4);
+   DrawAcePile(Suit::Hearts().GetOrdinal(), 32);
+   DrawAcePile(Suit::Spades().GetOrdinal(), 36);
 }
 
 
@@ -236,7 +237,7 @@ void Drawing::EraseCard(CardLocation location) {
    {
       // erasing a card from the ace pile just exposes the card
       // below
-      DrawAcePile(location.GetAceSuit(), location.GetX());
+      DrawAcePile(location.GetAceSuitOrdinal(), location.GetX());
    }
 }
 

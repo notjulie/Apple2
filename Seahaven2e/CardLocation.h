@@ -87,7 +87,7 @@ public:
    bool IsColumn() const { return value.parts.region < 10; }
    bool IsTower() const { return value.parts.region == (uint8_t)Region::Tower; }
 
-   Suit GetAceSuit() const { return (Suit)value.parts.index; }
+   uint8_t GetAceSuitOrdinal() const { return value.parts.index; }
    uint8_t GetColumn() const;
    uint8_t GetRow() const;
    uint8_t GetTowerIndex() const { return value.parts.index; }
@@ -104,7 +104,7 @@ public:
    CardLocation Left() const;
    CardLocation Right() const;
 
-   static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, (uint8_t)suit); }
+   static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, suit.GetOrdinal()); }
    static CardLocation Column(uint8_t column, uint8_t index) { return CardLocation((Region)column, index); }
    static inline CardLocation Tower(uint8_t index) { return CardLocation(Region::Tower, index); }
    static constexpr CardLocation Null() { return CardLocation(Region::Null, 0); }

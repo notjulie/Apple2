@@ -50,23 +50,23 @@ public:
    operator Card() const;
 
    Rank GetRank() const { return (Rank)card.parts.rank; }
-   Suit GetSuit() const { return (Suit)card.parts.suit; }
+   Suit GetSuit() const { return Suit::FromOrdinal(card.parts.suitOrdinal); }
    bool IsNull() const { return card.parts.rank == 0; }
    uint8_t ToOrdinal() const;
 
    bool operator==(CompactCard c) { return card.asInt == c.card.asInt; }
 
    static CompactCard FromOrdinal(uint8_t ordinal);
-   static constexpr CompactCard Null() { return CardDetails(Rank::Null, Suit::Clubs); }
+   static constexpr CompactCard Null() { return CardDetails(Rank::Null, Suit::Clubs()); }
 
 private:
    union CardDetails {
       CardDetails() {}
       constexpr CardDetails(Rank rank, Suit suit) : parts(rank, suit) {}
       struct Parts {
-         constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suit((uint8_t)suit) {}
+         constexpr Parts(Rank rank, Suit suit) : rank((uint8_t)rank), suitOrdinal(suit.GetOrdinal()) {}
          uint8_t rank : 4;
-         uint8_t suit : 2;
+         uint8_t suitOrdinal : 2;
       } parts;
       uint8_t asInt;
    };

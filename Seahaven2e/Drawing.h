@@ -35,7 +35,7 @@ public:
 
 private:
    constexpr Drawing(a2::HGRPage hgr) : hgr(hgr) {}
-   void DrawAcePile(Suit suit, uint8_t x);
+   void DrawAcePile(uint8_t suitOrdinal, uint8_t x);
    void DrawCardBottom(uint8_t x, uint8_t y);
    void DrawCardTop(CompactCard card, uint8_t x, uint8_t y);
    void DrawColumns();

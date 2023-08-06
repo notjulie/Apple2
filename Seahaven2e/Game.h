@@ -20,7 +20,7 @@ public:
    void SetCard(CardLocation location, CompactCard card);
    void RemoveCard(CardLocation location);
 
-   Rank GetAcePileRank(Suit suit) const { return acePiles[(uint8_t)suit]; }
+   Rank GetAcePileRank(uint8_t suitOrdinal) const { return acePiles[suitOrdinal]; }
    inline CompactCard GetTower(uint8_t index) const { return towers[index]; }
 
    CardLocation GetCardToMoveToAce() const;

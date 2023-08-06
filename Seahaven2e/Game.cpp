@@ -120,8 +120,8 @@ CardLocation Game::GetCardToMoveToAce() const {
 CompactCard Game::GetCard(CardLocation location) const
 {
    if (location.IsAce()) {
-      Suit suit = location.GetAceSuit();
-      return CompactCard(suit, acePiles[(uint8_t)suit]);
+      uint8_t suitOrdinal = location.GetAceSuitOrdinal();
+      return CompactCard(Suit::FromOrdinal(suitOrdinal), acePiles[suitOrdinal]);
    } else if (location.IsTower()) {
       return towers[location.GetTowerIndex()];
    } else if (location.IsColumn()) {
@@ -158,7 +158,7 @@ CardLocation Game::GetCardLocation(CompactCard card)
    Rank rank = card.GetRank();
    for (uint8_t i=0; i<4; ++i)
       if (acePiles[i] >= rank)
-         return CardLocation::AcePile((Suit)i);
+         return CardLocation::AcePile(Suit::FromOrdinal(i));
 
    // else it's nowhere
    return CardLocation::Null();
@@ -191,7 +191,7 @@ __attribute__((noinline)) void Game::SetCard(CardLocation location, CompactCard 
 
    if (location.IsAce())
    {
-      acePiles[(uint8_t)location.GetAceSuit()] = card.GetRank();
+      acePiles[location.GetAceSuitOrdinal()] = card.GetRank();
    }
    else if (location.IsTower())
    {
@@ -211,7 +211,8 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 {
    if (location.IsAce())
    {
-      acePiles[(uint8_t)location.GetAceSuit()] = acePiles[(uint8_t)location.GetAceSuit()] - 1;
+      uint8_t suitOrdinal = location.GetAceSuitOrdinal();
+      acePiles[suitOrdinal] = acePiles[suitOrdinal] - 1;
    }
    else if (location.IsTower())
    {
@@ -293,7 +294,7 @@ bool Game::CanMoveToAce(CompactCard card) const
    if (card.IsNull())
       return false;
    else
-      return card.GetRank() - acePiles[(uint8_t)card.GetSuit()] == 1;
+      return card.GetRank() - acePiles[card.GetSuit().GetOrdinal()] == 1;
 }
 
 

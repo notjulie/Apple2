@@ -25,7 +25,7 @@ class Sprites {
     return *ranksLookup.Get((uint8_t)rank - 1);
   }
   inline static const CardTopSprite &GetSuitSprite(Suit suit) {
-    return *suitsLookup.Get((uint8_t)suit);
+    return *suitsLookup.Get(suit.GetOrdinal());
   }
 
  public:
