@@ -22,10 +22,6 @@ using ::a2::KeyCode;
 __attribute__((noinline)) void StateMachine::Service() {
    switch (state) {
    case State::Uninitialized:
-      // set HGR
-      a2::HIRESON();
-      a2::TEXTOFF();
-
       // new game
       NewGame();
       break;

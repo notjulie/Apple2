@@ -5,6 +5,7 @@
 #include "CardAnimator.h"
 
 #include <Apple2Lib/VBLCounter.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include "Cursor.h"
 #include "Drawing.h"
@@ -32,9 +33,18 @@ CardAnimator::CardAnimator()
 /// </summary>
 void CardAnimator::Initialize()
 {
-   state = State::Idle;
+   // initialize our pages
    onscreenPage = AnimationPage::Page1();
    offscreenPage = AnimationPage::Page2();
+
+   // clear and show page 1
+   offscreenPage.GetDrawing().DrawBackground();
+   SwapPages();
+   a2::TEXTOFF();
+   a2::HIRESON();
+
+   // set initial state
+   state = State::Idle;
 }
 
 
