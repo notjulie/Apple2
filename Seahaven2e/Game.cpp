@@ -154,11 +154,11 @@ CardLocation Game::GetCardLocation(Card card)
          return CardLocation::Column(column, index);
    }
 
-   // see if it's on an ace pile
+   // see if it's on its ace pile
    Rank rank = card.GetRank();
-   for (uint8_t i=0; i<4; ++i)
-      if (acePiles[i] >= rank)
-         return CardLocation::AcePile(Suit::FromOrdinal(i));
+   uint8_t suitOrdinal = card.GetSuit().GetOrdinal();
+   if (acePiles[suitOrdinal] >= rank)
+      return CardLocation::AcePile(Suit::FromOrdinal(suitOrdinal));
 
    // else it's nowhere
    return CardLocation::Null();
