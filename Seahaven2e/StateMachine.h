@@ -47,10 +47,10 @@ private:
 
 private:
    State state = State::Uninitialized;
-   UndoGroupID currentUndoGroup;
    int8_t moveToTowerColumn;
    int8_t moveToTowerCurrentRow;
    int8_t moveToTowerEndRow;
+   UndoGroupID currentUndoGroup;
 };
 
 

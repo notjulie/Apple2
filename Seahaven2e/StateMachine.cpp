@@ -167,14 +167,13 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    }
 
    // start a new undo group
-   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
+   PersistentState::instance.UndoJournal.StartNewUndo();
 
    // if we are moving column to column it gets slightly complicated if multiple
    // cards are moving, so pop off to our handling for that
    if (location.IsColumn())
    {
       PersistentState::instance.UndoJournal.LogMove(
-               currentUndoGroup,
                CompactCard(card),
                location,
                targetLocation
@@ -217,7 +216,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
    }
 
    // start a new undo
-   currentUndoGroup = PersistentState::instance.UndoJournal.StartNewUndo();
+   PersistentState::instance.UndoJournal.StartNewUndo();
 
    // save the parameters of the move
    moveToTowerColumn = moveToTowerEnd.GetColumn();
@@ -251,7 +250,7 @@ void StateMachine::StartNextMoveToTower()
    assert(!end.IsNull());
 
    // log
-   PersistentState::instance.UndoJournal.LogMove(currentUndoGroup, card, start, end);
+   PersistentState::instance.UndoJournal.LogMove(card, start, end);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, end);
@@ -266,7 +265,7 @@ void StateMachine::StartNextMoveToTower()
 void StateMachine::MoveCard(CompactCard card, CardLocation location)
 {
    // log
-   PersistentState::instance.UndoJournal.LogMove(currentUndoGroup, card, Game::instance.GetCardLocation(card), location);
+   PersistentState::instance.UndoJournal.LogMove(card, Game::instance.GetCardLocation(card), location);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, location);

@@ -12,7 +12,7 @@
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
-__attribute__((noinline)) void UndoJournal::LogMove(UndoGroupID groupID, CompactCard card, CardLocation startLocation, CardLocation endLocation)
+__attribute__((noinline)) void UndoJournal::LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation)
 {
    // we can't redo beyond the current point... truncate the journal
    // at the current position
@@ -26,7 +26,7 @@ __attribute__((noinline)) void UndoJournal::LogMove(UndoGroupID groupID, Compact
    // append
    CardAndGroup cardAndGroup;
    cardAndGroup.SetCard(card);
-   cardAndGroup.SetGroup(groupID);
+   cardAndGroup.SetGroup(currentUndoGroup);
    cards[entryCount] = cardAndGroup;
 
    // XOR the start location and the end location... then we can always
@@ -104,7 +104,8 @@ void UndoJournal::PopUndo()
    --currentPosition;
 }
 
-UndoGroupID UndoJournal::StartNewUndo()
+
+void UndoJournal::StartNewUndo()
 {
    // truncate anything in the list beyond the current position
    entryCount = currentPosition;
@@ -114,7 +115,7 @@ UndoGroupID UndoJournal::StartNewUndo()
 
    // all we need to do is make sure that we return a group ID
    // that's different from the last undo
-   return (UndoGroupID)((uint8_t)undo.GetGroup() + 1);
+   currentUndoGroup = (UndoGroupID)((uint8_t)undo.GetGroup() + 1);
 }
 
 

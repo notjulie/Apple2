@@ -66,8 +66,8 @@ class UndoJournal {
 public:
    UndoJournal() {}
 
-   UndoGroupID StartNewUndo();
-   void LogMove(UndoGroupID groupID, CompactCard card, CardLocation startLocation, CardLocation endLocation);
+   void StartNewUndo();
+   void LogMove(CompactCard card, CardLocation startLocation, CardLocation endLocation);
    UndoInstruction PeekRedo() const;
    UndoInstruction PeekUndo() const;
    void PopRedo();
@@ -84,6 +84,7 @@ private:
    uint8_t currentPosition = 0;
    CardAndGroup cards[JournalMaxLength];
    uint8_t locations[JournalMaxLength];
+   UndoGroupID currentUndoGroup;
 };
 
 #endif // UNDOJOURNAL_H
