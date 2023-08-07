@@ -27,6 +27,8 @@ private:
    // state machine
    bool CheckAcesToMove();
    void EnterIdle();
+   void EnterScreensave();
+   void ExitScreensave();
    void ServiceIdle();
    void RedoNext();
    void UndoNext();
@@ -42,7 +44,8 @@ private:
       Animating,
       Undoing,
       Redoing,
-      MovingToTower
+      MovingToTower,
+      Screensave
    };
 
 private:
@@ -51,6 +54,9 @@ private:
    int8_t moveToTowerCurrentRow;
    int8_t moveToTowerEndRow;
    UndoGroupID currentUndoGroup;
+
+   uint8_t lastVBLCount;
+   uint16_t timeInIdle;
 };
 
 

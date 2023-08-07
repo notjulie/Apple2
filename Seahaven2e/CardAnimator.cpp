@@ -72,6 +72,66 @@ __attribute__((noinline)) void CardAnimator::DrawGame()
 }
 
 
+void CardAnimator::Erase()
+{
+   // draw to offscreen page
+   offscreenPage.GetDrawing().DrawBackground();
+
+   // show
+   SwapPages();
+
+   // copy to the offscreen buffer
+   offscreenPage.CopyFrom(onscreenPage);
+
+   // both pages are the same and up to date
+   state = State::Idle;
+
+   // and the cursor is no more
+   Cursor::instance.CursorHasBeenObliterated();
+}
+
+void CardAnimator::StartFreeAnimation(
+         Card card,
+         uint8_t startX, uint8_t startY,
+         uint8_t endX, uint8_t endY,
+         uint8_t duration
+         )
+{
+   // step 0: hide the cursor
+   Cursor::instance.Hide();
+
+   // set the bounds of the animation
+   currentPosition[(uint8_t)Coordinate::X] = startX;
+   currentPosition[(uint8_t)Coordinate::Y] = startY;
+   targetPosition[(uint8_t)Coordinate::X] = endX;
+   targetPosition[(uint8_t)Coordinate::Y] = endY;
+   StartPositionTracker((uint8_t)Coordinate::X);
+   StartPositionTracker((uint8_t)Coordinate::Y);
+
+   // set the duration
+   this->duration = duration;
+   timeLeft = duration;
+
+   lastVBLCount = a2::VBLCounter::GetCounter();
+   cardToMove = card;
+
+   // draw the card at its original position, saving the background
+   offscreenPage.MoveCard(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
+
+   // switch
+   SwapPages();
+
+   // set the state
+   state = State::FreeAnimating;
+}
+
+
+
+
 /// <summary>
 ///   Starts an animation of a card from one position to another
 /// </summary>
@@ -192,42 +252,55 @@ __attribute__((noinline)) void CardAnimator::Service()
       break;
 
    case State::Animating:
-      // update the position, move the card
-      UpdatePosition();
-      offscreenPage.MoveCard(
-            cardToMove,
-            currentPosition[(uint8_t)Coordinate::X],
-            currentPosition[(uint8_t)Coordinate::Y]
-            );
-      SwapPages();
+      // update the animation
+      UpdateAnimation();
 
-      // if we're done...
-      if (timeLeft == 0)
-      {
-         // end the animation on the onscreen page
-         onscreenPage.EndAnimation();
-
-         // finish the animation on the offscreen page
-         offscreenPage.MoveCard(
-               cardToMove,
-               currentPosition[(uint8_t)Coordinate::X],
-               currentPosition[(uint8_t)Coordinate::Y]
-               );
-         offscreenPage.EndAnimation();
-
-         // update the game object and our state
+      // if it finished move the card to its final location
+      if (state == State::Idle)
          Game::instance.SetCard(endLocation, cardToMove);
-         state = State::Idle;
-         break;
-      }
       break;
 
    case State::MovingColumnToColumn:
       ServiceColumnToColumnMove();
       break;
+
+   case State::FreeAnimating:
+      // update the animation
+      UpdateAnimation();
+      break;
    }
 }
 
+
+void CardAnimator::UpdateAnimation()
+{
+   // update the position, move the card
+   UpdatePosition();
+   offscreenPage.MoveCard(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
+   SwapPages();
+
+   // if we're done...
+   if (timeLeft == 0)
+   {
+      // end the animation on the onscreen page
+      onscreenPage.EndAnimation();
+
+      // finish the animation on the offscreen page
+      offscreenPage.MoveCard(
+            cardToMove,
+            currentPosition[(uint8_t)Coordinate::X],
+            currentPosition[(uint8_t)Coordinate::Y]
+            );
+      offscreenPage.EndAnimation();
+
+      // update our state
+      state = State::Idle;
+   }
+}
 
 __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
 {

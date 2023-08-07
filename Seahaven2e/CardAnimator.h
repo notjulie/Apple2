@@ -20,11 +20,18 @@ public:
    void Initialize();
 
    void DrawGame();
+   void Erase();
    bool IsAnimating() { return state != State::Idle; }
    void StartAnimation(Card card, CardLocation end);
    void StartMoveColumnToColumn(CardLocation from, CardLocation to);
    void Service();
 
+   void StartFreeAnimation(
+         Card card,
+         uint8_t startX, uint8_t startY,
+         uint8_t endX, uint8_t endY,
+         uint8_t duration
+         );
    AnimationPage GetOnscreenPage() const { return onscreenPage; }
 
 public:
@@ -38,14 +45,19 @@ private:
       Idle,
 
       /// <summary>
-      /// Simple animation
+      /// Animating cards on the game table
       /// </summary>
       Animating,
 
       /// <summary>
       /// Moving multiple cards from one column to another
       /// </summary>
-      MovingColumnToColumn
+      MovingColumnToColumn,
+
+      /// <summary>
+      /// Doing free animation, such as during screensave
+      /// </summary>
+      FreeAnimating
    };
 
    enum class Coordinate {
@@ -56,6 +68,7 @@ private:
 private:
    static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
    void SwapPages();
+   void UpdateAnimation();
    void UpdatePosition();
    void NextColumnToColumnMove();
    void ServiceColumnToColumnMove();

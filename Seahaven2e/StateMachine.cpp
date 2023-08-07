@@ -6,12 +6,14 @@
 
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
+#include <Apple2Lib/VBLCounter.h>
 #include "Audio.h"
 #include "CardAnimator.h"
 #include "Cursor.h"
 #include "Drawing.h"
 #include "Game.h"
 #include "PersistentState.h"
+#include "Screensave.h"
 #include "SHAssert.h"
 
 using ::a2::KeyCode;
@@ -54,6 +56,13 @@ __attribute__((noinline)) void StateMachine::Service() {
       if (!CardAnimator::instance.IsAnimating())
          StartNextMoveToTower();
       break;
+
+   case State::Screensave:
+      if (a2::getKey() != a2::KeyCode::None)
+         ExitScreensave();
+      else
+         Screensave::instance.Service();
+      break;
    }
 }
 
@@ -65,6 +74,20 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 {
   // give the cursor its timeslice
   Cursor::instance.Service();
+
+  // update our timer
+  a2::VBLCounter::Update();
+  uint8_t now = a2::VBLCounter::GetCounter();
+  uint8_t elapsed = now - lastVBLCount;
+  timeInIdle += elapsed;
+  lastVBLCount = now;
+
+  // if we've been in idle too long switch to screensave
+  if (timeInIdle > 600)
+  {
+     EnterScreensave();
+     return;
+  }
 
   // check for user input
 #pragma GCC diagnostic push
@@ -289,11 +312,22 @@ void StateMachine::NewGame() {
 }
 
 
+void StateMachine::ExitScreensave()
+{
+  // have the animator draw
+  CardAnimator::instance.DrawGame();
+
+  // check for auto moves
+  EnterIdle();
+}
+
+
 /// <summary>
 /// Enters idle state
 /// </summary>
 void StateMachine::EnterIdle() {
   state = State::Idle;
+  timeInIdle = 0;
   Cursor::instance.Show();
 }
 
@@ -422,3 +456,8 @@ __attribute__((noinline)) void StateMachine::UndoNext()
 }
 
 
+void StateMachine::EnterScreensave()
+{
+   Screensave::instance.Start();
+   state = State::Screensave;
+}
