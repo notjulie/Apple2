@@ -456,7 +456,7 @@ __attribute__((noinline)) void StateMachine::UndoNext()
 }
 
 
-void StateMachine::EnterScreensave()
+__attribute__((noinline)) void StateMachine::EnterScreensave()
 {
    Screensave::instance.Start();
    state = State::Screensave;

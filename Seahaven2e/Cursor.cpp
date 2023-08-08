@@ -40,7 +40,7 @@ __attribute__((noinline)) void Cursor::SetCursorLocationToDefault()
 /// <summary>
 /// Moves the cursor up
 /// </summary>
-void Cursor::Up()
+__attribute__((noinline)) void Cursor::Up()
 {
    // get the current location
    CardLocation location = GetLocation();
@@ -58,7 +58,7 @@ void Cursor::Up()
 /// <summary>
 /// Moves the cursor down
 /// </summary>
-void Cursor::Down()
+__attribute__((noinline)) void Cursor::Down()
 {
    // get the current location
    CardLocation location = GetLocation();
@@ -82,7 +82,7 @@ void Cursor::Down()
 /// <summary>
 /// Moves the cursor left
 /// </summary>
-void Cursor::Left()
+__attribute__((noinline)) void Cursor::Left()
 {
    while (gridColumn > 0)
    {
@@ -100,7 +100,7 @@ void Cursor::Left()
 /// <summary>
 /// Moves the cursor right
 /// </summary>
-void Cursor::Right()
+__attribute__((noinline)) void Cursor::Right()
 {
    while (gridColumn < 9)
    {

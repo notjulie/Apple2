@@ -8,7 +8,7 @@ namespace a2 {
    uint8_t VBLCounter::counter;
 
 
-   void VBLCounter::Update()
+   __attribute__((noinline)) void VBLCounter::Update()
    {
       int8_t vblState = a2::VBLFLAG();
       if (vblState>=0)
