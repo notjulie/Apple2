@@ -23,6 +23,8 @@ namespace CardLocations {
   constexpr uint8_t TowersBottom = TowersTop + CardHeight;
   constexpr uint8_t ColumnsTop = TowersBottom + 4;
 
+  constexpr uint8_t CardByteWidth = 4;
+
   /// <summary>
   /// Starting column cards... 5, of course
   /// </summary>

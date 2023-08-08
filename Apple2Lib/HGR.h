@@ -16,12 +16,19 @@
 
 namespace a2 {
 
-   /// \brief
-   ///    Height of the HGR screen in pixels
+   /// <summary>
+   /// Height of the HGR screen in pixels
+   /// </summary>
    const uint8_t HGRHeight = 192;
 
-   /// \brief
-   ///    Base address of HGR page 1
+   /// <summary>
+   /// Width of the HGR screen in bytes
+   /// </summary>
+   const uint8_t HGRByteWidth = 40;
+
+   /// <summary>
+   /// Base address of HGR page 1
+   /// </summary>
    inline uint8_t *HGRPage1Base() {
       return (uint8_t *)0x2000;
    }

@@ -119,6 +119,16 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       MoveToColumn();
       break;
 
+   case (KeyCode)'R':
+      // diagnostic... force redraw
+      CardAnimator::instance.DrawGame();
+      break;
+
+   case (KeyCode)'S':
+      // diagnostic... force screensave
+      EnterScreensave();
+      break;
+
    case (KeyCode)'T':
       MoveToTower();
       break;

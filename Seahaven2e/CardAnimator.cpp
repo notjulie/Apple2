@@ -256,8 +256,23 @@ __attribute__((noinline)) void CardAnimator::Service()
       UpdateAnimation();
 
       // if it finished move the card to its final location
-      if (state == State::Idle)
+      if (timeLeft == 0)
+      {
+         // end the animation on the onscreen page
+         onscreenPage.EndAnimation();
+
+         // finish the animation on the offscreen page
+         offscreenPage.MoveCard(
+               cardToMove,
+               currentPosition[(uint8_t)Coordinate::X],
+               currentPosition[(uint8_t)Coordinate::Y]
+               );
+         offscreenPage.EndAnimation();
+
+         // update our state
          Game::instance.SetCard(endLocation, cardToMove);
+         state = State::Idle;
+      }
       break;
 
    case State::MovingColumnToColumn:
@@ -267,6 +282,8 @@ __attribute__((noinline)) void CardAnimator::Service()
    case State::FreeAnimating:
       // update the animation
       UpdateAnimation();
+      if (timeLeft == 0)
+         state = State::Idle;
       break;
    }
 }
@@ -282,24 +299,6 @@ void CardAnimator::UpdateAnimation()
          currentPosition[(uint8_t)Coordinate::Y]
          );
    SwapPages();
-
-   // if we're done...
-   if (timeLeft == 0)
-   {
-      // end the animation on the onscreen page
-      onscreenPage.EndAnimation();
-
-      // finish the animation on the offscreen page
-      offscreenPage.MoveCard(
-            cardToMove,
-            currentPosition[(uint8_t)Coordinate::X],
-            currentPosition[(uint8_t)Coordinate::Y]
-            );
-      offscreenPage.EndAnimation();
-
-      // update our state
-      state = State::Idle;
-   }
 }
 
 __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()

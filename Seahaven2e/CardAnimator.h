@@ -34,6 +34,8 @@ public:
          );
    AnimationPage GetOnscreenPage() const { return onscreenPage; }
 
+   static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
+
 public:
   static CardAnimator instance;
 
@@ -66,7 +68,6 @@ private:
    };
 
 private:
-   static uint8_t CalculatePixelDistance(uint8_t dx, uint8_t dy);
    void SwapPages();
    void UpdateAnimation();
    void UpdatePosition();
