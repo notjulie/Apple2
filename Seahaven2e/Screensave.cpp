@@ -113,6 +113,35 @@ uint8_t Screensave::GetRandomY()
 }
 
 
+__attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
+{
+   uint8_t result;
+
+   asm volatile (
+      // subtract a from b
+      "PHA\n"
+      "SEC\n"
+      "SBC\t%1\n"
+      "BCS\t1f\n"
+
+      // negate
+      "EOR\t#$FF\n"
+      "ADC\t#$01\n"
+      "LDA\t$0\n"
+
+   "1:\n"
+      "TAX\n"
+      "PLA\n"
+
+   : "=x"(result) // outputs
+   : "r"(a), "a"(b) // input
+   :  // clobbers
+   );
+
+   return result;
+}
+
+
 void Screensave::StartNextAnimation()
 {
    // grab the start position
@@ -124,14 +153,8 @@ void Screensave::StartNextAnimation()
 
    // calculate a duration based on the distance
    uint8_t dx, dy;
-   if (startX > targetX)
-      dx = startX - targetX;
-   else
-      dx = targetX - startX;
-   if (startX > targetX)
-      dy = startY - targetY;
-   else
-      dy = targetY - startY;
+   dx = Difference(startX, targetX);
+   dy = Difference(startY, targetY);
    uint8_t distance = CardAnimator::CalculatePixelDistance(dx, dy);
 
    // start animating
