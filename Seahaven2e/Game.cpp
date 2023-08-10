@@ -423,23 +423,36 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
 {
    assert(location.IsColumn());
 
-   uint8_t column = location.GetColumn();
+   // calculate our result
    uint8_t row = location.GetRow();
+   uint8_t column = location.GetColumn();
    uint8_t count = columnCounts[column];
-   Card topCard = GetColumnCard(column, row);
+   uint8_t result = count - row;
 
-   // confirm that all cards below form a straight flush
-   for (uint8_t i=row + 1; i<count; ++i)
+   // that result is correct, as long as all the cards between
+   // this row and the last card on the column are a straight flush;
+   // if not we return 0 to indicate that these cards can't move to
+   // another column as a group
+   if (count > 5)
+      count = 5;
+   uint8_t index = column + rowOffset[row];
+   Card topCard = columnCards[index];
+   while (++row < count)
    {
-      Card card = GetColumnCard(column, i);
-      if (card.GetSuit() != topCard.GetSuit())
-         return 0;
-      if (topCard.GetRank() - card.GetRank() != i - row)
-         return 0;
+      index += 10;
+      Card nextCard = columnCards[index];
+
+      if (nextCard.GetSuit() != topCard.GetSuit())
+         goto return0;
+      if (topCard.GetRank() - nextCard.GetRank() != 1)
+         goto return0;
+      topCard = nextCard;
    }
 
-   // if so we're good
-   return count - row;
+   return result;
+
+return0:
+   return 0;
 }
 
 
