@@ -39,19 +39,13 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
    Shuffle8((uint8_t)instruction);
 
    // deal
-   uint8_t cardIndex = 0;
+   c6502::memcpy8(columnCards, deck, sizeof(columnCards));
    for (uint8_t column=0; column < 10; ++column)
-   {
-      for (uint8_t index=column; index < 50; index += 10)
-      {
-         columnCards[index] = deck[cardIndex++];
-      }
       columnCounts[column] = 5;
-   }
 
    towers[0] = Card::Null();
-   towers[1] = deck[cardIndex++];
-   towers[2] = deck[cardIndex++];
+   towers[1] = deck[50];
+   towers[2] = deck[51];
    towers[3] = Card::Null();
 
    acePiles[0] = Rank::Null;
@@ -61,32 +55,48 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
 }
 
 void Game::Shuffle8(uint8_t instruction) {
-  Card deckCopy[52];
-  uint8_t index;
+   Card deckCopy[52];
+   uint8_t index;
 
-  // we have two types of shuffling, and we choose one each time through
-  // based on the bits in the instruction
-  for (int i=0; i < 8; ++i) {
-    c6502::memcpy8(deckCopy, deck, 52);
+   // we have two types of shuffling, and we choose one each time through
+   // based on the bits in the instruction
+   for (int i=0; i < 8; ++i)
+   {
+      c6502::memcpy8(deckCopy, deck, 52);
 
-    if (instruction & 1) {
       index = 0;
-      for (int j=0; j < 26; ++j) {
-        deck[index++] = deckCopy[25 - j];
-        deck[index++] = deckCopy[j + 26];
+      for (int j=0; j < 26; ++j)
+      {
+         deck[index++] = deckCopy[25 - j];
+         deck[index++] = deckCopy[j + 26];
       }
-    } else {
-      index = 23;
-      for (int j=51; j >= 0; --j) {
-        deck[j] = deckCopy[index];
-        index += 7;
-        if (index >= 52)
-          index -= 52;
-      }
-    }
 
-    instruction >>= 1;
-  }
+      c6502::memcpy8(deckCopy, deck, 52);
+      if (instruction & 1)
+      {
+         index = 17;
+         for (int j=51; j >= 0; --j)
+         {
+               deck[j] = deckCopy[index];
+               index += 19;
+            if (index >= 52)
+               index -= 52;
+         }
+      }
+      else
+      {
+         index = 23;
+         for (int j=51; j >= 0; --j)
+         {
+           deck[j] = deckCopy[index];
+           index += 7;
+           if (index >= 52)
+             index -= 52;
+         }
+      }
+
+      instruction >>= 1;
+   }
 }
 
 
