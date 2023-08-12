@@ -71,28 +71,24 @@ void Game::Shuffle8(uint8_t instruction) {
          deck[index++] = deckCopy[j + 26];
       }
 
+      uint8_t increment;
       c6502::memcpy8(deckCopy, deck, 52);
       if (instruction & 1)
       {
          index = 17;
-         for (int j=51; j >= 0; --j)
-         {
-               deck[j] = deckCopy[index];
-               index += 19;
-            if (index >= 52)
-               index -= 52;
-         }
+         increment = 19;
       }
       else
       {
          index = 23;
-         for (int j=51; j >= 0; --j)
-         {
-           deck[j] = deckCopy[index];
-           index += 7;
-           if (index >= 52)
-             index -= 52;
-         }
+         increment = 7;
+      }
+      for (int j=51; j >= 0; --j)
+      {
+         deck[j] = deckCopy[index];
+         index += increment;
+         if (index >= 52)
+            index -= 52;
       }
 
       instruction >>= 1;

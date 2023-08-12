@@ -67,6 +67,8 @@
 		</Linker>
 		<Unit filename="../Apple2Lib/HGR.cpp" />
 		<Unit filename="../Apple2Lib/HGR.h" />
+		<Unit filename="../Apple2Lib/HGRAddressCalculator.cpp" />
+		<Unit filename="../Apple2Lib/HGRAddressCalculator.h" />
 		<Unit filename="../Apple2Lib/HGRPage.cpp" />
 		<Unit filename="../Apple2Lib/HGRPage.h" />
 		<Unit filename="../Apple2Lib/HGRWord.h" />
@@ -101,6 +103,8 @@
 		<Unit filename="SHAssert.h" />
 		<Unit filename="SavedBackground.cpp" />
 		<Unit filename="SavedBackground.h" />
+		<Unit filename="Screensave.cpp" />
+		<Unit filename="Screensave.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
 		<Unit filename="StateMachine.cpp" />
