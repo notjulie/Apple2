@@ -5,6 +5,7 @@
 #include "Screensave.h"
 
 #include <Apple2Lib/HGR.h>
+#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "CardAnimator.h"
 #include "SHAssert.h"
@@ -113,6 +114,9 @@ uint8_t Screensave::GetRandomY()
 }
 
 
+/// <summary>
+/// Calculates the absolute value difference between two bytes
+/// </summary>
 __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
 {
    uint8_t result;
@@ -122,12 +126,11 @@ __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
       "PHA\n"
       "SEC\n"
       "SBC\t%1\n"
-      "BCS\t1f\n"
+      "BPL\t1f\n"
 
       // negate
       "EOR\t#$FF\n"
       "ADC\t#$01\n"
-      "LDA\t$0\n"
 
    "1:\n"
       "TAX\n"

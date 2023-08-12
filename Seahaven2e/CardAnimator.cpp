@@ -216,6 +216,7 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy)
    // like this, so we go manual on some of this
    uint8_t xPixels;
    asm volatile (
+      "PHA\n"
       "TXA\n"
       "LSR\n"
       "STA\t%0\n"
@@ -226,9 +227,10 @@ uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy)
       "SEC\n"
       "SBC\t%0\n"
       "STA\t%0\n"
+      "PLA\n"
    : "=r"(xPixels) // outputs
    : "x"(dx) // input
-   : "a"// clobbers
+   : // clobbers
    );
 
    dy >>= 1;

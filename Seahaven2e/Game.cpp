@@ -334,8 +334,6 @@ uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column) const
 
 Card Game::GetColumnCard(uint8_t column, uint8_t row) const
 {
-   assert(row <= columnCounts[column]);
-
    // if it's in our array of cards return what's in the array
    if (row < 5)
       return columnCards[column + rowOffset[row]];
