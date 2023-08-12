@@ -90,7 +90,11 @@ void CardAnimator::Erase()
    Cursor::instance.CursorHasBeenObliterated();
 }
 
-void CardAnimator::StartFreeAnimation(
+
+/// <summary>
+/// Moves a card that's not on the game table along a linear path
+/// </summary>
+__attribute__((noinline)) void CardAnimator::StartFreeAnimation(
          Card card,
          uint8_t startX, uint8_t startY,
          uint8_t endX, uint8_t endY,
