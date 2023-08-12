@@ -44,7 +44,6 @@ public:
 
 private:
    bool CanMoveToAce(Card card) const;
-   int8_t GetColumnCardIndex(uint8_t column, Card card);
    void RemoveColumnCard(uint8_t column, uint8_t row);
    void SetColumnCard(uint8_t column, uint8_t row, Card card);
    void Shuffle8(uint8_t instruction);

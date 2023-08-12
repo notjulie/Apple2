@@ -152,12 +152,16 @@ CardLocation Game::GetCardLocation(Card card)
       if (card == towers[i])
          return CardLocation::Tower(i);
 
-   // see if it's on column
+   // see if it's on column... for the sake of frugal use of RAM I'm
+   // making this simple but slow... there are some easy speed improvements
+   // to make if necessary... I think they are not
    for (uint8_t column=0; column<10; ++column)
    {
-      int8_t index = GetColumnCardIndex(column, card);
-      if (index >= 0)
-         return CardLocation::Column(column, index);
+      for (uint8_t row=0; row<CardLocations::MaxColumnCards; ++row)
+      {
+         if (GetColumnCard(column, row) == card)
+            return CardLocation::Column(column, row);
+      }
    }
 
    // see if it's on its ace pile
@@ -336,6 +340,9 @@ Card Game::GetColumnCard(uint8_t column, uint8_t row) const
    if (row < 5)
       return columnCards[column + rowOffset[row]];
 
+   if (row >= columnCounts[column])
+      return Card::Null();
+
    // anything beyond the array is a card stacked on the last card of the array
    return columnCards[40 + column] - (row - 4);
 }
@@ -348,46 +355,6 @@ void Game::RemoveColumnCard(uint8_t column, uint8_t row)
    // it has to be the bottom card
    assert(row == columnCounts[column] - 1);
    columnCounts[column]--;
-}
-
-
-/// <summary>
-/// Gets the index of the card within this column; returns -1 if we don't
-/// have that card
-/// </summary>
-int8_t Game::GetColumnCardIndex(uint8_t column, Card card)
-{
-   uint8_t count = columnCounts[column];
-
-   // first check to see if we have it stored as-is
-   {
-      uint8_t index = column;
-      for (int i=0; i<count; ++i)
-      {
-         if (columnCards[index] == card)
-            return i;
-         index += 10;
-      }
-   }
-
-   // if we don't have more than 5 cards then it's not here
-   if (count <= 5)
-      return -1;
-
-   // a count of >5 means that the 5th card has cards on top of it, which
-   // must be of the same suit as the 5th card, and of descending rank
-   Card fifthCard = GetColumnCard(column, 4);
-   if (card.GetSuit() != fifthCard.GetSuit())
-      return -1;
-   int8_t offsetToCard = fifthCard.GetRank() - card.GetRank();
-   if (offsetToCard < 0)
-      return -1;
-
-   int8_t index = 4 + offsetToCard;
-   if (index >= count)
-      return -1;
-   else
-      return index;
 }
 
 
