@@ -90,67 +90,69 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
   }
 
   // check for user input
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wswitch"
    KeyCode key = a2::getKey();
-   switch (key) {
-   case (KeyCode)'N':
-      // new game...
-      NewGame();
-      break;
+   if (key != KeyCode::None)
+   {
+      timeInIdle = 0;
 
-   case KeyCode::Up:
-      Cursor::instance.Up();
-      break;
+      #pragma GCC diagnostic push
+      #pragma GCC diagnostic ignored "-Wswitch"
+      switch (key) {
+      case (KeyCode)'N':
+         // new game...
+         NewGame();
+         break;
 
-   case KeyCode::Down:
-      Cursor::instance.Down();
-      break;
+      case KeyCode::Up:
+         Cursor::instance.Up();
+         break;
 
-   case KeyCode::Left:
-      Cursor::instance.Left();
-      break;
+      case KeyCode::Down:
+         Cursor::instance.Down();
+         break;
 
-   case KeyCode::Right:
-      Cursor::instance.Right();
-      break;
+      case KeyCode::Left:
+         Cursor::instance.Left();
+         break;
 
-   case (KeyCode)'C':
-      MoveToColumn();
-      break;
+      case KeyCode::Right:
+         Cursor::instance.Right();
+         break;
 
-   case (KeyCode)'R':
-      // restart
-      Restart();
-      break;
+      case (KeyCode)'C':
+         MoveToColumn();
+         break;
 
-   case (KeyCode)'S':
-      // force screensave
-      EnterScreensave();
-      break;
+      case (KeyCode)'R':
+         // restart
+         Restart();
+         break;
 
-   case (KeyCode)'T':
-      MoveToTower();
-      break;
+      case (KeyCode)'S':
+         // force screensave
+         EnterScreensave();
+         break;
 
-   case (KeyCode)'Z':
-      BeginUndo();
-      break;
+      case (KeyCode)'T':
+         MoveToTower();
+         break;
 
-   case (KeyCode)'Y':
-      BeginRedo();
-      break;
+      case (KeyCode)'Z':
+         BeginUndo();
+         break;
 
-   case KeyCode::None:
-      break;
+      case (KeyCode)'Y':
+         BeginRedo();
+         break;
 
-   default:
-      #ifdef DEBUG
-         a2::PRBYTE((uint8_t)key);
-      #endif
-      break;
+      default:
+         #ifdef DEBUG
+            a2::PRBYTE((uint8_t)key);
+         #endif
+         break;
+      }
+      #pragma GCC diagnostic pop
    }
-#pragma GCC diagnostic pop
 }
 
 
