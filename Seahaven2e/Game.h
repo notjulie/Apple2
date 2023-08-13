@@ -15,6 +15,7 @@
 class Game {
 public:
    void Shuffle16(uint16_t instruction);
+   void DealCurrentDeck();
 
    Card GetCard(CardLocation location) const;
    void SetCard(CardLocation location, Card card);

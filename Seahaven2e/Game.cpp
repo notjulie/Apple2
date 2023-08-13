@@ -39,6 +39,12 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
    Shuffle8((uint8_t)instruction);
 
    // deal
+   DealCurrentDeck();
+}
+
+
+void Game::DealCurrentDeck()
+{
    c6502::memcpy8(columnCards, deck, sizeof(columnCards));
    for (uint8_t column=0; column < 10; ++column)
       columnCounts[column] = 5;
@@ -53,6 +59,7 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
    acePiles[2] = Rank::Null;
    acePiles[3] = Rank::Null;
 }
+
 
 void Game::Shuffle8(uint8_t instruction) {
    Card deckCopy[52];

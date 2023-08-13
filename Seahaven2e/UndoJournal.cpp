@@ -14,6 +14,11 @@
 /// </summary>
 __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation startLocation, CardLocation endLocation)
 {
+   // we don't log moves to the aces at the beginning of the game...
+   // they aren't undoable
+   if (endLocation.IsAce() && currentPosition==0)
+      return;
+
    // we can't redo beyond the current point... truncate the journal
    // at the current position
    entryCount = currentPosition;
@@ -64,6 +69,12 @@ UndoInstruction UndoJournal::PeekUndo() const
    // that location with the stored location integers
    result.location = CardLocation::FromUint8(locations[position] ^ currentLocation.AsUint8());
    return result;
+}
+
+
+void UndoJournal::Restart()
+{
+   currentPosition = 0;
 }
 
 

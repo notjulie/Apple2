@@ -29,6 +29,7 @@ private:
    void EnterIdle();
    void EnterScreensave();
    void ExitScreensave();
+   void Restart();
    void ServiceIdle();
    void RedoNext();
    void UndoNext();

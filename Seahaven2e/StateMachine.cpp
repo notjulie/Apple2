@@ -120,12 +120,12 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       break;
 
    case (KeyCode)'R':
-      // diagnostic... force redraw
-      CardAnimator::instance.DrawGame();
+      // restart
+      Restart();
       break;
 
    case (KeyCode)'S':
-      // diagnostic... force screensave
+      // force screensave
       EnterScreensave();
       break;
 
@@ -315,6 +315,26 @@ void StateMachine::NewGame() {
 
   // reset the cursor
   Cursor::instance.SetCursorLocationToDefault();
+
+  // check for auto moves
+  if (!CheckAcesToMove())
+    EnterIdle();
+}
+
+
+void StateMachine::Restart()
+{
+  // shuffle
+  Game::instance.DealCurrentDeck();
+
+  // have the animator draw
+  CardAnimator::instance.DrawGame();
+
+  // reset the cursor
+  Cursor::instance.SetCursorLocationToDefault();
+
+  // reset Undo position
+  PersistentState::instance.UndoJournal.Restart();
 
   // check for auto moves
   if (!CheckAcesToMove())

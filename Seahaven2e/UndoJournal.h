@@ -66,6 +66,7 @@ class UndoJournal {
 public:
    UndoJournal() {}
 
+   void Restart();
    void StartNewUndo();
    void LogMove(Card card, CardLocation startLocation, CardLocation endLocation);
    UndoInstruction PeekRedo() const;
