@@ -341,12 +341,13 @@ uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column) const
 
 Card Game::GetColumnCard(uint8_t column, uint8_t row) const
 {
+   // never mind if we don't have that many cards on the column
+   if (row >= columnCounts[column])
+      return Card::Null();
+
    // if it's in our array of cards return what's in the array
    if (row < 5)
       return columnCards[column + rowOffset[row]];
-
-   if (row >= columnCounts[column])
-      return Card::Null();
 
    // anything beyond the array is a card stacked on the last card of the array
    return columnCards[40 + column] - (row - 4);
