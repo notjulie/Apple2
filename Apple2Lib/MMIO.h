@@ -80,16 +80,6 @@ namespace a2 {
    {
       asm volatile ("STA\t$C051" : );
    }
-
-   enum class KeyCode : char {
-     None = 0,
-     Left = 0x08,
-     Down = 0x0A,
-     Up   = 0x0B,
-     Right = 0x15,
-   };
-
-   KeyCode getKey();
 }
 
 /*

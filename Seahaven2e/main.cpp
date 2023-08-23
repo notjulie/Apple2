@@ -3,6 +3,7 @@
 // =============================================================
 
 #include <stdint.h>
+#include <Apple2Lib/DOS.h>
 #include <Apple2Lib/HGR.h>
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>

@@ -4,7 +4,7 @@
 
 #include "StateMachine.h"
 
-#include <Apple2Lib/MMIO.h>
+#include <Apple2Lib/Keyboard.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Audio.h"
@@ -58,7 +58,7 @@ __attribute__((noinline)) void StateMachine::Service() {
       break;
 
    case State::Screensave:
-      if (a2::getKey() != a2::KeyCode::None)
+      if (a2::Keyboard::GetKey() != a2::KeyCode::None)
          ExitScreensave();
       else
          Screensave::instance.Service();
@@ -90,7 +90,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
   }
 
   // check for user input
-   KeyCode key = a2::getKey();
+   KeyCode key = a2::Keyboard::GetKey();
    if (key != KeyCode::None)
    {
       timeInIdle = 0;

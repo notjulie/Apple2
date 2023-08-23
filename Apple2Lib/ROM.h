@@ -6,6 +6,12 @@
 
 namespace a2 {
 
+   // ========================================================================
+   // ========================================================================
+   //    functions
+   // ========================================================================
+   // ========================================================================
+
    /// <summary>
    /// This subroutine sends a bell (CTRL G) character to the current output device. It leaves the
    /// accumulator holding $87.
@@ -69,14 +75,6 @@ namespace a2 {
    inline void PRBYTE(uint8_t b)
    {
       asm volatile ("JSR\t$FDDA" : "+a"(b));
-   }
-
-   /** \brief
-    * DOS warm start... basically exits to BASIC
-    */
-   inline void DOSWRM()
-   {
-      asm volatile ("JMP\t$03D0" :::);
    }
 
    /** \brief
