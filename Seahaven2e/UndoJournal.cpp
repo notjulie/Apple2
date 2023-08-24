@@ -2,53 +2,116 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
+#include "UndoJournal.h"
+
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
-#include "UndoJournal.h"
 #include "Game.h"
+#include "PersistentState.h"
 #include "SHAssert.h"
 
+
+// ======================================================
+// ======================================================
+//   class UndoJournal
+// ======================================================
+// ======================================================
+
+UndoJournal UndoJournal::instance;
 
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
 __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation startLocation, CardLocation endLocation)
 {
+   auto &data = PersistentState::instance.UndoJournal;
+
    // we don't log moves to the aces at the beginning of the game...
    // they aren't undoable
-   if (endLocation.IsAce() && currentPosition==0)
+   if (endLocation.IsAce() && data.currentPosition==0)
       return;
 
    // we can't redo beyond the current point... truncate the journal
    // at the current position
-   entryCount = currentPosition;
+   data.entryCount = data.currentPosition;
 
    // TODO: if the journal fills up (because some doofus keeps moving
    // cards back and forth) we'll have to delete items off the front of
    // the journal
-   assert(entryCount < JournalMaxLength);
+   assert(data.entryCount < JournalMaxLength);
 
    // append
    CardAndGroup cardAndGroup;
    cardAndGroup.SetCard(card);
    cardAndGroup.SetGroup(currentUndoGroup);
-   cards[entryCount] = cardAndGroup;
+   data.cards[data.entryCount] = cardAndGroup;
 
    // XOR the start location and the end location... then we can always
    // get one if we know the other
-   locations[entryCount] = startLocation.AsUint8() ^ endLocation.AsUint8();
+   data.locations[data.entryCount] = startLocation.AsUint8() ^ endLocation.AsUint8();
 
    // increment
-   ++entryCount;
-   currentPosition = entryCount;
+   ++data.entryCount;
+   data.currentPosition = data.entryCount;
 }
 
+
+void UndoJournal::Restart()
+{
+   PersistentState::instance.UndoJournal.currentPosition = 0;
+}
+
+
+void UndoJournal::PopRedo()
+{
+   ++PersistentState::instance.UndoJournal.currentPosition;
+}
+
+void UndoJournal::PopUndo()
+{
+   --PersistentState::instance.UndoJournal.currentPosition;
+}
+
+
+void UndoJournal::StartNewUndo()
+{
+   auto &data = PersistentState::instance.UndoJournal;
+
+   // truncate anything in the list beyond the current position
+   data.entryCount = data.currentPosition;
+
+   // peek an undo
+   UndoInstruction undo = PeekUndo();
+
+   // all we need to do is make sure that we return a group ID
+   // that's different from the last undo
+   currentUndoGroup = (UndoGroupID)((uint8_t)undo.GetGroup() + 1);
+}
+
+
+UndoInstruction UndoJournal::PeekUndo() const
+{
+   return PersistentState::instance.UndoJournal.PeekUndo();
+}
+
+
+UndoInstruction UndoJournal::PeekRedo() const
+{
+   return PersistentState::instance.UndoJournal.PeekRedo();
+}
+
+
+// ======================================================
+// ======================================================
+//   class UndoJournalPersist
+// ======================================================
+// ======================================================
 
 /// <summary>
 /// Returns a look at the next move to undo without changing the journal's state;
 /// returns Null() if there is nothing to undo.
 /// </summary>
-UndoInstruction UndoJournal::PeekUndo() const
+UndoInstruction UndoJournalPersist::PeekUndo() const
 {
    UndoInstruction result = UndoInstruction::Null();
 
@@ -71,18 +134,11 @@ UndoInstruction UndoJournal::PeekUndo() const
    return result;
 }
 
-
-void UndoJournal::Restart()
-{
-   currentPosition = 0;
-}
-
-
 /// <summary>
 /// Pulls a move to redo off of the journal; returns false if there
 /// was nothing to redo.
 /// </summary>
-UndoInstruction UndoJournal::PeekRedo() const
+UndoInstruction UndoJournalPersist::PeekRedo() const
 {
    UndoInstruction result = UndoInstruction::Null();
 
@@ -105,32 +161,11 @@ UndoInstruction UndoJournal::PeekRedo() const
 }
 
 
-void UndoJournal::PopRedo()
-{
-   ++currentPosition;
-}
-
-void UndoJournal::PopUndo()
-{
-   --currentPosition;
-}
-
-
-void UndoJournal::StartNewUndo()
-{
-   // truncate anything in the list beyond the current position
-   entryCount = currentPosition;
-
-   // peek an undo
-   UndoInstruction undo = PeekUndo();
-
-   // all we need to do is make sure that we return a group ID
-   // that's different from the last undo
-   currentUndoGroup = (UndoGroupID)((uint8_t)undo.GetGroup() + 1);
-}
-
-
-
+// ======================================================
+// ======================================================
+//   class UndoInstruction
+// ======================================================
+// ======================================================
 
 
 bool UndoInstruction::IsNull() const

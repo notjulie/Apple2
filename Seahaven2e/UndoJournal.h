@@ -41,6 +41,7 @@ private:
    uint8_t cardOrdinal : 6;
    uint8_t group : 2;
 };
+static_assert(sizeof(CardAndGroup) == 1, "CardAndGroup is too large");
 
 
 /// <summary>
@@ -60,6 +61,27 @@ struct UndoInstruction
 
 
 /// <summary>
+/// The persistent data associated with the undo journal
+/// </summary>
+class UndoJournalPersist {
+private:
+   UndoInstruction PeekRedo() const;
+   UndoInstruction PeekUndo() const;
+
+private:
+   static constexpr uint8_t JournalMaxLength = 150;
+
+private:
+   uint8_t entryCount = 0;
+   uint8_t currentPosition = 0;
+   CardAndGroup cards[JournalMaxLength];
+   uint8_t locations[JournalMaxLength];
+
+   friend class UndoJournal;
+};
+
+
+/// <summary>
 /// The journal of moves that can be undone/redone
 /// </summary>
 class UndoJournal {
@@ -74,17 +96,10 @@ public:
    void PopRedo();
    void PopUndo();
 
-private:
-   static constexpr uint8_t JournalMaxLength = 150;
+public:
+   static UndoJournal instance;
 
 private:
-   static_assert(sizeof(CardAndGroup) == 1, "CardAndGroup is too large");
-
-private:
-   uint8_t entryCount = 0;
-   uint8_t currentPosition = 0;
-   CardAndGroup cards[JournalMaxLength];
-   uint8_t locations[JournalMaxLength];
    UndoGroupID currentUndoGroup;
 };
 

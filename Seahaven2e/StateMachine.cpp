@@ -200,13 +200,13 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    }
 
    // start a new undo group
-   PersistentState::instance.UndoJournal.StartNewUndo();
+   UndoJournal::instance.StartNewUndo();
 
    // if we are moving column to column it gets slightly complicated if multiple
    // cards are moving, so pop off to our handling for that
    if (location.IsColumn())
    {
-      PersistentState::instance.UndoJournal.LogMove(
+      UndoJournal::instance.LogMove(
                Card(card),
                location,
                targetLocation
@@ -249,7 +249,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
    }
 
    // start a new undo
-   PersistentState::instance.UndoJournal.StartNewUndo();
+   UndoJournal::instance.StartNewUndo();
 
    // save the parameters of the move
    moveToTowerColumn = moveToTowerEnd.GetColumn();
@@ -283,7 +283,7 @@ void StateMachine::StartNextMoveToTower()
    assert(!end.IsNull());
 
    // log
-   PersistentState::instance.UndoJournal.LogMove(card, start, end);
+   UndoJournal::instance.LogMove(card, start, end);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, end);
@@ -298,7 +298,7 @@ void StateMachine::StartNextMoveToTower()
 void StateMachine::MoveCard(Card card, CardLocation location)
 {
    // log
-   PersistentState::instance.UndoJournal.LogMove(card, Game::instance.GetCardLocation(card), location);
+   UndoJournal::instance.LogMove(card, Game::instance.GetCardLocation(card), location);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, location);
@@ -336,7 +336,7 @@ void StateMachine::Restart()
   Cursor::instance.SetCursorLocationToDefault();
 
   // reset Undo position
-  PersistentState::instance.UndoJournal.Restart();
+  UndoJournal::instance.Restart();
 
   // check for auto moves
   if (!CheckAcesToMove())
@@ -391,12 +391,12 @@ bool StateMachine::CheckAcesToMove() {
 __attribute__((noinline)) void StateMachine::BeginUndo()
 {
    // see if there's something to undo
-   UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
+   UndoInstruction undo = UndoJournal::instance.PeekUndo();
    if (undo.IsNull())
       return;
 
    // tell the journal that we're actually undoing it
-   PersistentState::instance.UndoJournal.PopUndo();
+   UndoJournal::instance.PopUndo();
 
    // save the group... we keep undoing until we hit something that
    // belongs to a different group
@@ -425,10 +425,10 @@ __attribute__((noinline)) void StateMachine::BeginUndo()
 /// </summary>
 __attribute__((noinline)) void StateMachine::BeginRedo()
 {
-   UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
+   UndoInstruction redo = UndoJournal::instance.PeekRedo();
    if (!redo.IsNull())
    {
-      PersistentState::instance.UndoJournal.PopRedo();
+      UndoJournal::instance.PopRedo();
 
       // save the group... we keep undoing until we hit something that
       // belongs to a different group
@@ -457,10 +457,10 @@ __attribute__((noinline)) void StateMachine::BeginRedo()
 /// </summary>
 __attribute__((noinline)) void StateMachine::RedoNext()
 {
-   UndoInstruction redo = PersistentState::instance.UndoJournal.PeekRedo();
+   UndoInstruction redo = UndoJournal::instance.PeekRedo();
    if (!redo.IsNull() && redo.GetGroup() == currentUndoGroup)
    {
-      PersistentState::instance.UndoJournal.PopRedo();
+      UndoJournal::instance.PopRedo();
       CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
    }
    else
@@ -475,10 +475,10 @@ __attribute__((noinline)) void StateMachine::RedoNext()
 /// </summary>
 __attribute__((noinline)) void StateMachine::UndoNext()
 {
-   UndoInstruction undo = PersistentState::instance.UndoJournal.PeekUndo();
+   UndoInstruction undo = UndoJournal::instance.PeekUndo();
    if (!undo.IsNull() && undo.GetGroup() == currentUndoGroup)
    {
-      PersistentState::instance.UndoJournal.PopUndo();
+      UndoJournal::instance.PopUndo();
       CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
    }
    else

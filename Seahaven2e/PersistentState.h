@@ -16,7 +16,7 @@ public:
    uint16_t GetNextGameSeed() { return ++gameSeed; }
 
 public:
-   UndoJournal UndoJournal;
+   UndoJournalPersist UndoJournal;
 
 public:
    static PersistentState instance;
