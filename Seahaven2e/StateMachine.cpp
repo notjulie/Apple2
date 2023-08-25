@@ -326,21 +326,21 @@ void StateMachine::NewGame() {
 
 void StateMachine::Restart()
 {
-  // shuffle
-  Game::instance.DealCurrentDeck();
+   // redeal
+   Game::instance.Shuffle16(PersistentState::instance.GetCurrentGameSeed());
 
-  // have the animator draw
-  CardAnimator::instance.DrawGame();
+   // have the animator draw
+   CardAnimator::instance.DrawGame();
 
-  // reset the cursor
-  Cursor::instance.SetCursorLocationToDefault();
+   // reset the cursor
+   Cursor::instance.SetCursorLocationToDefault();
 
-  // reset Undo position
-  UndoJournal::instance.Restart();
+   // reset Undo position
+   UndoJournal::instance.Restart();
 
-  // check for auto moves
-  if (!CheckAcesToMove())
-    EnterIdle();
+   // check for auto moves
+   if (!CheckAcesToMove())
+      EnterIdle();
 }
 
 

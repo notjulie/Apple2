@@ -15,7 +15,6 @@
 class Game {
 public:
    void Shuffle16(uint16_t instruction);
-   void DealCurrentDeck();
 
    Card GetCard(CardLocation location) const;
    void SetCard(CardLocation location, Card card);
@@ -50,7 +49,6 @@ private:
    void Shuffle8(uint8_t instruction);
 
 private:
-   Card deck[52];
    Rank acePiles[4];
    Card towers[4];
    uint8_t columnCounts[10];

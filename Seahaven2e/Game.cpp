@@ -9,6 +9,7 @@
 #include <C6502/Memory.h>
 #include "CardLocation.h"
 #include "SHAssert.h"
+#include "Shuffler.h"
 
 
 /// <summary>
@@ -23,83 +24,24 @@ Game Game::instance;
 static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
 
 
-/// <summary>
-/// Shuffles and deals out a new game
-/// </summary>
 __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
 {
-   // create unshuffled deck
-   for (uint8_t i=0; i < 52; ++i)
-    deck[i] = Card::FromOrdinal(i);
+   Shuffler shuffler;
+   shuffler.Shuffle16(instruction);
 
-   // shuffle 8 times according to high byte
-   Shuffle8(instruction >> 8);
-
-   // shuffle 8 times according to low byte
-   Shuffle8((uint8_t)instruction);
-
-   // deal
-   DealCurrentDeck();
-}
-
-
-void Game::DealCurrentDeck()
-{
-   c6502::memcpy8(columnCards, deck, sizeof(columnCards));
+   c6502::memcpy8(columnCards, shuffler.deck, sizeof(columnCards));
    for (uint8_t column=0; column < 10; ++column)
       columnCounts[column] = 5;
 
    towers[0] = Card::Null();
-   towers[1] = deck[50];
-   towers[2] = deck[51];
+   towers[1] = shuffler.deck[50];
+   towers[2] = shuffler.deck[51];
    towers[3] = Card::Null();
 
    acePiles[0] = Rank::Null;
    acePiles[1] = Rank::Null;
    acePiles[2] = Rank::Null;
    acePiles[3] = Rank::Null;
-}
-
-
-void Game::Shuffle8(uint8_t instruction) {
-   Card deckCopy[52];
-   uint8_t index;
-
-   // we have two types of shuffling, and we choose one each time through
-   // based on the bits in the instruction
-   for (int i=0; i < 8; ++i)
-   {
-      c6502::memcpy8(deckCopy, deck, 52);
-
-      index = 0;
-      for (int j=0; j < 26; ++j)
-      {
-         deck[index++] = deckCopy[25 - j];
-         deck[index++] = deckCopy[j + 26];
-      }
-
-      uint8_t increment;
-      c6502::memcpy8(deckCopy, deck, 52);
-      if (instruction & 1)
-      {
-         index = 17;
-         increment = 19;
-      }
-      else
-      {
-         index = 23;
-         increment = 7;
-      }
-      for (int j=51; j >= 0; --j)
-      {
-         deck[j] = deckCopy[index];
-         index += increment;
-         if (index >= 52)
-            index -= 52;
-      }
-
-      instruction >>= 1;
-   }
 }
 
 
