@@ -209,7 +209,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    if (location.IsColumn())
    {
       UndoJournal::instance.LogMove(
-               Card(card),
+               card,
                location,
                targetLocation
                );
@@ -220,7 +220,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    }
 
    // start the animation
-   MoveCard(Card(card), targetLocation);
+   MoveCard(card, targetLocation);
 }
 
 

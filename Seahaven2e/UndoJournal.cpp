@@ -73,7 +73,7 @@ void UndoJournal::PopUndo()
 }
 
 
-void UndoJournal::StartNewUndo()
+__attribute__((noinline)) void UndoJournal::StartNewUndo()
 {
    auto &data = PersistentState::instance.UndoJournal;
 
