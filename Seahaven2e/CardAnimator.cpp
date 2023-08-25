@@ -210,7 +210,7 @@ __attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
 /// <summary>
 /// Calculates an approximate hypotenuse
 /// </summary>
-uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy)
+__attribute__((noinline)) uint8_t CardAnimator::CalculatePixelDistance(uint8_t dx, uint8_t dy)
 {
    // So for starters each x location is 7 pixels, y = 1 pixels, so
    // I want 7 * dx for the x distance.  But also I need to divide both
