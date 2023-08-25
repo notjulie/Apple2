@@ -9,7 +9,7 @@
 #include <Apple2Lib/ROM.h>
 #include "Cursor.h"
 #include "Drawing.h"
-#include "Game.h"
+#include "PersistentState.h"
 #include "SHAssert.h"
 
 
@@ -143,6 +143,8 @@ void CardAnimator::StartAnimation(
       Card card,
       CardLocation end)
 {
+   auto &game = PersistentState::instance.Game;
+
    // save parameters
    endLocation = end;
 
@@ -150,8 +152,8 @@ void CardAnimator::StartAnimation(
    Cursor::instance.Hide();
 
    // step 1: remove the card from its current position
-   CardLocation start = Game::instance.GetCardLocation(card);
-   Game::instance.RemoveCard(start);
+   CardLocation start = game.GetCardLocation(card);
+   game.RemoveCard(start);
 
    // set the bounds of the animation
    currentPosition[(uint8_t)Coordinate::X] = start.GetX();
@@ -253,6 +255,8 @@ __attribute__((noinline)) uint8_t CardAnimator::CalculatePixelDistance(uint8_t d
 ///
 __attribute__((noinline)) void CardAnimator::Service()
 {
+   auto &game = PersistentState::instance.Game;
+
    switch (state) {
    case State::Idle:
       break;
@@ -276,7 +280,7 @@ __attribute__((noinline)) void CardAnimator::Service()
          offscreenPage.EndAnimation();
 
          // update our state
-         Game::instance.SetCard(endLocation, cardToMove);
+         game.SetCard(endLocation, cardToMove);
          state = State::Idle;
       }
       break;
@@ -377,19 +381,21 @@ void CardAnimator::SwapPages()
 /// </summary>
 __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
 {
+   auto &game = PersistentState::instance.Game;
+
    // figure out if we have a valid group to move and how big it is
-   numberOfCardsToMove = Game::instance.GetSizeOfMoveToColumnGroup(from);
+   numberOfCardsToMove = game.GetSizeOfMoveToColumnGroup(from);
    if (numberOfCardsToMove == 0)
       return;
 
    // make sure we have the tower space to allow it
-   if (numberOfCardsToMove > Game::instance.GetNumberOfAvailableTowers() + 1)
+   if (numberOfCardsToMove > game.GetNumberOfAvailableTowers() + 1)
       return;
 
    // make a list of the cards to move; we can afford the 15 bytes
    for (int i=0; i<numberOfCardsToMove; ++i)
    {
-      cardsToMove[i] = Game::instance.GetCard(from);
+      cardsToMove[i] = game.GetCard(from);
       startLocations[i] = from;
       endLocations[i] = to;
 
@@ -409,6 +415,8 @@ __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocatio
 /// </summary>
 void CardAnimator::NextColumnToColumnMove()
 {
+   auto &game = PersistentState::instance.Game;
+
    // if we are out of cards to move we need to finally update
    // the game
    if (cardBeingMoved == 0)
@@ -416,7 +424,7 @@ void CardAnimator::NextColumnToColumnMove()
       // actually move them... remember that columns like to have cards
       // added and removed lick a stack
       for (int i=0; i<numberOfCardsToMove; ++i)
-         Game::instance.SetCard(endLocations[i], cardsToMove[i]);
+         game.SetCard(endLocations[i], cardsToMove[i]);
 
       // done
       state = State::Idle;

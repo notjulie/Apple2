@@ -161,12 +161,14 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 /// </summary>
 __attribute__((noinline)) void StateMachine::MoveToColumn()
 {
+   auto &game = PersistentState::instance.Game;
+
    // grab the cursor location
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());
 
    // get the card
-   Card card = Game::instance.GetCard(location);
+   Card card = game.GetCard(location);
    assert(!card.IsNull());
 
    // locate the target location
@@ -174,9 +176,9 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    if (card.GetRank() == Rank::King)
    {
       if (location.IsTower())
-         targetLocation = Game::instance.GetClosestOpenColumnToTower(location.GetTowerIndex());
+         targetLocation = game.GetClosestOpenColumnToTower(location.GetTowerIndex());
       else if (location.IsColumn())
-         targetLocation = Game::instance.GetClosestOpenColumnToColumn(location.GetColumn());
+         targetLocation = game.GetClosestOpenColumnToColumn(location.GetColumn());
       else
          assert(0);
    }
@@ -184,8 +186,8 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    {
       // get the location of the card one rank higher and verify that it's the bottom
       // of a column
-      CardLocation locationAboveTarget = Game::instance.GetCardLocation(card + 1);
-      if (Game::instance.IsBottomOfColumn(locationAboveTarget))
+      CardLocation locationAboveTarget = game.GetCardLocation(card + 1);
+      if (game.IsBottomOfColumn(locationAboveTarget))
       {
          // the target location is one below that
          targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
@@ -227,6 +229,8 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 /// </summary>
 __attribute__((noinline)) void StateMachine::MoveToTower()
 {
+   auto &game = PersistentState::instance.Game;
+
    CardLocation moveToTowerEnd = Cursor::instance.GetLocation();
    assert(!moveToTowerEnd.IsNull());
 
@@ -238,11 +242,11 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
    }
 
    // figure out just how many cards we're dealing with
-   CardLocation moveToTowerStart = Game::instance.GetBottomColumnCardLocation(moveToTowerEnd.GetColumn());
+   CardLocation moveToTowerStart = game.GetBottomColumnCardLocation(moveToTowerEnd.GetColumn());
    uint8_t numberOfCardsToMove = 1 + moveToTowerStart.GetRow() - moveToTowerEnd.GetRow();
 
    // see if we have enough towers for them
-   if (Game::instance.GetNumberOfAvailableTowers() < numberOfCardsToMove)
+   if (game.GetNumberOfAvailableTowers() < numberOfCardsToMove)
    {
       Audio::ErrorBeep();
       return;
@@ -266,6 +270,8 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
 /// </summary>
 void StateMachine::StartNextMoveToTower()
 {
+   auto &game = PersistentState::instance.Game;
+
    // never mind if we're done
    if (moveToTowerCurrentRow < moveToTowerEndRow)
    {
@@ -276,10 +282,10 @@ void StateMachine::StartNextMoveToTower()
 
    // grab the vitals of the start position
    CardLocation start = CardLocation::Column(moveToTowerColumn, moveToTowerCurrentRow);
-   Card card = Game::instance.GetCard(start);
+   Card card = game.GetCard(start);
 
    // get the end location
-   CardLocation end = Game::instance.GetClosestOpenTowerToColumn(moveToTowerColumn);
+   CardLocation end = game.GetClosestOpenTowerToColumn(moveToTowerColumn);
    assert(!end.IsNull());
 
    // log
@@ -297,8 +303,10 @@ void StateMachine::StartNextMoveToTower()
 /// </summary>
 void StateMachine::MoveCard(Card card, CardLocation location)
 {
+   auto &game = PersistentState::instance.Game;
+
    // log
-   UndoJournal::instance.LogMove(card, Game::instance.GetCardLocation(card), location);
+   UndoJournal::instance.LogMove(card, game.GetCardLocation(card), location);
 
    // start animating
    CardAnimator::instance.StartAnimation(card, location);
@@ -308,26 +316,31 @@ void StateMachine::MoveCard(Card card, CardLocation location)
 /// <summary>
 ///   Starts a new game
 /// </summary>
-void StateMachine::NewGame() {
-  // shuffle
-  Game::instance.Shuffle16(PersistentState::instance.GetNextGameSeed());
+void StateMachine::NewGame()
+{
+   auto &game = PersistentState::instance.Game;
 
-  // have the animator draw
-  CardAnimator::instance.DrawGame();
+   // shuffle
+   game.Shuffle16(PersistentState::instance.GetNextGameSeed());
 
-  // reset the cursor
-  Cursor::instance.SetCursorLocationToDefault();
+   // have the animator draw
+   CardAnimator::instance.DrawGame();
 
-  // check for auto moves
-  if (!CheckAcesToMove())
-    EnterIdle();
+   // reset the cursor
+   Cursor::instance.SetCursorLocationToDefault();
+
+   // check for auto moves
+   if (!CheckAcesToMove())
+      EnterIdle();
 }
 
 
 void StateMachine::Restart()
 {
+   auto &game = PersistentState::instance.Game;
+
    // redeal
-   Game::instance.Shuffle16(PersistentState::instance.GetCurrentGameSeed());
+   game.Shuffle16(PersistentState::instance.GetCurrentGameSeed());
 
    // have the animator draw
    CardAnimator::instance.DrawGame();
@@ -371,17 +384,19 @@ void StateMachine::EnterIdle() {
 ///   true if a card is being moved to the aces
 /// </return>
 bool StateMachine::CheckAcesToMove() {
-  // find the location of the card to move
-  CardLocation startLocation = Game::instance.GetCardToMoveToAce();
-  if (startLocation.IsNull())
-    return false;
+   auto &game = PersistentState::instance.Game;
 
-  // get the card
-  Card card = Game::instance.GetCard(startLocation);
+   // find the location of the card to move
+   CardLocation startLocation = game.GetCardToMoveToAce();
+   if (startLocation.IsNull())
+      return false;
 
-  // start the animation
-  MoveCard(card, CardLocation::AcePile(card.GetSuit()));
-  return true;
+   // get the card
+   Card card = game.GetCard(startLocation);
+
+   // start the animation
+   MoveCard(card, CardLocation::AcePile(card.GetSuit()));
+   return true;
 }
 
 
@@ -390,6 +405,8 @@ bool StateMachine::CheckAcesToMove() {
 /// </summary>
 __attribute__((noinline)) void StateMachine::BeginUndo()
 {
+   auto &game = PersistentState::instance.Game;
+
    // see if there's something to undo
    UndoInstruction undo = UndoJournal::instance.PeekUndo();
    if (undo.IsNull())
@@ -405,7 +422,7 @@ __attribute__((noinline)) void StateMachine::BeginUndo()
    // if this is a column-to-column move treat it as such
    if (undo.location.IsColumn())
    {
-      CardLocation startLocation = Game::instance.GetCardLocation(undo.GetCard());
+      CardLocation startLocation = game.GetCardLocation(undo.GetCard());
       if (startLocation.IsColumn())
       {
          CardAnimator::instance.StartMoveColumnToColumn(startLocation, undo.location);
@@ -425,6 +442,8 @@ __attribute__((noinline)) void StateMachine::BeginUndo()
 /// </summary>
 __attribute__((noinline)) void StateMachine::BeginRedo()
 {
+   auto &game = PersistentState::instance.Game;
+
    UndoInstruction redo = UndoJournal::instance.PeekRedo();
    if (!redo.IsNull())
    {
@@ -437,7 +456,7 @@ __attribute__((noinline)) void StateMachine::BeginRedo()
       // if this is a column-to-column move treat it as such
       if (redo.location.IsColumn())
       {
-         CardLocation startLocation = Game::instance.GetCardLocation(redo.GetCard());
+         CardLocation startLocation = game.GetCardLocation(redo.GetCard());
          if (startLocation.IsColumn())
          {
             CardAnimator::instance.StartMoveColumnToColumn(startLocation, redo.location);

@@ -113,6 +113,8 @@ UndoInstruction UndoJournal::PeekRedo() const
 /// </summary>
 UndoInstruction UndoJournalPersist::PeekUndo() const
 {
+   auto &game = PersistentState::instance.Game;
+
    UndoInstruction result = UndoInstruction::Null();
 
    // make sure we have something from the group
@@ -125,7 +127,7 @@ UndoInstruction UndoJournalPersist::PeekUndo() const
    Card card = result.GetCard();
 
    // get its current location
-   CardLocation currentLocation = Game::instance.GetCardLocation(card);
+   CardLocation currentLocation = game.GetCardLocation(card);
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing
@@ -140,6 +142,8 @@ UndoInstruction UndoJournalPersist::PeekUndo() const
 /// </summary>
 UndoInstruction UndoJournalPersist::PeekRedo() const
 {
+   auto &game = PersistentState::instance.Game;
+
    UndoInstruction result = UndoInstruction::Null();
 
    // see if we have something to redo
@@ -151,7 +155,7 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
 
    // get its current location
    result.cardAndGroup = cards[currentPosition];
-   CardLocation currentLocation = Game::instance.GetCardLocation(result.GetCard());
+   CardLocation currentLocation = game.GetCardLocation(result.GetCard());
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing

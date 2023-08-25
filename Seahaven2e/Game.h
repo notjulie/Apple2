@@ -39,9 +39,6 @@ public:
 
    bool IsBottomOfColumn(CardLocation location) const;
 
-public:
-  static Game instance;
-
 private:
    bool CanMoveToAce(Card card) const;
    void RemoveColumnCard(uint8_t column, uint8_t row);

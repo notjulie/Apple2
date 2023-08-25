@@ -7,6 +7,7 @@
 #include <Apple2Lib/VBLCounter.h>
 #include "CardAnimator.h"
 #include "Drawing.h"
+#include "PersistentState.h"
 #include "SHAssert.h"
 
 
@@ -236,20 +237,28 @@ CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
 /// <summary>
 /// Gets the closest card to the given position on the given column
 /// </summary>
-CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) {
-  if (column < 10) {
-    CardLocation bottomCard = Game::instance.GetBottomColumnCardLocation(column);
+CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex)
+{
+   auto &game = PersistentState::instance.Game;
 
-    if (!bottomCard.IsNull()) {
-      if (bottomCard.GetRow() < startIndex) {
-        return bottomCard;
-      } else {
-        return CardLocation::Column(column, startIndex);
-      }
-    }
-  }
+   if (column < 10)
+   {
+      CardLocation bottomCard = game.GetBottomColumnCardLocation(column);
 
-  return CardLocation::Null();
+     if (!bottomCard.IsNull())
+     {
+        if (bottomCard.GetRow() < startIndex)
+        {
+           return bottomCard;
+        }
+        else
+        {
+           return CardLocation::Column(column, startIndex);
+        }
+     }
+   }
+
+   return CardLocation::Null();
 }
 
 
@@ -257,33 +266,36 @@ CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex) 
 /// Gets the location of the tower card closest to the given location
 /// </summary>
 CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
-  uint8_t startTower;
+   auto &game = PersistentState::instance.Game;
 
-  if (start.IsColumn()) {
-    startTower = start.GetColumn() - 3;
-    if ((int8_t)startTower < 0)
-      startTower = 0;
-    if (startTower > 3)
-      startTower = 3;
-  } else if (start.IsTower()) {
-    startTower = start.GetTowerIndex();
-  } else {
-    return CardLocation::Null();
-  }
+   uint8_t startTower;
 
-  for (uint8_t i=0; i<4; ++i) {
-    uint8_t tower = startTower + i;
-    Card card = Game::instance.GetTowerCard(tower);
-    if (!card.IsNull())
-      return CardLocation::Tower(tower);
+   if (start.IsColumn()) {
+      startTower = start.GetColumn() - 3;
+      if ((int8_t)startTower < 0)
+         startTower = 0;
+      if (startTower > 3)
+         startTower = 3;
+   } else if (start.IsTower()) {
+      startTower = start.GetTowerIndex();
+   } else {
+      return CardLocation::Null();
+   }
 
-    tower = startTower - i;
-    card = Game::instance.GetTowerCard(tower);
-    if (!card.IsNull())
-      return CardLocation::Tower(tower);
-  }
+   for (uint8_t i=0; i<4; ++i)
+   {
+      uint8_t tower = startTower + i;
+      Card card = game.GetTowerCard(tower);
+      if (!card.IsNull())
+         return CardLocation::Tower(tower);
 
-  return CardLocation::Null();
+      tower = startTower - i;
+      card = game.GetTowerCard(tower);
+      if (!card.IsNull())
+         return CardLocation::Tower(tower);
+   }
+
+   return CardLocation::Null();
 }
 
 
@@ -322,8 +334,10 @@ void Cursor::AdjustColumn()
 /// </summary>
 CardLocation Cursor::GetLocation() const
 {
+   auto &game = PersistentState::instance.Game;
+
    // see how many cards are on the column... that tells us the max row
-   uint8_t maxRow = Game::instance.GetNumberOfCardsOnColumn(gridColumn);
+   uint8_t maxRow = game.GetNumberOfCardsOnColumn(gridColumn);
    uint8_t row = gridRow;
    if (row > maxRow)
       row = maxRow;
@@ -332,7 +346,7 @@ CardLocation Cursor::GetLocation() const
    if (row == 0)
    {
       int8_t tower = (int8_t)gridColumn - 3;
-      if (tower>=0 && tower<4 && !Game::instance.GetTower(tower).IsNull())
+      if (tower>=0 && tower<4 && !game.GetTower(tower).IsNull())
          return CardLocation::Tower(tower);
       if (maxRow == 0)
           return CardLocation::Null();

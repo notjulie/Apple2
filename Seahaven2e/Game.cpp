@@ -13,12 +13,6 @@
 
 
 /// <summary>
-/// Our global instance
-/// </summary>
-Game Game::instance;
-
-
-/// <summary>
 /// look up table for avoiding multiplying by 10
 /// </summary>
 static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};

@@ -12,7 +12,7 @@
 #include <Apple2Lib/VBLCounter.h>
 #include <C6502/Memory.h>
 
-#include "Game.h"
+#include "PersistentState.h"
 #include "Rank.h"
 #include "Suit.h"
 #include "Sprites.h"
@@ -138,7 +138,9 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 
 void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
 {
-   Rank rank = Game::instance.GetAcePileRank(suitOrdinal);
+   auto &game = PersistentState::instance.Game;
+
+   Rank rank = game.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
       DrawCard(Card(Suit::FromOrdinal(suitOrdinal), rank), x, CardLocations::TowersTop);
@@ -163,11 +165,13 @@ __attribute__((noinline)) void Drawing::DrawAcePiles()
 /// </summary>
 void Drawing::DrawTowers()
 {
+   auto &game = PersistentState::instance.Game;
+
    uint8_t x = TowersLeft;
 
    for (uint8_t tower=0; tower < 4; ++tower)
    {
-      Card card = Game::instance.GetTower(tower);
+      Card card = game.GetTower(tower);
       if (!card.IsNull())
       {
          DrawCard(card, x, CardLocations::TowersTop);
@@ -181,13 +185,15 @@ void Drawing::DrawTowers()
 /// </summary>
 void Drawing::DrawColumns()
 {
+   auto &game = PersistentState::instance.Game;
+
    uint8_t x = 0;
 
    for (uint8_t column=0; column < 10; ++column)
    {
-      uint8_t cardCount = Game::instance.GetNumberOfCardsOnColumn(column);
+      uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
       for (uint8_t row=0; row < cardCount; ++row)
-         DrawCardTop(Game::instance.GetColumnCard(column, row), x, columnYLookup.Y(row));
+         DrawCardTop(game.GetColumnCard(column, row), x, columnYLookup.Y(row));
 
       DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
 

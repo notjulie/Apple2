@@ -6,6 +6,7 @@
 #define SEAHAVEN2E_PERSISTENTSTATE_H_
 
 #include <stdint.h>
+#include "Game.h"
 #include "UndoJournal.h"
 
 
@@ -17,6 +18,7 @@ public:
    uint16_t GetNextGameSeed() { return ++gameSeed; }
 
 public:
+   Game Game;
    UndoJournalPersist UndoJournal;
 
 public:
