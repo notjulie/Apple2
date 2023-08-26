@@ -108,7 +108,10 @@ bool PersistentState::CheckIntegrity() const
 }
 
 
-uint16_t PersistentState::CalculateChecksum() const
+/// <summary>
+/// Calculates our checksum
+/// </summary>
+__attribute__((noinline)) uint16_t PersistentState::CalculateChecksum() const
 {
    // calculate the checksum of everything
    uint16_t result = 0;
