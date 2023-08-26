@@ -15,6 +15,8 @@
 class StateMachine {
 public:
    void Service();
+   bool IsWriteRequested() const { return writeRequested; }
+   void ClearWriteRequest() { writeRequested = false; }
 
 private:
    // user commands
@@ -52,6 +54,8 @@ private:
 
 private:
    State state = State::Uninitialized;
+   bool writeRequested = false;
+
    int8_t moveToTowerColumn;
    int8_t moveToTowerCurrentRow;
    int8_t moveToTowerEndRow;

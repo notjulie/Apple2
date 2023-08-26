@@ -19,6 +19,7 @@ public:
    void Load();
    bool CheckIntegrity() const;
    void Reset();
+   void Save();
 
    uint16_t GetCurrentGameSeed() { return gameSeed; }
    uint16_t GetNextGameSeed() { return ++gameSeed; }

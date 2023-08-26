@@ -50,6 +50,13 @@ extern "C" int main()
 
      // give the state machine its timeslice
      stateMachine.Service();
+
+     // check for write requests
+     if (stateMachine.IsWriteRequested())
+     {
+        PersistentState::instance.Save();
+        stateMachine.ClearWriteRequest();
+     }
    }
 }
 

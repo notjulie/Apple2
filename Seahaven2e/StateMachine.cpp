@@ -25,7 +25,7 @@ __attribute__((noinline)) void StateMachine::Service() {
    switch (state) {
    case State::Uninitialized:
       // new game
-      NewGame();
+      StartCurrentGame();
       break;
 
    case State::Idle:
@@ -135,6 +135,12 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 
       case (KeyCode)'T':
          MoveToTower();
+         break;
+
+      case (KeyCode)'W':
+         // write to disk requested by user; for safety we let main handle that
+         // since we are exiting to DOS when we do that
+         writeRequested = true;
          break;
 
       case (KeyCode)'Z':

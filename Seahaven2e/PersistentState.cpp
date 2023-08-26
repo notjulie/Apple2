@@ -40,9 +40,7 @@ void PersistentState::Load()
    uint8_t loadAddressLo = (uint8_t)(uint16_t)this;
    uint8_t loadAddressHi = (uint8_t)(((uint16_t)this)>>8);
 
-   // Our command line is declared as const so that it gets put into the
-   // ro-data section (i.e. is initialized on program load).  But we choose
-   // to treat it as mutable so that we can install our target address
+   // Format up a command
    static const char BASE_LOAD_COMMAND[] = "BLOAD " FILENAME ",A$";
    char loadCommand[sizeof(BASE_LOAD_COMMAND) + 4];
    c6502::memcpy8(loadCommand, BASE_LOAD_COMMAND, sizeof(BASE_LOAD_COMMAND) - 1);
@@ -54,6 +52,46 @@ void PersistentState::Load()
 
    // execute; it's left to the caller to request an integrity check
    a2::ExecuteDOSCommand(loadCommand);
+}
+
+
+void PersistentState::Save()
+{
+   // We have a couple signature bytes, one at the beginning and one at
+   // the end, which we use as an integrity check, along with a checksum.
+   // Set the signature bytes before writing.
+   signature1 = SIGNATURE1;
+   signature2 = SIGNATURE2;
+
+   // set the checksum
+   checksum = CalculateChecksum();
+
+   uint8_t saveAddressLo = (uint8_t)(uint16_t)this;
+   uint8_t saveAddressHi = (uint8_t)(((uint16_t)this)>>8);
+   uint8_t saveLengthLo = (uint8_t)sizeof(*this);
+   uint8_t saveLengthHi = (uint8_t)(sizeof(*this)>>8);
+
+   // Format up a command
+   static const char BASE_SAVE_COMMAND[] = "BSAVE " FILENAME ",A$";
+   char saveCommand[sizeof(BASE_SAVE_COMMAND) + 11];
+   c6502::memcpy8(saveCommand, BASE_SAVE_COMMAND, sizeof(BASE_SAVE_COMMAND) - 1);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) - 1] = HexDigit(saveAddressHi>>4);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 0] = HexDigit(saveAddressHi&0xF);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 1] = HexDigit(saveAddressLo>>4);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 2] = HexDigit(saveAddressLo&0xF);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 3] = ',';
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 4] = 'L';
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 5] = '$';
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 6] = HexDigit(saveLengthHi>>4);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 7] = HexDigit(saveLengthHi&0xF);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 8] = HexDigit(saveLengthLo>>4);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 9] = HexDigit(saveLengthLo&0xF);
+   saveCommand[sizeof(BASE_SAVE_COMMAND) + 10] = 0;
+
+   // execute; it's left to the caller to request an integrity check
+   a2::puts(saveCommand);
+   assert(0);
+   a2::ExecuteDOSCommand(saveCommand);
 }
 
 
