@@ -38,7 +38,7 @@ __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation star
    // TODO: if the journal fills up (because some doofus keeps moving
    // cards back and forth) we'll have to delete items off the front of
    // the journal
-   assert(data.entryCount < JournalMaxLength);
+   assert(data.entryCount < UndoJournalPersist::JournalMaxLength);
 
    // append
    CardAndGroup cardAndGroup;

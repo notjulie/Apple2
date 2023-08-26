@@ -27,9 +27,17 @@ static StateMachine stateMachine;
 /// </summary>
 extern "C" int main()
 {
+   // load the persistent state; note that this does a DOS call and
+   // needs to be done here rather than higher in the call stack in case
+   // there are side effects on our zero-page data
+   PersistentState::instance.Load();
+
+   // check the integrity
+   if (!PersistentState::instance.CheckIntegrity())
+      PersistentState::instance.Reset();
+
    // call initializers
    Sprites::Initialize();
-   PersistentState::instance = PersistentState();
    stateMachine = StateMachine();
    CardAnimator::instance.Initialize();
    Cursor::instance = Cursor();
@@ -44,6 +52,7 @@ extern "C" int main()
      stateMachine.Service();
    }
 }
+
 
 
 /// <summary>

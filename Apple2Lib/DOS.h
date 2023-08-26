@@ -15,15 +15,15 @@ namespace a2 {
       asm volatile ("JMP\t$03D0" :::);
    }
 
-   typedef void DOSReturn();
-
    /// <summary>
    /// Sends the given command to DOS as though typed from the command
-   /// prompt; on completion re-enters the program at the given return
-   /// address.
+   /// prompt.
+   ///
+   /// NOTE: this will likely have side effects to zero page and
+   /// other things... it is probably only safe to call this from low
+   /// in the call stack, such as from main
    /// </summary>
-   void ExecuteDOSCommand(const char *command, DOSReturn *returnAddress);
-
+   void ExecuteDOSCommand(const char *command);
 }
 
 

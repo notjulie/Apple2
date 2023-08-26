@@ -323,6 +323,13 @@ void StateMachine::NewGame()
    // shuffle
    game.Shuffle16(PersistentState::instance.GetNextGameSeed());
 
+   // start the game
+   StartCurrentGame();
+}
+
+
+void StateMachine::StartCurrentGame()
+{
    // have the animator draw
    CardAnimator::instance.DrawGame();
 

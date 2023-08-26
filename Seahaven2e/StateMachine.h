@@ -31,6 +31,7 @@ private:
    void ExitScreensave();
    void Restart();
    void ServiceIdle();
+   void StartCurrentGame();
    void RedoNext();
    void UndoNext();
 

@@ -10,15 +10,14 @@ namespace a2 {
 
    /// <summary>
    /// Sends the given command to DOS as though typed from the command
-   /// prompt; on completion re-enters the program at the given return
-   /// address.
+   /// prompt.
+   ///
+   /// NOTE: this will likely have side effects to zero page and
+   /// other things... it is probably only safe to call this from low
+   /// in the call stack, such as from main
    /// </summary>
-   __attribute__((noinline)) void ExecuteDOSCommand(const char *command, DOSReturn *_returnAddress)
+   __attribute__((noinline)) void ExecuteDOSCommand(const char *command)
    {
-      // save the return address somewhere safe... our locals could get
-      // stomped by DOS
-      static DOSReturn *returnAddress = _returnAddress;
-
       // make the command string easy to deal with in asm
       uint8_t commandLo = (uint8_t)(uint16_t)command;
       uint8_t commandHi = (uint8_t)(((uint16_t)command) >> 8);
@@ -29,6 +28,17 @@ namespace a2 {
          // page data, so we just hack it right into the load instruction
          "STA\tldChar + 1\n"
          "STX\tldChar + 2\n"
+
+         // save the stack pointer
+         "TSX\n"
+         "STX\tsSave\n"
+//         "PLA\n"
+//         "CLC\n"
+//         "ADC\t#1\n"
+//         "STA\tasmExit+1\n"
+//         "PLA\n"
+//         "ADC\t#0\n"
+//         "STA\tasmExit+2\n"
 
          // clear our index
          "LDX\t#0\n"
@@ -46,7 +56,8 @@ namespace a2 {
          "LDY\t#mos16hi(hook)\n"
          "STY\t$39\n"
 
-         // exit to DOS
+         // exit to DOS; DOS won't return to us, so we need to
+         // steal control when it asks for a character from the keyboard
          "JMP\t$03D0\n"
 
       "oldHook:\n"
@@ -69,7 +80,7 @@ namespace a2 {
          "LDA\t#$80\n"
          "STA\tindex\n"
 
-         // send the callaer a CR
+         // send the caller a CR
          "LDA\t#$0D\n"
 
       "hExit:\n"
@@ -78,25 +89,33 @@ namespace a2 {
          "LDX\txSave\n"
          "RTS\n"
 
+      "sSave:\n"
+         "NOP\n"
       "xSave:\n"
          "NOP\n"
       "index:\n"
          "NOP\n"
 
       "done:\n"
-         // restore the original hook and exit the asm block
+         // DOS has finished executing our command and has asked us for another
+         // character from the keyboard; instead, we will unroll the stack to it's
+         // original location and return to our caller.
+
+         // restore the original hook
          "LDY\toldHook\n"
          "STY\t$38\n"
          "LDY\toldHook+1\n"
          "STY\t$39\n"
 
+         // restore stack pointer and return
+         "LDX\tsSave\n"
+         "TXS\n"
+         "RTS\n"
+
       : // outputs
       : "a"(commandLo), "x"(commandHi) // inputs
       : // clobbers
       );
-
-      // jump to the return entry point
-      (*returnAddress)();
    }
 
 }
