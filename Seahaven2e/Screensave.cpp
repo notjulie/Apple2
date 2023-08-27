@@ -165,7 +165,7 @@ void Screensave::StartNextAnimation()
          Card(Suit::Clubs(), Rank::Three),
          startX, startY,
          targetX, targetY,
-         distance >> 2
+         distance >> 1
          );
 }
 
