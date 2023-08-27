@@ -182,7 +182,10 @@ __attribute__((noinline)) void Cursor::Service() {
 __attribute__((noinline)) void Cursor::Toggle()
 {
    lastToggleTime = a2::VBLCounter::GetCounter();
-   CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(currentDisplayLocation);
+   if (!currentDisplayLocation.IsNull())
+   {
+      CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(currentDisplayLocation);
+   }
 }
 
 

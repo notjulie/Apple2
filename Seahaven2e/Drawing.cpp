@@ -192,10 +192,13 @@ void Drawing::DrawColumns()
    for (uint8_t column=0; column < 10; ++column)
    {
       uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
-      for (uint8_t row=0; row < cardCount; ++row)
-         DrawCardTop(game.GetColumnCard(column, row), x, columnYLookup.Y(row));
+      if (cardCount != 0)
+      {
+         for (uint8_t row=0; row < cardCount; ++row)
+            DrawCardTop(game.GetColumnCard(column, row), x, columnYLookup.Y(row));
 
-      DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
+         DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
+      }
 
       x += 4;
   }
