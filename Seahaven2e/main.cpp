@@ -2,18 +2,11 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
-#include <stdint.h>
-#include <Apple2Lib/DOS.h>
-#include <Apple2Lib/HGR.h>
 #include <Apple2Lib/MMIO.h>
-#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
-#include <C6502/Memory.h>
 
 #include "CardAnimator.h"
 #include "Cursor.h"
-#include "Drawing.h"
-#include "Game.h"
 #include "PersistentState.h"
 #include "SHAssert.h"
 #include "Sprites.h"
@@ -27,6 +20,10 @@ static StateMachine stateMachine;
 /// </summary>
 extern "C" int main()
 {
+   // initialize the CardAnimator first so that it hides the screen
+   // output from calls to DOS below
+   CardAnimator::instance.Initialize();
+
    // load the persistent state; note that this does a DOS call and
    // needs to be done here rather than higher in the call stack in case
    // there are side effects on our zero-page data
@@ -39,7 +36,6 @@ extern "C" int main()
    // call initializers
    Sprites::Initialize();
    stateMachine = StateMachine();
-   CardAnimator::instance.Initialize();
    Cursor::instance = Cursor();
 
    // enter main loop
