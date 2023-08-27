@@ -136,7 +136,13 @@ __attribute__((noinline)) void Cursor::Show()
 {
    if (state == State::Idle)
    {
+      // make sure that we're on a column/tower with cards on it
+      AdjustColumn();
+
+      // get the location
       currentDisplayLocation = GetLocation();
+
+      // turn it on
       Toggle();
       state = State::On;
    }
