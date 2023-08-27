@@ -95,6 +95,10 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
    {
       timeInIdle = 0;
 
+      // force uppercase
+      if ((char)key>='a' && (char)key<='z')
+         key = (KeyCode)((char)key - ('a' - 'A'));
+
       #pragma GCC diagnostic push
       #pragma GCC diagnostic ignored "-Wswitch"
       switch (key) {
