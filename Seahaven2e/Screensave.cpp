@@ -126,9 +126,9 @@ __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
       "PHA\n"
       "SEC\n"
       "SBC\t%1\n"
-      "BPL\t1f\n"
+      "BCS\t1f\n"
 
-      // negate
+      // we had to borrow, negate the result
       "EOR\t#$FF\n"
       "ADC\t#$01\n"
 
