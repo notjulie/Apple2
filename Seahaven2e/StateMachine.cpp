@@ -83,7 +83,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
   lastVBLCount = now;
 
   // if we've been in idle too long switch to screensave
-  if (timeInIdle > 600)
+  if (timeInIdle > 3600)
   {
      EnterScreensave();
      return;
