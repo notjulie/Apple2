@@ -1,6 +1,7 @@
 /default/
 /Debug/
 /Release/
+/UnitTest/
 *.layout
 *.depend
 /doxygen/

@@ -6,7 +6,18 @@ namespace a2
    void puts(const char *s)
    {
       while (*s)
-         COUT(*s++);
+      {
+         if (*s == '\n')
+         {
+            a2::CLREOL();
+            a2::CR();
+         }
+         else
+         {
+            COUT(*s);
+         }
+         ++s;
+      }
    }
 }
 

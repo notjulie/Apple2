@@ -46,6 +46,27 @@
 					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
 				</ExtraCommands>
 			</Target>
+			<Target title="UnitTest">
+				<Option output="UnitTest/Sh2CB.a2" prefix_auto="0" extension_auto="0" />
+				<Option object_output="UnitTest" />
+				<Option type="1" />
+				<Option compiler="llvm-mos" />
+				<Option use_console_runner="0" />
+				<Compiler>
+					<Add option="-Os" />
+					<Add option="-DDEBUG" />
+					<Add directory=".." />
+					<Add directory="." />
+				</Compiler>
+				<Linker>
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libcrt.a" />
+					<Add library="$(llvmRoot)/mos-platform/common/lib/libc.a" />
+					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
+				</ExtraCommands>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="--target=mos" />
@@ -115,10 +136,16 @@
 		<Unit filename="StateMachine.cpp" />
 		<Unit filename="StateMachine.h" />
 		<Unit filename="Suit.h" />
+		<Unit filename="Test/UnitTestMain.cpp">
+			<Option target="UnitTest" />
+		</Unit>
 		<Unit filename="UndoJournal.cpp" />
 		<Unit filename="UndoJournal.h" />
 		<Unit filename="ld/target.ld" />
-		<Unit filename="main.cpp" />
+		<Unit filename="main.cpp">
+			<Option target="Release" />
+			<Option target="Debug" />
+		</Unit>
 		<Extensions>
 			<DoxyBlocks>
 				<comment_style block="2" line="0" />
