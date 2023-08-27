@@ -84,6 +84,12 @@ void Screensave::ChooseRandomTarget()
       targetY = YMax;
       break;
    }
+
+   // pick a randomish card
+   uint8_t cardIndex = now;
+   while (cardIndex >= 52)
+      cardIndex -= 52;
+   cardInMotion = Card::FromOrdinal(cardIndex);
 }
 
 
@@ -162,7 +168,7 @@ void Screensave::StartNextAnimation()
 
    // start animating
    CardAnimator::instance.StartFreeAnimation(
-         Card(Suit::Clubs(), Rank::Three),
+         cardInMotion,
          startX, startY,
          targetX, targetY,
          distance >> 1

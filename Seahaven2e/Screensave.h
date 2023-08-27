@@ -6,6 +6,7 @@
 #define SCREENSAVE_H
 
 #include <stdint.h>
+#include "Card.h"
 
 class Screensave {
 public:
@@ -31,6 +32,7 @@ private:
    static uint8_t GetRandomY();
 
 private:
+   Card cardInMotion;
    Edge targetEdge;
    uint8_t targetX;
    uint8_t targetY;
