@@ -90,7 +90,6 @@ void PersistentState::Save()
 
    // execute; it's left to the caller to request an integrity check
    a2::puts(saveCommand);
-   assert(0);
    a2::ExecuteDOSCommand(saveCommand);
 }
 
