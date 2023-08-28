@@ -88,6 +88,7 @@ class UndoJournal {
 public:
    UndoJournal() {}
 
+   void Clear();
    void Restart();
    void StartNewUndo();
    void LogMove(Card card, CardLocation startLocation, CardLocation endLocation);

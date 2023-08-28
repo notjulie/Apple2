@@ -27,6 +27,9 @@ public:
 
    bool operator==(Card c) const { return cardNumber == c.cardNumber; }
 
+   void Print() const;
+
+public:
    static Card FromOrdinal(uint8_t ordinal);
    static constexpr Card Null() { return Card(Suit::Clubs(), Rank::Null); }
 

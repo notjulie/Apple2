@@ -39,6 +39,7 @@
 					<Add option="-Wno-c++17-extensions" />
 					<Add option="-DDEBUG" />
 					<Add directory=".." />
+					<Add directory="../../../Documents/Bin/llvm-mos/mos-platform/common/include" />
 				</Compiler>
 				<Linker>
 					<Add library="$(llvmRoot)/mos-platform/common/lib/libcrt.a" />

@@ -27,6 +27,21 @@ public:
    bool operator==(Suit suit) const { return numericValue == suit.numericValue; }
    bool operator!=(Suit suit) const { return numericValue != suit.numericValue; }
 
+   char ToChar() const {
+      switch(numericValue) {
+      case NumericValue::Clubs:
+         return 'C';
+      case NumericValue::Diamonds:
+         return 'D';
+      case NumericValue::Hearts:
+         return 'H';
+      case NumericValue::Spades:
+         return 'S';
+      default:
+         return 'X';
+      }
+   }
+
 public:
    static Suit FromOrdinal(uint8_t ordinal) {
       Suit result;

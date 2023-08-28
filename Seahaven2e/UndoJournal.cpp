@@ -19,6 +19,14 @@
 
 UndoJournal UndoJournal::instance;
 
+
+void UndoJournal::Clear()
+{
+   // clear the persist data
+   PersistentState::instance.UndoJournal = UndoJournalPersist();
+}
+
+
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
@@ -154,7 +162,6 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
    result.cardAndGroup = cards[currentPosition];
 
    // get its current location
-   result.cardAndGroup = cards[currentPosition];
    CardLocation currentLocation = game.GetCardLocation(result.GetCard());
    assert(!currentLocation.IsNull());
 

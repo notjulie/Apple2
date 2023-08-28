@@ -106,13 +106,16 @@ public:
    CardLocation Left() const;
    CardLocation Right() const;
 
+   void Print() const;
+
+   bool operator==(CardLocation location) const;
+   bool operator!=(CardLocation location) const;
+
+public:
    static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, suit.GetOrdinal()); }
    static CardLocation Column(uint8_t column, uint8_t index) { return CardLocation((Region)column, index); }
    static inline CardLocation Tower(uint8_t index) { return CardLocation(Region::Tower, index); }
    static constexpr CardLocation Null() { return CardLocation(Region::Null, 0); }
-
-   bool operator==(CardLocation location) const;
-   bool operator!=(CardLocation location) const;
 
 private:
    static constexpr uint8_t ColumnXValues[10] = {0, 4, 8, 12, 16, 20, 24, 28, 32, 36};

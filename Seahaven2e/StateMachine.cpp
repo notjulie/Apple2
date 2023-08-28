@@ -330,6 +330,9 @@ void StateMachine::NewGame()
 {
    auto &game = PersistentState::instance.Game;
 
+   // clear the undo journal
+   UndoJournal::instance.Clear();
+
    // shuffle
    game.Shuffle16(PersistentState::instance.GetNextGameSeed());
 
@@ -352,6 +355,9 @@ void StateMachine::StartCurrentGame()
 }
 
 
+/// <summary>
+/// Restarts the game, resetting the undo journal to the beginning
+/// </summary>
 void StateMachine::Restart()
 {
    auto &game = PersistentState::instance.Game;

@@ -209,3 +209,27 @@ __attribute__((noinline)) CardLocation CardLocation::Right() const
    return *this;
 }
 
+
+void CardLocation::Print() const
+{
+   if (IsNull())
+   {
+      a2::COUT('X');
+   }
+   else if (IsTower())
+   {
+      a2::COUT('T');
+      a2::COUT('0' + GetTowerIndex());
+   }
+   else if (IsColumn())
+   {
+      a2::COUT('C');
+      a2::COUT('0' + GetColumn());
+      a2::COUT('0' + GetRow());
+   }
+   else if (IsAce())
+   {
+      a2::COUT('A');
+      a2::COUT('0' + GetAceSuitOrdinal());
+   }
+}
