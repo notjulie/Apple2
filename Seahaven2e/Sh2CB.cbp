@@ -14,7 +14,9 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add option="-Wno-c++17-extensions" />
 					<Add directory=".." />
+					<Add directory="../../../Documents/Bin/llvm-mos/mos-platform/common/include" />
 				</Compiler>
 				<Linker>
 					<Add library="$(llvmRoot)/mos-platform/common/lib/libcrt.a" />
@@ -34,6 +36,7 @@
 				<Option use_console_runner="0" />
 				<Compiler>
 					<Add option="-Os" />
+					<Add option="-Wno-c++17-extensions" />
 					<Add option="-DDEBUG" />
 					<Add directory=".." />
 				</Compiler>

@@ -6,6 +6,7 @@
 #define SEAHAVEN2E_SPRITES_H_
 
 #include <stdint.h>
+#include <initializer_list>
 #include <C6502/LookupTable.h>
 #include <Apple2Lib/HGRWord.h>
 #include "Rank.h"
@@ -14,7 +15,30 @@
 const uint8_t CardTopSpriteHeight = 9;
 const uint8_t CardHeight = 33;
 
-typedef a2::HGRWord CardTopSprite[CardTopSpriteHeight];
+
+class CardTopSprite {
+public:
+   constexpr CardTopSprite(const std::initializer_list<const char *> &rowStrings, uint8_t alignOffset = 0) {
+      int i=0;
+      for (auto str : rowStrings)
+         rows[i++] = a2::HGRWord(str, alignOffset);
+   }
+
+public:
+   a2::HGRWord rows[CardTopSpriteHeight];
+};
+
+class CardTopDualSprite {
+public:
+   constexpr CardTopDualSprite(const std::initializer_list<const char *> &rowStrings)
+   : even(rowStrings, 0), odd(rowStrings, 1)
+   {
+   }
+
+public:
+   CardTopSprite even;
+   CardTopSprite odd;
+};
 
 
 class Sprites {
@@ -24,16 +48,20 @@ class Sprites {
   inline static const CardTopSprite &GetRankSprite(Rank rank) {
     return *ranksLookup.Get((uint8_t)rank - 1);
   }
-  inline static const CardTopSprite &GetSuitSprite(Suit suit) {
-    return *suitsLookup.Get(suit.GetOrdinal());
+  inline static const CardTopSprite &GetSuitSprite(Suit suit, bool oddColors) {
+     if (oddColors)
+        return *oddSuitsLookup.Get(suit.GetOrdinal());
+     else
+        return *evenSuitsLookup.Get(suit.GetOrdinal());
   }
 
  public:
   static const CardTopSprite ranks[13];
   static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
 
-  static const CardTopSprite suits[4];
-  static c6502::Lookup16Bit<const CardTopSprite *, 4> suitsLookup;
+  static const CardTopDualSprite suits[4];
+  static c6502::Lookup16Bit<const CardTopSprite *, 4> evenSuitsLookup;
+  static c6502::Lookup16Bit<const CardTopSprite *, 4> oddSuitsLookup;
 
   static const CardTopSprite cursorLeft;
   static const CardTopSprite cursorRight;

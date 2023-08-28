@@ -5,11 +5,11 @@
 #include "Sprites.h"
 
 c6502::Lookup16Bit<const CardTopSprite *, 13> Sprites::ranksLookup;
-c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::suitsLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::evenSuitsLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::oddSuitsLookup;
 
-const CardTopSprite Sprites::suits[4] {
-  // club
-  {
+// club
+const CardTopSprite clubsSprite = {
     "WWWWWWWWWWWW  ",
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
@@ -18,11 +18,11 @@ const CardTopSprite Sprites::suits[4] {
     "WW        WWW ",
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
-    "WWWWWWWWWWWWW ",
-  },
+    "WWWWWWWWWWWWW "
+  };
 
-  // diamond
-  {
+// diamond
+const CardTopDualSprite diamondsSprite = {
     "WWWWWWWWWWWW  ",
     "WWWWWRRRWWWWW ",
     "WWWWRRRRRWWWW ",
@@ -31,11 +31,11 @@ const CardTopSprite Sprites::suits[4] {
     "WWWRRRRRRRWWW ",
     "WWWWRRRRRWWWW ",
     "WWWWWRRRWWWWW ",
-    "WWWWWWWWWWWWW ",
-  },
+    "WWWWWWWWWWWWW "
+  };
 
-  // heart
-  {
+// heart
+const CardTopDualSprite heartsSprite = {
     "WWWWWWWWWWWW  ",
     "WWWRRRWWRRWWW ",
     "WRRRRRRRRRRRW ",
@@ -44,11 +44,11 @@ const CardTopSprite Sprites::suits[4] {
     "WWWWRRRRRWWWW ",
     "WWWWWRRRWWWWW ",
     "WWWWWWWWWWWWW ",
-    "WWWWWWWWWWWWW ",
-  },
+    "WWWWWWWWWWWWW "
+  };
 
-  // spade
-  {
+// spade
+const CardTopSprite spadesSprite = {
     "WWWWWWWWWWWW  ",
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
@@ -58,8 +58,8 @@ const CardTopSprite Sprites::suits[4] {
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
     "WWWWWWWWWWWWW ",
-  }
-};
+  };
+
 
 const CardTopSprite Sprites::ranks[13] {
   // ace
@@ -252,7 +252,12 @@ __attribute__((noinline)) void Sprites::Initialize()
    for (uint8_t i=0; i < 13; ++i)
       ranksLookup.Set(i, rankSprite++);
 
-   const CardTopSprite *suitSprite = &suits[0];
-   for (uint8_t i=0; i < 4; ++i)
-      suitsLookup.Set(i, suitSprite++);
+   evenSuitsLookup.Set(0, &clubsSprite);
+   oddSuitsLookup.Set(0, &clubsSprite);
+   evenSuitsLookup.Set(1, &diamondsSprite.even);
+   oddSuitsLookup.Set(1, &diamondsSprite.odd);
+   evenSuitsLookup.Set(2, &heartsSprite.even);
+   oddSuitsLookup.Set(2, &heartsSprite.odd);
+   evenSuitsLookup.Set(3, &spadesSprite);
+   oddSuitsLookup.Set(3, &spadesSprite);
 }

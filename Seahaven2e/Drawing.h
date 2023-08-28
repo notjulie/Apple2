@@ -40,11 +40,11 @@ private:
    void DrawCardTop(Card card, uint8_t x, uint8_t y);
    void DrawColumns();
    void DrawSprite(
-          const a2::HGRWord *sprite,
+          const CardTopSprite &sprite,
           uint8_t rows,
           uint8_t y,
           uint8_t x);
-   void XorSprite(const a2::HGRWord *sprite, uint8_t rows, uint8_t y, uint8_t x);
+   void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:
    a2::HGRPage hgr;
