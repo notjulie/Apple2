@@ -23,7 +23,7 @@ __attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
    Shuffler shuffler;
    shuffler.Shuffle16(instruction);
 
-   c6502::memcpy8(columnCards, shuffler.deck, sizeof(columnCards));
+   c6502::memcpy8(&columnCards, shuffler.deck, sizeof(columnCards));
    for (uint8_t column=0; column < 10; ++column)
       columnCounts[column] = 5;
 

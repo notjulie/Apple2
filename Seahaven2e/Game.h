@@ -7,7 +7,22 @@
 
 #include "Card.h"
 #include "CardLocation.h"
+#include "SHAssert.h"
 
+template <typename T, uint8_t Length> class SafeArray {
+public:
+   T &operator[](uint8_t index) {
+      assert(index < Length);
+      return array[index];
+   }
+   const T &operator[](uint8_t index) const {
+      assert(index < Length);
+      return array[index];
+   }
+
+private:
+   T array[Length];
+};
 
 /** \brief
  * Represents the game as a whole
@@ -46,10 +61,10 @@ private:
    void Shuffle8(uint8_t instruction);
 
 private:
-   Rank acePiles[4];
-   Card towers[4];
-   uint8_t columnCounts[10];
-   Card columnCards[50];
+   SafeArray<Rank,4> acePiles;
+   SafeArray<Card,4> towers;
+   SafeArray<uint8_t,10> columnCounts;
+   SafeArray<Card,50> columnCards;
 };
 
 #endif  // SEAHAVEN2E_GAME_H_
