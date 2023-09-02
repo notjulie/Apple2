@@ -23,8 +23,8 @@ private:
    void MoveToColumn();
    void MoveToTower();
    void NewGame();
-   void BeginRedo();
-   void BeginUndo();
+   void BeginRedo(bool firstInGroup);
+   void BeginUndo(bool firstInGroup);
 
    // state machine
    bool CheckAcesToMove();
@@ -34,8 +34,6 @@ private:
    void Restart();
    void ServiceIdle();
    void StartCurrentGame();
-   void RedoNext();
-   void UndoNext();
 
    // card movement
    void MoveCard(Card card, CardLocation location);
@@ -59,7 +57,6 @@ private:
    int8_t moveToTowerColumn;
    int8_t moveToTowerCurrentRow;
    int8_t moveToTowerEndRow;
-   UndoGroupID currentUndoGroup;
 
    uint8_t lastVBLCount;
    uint16_t timeInIdle;

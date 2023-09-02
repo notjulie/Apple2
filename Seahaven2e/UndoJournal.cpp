@@ -70,17 +70,6 @@ void UndoJournal::Restart()
 }
 
 
-void UndoJournal::PopRedo()
-{
-   ++PersistentState::instance.UndoJournal.currentPosition;
-}
-
-void UndoJournal::PopUndo()
-{
-   --PersistentState::instance.UndoJournal.currentPosition;
-}
-
-
 __attribute__((noinline)) void UndoJournal::StartNewUndo()
 {
    auto &data = PersistentState::instance.UndoJournal;
@@ -88,24 +77,75 @@ __attribute__((noinline)) void UndoJournal::StartNewUndo()
    // truncate anything in the list beyond the current position
    data.entryCount = data.currentPosition;
 
-   // peek an undo
-   UndoInstruction undo = PeekUndo();
-
-   // all we need to do is make sure that we return a group ID
-   // that's different from the last undo
-   currentUndoGroup = (UndoGroupID)((uint8_t)undo.GetGroup() + 1);
+   // set the current undo group to something other than the group
+   // of the last entry
+   if (data.entryCount > 0)
+   {
+      currentUndoGroup = (UndoGroupID)((((uint8_t)data.cards[data.entryCount - 1].GetGroupID()) + 1) & 3);
+   }
+   else
+   {
+      currentUndoGroup = UndoGroupID::Group0;
+   }
 }
 
 
-UndoInstruction UndoJournal::PeekUndo() const
+UndoInstruction UndoJournal::GetFirstRedo()
 {
-   return PersistentState::instance.UndoJournal.PeekUndo();
+   auto &data = PersistentState::instance.UndoJournal;
+
+   // get the group of the next item
+   if (data.currentPosition >= data.entryCount)
+      return UndoInstruction::Null();
+   currentUndoGroup = data.cards[data.currentPosition].GetGroupID();
+
+   // return
+   return GetNextRedo();
+}
+
+UndoInstruction UndoJournal::GetFirstUndo()
+{
+   auto &data = PersistentState::instance.UndoJournal;
+
+   // get the group of the next item
+   if (data.currentPosition == 0)
+      return UndoInstruction::Null();
+   currentUndoGroup = data.cards[data.currentPosition - 1].GetGroupID();
+
+   // return
+   return GetNextUndo();
 }
 
 
-UndoInstruction UndoJournal::PeekRedo() const
+UndoInstruction UndoJournal::GetNextRedo()
 {
-   return PersistentState::instance.UndoJournal.PeekRedo();
+   auto &data = PersistentState::instance.UndoJournal;
+
+   // check the group of the next item
+   if (data.currentPosition >= data.entryCount)
+      return UndoInstruction::Null();
+   if (currentUndoGroup != data.cards[data.currentPosition].GetGroupID())
+      return UndoInstruction::Null();
+
+   UndoInstruction result = data.PeekRedo();
+   ++data.currentPosition;
+   return result;
+}
+
+
+UndoInstruction UndoJournal::GetNextUndo()
+{
+   auto &data = PersistentState::instance.UndoJournal;
+
+   // check the group of the next item
+   if (data.currentPosition == 0)
+      return UndoInstruction::Null();
+   if (currentUndoGroup != data.cards[data.currentPosition - 1].GetGroupID())
+      return UndoInstruction::Null();
+
+   UndoInstruction result = data.PeekUndo();
+   --data.currentPosition;
+   return result;
 }
 
 
@@ -131,11 +171,10 @@ UndoInstruction UndoJournalPersist::PeekUndo() const
 
    // get the card to move
    uint8_t position = currentPosition - 1;
-   result.cardAndGroup = cards[position];
-   Card card = result.GetCard();
+   result.card = cards[position].GetCard();
 
    // get its current location
-   CardLocation currentLocation = game.GetCardLocation(card);
+   CardLocation currentLocation = game.GetCardLocation(result.card);
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing
@@ -159,10 +198,10 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
       return result;
 
    // get the card to move
-   result.cardAndGroup = cards[currentPosition];
+   result.card = cards[currentPosition].GetCard();
 
    // get its current location
-   CardLocation currentLocation = game.GetCardLocation(result.GetCard());
+   CardLocation currentLocation = game.GetCardLocation(result.card);
    assert(!currentLocation.IsNull());
 
    // get the target location; given the current location we get that by XORing

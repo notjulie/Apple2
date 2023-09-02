@@ -49,12 +49,10 @@ static_assert(sizeof(CardAndGroup) == 1, "CardAndGroup is too large");
 /// </summary>
 struct UndoInstruction
 {
-   CardAndGroup cardAndGroup;
+   Card card;
    CardLocation location;
 
    bool IsNull() const;
-   Card GetCard() const { return cardAndGroup.GetCard(); }
-   UndoGroupID GetGroup() const { return cardAndGroup.GetGroupID(); }
 
    static UndoInstruction Null();
 };
@@ -92,10 +90,10 @@ public:
    void Restart();
    void StartNewUndo();
    void LogMove(Card card, CardLocation startLocation, CardLocation endLocation);
-   UndoInstruction PeekRedo() const;
-   UndoInstruction PeekUndo() const;
-   void PopRedo();
-   void PopUndo();
+   UndoInstruction GetFirstRedo();
+   UndoInstruction GetFirstUndo();
+   UndoInstruction GetNextRedo();
+   UndoInstruction GetNextUndo();
 
 public:
    static UndoJournal instance;

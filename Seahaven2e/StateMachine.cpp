@@ -43,13 +43,13 @@ __attribute__((noinline)) void StateMachine::Service() {
    case State::Undoing:
       CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
-         UndoNext();
+         BeginUndo(false);
       break;
 
    case State::Redoing:
       CardAnimator::instance.Service();
       if (!CardAnimator::instance.IsAnimating())
-         RedoNext();
+         BeginRedo(false);
       break;
 
    case State::MovingToTower:
@@ -109,7 +109,6 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
          break;
 
       case (KeyCode)'1':
-         UndoJournal::instance.PrintState();
          a2::PAGE2OFF();
          a2::TEXTON();
          break;
@@ -159,11 +158,11 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
          break;
 
       case (KeyCode)'Z':
-         BeginUndo();
+         BeginUndo(true);
          break;
 
       case (KeyCode)'Y':
-         BeginRedo();
+         BeginRedo(true);
          break;
 
       default:
@@ -437,36 +436,33 @@ bool StateMachine::CheckAcesToMove() {
 /// <summary>
 /// Undoes a move if possible
 /// </summary>
-__attribute__((noinline)) void StateMachine::BeginUndo()
+__attribute__((noinline)) void StateMachine::BeginUndo(bool firstInGroup)
 {
    auto &game = PersistentState::instance.Game;
 
    // see if there's something to undo
-   UndoInstruction undo = UndoJournal::instance.PeekUndo();
+   UndoInstruction undo =
+      firstInGroup ? UndoJournal::instance.GetFirstUndo() : UndoJournal::instance.GetNextUndo();
    if (undo.IsNull())
+   {
+      EnterIdle();
       return;
-
-   // tell the journal that we're actually undoing it
-   UndoJournal::instance.PopUndo();
-
-   // save the group... we keep undoing until we hit something that
-   // belongs to a different group
-   currentUndoGroup = undo.GetGroup();
+   }
 
    // if this is a column-to-column move treat it as such
    if (undo.location.IsColumn())
    {
-      CardLocation startLocation = game.GetCardLocation(undo.GetCard());
+      CardLocation startLocation = game.GetCardLocation(undo.card);
       if (startLocation.IsColumn())
       {
          CardAnimator::instance.StartMoveColumnToColumn(startLocation, undo.location);
-         state = State::Animating;
+         state = State::Undoing;
          return;
       }
    }
 
    // start it a-moving
-   CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
+   CardAnimator::instance.StartAnimation(undo.card, undo.location);
    state = State::Undoing;
 }
 
@@ -474,70 +470,32 @@ __attribute__((noinline)) void StateMachine::BeginUndo()
 /// <summary>
 /// Redoes a move if possible
 /// </summary>
-__attribute__((noinline)) void StateMachine::BeginRedo()
+__attribute__((noinline)) void StateMachine::BeginRedo(bool firstInGroup)
 {
    auto &game = PersistentState::instance.Game;
 
-   UndoInstruction redo = UndoJournal::instance.PeekRedo();
-   if (!redo.IsNull())
+   UndoInstruction redo =
+      firstInGroup ? UndoJournal::instance.GetFirstRedo() : UndoJournal::instance.GetNextRedo();
+   if (redo.IsNull())
    {
-      UndoJournal::instance.PopRedo();
+      EnterIdle();
+      return;
+   }
 
-      // save the group... we keep undoing until we hit something that
-      // belongs to a different group
-      currentUndoGroup = redo.GetGroup();
-
-      // if this is a column-to-column move treat it as such
-      if (redo.location.IsColumn())
+   // if this is a column-to-column move treat it as such
+   if (redo.location.IsColumn())
+   {
+      CardLocation startLocation = game.GetCardLocation(redo.card);
+      if (startLocation.IsColumn())
       {
-         CardLocation startLocation = game.GetCardLocation(redo.GetCard());
-         if (startLocation.IsColumn())
-         {
-            CardAnimator::instance.StartMoveColumnToColumn(startLocation, redo.location);
-            state = State::Animating;
-            return;
-         }
+         CardAnimator::instance.StartMoveColumnToColumn(startLocation, redo.location);
+         state = State::Redoing;
+         return;
       }
-
-      CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
-      state = State::Redoing;
    }
-}
 
-
-/// <summary>
-/// Starts moving the next card to redo if there are more in the current group
-/// </summary>
-__attribute__((noinline)) void StateMachine::RedoNext()
-{
-   UndoInstruction redo = UndoJournal::instance.PeekRedo();
-   if (!redo.IsNull() && redo.GetGroup() == currentUndoGroup)
-   {
-      UndoJournal::instance.PopRedo();
-      CardAnimator::instance.StartAnimation(redo.GetCard(), redo.location);
-   }
-   else
-   {
-      EnterIdle();
-   }
-}
-
-
-/// <summary>
-/// Starts moving the next card to undo if there are more in the current group
-/// </summary>
-__attribute__((noinline)) void StateMachine::UndoNext()
-{
-   UndoInstruction undo = UndoJournal::instance.PeekUndo();
-   if (!undo.IsNull() && undo.GetGroup() == currentUndoGroup)
-   {
-      UndoJournal::instance.PopUndo();
-      CardAnimator::instance.StartAnimation(undo.GetCard(), undo.location);
-   }
-   else
-   {
-      EnterIdle();
-   }
+   CardAnimator::instance.StartAnimation(redo.card, redo.location);
+   state = State::Redoing;
 }
 
 
