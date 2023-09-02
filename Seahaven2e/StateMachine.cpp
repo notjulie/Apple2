@@ -5,6 +5,7 @@
 #include "StateMachine.h"
 
 #include <Apple2Lib/Keyboard.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "Audio.h"
@@ -72,24 +73,24 @@ __attribute__((noinline)) void StateMachine::Service() {
 /// </summary>
 __attribute__((noinline)) void StateMachine::ServiceIdle()
 {
-  // give the cursor its timeslice
-  Cursor::instance.Service();
+   // give the cursor its timeslice
+   Cursor::instance.Service();
 
-  // update our timer
-  a2::VBLCounter::Update();
-  uint8_t now = a2::VBLCounter::GetCounter();
-  uint8_t elapsed = now - lastVBLCount;
-  timeInIdle += elapsed;
-  lastVBLCount = now;
+   // update our timer
+   a2::VBLCounter::Update();
+   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t elapsed = now - lastVBLCount;
+   timeInIdle += elapsed;
+   lastVBLCount = now;
 
-  // if we've been in idle too long switch to screensave
-  if (timeInIdle > 3600)
-  {
-     EnterScreensave();
-     return;
-  }
+   // if we've been in idle too long switch to screensave
+   if (timeInIdle > 3600)
+   {
+      EnterScreensave();
+      return;
+   }
 
-  // check for user input
+   // check for user input
    KeyCode key = a2::Keyboard::GetKey();
    if (key != KeyCode::None)
    {
@@ -105,6 +106,16 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       case (KeyCode)'N':
          // new game...
          NewGame();
+         break;
+
+      case (KeyCode)'1':
+         UndoJournal::instance.PrintState();
+         a2::PAGE2OFF();
+         a2::TEXTON();
+         break;
+
+      case (KeyCode)'2':
+         CardAnimator::instance.SetGraphicsMode();
          break;
 
       case KeyCode::Up:
