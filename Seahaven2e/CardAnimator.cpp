@@ -470,3 +470,11 @@ __attribute__((noinline)) void CardAnimator::UpdatePositionTracker(uint8_t i)
       numerator[i] -= duration;
    }
 }
+
+
+void CardAnimator::SetGraphicsMode()
+{
+   a2::TEXTOFF();
+   onscreenPage.Show();
+}
+

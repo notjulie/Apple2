@@ -18,6 +18,7 @@ class CardAnimator {
 public:
    CardAnimator();
    void Initialize();
+   void SetGraphicsMode();
 
    void DrawGame();
    void Erase();
