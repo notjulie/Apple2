@@ -5,7 +5,7 @@
 namespace a2 {
 
    int8_t VBLCounter::previousState;
-   uint8_t VBLCounter::counter;
+   c6502::Int16 VBLCounter::counter;
 
 
    __attribute__((noinline)) void VBLCounter::Update()

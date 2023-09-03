@@ -116,7 +116,7 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
    this->duration = duration;
    timeLeft = duration;
 
-   lastVBLCount = a2::VBLCounter::GetCounter();
+   lastVBLCount = a2::VBLCounter::GetCounter().lo;
    cardToMove = card;
 
    // draw the card at its original position, saving the background
@@ -168,7 +168,7 @@ void CardAnimator::StartAnimation(
    duration = pixelDistance >> 3;
 
    timeLeft = duration;
-   lastVBLCount = a2::VBLCounter::GetCounter();
+   lastVBLCount = a2::VBLCounter::GetCounter().lo;
    cardToMove = card;
 
    // draw the game without the card
@@ -446,7 +446,7 @@ void CardAnimator::UpdatePosition() {
       return;
 
    // snapshot the time
-   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
 
    // step once for each tick of the clock
    while (lastVBLCount != now)

@@ -26,7 +26,7 @@ void Screensave::Start()
 
    // choose a random-ish edge and pretend that that's where out last
    // animation ended
-   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
    targetEdge = (Edge)(now & 3);
 
    // choose a random target on that edge
@@ -52,7 +52,7 @@ void Screensave::ChooseRandomTarget()
    // we want a random number from 1 to 3 as an offset to the
    // last edge
    uint8_t newEdge = (uint8_t)targetEdge + 1;
-   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
    if (now > 171)
       ++newEdge;
    if (now > 85)
@@ -99,7 +99,7 @@ uint8_t Screensave::GetRandomX()
    // that's the expectation
    static_assert(XMax==36, "GetRandomX assumes a range of 0 to 36");
 
-   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
    return
       (now >> 3) + // (0 to 31)
       ((now >> 1) & 3) + // 0 to 3
@@ -113,7 +113,7 @@ uint8_t Screensave::GetRandomY()
    // that's the expectation
    static_assert(YMax==158, "GetRandomX assumes a range of 0 to 158");
 
-   uint8_t now = a2::VBLCounter::GetCounter();
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
    return
       (now >> 1) + // (0 to 127)
       (now >> 3); // 0 to 31

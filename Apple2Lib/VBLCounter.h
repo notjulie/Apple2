@@ -3,16 +3,17 @@
 #define VBLCOUNTER_H
 
 #include <stdint.h>
+#include <C6502/Int6502.h>
 
 namespace a2 {
    class VBLCounter {
    public:
-      static uint8_t GetCounter() { return counter; }
+      static c6502::Int16 &GetCounter() { return counter; }
       static void Update();
 
    private:
       static int8_t previousState;
-      static uint8_t counter;
+      static c6502::Int16 counter;
    };
 }
 

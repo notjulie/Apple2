@@ -58,8 +58,7 @@ private:
    int8_t moveToTowerCurrentRow;
    int8_t moveToTowerEndRow;
 
-   uint8_t lastVBLCount;
-   uint16_t timeInIdle;
+   uint8_t idleEntryTime;
 };
 
 

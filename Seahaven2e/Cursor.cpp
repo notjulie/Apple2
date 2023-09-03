@@ -153,7 +153,7 @@ __attribute__((noinline)) void Cursor::Show()
 /// Performs periodic actions
 /// </summary>
 __attribute__((noinline)) void Cursor::Service() {
-  uint8_t sinceLastToggle = a2::VBLCounter::GetCounter() - lastToggleTime;
+  uint8_t sinceLastToggle = a2::VBLCounter::GetCounter().lo - lastToggleTime;
 
   switch (state) {
   case State::On:
@@ -181,7 +181,7 @@ __attribute__((noinline)) void Cursor::Service() {
 /// </summary>
 __attribute__((noinline)) void Cursor::Toggle()
 {
-   lastToggleTime = a2::VBLCounter::GetCounter();
+   lastToggleTime = a2::VBLCounter::GetCounter().lo;
    if (!currentDisplayLocation.IsNull())
    {
       CardAnimator::instance.GetOnscreenPage().GetDrawing().ToggleCursor(currentDisplayLocation);

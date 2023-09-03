@@ -78,13 +78,10 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 
    // update our timer
    a2::VBLCounter::Update();
-   uint8_t now = a2::VBLCounter::GetCounter();
-   uint8_t elapsed = now - lastVBLCount;
-   timeInIdle += elapsed;
-   lastVBLCount = now;
 
    // if we've been in idle too long switch to screensave
-   if (timeInIdle > 3600)
+   uint8_t ticksInIdle = a2::VBLCounter::GetCounter().hi - idleEntryTime;
+   if (ticksInIdle > 3600 / 256)
    {
       EnterScreensave();
       return;
@@ -94,7 +91,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
    KeyCode key = a2::Keyboard::GetKey();
    if (key != KeyCode::None)
    {
-      timeInIdle = 0;
+      idleEntryTime = a2::VBLCounter::GetCounter().hi;
 
       // force uppercase
       if ((char)key>='a' && (char)key<='z')
@@ -405,7 +402,7 @@ void StateMachine::ExitScreensave()
 /// </summary>
 void StateMachine::EnterIdle() {
   state = State::Idle;
-  timeInIdle = 0;
+  idleEntryTime = a2::VBLCounter::GetCounter().hi;
   Cursor::instance.Show();
 }
 
