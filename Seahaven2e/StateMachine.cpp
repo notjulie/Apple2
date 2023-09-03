@@ -285,7 +285,6 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
 /// <summary>
 /// Moves the next column to tower move
 /// </summary>
-void StateMachine::StartNextMoveToTower()
 __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 {
    auto &game = PersistentState::instance.Game;
