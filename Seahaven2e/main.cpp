@@ -68,7 +68,7 @@ extern "C" int main()
 /// the binary to a disk.  It's a little Rube-Goldberg.  And
 /// therefore awesome.
 /// </summary>
-extern "C" void exit()
+extern "C" [[noreturn]] void exit()
 {
    a2::PAGE2OFF();
    a2::TEXTON();

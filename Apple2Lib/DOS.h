@@ -10,10 +10,13 @@ namespace a2 {
    /// <summary>
    /// DOS warm start... basically exits to BASIC
    /// </summary>
-   inline void DOSWRM()
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Winvalid-noreturn"
+   [[noreturn]] inline void DOSWRM()
    {
       asm volatile ("JMP\t$03D0" :::);
    }
+#pragma GCC diagnostic pop
 
    /// <summary>
    /// Sends the given command to DOS as though typed from the command
