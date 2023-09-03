@@ -120,11 +120,7 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
    cardToMove = card;
 
    // draw the card at its original position, saving the background
-   offscreenPage.MoveCard(
-         cardToMove,
-         currentPosition[(uint8_t)Coordinate::X],
-         currentPosition[(uint8_t)Coordinate::Y]
-         );
+   UpdateCard();
 
    // switch
    SwapPages();
@@ -175,11 +171,7 @@ void CardAnimator::StartAnimation(
    offscreenPage.EraseCard(start);
 
    // draw the card at its original position, saving the background
-   offscreenPage.MoveCard(
-         cardToMove,
-         currentPosition[(uint8_t)Coordinate::X],
-         currentPosition[(uint8_t)Coordinate::Y]
-         );
+   UpdateCard();
 
    // switch
    SwapPages();
@@ -272,11 +264,7 @@ __attribute__((noinline)) void CardAnimator::Service()
          onscreenPage.EndAnimation();
 
          // finish the animation on the offscreen page
-         offscreenPage.MoveCard(
-               cardToMove,
-               currentPosition[(uint8_t)Coordinate::X],
-               currentPosition[(uint8_t)Coordinate::Y]
-               );
+         UpdateCard();
          offscreenPage.EndAnimation();
 
          // update our state
@@ -303,11 +291,7 @@ void CardAnimator::UpdateAnimation()
 {
    // update the position, move the card
    UpdatePosition();
-   offscreenPage.MoveCard(
-         cardToMove,
-         currentPosition[(uint8_t)Coordinate::X],
-         currentPosition[(uint8_t)Coordinate::Y]
-         );
+   UpdateCard();
    SwapPages();
 }
 
@@ -315,11 +299,7 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
 {
    // update the position, move the card
    UpdatePosition();
-   offscreenPage.MoveCard(
-         cardToMove,
-         currentPosition[(uint8_t)Coordinate::X],
-         currentPosition[(uint8_t)Coordinate::Y]
-         );
+   UpdateCard();
    SwapPages();
 
    // if we're done...
@@ -333,28 +313,16 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
          onscreenPage.EndAnimation();
 
          // finish the animation on the offscreen page
-         offscreenPage.MoveCard(
-               cardToMove,
-               currentPosition[(uint8_t)Coordinate::X],
-               currentPosition[(uint8_t)Coordinate::Y]
-               );
+         UpdateCard();
          offscreenPage.EndAnimation();
       }
       else
       {
-         offscreenPage.MoveCardTop(
-               cardToMove,
-               currentPosition[(uint8_t)Coordinate::X],
-               currentPosition[(uint8_t)Coordinate::Y]
-               );
+         UpdateCardTop();
          offscreenPage.EndAnimation();
          SwapPages();
 
-         offscreenPage.MoveCardTop(
-               cardToMove,
-               currentPosition[(uint8_t)Coordinate::X],
-               currentPosition[(uint8_t)Coordinate::Y]
-               );
+         UpdateCardTop();
          offscreenPage.EndAnimation();
       }
 
@@ -362,6 +330,27 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
       NextColumnToColumnMove();
    }
 }
+
+
+__attribute__((noinline)) void CardAnimator::UpdateCard()
+{
+   offscreenPage.MoveCard(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
+}
+
+
+__attribute__((noinline)) void CardAnimator::UpdateCardTop()
+{
+   offscreenPage.MoveCardTop(
+         cardToMove,
+         currentPosition[(uint8_t)Coordinate::X],
+         currentPosition[(uint8_t)Coordinate::Y]
+         );
+}
+
 
 
 void CardAnimator::SwapPages()

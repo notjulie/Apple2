@@ -76,6 +76,8 @@ private:
    void ServiceColumnToColumnMove();
    void StartPositionTracker(uint8_t i);
    void UpdatePositionTracker(uint8_t i);
+   void UpdateCard();
+   void UpdateCardTop();
 
 private:
    // operating state
