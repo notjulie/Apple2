@@ -31,7 +31,7 @@ CardAnimator::CardAnimator()
 /// <summary>
 /// Performs one-time initialization
 /// </summary>
-void CardAnimator::Initialize()
+__attribute__((noinline)) void CardAnimator::Initialize()
 {
    // initialize our pages
    onscreenPage = AnimationPage::Page1();

@@ -27,9 +27,9 @@ static uint8_t HexDigit(uint8_t nybble);
 
 
 /// <summary>
-/// Loads the persistent state o=from a file
+/// Loads the persistent state from a file
 /// </summary>
-void PersistentState::Load()
+__attribute__((noinline)) void PersistentState::Load()
 {
    // We have a couple signature bytes, one at the beginning and one at
    // the end, which we use as an integrity check, along with a checksum.
@@ -55,7 +55,7 @@ void PersistentState::Load()
 }
 
 
-void PersistentState::Save()
+__attribute__((noinline)) void PersistentState::Save()
 {
    // We have a couple signature bytes, one at the beginning and one at
    // the end, which we use as an integrity check, along with a checksum.
@@ -94,7 +94,7 @@ void PersistentState::Save()
 }
 
 
-bool PersistentState::CheckIntegrity() const
+__attribute__((noinline)) bool PersistentState::CheckIntegrity() const
 {
    if (signature1 != SIGNATURE1)
       return false;
