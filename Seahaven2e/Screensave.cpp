@@ -4,7 +4,9 @@
 
 #include "Screensave.h"
 
+#include <Apple2Lib/DOS.h>
 #include <Apple2Lib/HGR.h>
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "CardAnimator.h"
@@ -85,10 +87,24 @@ void Screensave::ChooseRandomTarget()
       break;
    }
 
-   // pick a randomish card
-   uint8_t cardIndex = now;
-   while (cardIndex >= 52)
-      cardIndex -= 52;
+   // pick a randomish card; this just takes our quasi-random byte
+   // and subtracts 52 until we have something modulus 52
+   uint8_t cardIndex;
+   asm volatile (
+      "LDA\t%1\n"
+      "JMP\tcomp\n"
+   "subt:\n"
+      // carry is always clear here
+      "SBC\t#51\n"
+   "comp:\n"
+      "CMP\t#51\n"
+      "BCS\tsubt"
+   : "=a"(cardIndex) // output
+   : "r"(now) // input
+   : //clobbers
+   );
+
+   // convert the ordinal to a card
    cardInMotion = Card::FromOrdinal(cardIndex);
 }
 
