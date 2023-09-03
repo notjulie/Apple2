@@ -24,8 +24,7 @@ __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
    shuffler.Shuffle16(instruction);
 
    c6502::memcpy8(&columnCards, shuffler.deck, sizeof(columnCards));
-   for (uint8_t column=0; column < 10; ++column)
-      columnCounts[column] = 5;
+   c6502::memset8(&columnCounts[0], 5, 10);
 
    towers[0] = Card::Null();
    towers[1] = shuffler.deck[50];
