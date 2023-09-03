@@ -34,17 +34,16 @@ void Shuffler::Shuffle8(uint8_t instruction) {
    // based on the bits in the instruction
    for (int i=0; i < 8; ++i)
    {
-      c6502::memcpy8(deckCopy, deck, 52);
-
+      // shuffle from deck to deckCopy
       index = 0;
       for (int j=0; j < 26; ++j)
       {
-         deck[index++] = deckCopy[25 - j];
-         deck[index++] = deckCopy[j + 26];
+         deckCopy[index++] = deck[25 - j];
+         deckCopy[index++] = deck[j + 26];
       }
 
+      // shuffle from deckCopy to deck
       uint8_t increment;
-      c6502::memcpy8(deckCopy, deck, 52);
       if (instruction & 1)
       {
          index = 17;
