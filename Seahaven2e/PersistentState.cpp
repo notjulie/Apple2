@@ -4,6 +4,7 @@
 
 #include "PersistentState.h"
 
+#include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
 #include "SHAssert.h"
@@ -24,6 +25,7 @@ static const uint8_t SIGNATURE2 = 0x24;
 
 
 static uint8_t HexDigit(uint8_t nybble);
+static void WriteHex4(uint8_t *dest, c6502::Int16 i16);
 
 
 /// <summary>
@@ -37,21 +39,13 @@ __attribute__((noinline)) void PersistentState::Load()
    signature1 = ~SIGNATURE1;
    signature2 = ~SIGNATURE2;
 
-   uint8_t loadAddressLo = (uint8_t)(uint16_t)this;
-   uint8_t loadAddressHi = (uint8_t)(((uint16_t)this)>>8);
-
-   // Format up a command
-   static const char BASE_LOAD_COMMAND[] = "BLOAD " FILENAME ",A$";
-   char loadCommand[sizeof(BASE_LOAD_COMMAND) + 4];
-   c6502::memcpy8(loadCommand, BASE_LOAD_COMMAND, sizeof(BASE_LOAD_COMMAND) - 1);
-   loadCommand[sizeof(BASE_LOAD_COMMAND) - 1] = HexDigit(loadAddressHi>>4);
-   loadCommand[sizeof(BASE_LOAD_COMMAND) + 0] = HexDigit(loadAddressHi&0xF);
-   loadCommand[sizeof(BASE_LOAD_COMMAND) + 1] = HexDigit(loadAddressLo>>4);
-   loadCommand[sizeof(BASE_LOAD_COMMAND) + 2] = HexDigit(loadAddressLo&0xF);
-   loadCommand[sizeof(BASE_LOAD_COMMAND) + 3] = 0;
+   // the command is declared as const so that it's saved to program memory, but
+   // we overwrite it anyway
+   static const char BASE_LOAD_COMMAND[] = "BLOAD " FILENAME ",A$0000";
+   WriteHex4((uint8_t *)&BASE_LOAD_COMMAND[sizeof(BASE_LOAD_COMMAND) - 5], this);
 
    // execute; it's left to the caller to request an integrity check
-   a2::ExecuteDOSCommand(loadCommand);
+   a2::ExecuteDOSCommand(BASE_LOAD_COMMAND);
 }
 
 
@@ -66,31 +60,14 @@ __attribute__((noinline)) void PersistentState::Save()
    // set the checksum
    checksum = CalculateChecksum();
 
-   uint8_t saveAddressLo = (uint8_t)(uint16_t)this;
-   uint8_t saveAddressHi = (uint8_t)(((uint16_t)this)>>8);
-   uint8_t saveLengthLo = (uint8_t)sizeof(*this);
-   uint8_t saveLengthHi = (uint8_t)(sizeof(*this)>>8);
-
-   // Format up a command
-   static const char BASE_SAVE_COMMAND[] = "BSAVE " FILENAME ",A$";
-   char saveCommand[sizeof(BASE_SAVE_COMMAND) + 11];
-   c6502::memcpy8(saveCommand, BASE_SAVE_COMMAND, sizeof(BASE_SAVE_COMMAND) - 1);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) - 1] = HexDigit(saveAddressHi>>4);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 0] = HexDigit(saveAddressHi&0xF);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 1] = HexDigit(saveAddressLo>>4);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 2] = HexDigit(saveAddressLo&0xF);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 3] = ',';
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 4] = 'L';
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 5] = '$';
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 6] = HexDigit(saveLengthHi>>4);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 7] = HexDigit(saveLengthHi&0xF);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 8] = HexDigit(saveLengthLo>>4);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 9] = HexDigit(saveLengthLo&0xF);
-   saveCommand[sizeof(BASE_SAVE_COMMAND) + 10] = 0;
+   // the command is declared as const so that it's saved to program memory, but
+   // we overwrite it anyway
+   static const char BASE_SAVE_COMMAND[] = "BSAVE " FILENAME ",A$0000,L$0000";
+   WriteHex4((uint8_t *)&BASE_SAVE_COMMAND[sizeof(BASE_SAVE_COMMAND) - 12], this);
+   WriteHex4((uint8_t *)&BASE_SAVE_COMMAND[sizeof(BASE_SAVE_COMMAND) - 5], sizeof(*this));
 
    // execute; it's left to the caller to request an integrity check
-   a2::puts(saveCommand);
-   a2::ExecuteDOSCommand(saveCommand);
+   a2::ExecuteDOSCommand(BASE_SAVE_COMMAND);
 }
 
 
@@ -137,8 +114,17 @@ void PersistentState::Reset()
 
 __attribute__((noinline)) static uint8_t HexDigit(uint8_t nybble)
 {
+   nybble &= 0x0F;
    if (nybble >= 10)
       return ('A' - 10) + nybble;
    else
       return '0' + nybble;
+}
+
+__attribute__((noinline)) void WriteHex4(uint8_t *dest, c6502::Int16 i16)
+{
+   dest[0] = HexDigit(i16.hi>>4);
+   dest[1] = HexDigit(i16.hi);
+   dest[2] = HexDigit(i16.lo>>4);
+   dest[3] = HexDigit(i16.lo);
 }

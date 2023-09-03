@@ -7,6 +7,9 @@
 namespace c6502 {
 
    struct Int16 {
+      Int16() {}
+      template <typename T> Int16(T v) { i16 = (int16_t)v; }
+
       Int16 &operator++() {
          ++i16;
          return *this;
