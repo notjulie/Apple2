@@ -339,7 +339,7 @@ void StateMachine::MoveCard(Card card, CardLocation location)
 /// <summary>
 ///   Starts a new game
 /// </summary>
-void StateMachine::NewGame()
+__attribute__((noinline)) void StateMachine::NewGame()
 {
    auto &game = PersistentState::instance.Game;
 
