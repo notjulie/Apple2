@@ -5,6 +5,7 @@
 #ifndef SEAHAVEN2E_GAME_H_
 #define SEAHAVEN2E_GAME_H_
 
+#include <C6502/Int6502.h>
 #include "Card.h"
 #include "CardLocation.h"
 #include "SHAssert.h"
@@ -29,7 +30,7 @@ private:
  */
 class Game {
 public:
-   void Shuffle16(uint16_t instruction);
+   void Shuffle16(c6502::Int16 instruction);
 
    Card GetCard(CardLocation location) const;
    void SetCard(CardLocation location, Card card);

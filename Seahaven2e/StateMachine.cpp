@@ -286,6 +286,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
 /// Moves the next column to tower move
 /// </summary>
 void StateMachine::StartNextMoveToTower()
+__attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 {
    auto &game = PersistentState::instance.Game;
 
@@ -341,7 +342,8 @@ void StateMachine::NewGame()
    UndoJournal::instance.Clear();
 
    // shuffle
-   game.Shuffle16(PersistentState::instance.GetNextGameSeed());
+   PersistentState::instance.NextGameSeed();
+   game.Shuffle16(PersistentState::instance.GetCurrentGameSeed());
 
    // start the game
    StartCurrentGame();

@@ -6,6 +6,7 @@
 #define SEAHAVEN2E_PERSISTENTSTATE_H_
 
 #include <stdint.h>
+#include <C6502/Int6502.h>
 #include <Apple2Lib/DOS.h>
 #include "Game.h"
 #include "UndoJournal.h"
@@ -21,8 +22,8 @@ public:
    void Reset();
    void Save();
 
-   uint16_t GetCurrentGameSeed() { return gameSeed; }
-   uint16_t GetNextGameSeed() { return ++gameSeed; }
+   c6502::Int16 &GetCurrentGameSeed() { return gameSeed; }
+   void NextGameSeed() { ++gameSeed; }
 
 private:
    uint16_t CalculateChecksum() const;
@@ -44,7 +45,7 @@ public:
    Game Game;
    UndoJournalPersist UndoJournal;
 private:
-   uint16_t gameSeed;
+   c6502::Int16 gameSeed;
    uint8_t signature2;
    uint16_t checksum;
 };

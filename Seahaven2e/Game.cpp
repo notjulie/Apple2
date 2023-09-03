@@ -18,7 +18,7 @@
 static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
 
 
-__attribute__((noinline)) void Game::Shuffle16(uint16_t instruction)
+__attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
 {
    Shuffler shuffler;
    shuffler.Shuffle16(instruction);

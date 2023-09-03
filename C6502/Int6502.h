@@ -2,6 +2,7 @@
 #ifndef INT6502_H
 #define INT6502_H
 
+#include <stdint.h>
 
 namespace c6502 {
 

@@ -5,6 +5,7 @@
 #ifndef SHUFFLER_H
 #define SHUFFLER_H
 
+#include <C6502/Int6502.h>
 #include "Card.h"
 
 
@@ -14,7 +15,7 @@
 /// </summary>
 class Shuffler {
 public:
-   void Shuffle16(uint16_t instruction);
+   void Shuffle16(c6502::Int16 instruction);
 
 public:
    // this is public... it's our output, and we don't care

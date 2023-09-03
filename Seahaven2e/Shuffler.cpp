@@ -9,17 +9,17 @@
 /// <summary>
 /// Shuffles a deck based on the integer seed value
 /// </summary>
-__attribute__((noinline)) void Shuffler::Shuffle16(uint16_t instruction)
+__attribute__((noinline)) void Shuffler::Shuffle16(c6502::Int16 instruction)
 {
    // create unshuffled deck
    for (uint8_t i=0; i < 52; ++i)
       deck[i] = Card::FromOrdinal(i);
 
    // shuffle 8 times according to high byte
-   Shuffle8(instruction >> 8);
+   Shuffle8(instruction.hi);
 
    // shuffle 8 times according to low byte
-   Shuffle8((uint8_t)instruction);
+   Shuffle8(instruction.lo);
 }
 
 
