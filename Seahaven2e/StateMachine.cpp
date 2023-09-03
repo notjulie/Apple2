@@ -4,7 +4,6 @@
 
 #include "StateMachine.h"
 
-#include <Apple2Lib/Keyboard.h>
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
@@ -97,79 +96,86 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
       if ((char)key>='a' && (char)key<='z')
          key = (KeyCode)((char)key - ('a' - 'A'));
 
-      #pragma GCC diagnostic push
-      #pragma GCC diagnostic ignored "-Wswitch"
-      switch (key) {
-      case (KeyCode)'N':
-         // new game...
-         NewGame();
-         break;
-
-      case (KeyCode)'1':
-         a2::PAGE2OFF();
-         a2::TEXTON();
-         break;
-
-      case (KeyCode)'2':
-         CardAnimator::instance.SetGraphicsMode();
-         break;
-
-      case KeyCode::Up:
-         Cursor::instance.Up();
-         break;
-
-      case KeyCode::Down:
-         Cursor::instance.Down();
-         break;
-
-      case KeyCode::Left:
-         Cursor::instance.Left();
-         break;
-
-      case KeyCode::Right:
-         Cursor::instance.Right();
-         break;
-
-      case (KeyCode)'C':
-         MoveToColumn();
-         break;
-
-      case (KeyCode)'R':
-         // restart
-         Restart();
-         break;
-
-      case (KeyCode)'S':
-         // force screensave
-         EnterScreensave();
-         break;
-
-      case (KeyCode)'T':
-         MoveToTower();
-         break;
-
-      case (KeyCode)'W':
-         // write to disk requested by user; for safety we let main handle that
-         // since we are exiting to DOS when we do that
-         writeRequested = true;
-         break;
-
-      case (KeyCode)'Z':
-         BeginUndo(true);
-         break;
-
-      case (KeyCode)'Y':
-         BeginRedo(true);
-         break;
-
-      default:
-         #ifdef DEBUG
-            a2::PRBYTE((uint8_t)key);
-         #endif
-         break;
-      }
-      #pragma GCC diagnostic pop
+      // process
+      ProcessInputKey(key);
    }
+}
+
+
+__attribute__((noinline)) void StateMachine::ProcessInputKey(KeyCode key)
+{
+   #pragma GCC diagnostic push
+   #pragma GCC diagnostic ignored "-Wswitch"
+   switch (key) {
+   case (KeyCode)'N':
+      // new game...
+      NewGame();
+      break;
+
+   case (KeyCode)'1':
+      a2::PAGE2OFF();
+      a2::TEXTON();
+      break;
+
+   case (KeyCode)'2':
+      CardAnimator::instance.SetGraphicsMode();
+      break;
+
+   case KeyCode::Up:
+      Cursor::instance.Up();
+      break;
+
+   case KeyCode::Down:
+      Cursor::instance.Down();
+      break;
+
+   case KeyCode::Left:
+      Cursor::instance.Left();
+      break;
+
+   case KeyCode::Right:
+      Cursor::instance.Right();
+      break;
+
+   case (KeyCode)'C':
+      MoveToColumn();
+      break;
+
+   case (KeyCode)'R':
+      // restart
+      Restart();
+      break;
+
+   case (KeyCode)'S':
+      // force screensave
+      EnterScreensave();
+      break;
+
+   case (KeyCode)'T':
+      MoveToTower();
+      break;
+
+   case (KeyCode)'W':
+      // write to disk requested by user; for safety we let main handle that
+      // since we are exiting to DOS when we do that
+      writeRequested = true;
+      break;
+
+   case (KeyCode)'Z':
+      BeginUndo(true);
+      break;
+
+   case (KeyCode)'Y':
+      BeginRedo(true);
+      break;
+
+   default:
+      #ifdef DEBUG
+         a2::PRBYTE((uint8_t)key);
+      #endif
+      break;
+   }
+   #pragma GCC diagnostic pop
 }
 
 

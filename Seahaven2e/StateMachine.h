@@ -5,6 +5,7 @@
 #ifndef SEAHAVEN2E_STATEMACHINE_H_
 #define SEAHAVEN2E_STATEMACHINE_H_
 
+#include <Apple2Lib/Keyboard.h>
 #include "Card.h"
 #include "CardLocation.h"
 #include "UndoJournal.h"
@@ -34,6 +35,7 @@ private:
    void Restart();
    void ServiceIdle();
    void StartCurrentGame();
+   void ProcessInputKey(a2::KeyCode keyCode);
 
    // card movement
    void MoveCard(Card card, CardLocation location);
