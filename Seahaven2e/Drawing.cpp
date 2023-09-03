@@ -136,7 +136,7 @@ void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
 }
 
 
-void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
+__attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
 {
    auto &game = PersistentState::instance.Game;
 

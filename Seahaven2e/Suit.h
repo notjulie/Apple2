@@ -43,15 +43,19 @@ public:
    }
 
 public:
-   static Suit FromOrdinal(uint8_t ordinal) {
-      Suit result;
-      result.numericValue = (NumericValue)(ordinal << 4);
-      return result;
-   }
    static constexpr Suit Clubs() { return Suit(NumericValue::Clubs); }
    static constexpr Suit Diamonds() { return Suit(NumericValue::Diamonds); }
    static constexpr Suit Hearts() { return Suit(NumericValue::Hearts); }
    static constexpr Suit Spades() { return Suit(NumericValue::Spades); }
+   static Suit FromOrdinal(uint8_t ordinal) {
+      static const Suit suits[] = {
+         Clubs(),
+         Diamonds(),
+         Hearts(),
+         Spades()
+      };
+      return suits[ordinal];
+   }
 
 private:
    /// <summary>
