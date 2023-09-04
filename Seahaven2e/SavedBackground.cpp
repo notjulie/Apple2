@@ -32,7 +32,7 @@ __attribute__((noinline)) void SavedBackground::SaveCardBackground(a2::HGRPage h
 }
 
 
-void SavedBackground::RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y)
+__attribute__((noinline)) void SavedBackground::RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y)
 {
    RestoreBackground();
    SaveCardBackground(hgr, x, y);
