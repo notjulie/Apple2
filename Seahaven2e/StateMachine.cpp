@@ -372,7 +372,7 @@ void StateMachine::StartCurrentGame()
 /// <summary>
 /// Restarts the game, resetting the undo journal to the beginning
 /// </summary>
-void StateMachine::Restart()
+__attribute__((noinline)) void StateMachine::Restart()
 {
    auto &game = PersistentState::instance.Game;
 
