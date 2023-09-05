@@ -11,6 +11,8 @@
 #include "SHAssert.h"
 #include "Sprites.h"
 #include "StateMachine.h"
+#include "TextScreen.h"
+
 
 static StateMachine stateMachine;
 
@@ -20,6 +22,11 @@ static StateMachine stateMachine;
 /// </summary>
 extern "C" int main()
 {
+   // show the splash screen
+   TextScreen::instance.Initialize();
+   TextScreen::instance.ShowSplash();
+   // shows notbing instantaneously... TOTO... finish
+
    // initialize the CardAnimator first so that it hides the screen
    // output from calls to DOS below
    CardAnimator::instance.Initialize();

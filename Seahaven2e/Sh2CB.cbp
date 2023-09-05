@@ -103,8 +103,11 @@
 		<Unit filename="../Apple2Lib/Keyboard.h" />
 		<Unit filename="../Apple2Lib/ROM.cpp" />
 		<Unit filename="../Apple2Lib/ROM.h" />
+		<Unit filename="../Apple2Lib/TextPage.cpp" />
+		<Unit filename="../Apple2Lib/TextPage.h" />
 		<Unit filename="../Apple2Lib/VBLCounter.cpp" />
 		<Unit filename="../Apple2Lib/VBLCounter.h" />
+		<Unit filename="../C6502/Int6502.h" />
 		<Unit filename="../C6502/LookupTable.h" />
 		<Unit filename="../C6502/Memory.h" />
 		<Unit filename="AnimationPage.cpp" />
@@ -143,6 +146,8 @@
 		<Unit filename="Test/UnitTestMain.cpp">
 			<Option target="UnitTest" />
 		</Unit>
+		<Unit filename="TextScreen.cpp" />
+		<Unit filename="TextScreen.h" />
 		<Unit filename="UndoJournal.cpp" />
 		<Unit filename="UndoJournal.h" />
 		<Unit filename="ld/target.ld" />
