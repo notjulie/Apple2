@@ -1,5 +1,6 @@
 
 #include "TextScreen.h"
+#include <Apple2Lib/VBLCounter.h>
 
 TextScreen TextScreen::instance;
 
@@ -15,5 +16,16 @@ void TextScreen::ShowSplash()
 {
    textPage.Clear();
    textPage.Show();
+   textPage.WriteAt(6, 9, "SEA][HAVEN TOWERS V1.3.DEV");
+
+   a2::VBLCounter::Update();
+   uint8_t startTime = a2::VBLCounter::GetCounter().lo;
+   for (;;)
+   {
+      a2::VBLCounter::Update();
+      uint8_t elapsed = a2::VBLCounter::GetCounter().lo - startTime;
+      if (elapsed > 200)
+         break;
+   }
 }
 

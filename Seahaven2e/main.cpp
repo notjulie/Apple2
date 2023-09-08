@@ -25,7 +25,7 @@ extern "C" int main()
    // show the splash screen
    TextScreen::instance.Initialize();
    TextScreen::instance.ShowSplash();
-   // shows notbing instantaneously... TOTO... finish
+   // shows notbing instantaneously... TODO... finish
 
    // initialize the CardAnimator first so that it hides the screen
    // output from calls to DOS below

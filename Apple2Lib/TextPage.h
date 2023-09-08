@@ -13,6 +13,7 @@ namespace a2 {
 
       void Clear();
       void Show();
+      void WriteAt(uint8_t x, uint8_t y, const char *s);
 
    public:
       static constexpr TextPage TEXT1() { return TextPage(Page1MemoryPage); }

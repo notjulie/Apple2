@@ -32,5 +32,20 @@ namespace a2 {
          a2::PAGE2ON();
       a2::TEXTON();
    }
+
+
+   void TextPage::WriteAt(uint8_t x, uint8_t y, const char *s)
+   {
+      char *dest = (char *)(GetRowAddress(y) + x);
+      uint8_t i = 0;
+      for (;;)
+      {
+         char c = s[i];
+         if (c == 0)
+            break;
+         dest[i++] = (c | 0x80);
+      }
+   }
+
 }
 
