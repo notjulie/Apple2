@@ -22,19 +22,18 @@ static StateMachine stateMachine;
 /// </summary>
 extern "C" int main()
 {
-   // show the splash screen
+   // show the splash screen while we load the PersistentState
    TextScreen::instance.Initialize();
    TextScreen::instance.ShowSplash();
-   // shows notbing instantaneously... TODO... finish
-
-   // initialize the CardAnimator first so that it hides the screen
-   // output from calls to DOS below
-   CardAnimator::instance.Initialize();
 
    // load the persistent state; note that this does a DOS call and
    // needs to be done here rather than higher in the call stack in case
    // there are side effects on our zero-page data
    PersistentState::instance.Load();
+
+   // initialize the CardAnimator first so that it hides the screen
+   // output from calls to DOS below
+   CardAnimator::instance.Initialize();
 
    // check the integrity
    if (!PersistentState::instance.CheckIntegrity())
