@@ -22,7 +22,8 @@ namespace a2 {
    private:
       constexpr TextPage(uint8_t memoryPage) : pageOffset(memoryPage) {}
 
-      uint8_t *GetRowAddress(uint8_t row);
+      uint8_t *GetRowAddress(uint8_t row) const { return GetRowAddress(row, pageOffset); }
+      static uint8_t *GetRowAddress(uint8_t row, uint8_t pageOffset);
 
    private:
       static constexpr uint8_t Page1MemoryPage = 0x04; // address 0x0400
