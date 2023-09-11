@@ -241,7 +241,7 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t
 /// <summary>
 /// Returns true if the given card can be moved to an ace
 /// </summary>
-bool Game::CanMoveToAce(Card card) const
+__attribute__((noinline)) bool Game::CanMoveToAce(Card card) const
 {
    if (card.IsNull())
       return false;
