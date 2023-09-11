@@ -20,6 +20,9 @@
 
 static const uint8_t TowersLeft = 12;
 
+uint8_t Drawing::cardX;
+uint8_t Drawing::cardY;
+
 
 void Drawing::DrawBackground() {
   hgr.Fill(0);
@@ -52,12 +55,21 @@ void Drawing::XorSprite(
 }
 
 
-void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y) {
-  DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, y, x);
+void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
+{
+   cardX = x;
+   cardY = y;
+   DrawCardTop(card);
+}
+
+
+void Drawing::DrawCardTop(Card card)
+{
+  DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, cardY, cardX);
   DrawSprite(
-    Sprites::GetSuitSprite(card.GetSuit(), (bool)(x&1)),
+    Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
     CardTopSpriteHeight,
-    y, x + 2);
+    cardY, cardX + 2);
 }
 
 
@@ -109,26 +121,45 @@ void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y) {
   DrawCardTop(card, x, y);
 }
 
-void Drawing::DrawCard(Card card, uint8_t x, uint8_t y) {
-  a2::VBLCounter::Update();
-  DrawCardTop(card, x, y);
-  a2::VBLCounter::Update();
-  DrawCardBottom(x, y + CardTopSpriteHeight);
-  a2::VBLCounter::Update();
+void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
+{
+   cardX = x;
+   cardY = y;
+   DrawCard(card);
 }
 
-void Drawing::DrawCardBottom(uint8_t x, uint8_t y) {
+void Drawing::DrawCard(Card card)
+{
+   a2::VBLCounter::Update();
+   DrawCardTop(card);
+   a2::VBLCounter::Update();
+   DrawCardBottom();
+   a2::VBLCounter::Update();
+}
+
+void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
+{
+   cardX = x;
+   cardY = y - CardTopSpriteHeight;
+   DrawCardBottom();
+}
+
+
+void Drawing::DrawCardBottom()
+{
   uint8_t * row;
 
+  uint8_t y = cardY + CardTopSpriteHeight;
+
   for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i) {
-    row = hgr.GetByteAddress(y++, x);
+    row = hgr.GetByteAddress(y++, cardX);
     row[0] = 0xFF;
     row[1] = 0xFF;
     row[2] = 0xFF;
     row[3] = 0xBF;
   }
 
-  row = hgr.GetByteAddress(y++, x);
+  row = hgr.GetByteAddress(y++, cardX);
   row[0] = 0xFE;
   row[1] = 0xFF;
   row[2] = 0xFF;
@@ -167,16 +198,17 @@ void Drawing::DrawTowers()
 {
    auto &game = PersistentState::instance.Game;
 
-   uint8_t x = TowersLeft;
+   cardX = TowersLeft;
+   cardY = CardLocations::TowersTop;
 
    for (uint8_t tower=0; tower < 4; ++tower)
    {
       Card card = game.GetTower(tower);
       if (!card.IsNull())
       {
-         DrawCard(card, x, CardLocations::TowersTop);
+         DrawCard(card);
       }
-      x += 4;
+      cardX += 4;
    }
 }
 
@@ -187,7 +219,7 @@ void Drawing::DrawColumns()
 {
    auto &game = PersistentState::instance.Game;
 
-   uint8_t x = 0;
+   cardX = 0;
 
    for (uint8_t column=0; column < 10; ++column)
    {
@@ -195,12 +227,15 @@ void Drawing::DrawColumns()
       if (cardCount != 0)
       {
          for (uint8_t row=0; row < cardCount; ++row)
-            DrawCardTop(game.GetColumnCard(column, row), x, columnYLookup.Y(row));
+         {
+            cardY = columnYLookup.Y(row);
+            DrawCardTop(game.GetColumnCard(column, row));
+         }
 
-         DrawCardBottom(x, columnYLookup.Y(cardCount - 1) + CardTopSpriteHeight);
+         DrawCardBottom();
       }
 
-      x += 4;
+      cardX += 4;
   }
 }
 

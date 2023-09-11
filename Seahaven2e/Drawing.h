@@ -46,8 +46,16 @@ private:
           uint8_t x);
    void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
 
+   // card drawing at current location
+   void DrawCard(Card card);
+   void DrawCardBottom();
+   void DrawCardTop(Card card);
+
 private:
    a2::HGRPage hgr;
+
+   static uint8_t cardX;
+   static uint8_t cardY;
 };
 
 // I pass these around by value because they are just a byte indicating the page
