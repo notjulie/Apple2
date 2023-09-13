@@ -19,7 +19,6 @@ public:
    void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y);
    void DrawGame();
    void DrawAcePiles();
-   void DrawTowers();
 
    void EraseCard(CardLocation location);
    void ToggleCursor(CardLocation location);
@@ -38,22 +37,25 @@ private:
    void DrawAcePile(uint8_t suitOrdinal, uint8_t x);
    void DrawCardBottom(uint8_t x, uint8_t y);
    void DrawCardTop(Card card, uint8_t x, uint8_t y);
-   void DrawColumns();
-   void DrawSprite(
+   void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
+
+private:
+   // statics that use the global currentPage instead of a this pointer
+   static void StaticDrawCard(Card card);
+   static void StaticDrawCardBottom();
+   static void StaticDrawCardTop(Card card);
+   static void StaticDrawColumns();
+   static void StaticDrawSprite(
           const CardTopSprite &sprite,
           uint8_t rows,
           uint8_t y,
           uint8_t x);
-   void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
-
-   // card drawing at current location
-   void DrawCard(Card card);
-   void DrawCardBottom();
-   void DrawCardTop(Card card);
+   static void StaticDrawTowers();
 
 private:
    a2::HGRPage hgr;
 
+   static a2::HGRPage page;
    static uint8_t cardX;
    static uint8_t cardY;
 };
