@@ -20,27 +20,17 @@
 
 static const uint8_t TowersLeft = 12;
 
-a2::HGRPage Drawing::page;
-uint8_t Drawing::cardX;
-uint8_t Drawing::cardY;
+
+
+// =====================================================================
+// =====================================================================
+//     class Drawing
+// =====================================================================
+// =====================================================================
 
 
 void Drawing::DrawBackground() {
   hgr.Fill(0);
-}
-
-
-void Drawing::StaticDrawSprite(
-                const CardTopSprite &sprite,
-                uint8_t rows,
-                uint8_t y,
-                uint8_t x) {
-   for (int i=0; i < rows; ++i)
-   {
-    uint8_t *rowPointer = page.GetByteAddress(y++, x);
-    rowPointer[0] = sprite.rows[i].GetLeft();
-    rowPointer[1] = sprite.rows[i].GetRight();
-   }
 }
 
 
@@ -59,20 +49,10 @@ void Drawing::XorSprite(
 
 void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
 {
-   page = hgr;
-   cardX = x;
-   cardY = y;
-   StaticDrawCardTop(card);
-}
-
-
-void Drawing::StaticDrawCardTop(Card card)
-{
-   StaticDrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, cardY, cardX);
-   StaticDrawSprite(
-      Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
-      CardTopSpriteHeight,
-      cardY, cardX + 2);
+   DrawingPrimatives::page = hgr;
+   DrawingPrimatives::cardX = x;
+   DrawingPrimatives::cardY = y;
+   DrawingPrimatives::DrawCardTop(card);
 }
 
 
@@ -126,49 +106,18 @@ void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y) {
 
 void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 {
-   page = hgr;
-   cardX = x;
-   cardY = y;
-   StaticDrawCard(card);
-}
-
-void Drawing::StaticDrawCard(Card card)
-{
-   a2::VBLCounter::Update();
-   StaticDrawCardTop(card);
-   a2::VBLCounter::Update();
-   StaticDrawCardBottom();
-   a2::VBLCounter::Update();
+   DrawingPrimatives::page = hgr;
+   DrawingPrimatives::cardX = x;
+   DrawingPrimatives::cardY = y;
+   DrawingPrimatives::DrawCard(card);
 }
 
 void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
 {
-   page = hgr;
-   cardX = x;
-   cardY = y - CardTopSpriteHeight;
-   StaticDrawCardBottom();
-}
-
-
-void Drawing::StaticDrawCardBottom()
-{
-  uint8_t * row;
-
-  uint8_t y = cardY + CardTopSpriteHeight;
-
-  for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i) {
-    row = page.GetByteAddress(y++, cardX);
-    row[0] = 0xFF;
-    row[1] = 0xFF;
-    row[2] = 0xFF;
-    row[3] = 0xBF;
-  }
-
-  row = page.GetByteAddress(y++, cardX);
-  row[0] = 0xFE;
-  row[1] = 0xFF;
-  row[2] = 0xFF;
-  row[3] = 0x9F;
+   DrawingPrimatives::page = hgr;
+   DrawingPrimatives::cardX = x;
+   DrawingPrimatives::cardY = y - CardTopSpriteHeight;
+   DrawingPrimatives::DrawCardBottom();
 }
 
 
@@ -197,63 +146,14 @@ __attribute__((noinline)) void Drawing::DrawAcePiles()
 
 
 /// <summary>
-/// Draws the towers
-/// </summary>
-void Drawing::StaticDrawTowers()
-{
-   auto &game = PersistentState::instance.Game;
-
-   cardX = TowersLeft;
-   cardY = CardLocations::TowersTop;
-
-   for (uint8_t tower=0; tower < 4; ++tower)
-   {
-      Card card = game.GetTower(tower);
-      if (!card.IsNull())
-      {
-         StaticDrawCard(card);
-      }
-      cardX += 4;
-   }
-}
-
-/// <summary>
-/// Draws all the columns
-/// </summary>
-void Drawing::StaticDrawColumns()
-{
-   auto &game = PersistentState::instance.Game;
-
-   cardX = 0;
-
-   for (uint8_t column=0; column < 10; ++column)
-   {
-      uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
-      if (cardCount != 0)
-      {
-         for (uint8_t row=0; row < cardCount; ++row)
-         {
-            cardY = columnYLookup.Y(row);
-            StaticDrawCardTop(game.GetColumnCard(column, row));
-         }
-
-         StaticDrawCardBottom();
-      }
-
-      cardX += 4;
-  }
-}
-
-
-/// <summary>
 /// Draws all cards
 /// </summary>
 __attribute__((noinline)) void Drawing::DrawGame()
 {
-   page = hgr;
+   DrawingPrimatives::page = hgr;
    DrawAcePiles();
-   StaticDrawColumns();
-   StaticDrawTowers();
+   DrawingPrimatives::DrawColumns();
+   DrawingPrimatives::DrawTowers();
 }
 
 
@@ -288,6 +188,125 @@ void Drawing::EraseCard(CardLocation location) {
       // erasing a card from the ace pile just exposes the card
       // below
       DrawAcePile(location.GetAceSuitOrdinal(), location.GetX());
+   }
+}
+
+
+
+
+// =====================================================================
+// =====================================================================
+//     class DrawingPrimatives
+// =====================================================================
+// =====================================================================
+
+a2::HGRPage DrawingPrimatives::page;
+uint8_t DrawingPrimatives::cardX;
+uint8_t DrawingPrimatives::cardY;
+
+
+void DrawingPrimatives::DrawCard(Card card)
+{
+   a2::VBLCounter::Update();
+   DrawCardTop(card);
+   a2::VBLCounter::Update();
+   DrawCardBottom();
+   a2::VBLCounter::Update();
+}
+
+
+void DrawingPrimatives::DrawCardBottom()
+{
+  uint8_t * row;
+
+  uint8_t y = cardY + CardTopSpriteHeight;
+
+  for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i) {
+    row = page.GetByteAddress(y++, cardX);
+    row[0] = 0xFF;
+    row[1] = 0xFF;
+    row[2] = 0xFF;
+    row[3] = 0xBF;
+  }
+
+  row = page.GetByteAddress(y++, cardX);
+  row[0] = 0xFE;
+  row[1] = 0xFF;
+  row[2] = 0xFF;
+  row[3] = 0x9F;
+}
+
+
+void DrawingPrimatives::DrawCardTop(Card card)
+{
+   DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, cardY, cardX);
+   DrawSprite(
+      Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
+      CardTopSpriteHeight,
+      cardY, cardX + 2);
+}
+
+
+/// <summary>
+/// Draws all the columns
+/// </summary>
+void DrawingPrimatives::DrawColumns()
+{
+   auto &game = PersistentState::instance.Game;
+
+   cardX = 0;
+
+   for (uint8_t column=0; column < 10; ++column)
+   {
+      uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
+      if (cardCount != 0)
+      {
+         for (uint8_t row=0; row < cardCount; ++row)
+         {
+            cardY = columnYLookup.Y(row);
+            DrawCardTop(game.GetColumnCard(column, row));
+         }
+
+         DrawCardBottom();
+      }
+
+      cardX += 4;
+  }
+}
+
+
+void DrawingPrimatives::DrawSprite(
+                const CardTopSprite &sprite,
+                uint8_t rows,
+                uint8_t y,
+                uint8_t x) {
+   for (int i=0; i < rows; ++i)
+   {
+    uint8_t *rowPointer = page.GetByteAddress(y++, x);
+    rowPointer[0] = sprite.rows[i].GetLeft();
+    rowPointer[1] = sprite.rows[i].GetRight();
+   }
+}
+
+
+/// <summary>
+/// Draws the towers
+/// </summary>
+void DrawingPrimatives::DrawTowers()
+{
+   auto &game = PersistentState::instance.Game;
+
+   cardX = TowersLeft;
+   cardY = CardLocations::TowersTop;
+
+   for (uint8_t tower=0; tower < 4; ++tower)
+   {
+      Card card = game.GetTower(tower);
+      if (!card.IsNull())
+      {
+         DrawCard(card);
+      }
+      cardX += 4;
    }
 }
 

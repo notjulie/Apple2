@@ -11,6 +11,37 @@
 #include "Game.h"
 #include "SavedBackground.h"
 
+/// <summary>
+/// Static class for stateful drawing so that I can reduce parameter
+/// passing by setting a current destination for multiple calls
+/// </summary>
+class DrawingPrimatives {
+public:
+   // pseudo-parameters... they are global variables that are easier to
+   // pass around than parameters
+   static a2::HGRPage page;
+   static uint8_t cardX;
+   static uint8_t cardY;
+
+public:
+   static void DrawCard(Card card);
+   static void DrawCardTop(Card card);
+   static void DrawCardBottom();
+   static void DrawColumns();
+   static void DrawTowers();
+
+private:
+   static void DrawSprite(
+          const CardTopSprite &sprite,
+          uint8_t rows,
+          uint8_t y,
+          uint8_t x);
+};
+
+
+/// <summary>
+/// More conventional C++ drawing class
+/// </summary>
 class Drawing {
 public:
    void DrawBackground();
@@ -40,24 +71,7 @@ private:
    void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:
-   // statics that use the global currentPage instead of a this pointer
-   static void StaticDrawCard(Card card);
-   static void StaticDrawCardBottom();
-   static void StaticDrawCardTop(Card card);
-   static void StaticDrawColumns();
-   static void StaticDrawSprite(
-          const CardTopSprite &sprite,
-          uint8_t rows,
-          uint8_t y,
-          uint8_t x);
-   static void StaticDrawTowers();
-
-private:
    a2::HGRPage hgr;
-
-   static a2::HGRPage page;
-   static uint8_t cardX;
-   static uint8_t cardY;
 };
 
 // I pass these around by value because they are just a byte indicating the page
