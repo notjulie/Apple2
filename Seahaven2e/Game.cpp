@@ -210,6 +210,34 @@ CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower) const
 
 
 /// <summary>
+/// Gets the destination column location for the card
+/// </summary>
+CardLocation Game::GetMoveToColumnDestination(CardLocation startLocation, Card card)
+{
+   if (card.GetRank() == Rank::King)
+   {
+      if (startLocation.IsTower())
+         return GetClosestOpenColumnToTower(startLocation.GetTowerIndex());
+      else if (startLocation.IsColumn())
+         return GetClosestOpenColumnToColumn(startLocation.GetColumn());
+   }
+   else
+   {
+      // get the location of the card one rank higher and verify that it's the bottom
+      // of a column
+      CardLocation locationAboveTarget = GetCardLocation(card + 1);
+      if (IsBottomOfColumn(locationAboveTarget))
+      {
+         // the target location is one below that
+         return CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
+      }
+   }
+
+   return CardLocation::Null();
+}
+
+
+/// <summary>
 /// Gets the card location of the open tower closest to the given
 /// column
 /// </summary>

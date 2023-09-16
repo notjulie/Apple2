@@ -195,27 +195,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    assert(!card.IsNull());
 
    // locate the target location
-   CardLocation targetLocation = CardLocation::Null();
-   if (card.GetRank() == Rank::King)
-   {
-      if (location.IsTower())
-         targetLocation = game.GetClosestOpenColumnToTower(location.GetTowerIndex());
-      else if (location.IsColumn())
-         targetLocation = game.GetClosestOpenColumnToColumn(location.GetColumn());
-      else
-         assert(0);
-   }
-   else
-   {
-      // get the location of the card one rank higher and verify that it's the bottom
-      // of a column
-      CardLocation locationAboveTarget = game.GetCardLocation(card + 1);
-      if (game.IsBottomOfColumn(locationAboveTarget))
-      {
-         // the target location is one below that
-         targetLocation = CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
-      }
-   }
+   CardLocation targetLocation = game.GetMoveToColumnDestination(location, card);
 
    // complain if we don't have a landing spot
    if (targetLocation.IsNull())
