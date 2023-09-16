@@ -12,6 +12,9 @@
 
 template <typename T, uint8_t Length> class SafeArray {
 public:
+   // default constructor does no initialization
+   SafeArray() {}
+
    T &operator[](uint8_t index) {
       assert(index < Length);
       return array[index];

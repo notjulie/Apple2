@@ -49,6 +49,10 @@ static_assert(sizeof(CardAndGroup) == 1, "CardAndGroup is too large");
 /// </summary>
 struct UndoInstruction
 {
+   // on construction we only initialize what we require to be
+   // initialized
+   UndoInstruction() {}
+
    Card card;
    CardLocation location;
 
@@ -62,6 +66,11 @@ struct UndoInstruction
 /// The persistent data associated with the undo journal
 /// </summary>
 class UndoJournalPersist {
+public:
+   // on construction we only initialize what we require to be
+   // initialized
+   UndoJournalPersist() {}
+
 private:
    UndoInstruction PeekRedo() const;
    UndoInstruction PeekUndo() const;

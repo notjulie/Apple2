@@ -102,12 +102,13 @@ __attribute__((noinline)) uint16_t PersistentState::CalculateChecksum() const
 }
 
 
+/// <summary>
+/// Clears the state to initial settings
+/// <summary>
 void PersistentState::Reset()
 {
-   // start with any defaults we have defined
-   *this = PersistentState();
-
    // deal the initial game
+   this->gameSeed = 0;
    Game.Shuffle16(this->gameSeed);
 }
 
