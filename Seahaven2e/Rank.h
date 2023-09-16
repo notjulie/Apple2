@@ -10,7 +10,7 @@
 /** \brief
  * Rank enumeration
  */
-enum class Rank {
+enum class Rank : uint8_t {
   Null,
   Ace,
   Two,

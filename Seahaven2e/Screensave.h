@@ -17,7 +17,7 @@ public:
    static Screensave instance;
 
 private:
-   enum class Edge {
+   enum class Edge : uint8_t {
       Top,
       Left,
       Bottom,

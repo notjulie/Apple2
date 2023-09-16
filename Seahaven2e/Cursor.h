@@ -12,7 +12,7 @@
 /// </summary>
 class Cursor {
 public:
-   Cursor() = default;
+   Cursor() {}
 
    void CursorHasBeenObliterated();
    void Hide();
@@ -31,7 +31,7 @@ public:
    static Cursor instance;
 
 private:
-   enum class State {
+   enum class State : uint8_t {
       Idle,
       On,
       Off

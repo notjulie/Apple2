@@ -15,6 +15,8 @@
 /// </summary>
 class StateMachine {
 public:
+   StateMachine() {}
+
    void Service();
    bool IsWriteRequested() const { return writeRequested; }
    void ClearWriteRequest() { writeRequested = false; }
@@ -42,7 +44,7 @@ private:
    void StartNextMoveToTower();
 
 private:
-   enum class State {
+   enum class State : uint8_t {
       Uninitialized,
       Idle,
       Animating,

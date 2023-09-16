@@ -41,7 +41,7 @@ public:
   static CardAnimator instance;
 
 private:
-   enum class State {
+   enum class State : uint8_t {
       /// <summary>
       /// Both HGR pages the same and up to date
       /// </summary>
@@ -63,7 +63,7 @@ private:
       FreeAnimating
    };
 
-   enum class Coordinate {
+   enum class Coordinate : uint8_t {
       X,
       Y
    };

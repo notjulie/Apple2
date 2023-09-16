@@ -18,6 +18,7 @@
 
 using ::a2::KeyCode;
 
+
 /// <summary>
 /// Performs periodic action
 /// </summary>
