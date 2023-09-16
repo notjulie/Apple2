@@ -186,6 +186,10 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 {
    auto &game = PersistentState::instance.Game;
 
+   // start a new undo group... we can do this whether we move or not
+   // so just get it out of the way
+   UndoJournal::instance.StartNewUndo();
+
    // grab the cursor location
    CardLocation location = Cursor::instance.GetLocation();
    assert(!location.IsNull());
@@ -204,26 +208,13 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
       return;
    }
 
-   // start a new undo group
-   UndoJournal::instance.StartNewUndo();
-
-   // if we are moving column to column it gets slightly complicated if multiple
-   // cards are moving, so pop off to our handling for that
+   // if the start location is a column location then we need to carry
+   // all the cards below the selected card along with it
+   uint8_t numberOfCardsToMove = 1;
    if (location.IsColumn())
-   {
-      UndoJournal::instance.LogMove(
-               card,
-               location,
-               targetLocation
-               );
-
-      CardAnimator::instance.StartMoveColumnToColumn(location, targetLocation);
-      state = State::Animating;
-      return;
-   }
-
-   // start the animation
-   MoveCard(card, targetLocation);
+      numberOfCardsToMove = game.GetSizeOfMoveToColumnGroup(location);
+   if (numberOfCardsToMove > 0)
+      MoveMultipleCards(card, targetLocation, numberOfCardsToMove);
 }
 
 
@@ -302,19 +293,42 @@ __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 
 
 /// <summary>
-/// Moves the given card, adding it to the undo journal
+/// Moves a group of cards that starts from the given card and extends down
+/// the column the given number of cards, adding them to the current undo group
 /// </summary>
-void StateMachine::MoveCard(Card card, CardLocation location)
+void StateMachine::MoveMultipleCards(Card card, CardLocation targetLocation, uint8_t count)
 {
    auto &game = PersistentState::instance.Game;
 
-   // log
-   UndoJournal::instance.LogMove(card, game.GetCardLocation(card), location);
+   // check for no-op
+   if (count == 0)
+       return;
 
-   // start animating
-   CardAnimator::instance.StartAnimation(card, location);
+   // make sure we have the required amount of tower space
+   uint8_t requiredTowers = count;
+   if (!targetLocation.IsTower())
+      --requiredTowers;
+   if (requiredTowers > game.GetNumberOfAvailableTowers())
+      return;
+
+   // get the start location
+   CardLocation startLocation = game.GetCardLocation(card);
+
+   // log it
+   UndoJournal::instance.LogMove(
+            card,
+            startLocation,
+            targetLocation
+            );
+
+   // start the animation
+   if (count == 1)
+      CardAnimator::instance.StartAnimation(card, targetLocation);
+   else
+      CardAnimator::instance.StartMoveColumnToColumn(startLocation, targetLocation);
    state = State::Animating;
 }
+
 
 /// <summary>
 ///   Starts a new game
@@ -412,7 +426,7 @@ bool StateMachine::CheckAcesToMove() {
    Card card = game.GetCard(startLocation);
 
    // start the animation
-   MoveCard(card, CardLocation::AcePile(card.GetSuit()));
+   MoveMultipleCards(card, CardLocation::AcePile(card.GetSuit()), 1);
    return true;
 }
 

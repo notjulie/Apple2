@@ -377,10 +377,6 @@ __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocatio
    if (numberOfCardsToMove == 0)
       return;
 
-   // make sure we have the tower space to allow it
-   if (numberOfCardsToMove > game.GetNumberOfAvailableTowers() + 1)
-      return;
-
    // make a list of the cards to move; we can afford the 15 bytes
    for (int i=0; i<numberOfCardsToMove; ++i)
    {
