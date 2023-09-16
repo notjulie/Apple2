@@ -66,7 +66,7 @@ namespace a2 {
    }
 
 
-   void TextPage::WriteAt(uint8_t x, uint8_t y, const char *s)
+   __attribute__((noinline)) void TextPage::WriteAt(uint8_t x, uint8_t y, const char *s)
    {
       char *dest = (char *)(GetRowAddress(y) + x);
       uint8_t i = 0;
