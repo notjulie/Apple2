@@ -112,23 +112,16 @@ void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
    DrawingPrimatives::DrawCard(card);
 }
 
-void Drawing::DrawCardBottom(uint8_t x, uint8_t y)
-{
-   DrawingPrimatives::page = hgr;
-   DrawingPrimatives::cardX = x;
-   DrawingPrimatives::cardY = y - CardTopSpriteHeight;
-   DrawingPrimatives::DrawCardBottom();
-}
 
-
-__attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t x)
+__attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal)
 {
    auto &game = PersistentState::instance.Game;
 
    Rank rank = game.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
-      DrawCard(Card(Suit::FromOrdinal(suitOrdinal), rank), x, CardLocations::TowersTop);
+      CardLocation location = CardLocation::AcePile(Suit::FromOrdinal(suitOrdinal));
+      DrawCard(Card(Suit::FromOrdinal(suitOrdinal), rank), location.GetX(), location.GetY());
    }
 }
 
@@ -138,10 +131,8 @@ __attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal, uint8_t
 /// </summary>
 __attribute__((noinline)) void Drawing::DrawAcePiles()
 {
-   DrawAcePile(Suit::Clubs().GetOrdinal(), 0);
-   DrawAcePile(Suit::Diamonds().GetOrdinal(), 4);
-   DrawAcePile(Suit::Hearts().GetOrdinal(), 32);
-   DrawAcePile(Suit::Spades().GetOrdinal(), 36);
+   for (int i=0; i<4; ++i)
+      DrawAcePile(i);
 }
 
 
@@ -160,16 +151,19 @@ __attribute__((noinline)) void Drawing::DrawGame()
 /// <summary>
 /// Erases the location
 /// </summary>
-void Drawing::EraseCard(CardLocation location) {
+void Drawing::EraseCard(CardLocation location)
+{
    // get the coordinates
-   uint8_t x = location.GetX();
-   uint8_t startY = location.GetY();
-   uint8_t y = startY;
+   DrawingPrimatives::cardX = location.GetX();
+   DrawingPrimatives::cardY = location.GetY();
+   DrawingPrimatives::page = hgr;
+
+   uint8_t y = DrawingPrimatives::cardY;
 
    // erase the card
    for (int i=0; i<CardHeight; ++i)
    {
-      uint8_t *row = hgr.GetByteAddress(y++, x);
+      uint8_t *row = hgr.GetByteAddress(y++, DrawingPrimatives::cardX);
       row[0] = 0;
       row[1] = 0;
       row[2] = 0;
@@ -181,13 +175,14 @@ void Drawing::EraseCard(CardLocation location) {
    {
       // if this was a column card and there was one above it we'll need to
       // redraw the card above it, or at least its lower part
-      DrawCardBottom(x, startY - CardLocations::CardShadowHeight);
+      DrawingPrimatives::cardY -= CardLocations::DistanceBetweenColumnCards;
+      DrawingPrimatives::DrawCardBottom();
    }
    else if (location.IsAce())
    {
       // erasing a card from the ace pile just exposes the card
       // below
-      DrawAcePile(location.GetAceSuitOrdinal(), location.GetX());
+      DrawAcePile(location.GetAceSuitOrdinal());
    }
 }
 

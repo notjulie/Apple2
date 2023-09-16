@@ -25,7 +25,7 @@ public:
    void ForgetBackground();
 
    void Show() { GetDrawing().Show(); }
-   Drawing GetDrawing() { return drawings[page]; }
+   __attribute__((noinline)) Drawing GetDrawing() { return drawings[page]; }
 
 public:
    static AnimationPage Page1() { return AnimationPage(0); }
