@@ -51,4 +51,9 @@ constexpr int8_t operator-(Rank r1, Rank r2) {
   return (int8_t)r1 - (int8_t)r2;
 }
 
+inline Rank &operator--(Rank &r) {
+   r = r - 1;
+   return r;
+}
+
 #endif  // SEAHAVEN2E_RANK_H_

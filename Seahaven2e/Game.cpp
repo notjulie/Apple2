@@ -31,10 +31,7 @@ __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
    towers[2] = shuffler.deck[51];
    towers[3] = Card::Null();
 
-   acePiles[0] = Rank::Null;
-   acePiles[1] = Rank::Null;
-   acePiles[2] = Rank::Null;
-   acePiles[3] = Rank::Null;
+   acePiles.Clear();
 }
 
 
@@ -69,8 +66,7 @@ CardLocation Game::GetCardToMoveToAce() const
 Card Game::GetCard(CardLocation location) const
 {
    if (location.IsAce()) {
-      uint8_t suitOrdinal = location.GetAceSuitOrdinal();
-      return Card(Suit::FromOrdinal(suitOrdinal), acePiles[suitOrdinal]);
+      return acePiles.GetCard(location);
    } else if (location.IsTower()) {
       return towers[location.GetTowerIndex()];
    } else if (location.IsColumn()) {
@@ -107,14 +103,8 @@ CardLocation Game::GetCardLocation(Card card)
       }
    }
 
-   // see if it's on its ace pile
-   Rank rank = card.GetRank();
-   uint8_t suitOrdinal = card.GetSuit().GetOrdinal();
-   if (acePiles[suitOrdinal] >= rank)
-      return CardLocation::AcePile(Suit::FromOrdinal(suitOrdinal));
-
-   // else it's nowhere
-   return CardLocation::Null();
+   // else if it's not on an ace pile then it's nowhere
+   return acePiles.GetCardLocation(card);
 }
 
 
@@ -144,7 +134,7 @@ __attribute__((noinline)) void Game::SetCard(CardLocation location, Card card)
 
    if (location.IsAce())
    {
-      acePiles[location.GetAceSuitOrdinal()] = card.GetRank();
+      acePiles.Set(location, card);
    }
    else if (location.IsTower())
    {
@@ -164,8 +154,7 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 {
    if (location.IsAce())
    {
-      uint8_t suitOrdinal = location.GetAceSuitOrdinal();
-      acePiles[suitOrdinal] = acePiles[suitOrdinal] - 1;
+      acePiles.RemoveCard(location);
    }
    else if (location.IsTower())
    {
@@ -278,7 +267,7 @@ __attribute__((noinline)) bool Game::CanMoveToAce(CardLocation location) const
    if (card.IsNull())
       return false;
    else
-      return card.GetRank() - acePiles[card.GetSuit().GetOrdinal()] == 1;
+      return card.GetRank() - acePiles.GetRank(card.GetSuit()) == 1;
 }
 
 
@@ -418,3 +407,34 @@ uint8_t Game::GetNumberOfAvailableTowers() const
 
    return towerCount;
 }
+
+
+// ========================================================================
+// ========================================================================
+//     class AcePiles
+// ========================================================================
+// ========================================================================
+
+
+Card AcePiles::GetCard(CardLocation location) const
+{
+   if (location.IsAce())
+   {
+      uint8_t suitOrdinal = location.GetAceSuitOrdinal();
+      return Card(Suit::FromOrdinal(suitOrdinal), ranks[suitOrdinal]);
+   }
+
+   return Card::Null();
+}
+
+
+__attribute__((noinline)) CardLocation AcePiles::GetCardLocation(Card card) const
+{
+   Rank rank = card.GetRank();
+   Suit suit = card.GetSuit();
+   if (rank <= ranks[suit.GetOrdinal()])
+      return CardLocation::AcePile(suit);
+
+   return CardLocation::Null();
+}
+

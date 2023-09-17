@@ -28,6 +28,26 @@ private:
    T array[Length];
 };
 
+
+/// <summary>
+/// Encapsulation of the ace piles... there are common operations that it's
+/// worth capturing here so that I can more easily see where the optimizations
+/// can be done.
+/// </summary>
+class AcePiles {
+public:
+   void Clear() { ranks[0] = ranks[1] = ranks[2] = ranks[3] = Rank::Null; }
+   Card GetCard(CardLocation location) const;
+   Rank GetRank(uint8_t suitOrdinal) const { return ranks[suitOrdinal]; }
+   Rank GetRank(Suit suit) const { return ranks[suit.GetOrdinal()]; }
+   CardLocation GetCardLocation(Card card) const;
+   void RemoveCard(CardLocation location) { --ranks[location.GetAceSuitOrdinal()]; }
+   void Set(CardLocation location, Card card) { ranks[location.GetAceSuitOrdinal()] = card.GetRank(); }
+
+private:
+   Rank ranks[4];
+};
+
 /** \brief
  * Represents the game as a whole
  */
@@ -39,7 +59,7 @@ public:
    void SetCard(CardLocation location, Card card);
    void RemoveCard(CardLocation location);
 
-   Rank GetAcePileRank(uint8_t suitOrdinal) const { return acePiles[suitOrdinal]; }
+   Rank GetAcePileRank(uint8_t suitOrdinal) const { return acePiles.GetRank(suitOrdinal); }
    inline Card GetTower(uint8_t index) const { return towers[index]; }
 
    CardLocation GetCardToMoveToAce() const;
@@ -66,7 +86,7 @@ private:
    void Shuffle8(uint8_t instruction);
 
 private:
-   SafeArray<Rank,4> acePiles;
+   AcePiles acePiles;
    SafeArray<Card,4> towers;
    SafeArray<uint8_t,10> columnCounts;
    SafeArray<Card,50> columnCards;
