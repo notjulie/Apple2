@@ -58,26 +58,21 @@ __attribute__((noinline)) uint8_t *SavedBackground::GetPixels(uint8_t page)
 
 void SavedBackground::CopyPixels(uint8_t page, bool save)
 {
-   uint8_t *p = GetPixels(page);
+   uint8_t *from, *to;
+   from = GetPixels(page);
+   to = from;
+
    uint8_t y = backgroundY[page];
 
    for (uint8_t i=0; i < SavedBackground::Height; ++i)
    {
       uint8_t *row = backgroundHGR[page].GetByteAddress(y++, backgroundX[page]);
       if (save)
-      {
-         p[0] = row[0];
-         p[1] = row[1];
-         p[2] = row[2];
-         p[3] = row[3];
-      }
+         from = row;
       else
-      {
-         row[0] = p[0];
-         row[1] = p[1];
-         row[2] = p[2];
-         row[3] = p[3];
-      }
-      p += 4;
+         to = row;
+
+      for (int8_t j=3; j>=0; --j)
+         *to++ = *from++;
    }
 }
