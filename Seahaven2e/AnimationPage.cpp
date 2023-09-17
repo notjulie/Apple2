@@ -5,9 +5,6 @@
 #include "AnimationPage.h"
 
 
-SavedBackground AnimationPage::background1;
-SavedBackground AnimationPage::background2;
-
 constexpr Drawing AnimationPage::drawings[2];
 
 
@@ -17,10 +14,7 @@ __attribute__((noinline)) void AnimationPage::MoveCard(Card card, uint8_t x, uin
 
    // restore the background at the old position and save the
    // background at the new position
-   if (page == 0)
-       background1.RestoreAndSave(drawing.GetHGRPage(), x, y);
-   else
-       background2.RestoreAndSave(drawing.GetHGRPage(), x, y);
+   SavedBackground::RestoreAndSave(page, x, y);
 
    // draw the card at the new position
    drawing.DrawCardWithShadow(card, x, y);
@@ -32,10 +26,7 @@ void AnimationPage::MoveCardTop(Card card, uint8_t x, uint8_t y)
 
    // restore the background at the old position and save the
    // background at the new position
-   if (page == 0)
-       background1.RestoreAndSave(drawing.GetHGRPage(), x, y);
-   else
-       background2.RestoreAndSave(drawing.GetHGRPage(), x, y);
+   SavedBackground::RestoreAndSave(page, x, y);
 
    // draw the card at the new position
    drawing.DrawCardTopWithShadow(card, x, y);
@@ -76,10 +67,7 @@ void AnimationPage::EndAnimation()
 
 __attribute__((noinline)) void AnimationPage::ForgetBackground()
 {
-   if (page == 0)
-      background1.Forget();
-   else
-      background2.Forget();
+   SavedBackground::Forget(page);
 }
 
 

@@ -15,20 +15,24 @@
 class SavedBackground
 {
 public:
-   void SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y);
-   void RestoreBackground();
-   void Forget() { backgroundSaved = false; }
-   void RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y);
+   static void SaveCardBackground(uint8_t page, uint8_t x, uint8_t y);
+   static void RestoreBackground(uint8_t page);
+   static void Forget(uint8_t page) { backgroundSaved[page] = false; }
+   static void RestoreAndSave(uint8_t page, uint8_t x, uint8_t y);
+
+private:
+   static uint8_t *GetPixels(uint8_t page);
+   static void CopyPixels(uint8_t page, bool save);
 
 private:
    static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;
+   typedef uint8_t Pixels[4 * Height];
 
 private:
-   a2::HGRPage backgroundHGR;
-   uint8_t backgroundX;
-   uint8_t backgroundY;
-   bool backgroundSaved;
-   uint8_t pixels[4 * Height];
+   static uint8_t backgroundX[2];
+   static uint8_t backgroundY[2];
+   static bool backgroundSaved[2];
+   static Pixels pixels[2];
 };
 
 #endif  // SEAHAVEN2E_SAVEDBACKGROUND_H_

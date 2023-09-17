@@ -6,61 +6,78 @@
 #include "SavedBackground.h"
 #include "Apple2Lib/VBLCounter.h"
 
+
+uint8_t SavedBackground::backgroundX[2];
+uint8_t SavedBackground::backgroundY[2];
+bool SavedBackground::backgroundSaved[2];
+SavedBackground::Pixels SavedBackground::pixels[2];
+
+static const a2::HGRPage backgroundHGR[2] = { a2::HGRPage::HGR(), a2::HGRPage::HGR2() };
+
+
 /// <summary>
 /// Saves a region from an HGR page to the SavedBackground object
 /// </summary>
-__attribute__((noinline)) void SavedBackground::SaveCardBackground(a2::HGRPage hgr, uint8_t x, uint8_t y)
+__attribute__((noinline)) void SavedBackground::SaveCardBackground(uint8_t page, uint8_t x, uint8_t y)
 {
    a2::VBLCounter::Update();
 
-   backgroundX = x;
-   backgroundY = y;
-   backgroundSaved = true;
-   backgroundHGR = hgr;
-
-   uint8_t *p = &pixels[0];
-   uint8_t *row;
-   for (uint8_t i=0; i < SavedBackground::Height; ++i)
-   {
-      row = hgr.GetByteAddress(y++, x);
-      p[0] = row[0];
-      p[1] = row[1];
-      p[2] = row[2];
-      p[3] = row[3];
-      p += 4;
-   }
+   backgroundX[page] = x;
+   backgroundY[page] = y;
+   backgroundSaved[page] = true;
+   CopyPixels(page, true);
 }
 
 
-__attribute__((noinline)) void SavedBackground::RestoreAndSave(a2::HGRPage hgr, uint8_t x, uint8_t y)
+__attribute__((noinline)) void SavedBackground::RestoreAndSave(uint8_t page, uint8_t x, uint8_t y)
 {
-   RestoreBackground();
-   SaveCardBackground(hgr, x, y);
+   RestoreBackground(page);
+   SaveCardBackground(page, x, y);
 }
 
 
 /// <summary>
 /// Restores a region of the HGR page from the SavedBackground object
 /// </summary>
-__attribute__((noinline)) void SavedBackground::RestoreBackground()
+__attribute__((noinline)) void SavedBackground::RestoreBackground(uint8_t page)
 {
-   if (!backgroundSaved)
+   if (!backgroundSaved[page])
       return;
-   backgroundSaved = true;
+   backgroundSaved[page] = true;
 
    a2::VBLCounter::Update();
-   uint8_t *p = &pixels[0];
-   uint8_t *row;
-   uint8_t y = backgroundY;
+   CopyPixels(page, false);
+}
+
+
+__attribute__((noinline)) uint8_t *SavedBackground::GetPixels(uint8_t page)
+{
+   return page==0 ? &pixels[0][0] : &pixels[1][0];
+}
+
+
+void SavedBackground::CopyPixels(uint8_t page, bool save)
+{
+   uint8_t *p = GetPixels(page);
+   uint8_t y = backgroundY[page];
 
    for (uint8_t i=0; i < SavedBackground::Height; ++i)
    {
-      row = backgroundHGR.GetByteAddress(y++, backgroundX);
-      row[0] = p[0];
-      row[1] = p[1];
-      row[2] = p[2];
-      row[3] = p[3];
+      uint8_t *row = backgroundHGR[page].GetByteAddress(y++, backgroundX[page]);
+      if (save)
+      {
+         p[0] = row[0];
+         p[1] = row[1];
+         p[2] = row[2];
+         p[3] = row[3];
+      }
+      else
+      {
+         row[0] = p[0];
+         row[1] = p[1];
+         row[2] = p[2];
+         row[3] = p[3];
+      }
       p += 4;
    }
 }
-

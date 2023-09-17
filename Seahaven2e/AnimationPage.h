@@ -38,10 +38,6 @@ private:
    // construction parameters
    uint8_t page;
 
-   // our saved backgrounds
-   static SavedBackground background1;
-   static SavedBackground background2;
-
    // our lookups
    static constexpr Drawing drawings[2] = { Drawing::Page1(), Drawing::Page2() };
 };

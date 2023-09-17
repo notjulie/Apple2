@@ -29,7 +29,7 @@ namespace a2 {
       /// <summary>
       /// Returns the address of the byte at the given offset
       /// </summary>
-      inline uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
+      uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
          return (uint8_t *)
             (
                (uint8_t)(HGRAddressCalculator::GetLowByte(row) + byteOffset) +
