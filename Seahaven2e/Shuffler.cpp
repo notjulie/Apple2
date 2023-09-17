@@ -26,7 +26,7 @@ __attribute__((noinline)) void Shuffler::Shuffle16(c6502::Int16 instruction)
 /// <summary>
 /// Shuffles our deck based on the eight bit instruction
 /// </summary>
-void Shuffler::Shuffle8(uint8_t instruction) {
+__attribute__((noinline)) void Shuffler::Shuffle8(uint8_t instruction) {
    Card deckCopy[52];
 
    Card *pDeck = &deck[0];
@@ -51,28 +51,63 @@ void Shuffler::Shuffle8(uint8_t instruction) {
          // x is our (25 - j) counter
          "DEX\n"
 
-      "loop:\n"
+      "1:\n"
          // deckCopy[index++] = deck[25 - j];
          "TXA\n"
          "TAY\n"
-         "LDA\t(%2),y\n"
+         "LDA\t(%3),y\n"
          "LDY\t%0\n"
-         "STA\t(%3),y\n"
+         "STA\t(%4),y\n"
          "INC\t%0\n"
 
          // deckCopy[index++] = deck[j + 26];
          "LDY\t%1\n"
-         "LDA\t(%2),y\n"
+         "LDA\t(%3),y\n"
          "LDY\t%0\n"
-         "STA\t(%3),y\n"
+         "STA\t(%4),y\n"
          "INC\t%0\n"
          "INC\t%1\n"
 
          // loop count
          "DEX\n"
-         "BPL\tloop\n"
-      : "=r"(index),"=r"(index2) //outputs
-      : "r"(pDeck),"r"(pDeckCopy),"r"(index),"r"(index2) //inputs
+         "BPL\t1b\n"
+
+         // load up our index and increment (index2) base on the low
+         // bit of the instruction
+         "LDA\t#17\n"
+         "LDX\t#19\n"
+         "LSR\t%2\n"
+         "BCS\t1f\n"
+         "LDA\t#23\n"
+         "LDX\t#7\n"
+      "1:\n"
+         "STX\t%1\n"
+
+         // index is our loop counter
+         "LDX\t#51\n"
+         "STX\t%0\n"
+
+      "3:\n"
+         "TAY\n"
+         "PHA\n"
+         "LDA\t(%4),y\n"
+         "LDY\t%0\n"
+         "STA\t(%3),y\n"
+         "PLA\n"
+
+         "CLC\n"
+         "ADC\t%1\n"
+         "CMP\t#52\n"
+         "BMI\t1f\n"
+         "SEC\n"
+         "SBC\t#52\n"
+      "1:\n"
+         "DEC\t%0\n"
+         "BPL\t3b\n"
+
+
+      : "=r"(index),"=r"(index2),"=r"(instruction) //outputs
+      : "r"(pDeck),"r"(pDeckCopy),"r"(index),"r"(index2),"r"(instruction) //inputs
       : "a","x","y" //clobbers
       );
 
@@ -82,7 +117,7 @@ void Shuffler::Shuffle8(uint8_t instruction) {
       {
          deckCopy[index++] = deck[25 - j];
          deckCopy[index++] = deck[j + 26];
-      }*/
+      }
 
       // shuffle from deckCopy to deck
       uint8_t increment;
@@ -104,7 +139,7 @@ void Shuffler::Shuffle8(uint8_t instruction) {
             index -= 52;
       }
 
-      instruction >>= 1;
+      instruction >>= 1;*/
    }
 }
 
