@@ -41,20 +41,21 @@ __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
 /// <summary>
 /// Gets the location of the first card that needs to move to the aces.
 /// </summary>
-CardLocation Game::GetCardToMoveToAce() const {
+CardLocation Game::GetCardToMoveToAce() const
+{
    // look at the towers
    for (int i=0; i < 4; ++i)
    {
-      if (CanMoveToAce(towers[i]))
-         return CardLocation::Tower(i);
+      CardLocation location = CardLocation::Tower(i);
+      if (CanMoveToAce(location))
+         return location;
    }
 
    // look at the columns
    for (int i=0; i<10; ++i)
    {
       CardLocation location = GetBottomColumnCardLocation(i);
-      Card card = GetCard(location);
-      if (CanMoveToAce(card))
+      if (CanMoveToAce(location))
          return location;
    }
 
@@ -271,8 +272,9 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t
 /// <summary>
 /// Returns true if the given card can be moved to an ace
 /// </summary>
-__attribute__((noinline)) bool Game::CanMoveToAce(Card card) const
+__attribute__((noinline)) bool Game::CanMoveToAce(CardLocation location) const
 {
+   Card card = GetCard(location);
    if (card.IsNull())
       return false;
    else
@@ -280,7 +282,10 @@ __attribute__((noinline)) bool Game::CanMoveToAce(Card card) const
 }
 
 
-CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
+/// <summary>
+/// Gets the location of the bottom card on the given column
+/// </summary>
+__attribute__((noinline)) CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
 {
    int8_t row = columnCounts[column];
    if (row > 0)
