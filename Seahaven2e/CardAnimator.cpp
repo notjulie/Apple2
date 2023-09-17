@@ -119,11 +119,8 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
    lastVBLCount = a2::VBLCounter::GetCounter().lo;
    cardToMove = card;
 
-   // draw the card at its original position, saving the background
-   UpdateCard();
-
-   // switch
-   SwapPages();
+   // initial update
+   UpdateAnimation();
 
    // set the state
    state = State::FreeAnimating;
@@ -170,11 +167,8 @@ void CardAnimator::StartAnimation(
    // draw the game without the card
    offscreenPage.EraseCard(start);
 
-   // draw the card at its original position, saving the background
-   UpdateCard();
-
-   // switch
-   SwapPages();
+   // initial update
+   UpdateAnimation();
 
    // draw the game without the card
    offscreenPage.EraseCard(start);
@@ -297,10 +291,8 @@ void CardAnimator::UpdateAnimation()
 
 __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
 {
-   // update the position, move the card
-   UpdatePosition();
-   UpdateCard();
-   SwapPages();
+   // update
+   UpdateAnimation();
 
    // if we're done...
    if (timeLeft == 0)
