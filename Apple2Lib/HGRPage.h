@@ -6,6 +6,7 @@
 #define HGRPAGE_H
 
 #include <stdint.h>
+#include <C6502/Int6502.h>
 #include "HGRAddressCalculator.h"
 
 namespace a2 {
@@ -22,7 +23,7 @@ namespace a2 {
       /// <summary>
       /// Returns the address of the given row
       /// </summary>
-      inline uint8_t *GetRowAddress(uint8_t row) const {
+      uint8_t *GetRowAddress(uint8_t row) const {
          return GetByteAddress(row, 0);
       }
 
@@ -30,11 +31,10 @@ namespace a2 {
       /// Returns the address of the byte at the given offset
       /// </summary>
       uint8_t *GetByteAddress(uint8_t row, uint8_t byteOffset) const {
-         return (uint8_t *)
-            (
-               (uint8_t)(HGRAddressCalculator::GetLowByte(row) + byteOffset) +
-               ((pageOffset + HGRAddressCalculator::GetHighByte(row)) << 8)
-            );
+         c6502::Int16 result;
+         result.lo = HGRAddressCalculator::GetLowByte(row) + byteOffset;
+         result.hi = pageOffset | HGRAddressCalculator::GetHighByte(row);
+         return (uint8_t *)result.i16;
       }
 
       void Fill(uint8_t value) const;

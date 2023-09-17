@@ -29,6 +29,7 @@ public:
    static void DrawCardBottom();
    static void DrawColumns();
    static void DrawTowers();
+   static void EraseCardImage();
 
 private:
    static void DrawSprite(

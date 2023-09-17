@@ -149,7 +149,8 @@ __attribute__((noinline)) void Drawing::DrawGame()
 
 
 /// <summary>
-/// Erases the location
+/// Erases the location; this also redraws the background if there's a card
+/// behind the card being erased
 /// </summary>
 void Drawing::EraseCard(CardLocation location)
 {
@@ -158,19 +159,10 @@ void Drawing::EraseCard(CardLocation location)
    DrawingPrimatives::cardY = location.GetY();
    DrawingPrimatives::page = hgr;
 
-   uint8_t y = DrawingPrimatives::cardY;
+   // turn the card to black
+   DrawingPrimatives::EraseCardImage();
 
-   // erase the card
-   for (int i=0; i<CardHeight; ++i)
-   {
-      uint8_t *row = hgr.GetByteAddress(y++, DrawingPrimatives::cardX);
-      row[0] = 0;
-      row[1] = 0;
-      row[2] = 0;
-      row[3] = 0;
-   }
-
-   // special cases
+   // special cases that have a background
    if (location.IsColumn() && location.GetRow()>0)
    {
       // if this was a column card and there was one above it we'll need to
@@ -302,6 +294,25 @@ void DrawingPrimatives::DrawTowers()
          DrawCard(card);
       }
       cardX += 4;
+   }
+}
+
+
+/// <summary>
+/// Paints the card's area black
+/// </summary>
+__attribute__((noinline)) void DrawingPrimatives::EraseCardImage()
+{
+   uint8_t y = DrawingPrimatives::cardY;
+
+   // erase the card
+   for (int i=0; i<CardHeight; ++i)
+   {
+      uint8_t *row = DrawingPrimatives::page.GetByteAddress(y++, DrawingPrimatives::cardX);
+      row[0] = 0;
+      row[1] = 0;
+      row[2] = 0;
+      row[3] = 0;
    }
 }
 
