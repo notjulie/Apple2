@@ -212,8 +212,10 @@ CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower) const
 /// <summary>
 /// Gets the destination column location for the card
 /// </summary>
-CardLocation Game::GetMoveToColumnDestination(CardLocation startLocation, Card card)
+CardLocation Game::GetMoveToColumnDestination(CardLocation startLocation)
 {
+   Card card = GetCard(startLocation);
+
    if (card.GetRank() == Rank::King)
    {
       if (startLocation.IsTower())

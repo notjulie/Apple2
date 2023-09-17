@@ -56,7 +56,7 @@ public:
    uint8_t GetSizeOfMoveToColumnGroup(CardLocation location) const;
    uint8_t GetNumberOfAvailableTowers() const;
 
-   CardLocation GetMoveToColumnDestination(CardLocation startLocation, Card card);
+   CardLocation GetMoveToColumnDestination(CardLocation startLocation);
    bool IsBottomOfColumn(CardLocation location) const;
 
 private:

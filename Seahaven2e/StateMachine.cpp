@@ -192,15 +192,11 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    UndoJournal::instance.StartNewUndo();
 
    // grab the cursor location
-   CardLocation location = Cursor::instance.GetLocation();
+   CardLocation startLocation = Cursor::instance.GetLocation();
    assert(!location.IsNull());
 
-   // get the card
-   Card card = game.GetCard(location);
-   assert(!card.IsNull());
-
    // locate the target location
-   CardLocation targetLocation = game.GetMoveToColumnDestination(location, card);
+   CardLocation targetLocation = game.GetMoveToColumnDestination(startLocation);
 
    // complain if we don't have a landing spot
    if (targetLocation.IsNull())
@@ -212,10 +208,10 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
    // if the start location is a column location then we need to carry
    // all the cards below the selected card along with it
    uint8_t numberOfCardsToMove = 1;
-   if (location.IsColumn())
-      numberOfCardsToMove = game.GetSizeOfMoveToColumnGroup(location);
+   if (startLocation.IsColumn())
+      numberOfCardsToMove = game.GetSizeOfMoveToColumnGroup(startLocation);
    if (numberOfCardsToMove > 0)
-      MoveMultipleCards(card, targetLocation, numberOfCardsToMove);
+      MoveMultipleCards(startLocation, targetLocation, numberOfCardsToMove);
 }
 
 
@@ -297,7 +293,7 @@ __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 /// Moves a group of cards that starts from the given card and extends down
 /// the column the given number of cards, adding them to the current undo group
 /// </summary>
-void StateMachine::MoveMultipleCards(Card card, CardLocation targetLocation, uint8_t count)
+void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation targetLocation, uint8_t count)
 {
    auto &game = PersistentState::instance.Game;
 
@@ -313,7 +309,7 @@ void StateMachine::MoveMultipleCards(Card card, CardLocation targetLocation, uin
       return;
 
    // get the start location
-   CardLocation startLocation = game.GetCardLocation(card);
+   Card card = game.GetCard(startLocation);
 
    // log it
    UndoJournal::instance.LogMove(
@@ -427,7 +423,7 @@ bool StateMachine::CheckAcesToMove() {
    Card card = game.GetCard(startLocation);
 
    // start the animation
-   MoveMultipleCards(card, CardLocation::AcePile(card.GetSuit()), 1);
+   MoveMultipleCards(startLocation, CardLocation::AcePile(card.GetSuit()), 1);
    return true;
 }
 
