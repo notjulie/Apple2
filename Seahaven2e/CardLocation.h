@@ -112,9 +112,9 @@ public:
    bool operator!=(CardLocation location) const;
 
 public:
-   static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, suit.GetOrdinal()); }
-   static CardLocation Column(uint8_t column, uint8_t index) { return CardLocation((Region)column, index); }
-   static inline CardLocation Tower(uint8_t index) { return CardLocation(Region::Tower, index); }
+   __attribute__((noinline)) static CardLocation AcePile(Suit suit) {  return CardLocation(Region::Ace, suit.GetOrdinal()); }
+   __attribute__((noinline)) static CardLocation Column(uint8_t column, uint8_t index) { return CardLocation((Region)column, index); }
+   __attribute__((noinline)) static inline CardLocation Tower(uint8_t index) { return CardLocation(Region::Tower, index); }
    static constexpr CardLocation Null() { return CardLocation(Region::Null, 0); }
 
 private:
