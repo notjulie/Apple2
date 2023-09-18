@@ -12,25 +12,12 @@
 #include "Shuffler.h"
 
 
-/// <summary>
-/// look up table for avoiding multiplying by 10
-/// </summary>
-static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
 
 
 __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
 {
-   Shuffler shuffler;
-   shuffler.Shuffle16(instruction);
-
-   c6502::memcpy8(&columnCards, shuffler.deck, sizeof(columnCards));
+   deck.Shuffle(instruction);
    c6502::memset8(&columnCounts[0], 5, 10);
-
-   towers[0] = Card::Null();
-   towers[1] = shuffler.deck[50];
-   towers[2] = shuffler.deck[51];
-   towers[3] = Card::Null();
-
    acePiles.Clear();
 }
 
@@ -68,7 +55,7 @@ Card Game::GetCard(CardLocation location) const
    if (location.IsAce()) {
       return acePiles.GetCard(location);
    } else if (location.IsTower()) {
-      return towers[location.GetTowerIndex()];
+      return deck.GetTower(location.GetTowerIndex());
    } else if (location.IsColumn()) {
       return GetColumnCard(location.GetColumn(), location.GetRow());
    } else {
@@ -88,7 +75,7 @@ CardLocation Game::GetCardLocation(Card card)
 
    // see if it's on a tower
    for (uint8_t i=0; i<4; ++i)
-      if (card == towers[i])
+      if (card == deck.GetTower(i))
          return CardLocation::Tower(i);
 
    // see if it's on column... for the sake of frugal use of RAM I'm
@@ -138,7 +125,7 @@ __attribute__((noinline)) void Game::SetCard(CardLocation location, Card card)
    }
    else if (location.IsTower())
    {
-      towers[location.GetTowerIndex()] = card;
+      deck.SetTower(location.GetTowerIndex(), card);
    }
    else if (location.IsColumn())
    {
@@ -158,7 +145,7 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
    }
    else if (location.IsTower())
    {
-      towers[location.GetTowerIndex()] = Card::Null();
+      deck.SetTower(location.GetTowerIndex(), Card::Null());
    }
    else if (location.IsColumn())
    {
@@ -246,11 +233,11 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t
    for (int i=0; i<4; ++i)
    {
       int8_t t = tower - i;
-      if (t>=0 && t<4 && towers[t].IsNull())
+      if (t>=0 && t<4 && deck.GetTower(t).IsNull())
          return CardLocation::Tower(t);
 
       t = tower + i;
-      if (t>=0 && t<4 && towers[t].IsNull())
+      if (t>=0 && t<4 && deck.GetTower(t).IsNull())
          return CardLocation::Tower(t);
    }
 
@@ -286,7 +273,7 @@ __attribute__((noinline)) CardLocation Game::GetBottomColumnCardLocation(uint8_t
 
 Card Game::GetTowerCard(uint8_t tower) {
   if (tower < 4)
-    return towers[tower];
+    return deck.GetTower(tower);
   else
     return Card::Null();
 }
@@ -306,10 +293,10 @@ Card Game::GetColumnCard(uint8_t column, uint8_t row) const
 
    // if it's in our array of cards return what's in the array
    if (row < 5)
-      return columnCards[column + rowOffset[row]];
+      return deck.GetColumnCard(column, row);
 
    // anything beyond the array is a card stacked on the last card of the array
-   return columnCards[40 + column] - (row - 4);
+   return deck.GetColumnCard(column, 4) - (row - 4);
 }
 
 /// <summary>
@@ -346,7 +333,7 @@ void Game::SetColumnCard(uint8_t column, uint8_t row, Card card)
    }
 
    // else just set it
-   columnCards[column + rowOffset[row]] = card;
+   deck.SetColumnCard(column, row, card);
    if (row >= columnCounts[column])
       columnCounts[column] = row + 1;
 }
@@ -373,12 +360,10 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
    // another column as a group
    if (count > 5)
       count = 5;
-   uint8_t index = column + rowOffset[row];
-   Card topCard = columnCards[index];
+   Card topCard = deck.GetColumnCard(column, row);
    while (++row < count)
    {
-      index += 10;
-      Card nextCard = columnCards[index];
+      Card nextCard = deck.GetColumnCard(column, row);
 
       if (nextCard.GetSuit() != topCard.GetSuit())
          goto return0;
@@ -401,7 +386,7 @@ uint8_t Game::GetNumberOfAvailableTowers() const
 {
    uint8_t towerCount = 0;
    for (int i=0; i<4; ++i)
-      if (towers[i].IsNull())
+      if (deck.GetTower(i).IsNull())
          ++towerCount;
 
 

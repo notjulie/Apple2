@@ -5,10 +5,13 @@
 #ifndef SEAHAVEN2E_GAME_H_
 #define SEAHAVEN2E_GAME_H_
 
+
 #include <C6502/Int6502.h>
 #include "Card.h"
 #include "CardLocation.h"
+#include "Deck.h"
 #include "SHAssert.h"
+
 
 template <typename T, uint8_t Length> class SafeArray {
 public:
@@ -60,7 +63,7 @@ public:
    void RemoveCard(CardLocation location);
 
    Rank GetAcePileRank(uint8_t suitOrdinal) const { return acePiles.GetRank(suitOrdinal); }
-   inline Card GetTower(uint8_t index) const { return towers[index]; }
+   Card GetTower(uint8_t index) const { return deck.GetTower(index); }
 
    CardLocation GetCardToMoveToAce() const;
    CardLocation GetBottomColumnCardLocation(uint8_t column) const;
@@ -87,9 +90,8 @@ private:
 
 private:
    AcePiles acePiles;
-   SafeArray<Card,4> towers;
    SafeArray<uint8_t,10> columnCounts;
-   SafeArray<Card,50> columnCards;
+   Deck deck;
 };
 
 #endif  // SEAHAVEN2E_GAME_H_

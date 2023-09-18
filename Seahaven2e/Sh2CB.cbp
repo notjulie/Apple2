@@ -124,6 +124,8 @@
 		<Unit filename="Column.h" />
 		<Unit filename="Cursor.cpp" />
 		<Unit filename="Cursor.h" />
+		<Unit filename="Deck.cpp" />
+		<Unit filename="Deck.h" />
 		<Unit filename="Drawing.cpp" />
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />
