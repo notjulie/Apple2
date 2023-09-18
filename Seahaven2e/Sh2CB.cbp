@@ -139,8 +139,6 @@
 		<Unit filename="SavedBackground.h" />
 		<Unit filename="Screensave.cpp" />
 		<Unit filename="Screensave.h" />
-		<Unit filename="Shuffler.cpp" />
-		<Unit filename="Shuffler.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
 		<Unit filename="StateMachine.cpp" />

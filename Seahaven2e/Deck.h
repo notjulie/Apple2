@@ -22,6 +22,9 @@ public:
    void Shuffle(c6502::Int16 instruction);
 
 private:
+   void Shuffle8(uint8_t instruction);
+
+private:
    // for convenience we include two extra cards to represent the two
    // towers that start out empty...
    Card cards[54];

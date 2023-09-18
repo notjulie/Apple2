@@ -9,9 +9,6 @@
 #include <C6502/Memory.h>
 #include "CardLocation.h"
 #include "SHAssert.h"
-#include "Shuffler.h"
-
-
 
 
 __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
