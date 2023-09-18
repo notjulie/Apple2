@@ -5,8 +5,6 @@
 #include "Sprites.h"
 
 c6502::Lookup16Bit<const CardTopSprite *, 13> Sprites::ranksLookup;
-c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::evenSuitsLookup;
-c6502::Lookup16Bit<const CardTopSprite *, 4> Sprites::oddSuitsLookup;
 
 // club
 const CardTopSprite clubsSprite = {
@@ -246,18 +244,28 @@ const CardTopSprite Sprites::cursorRight = {
 };
 
 
+
+
 __attribute__((noinline)) void Sprites::Initialize()
 {
    const CardTopSprite *rankSprite = &ranks[0];
    for (uint8_t i=0; i < 13; ++i)
       ranksLookup.Set(i, rankSprite++);
+}
 
-   evenSuitsLookup.Set(0, &clubsSprite);
-   oddSuitsLookup.Set(0, &clubsSprite);
-   evenSuitsLookup.Set(1, &diamondsSprite.even);
-   oddSuitsLookup.Set(1, &diamondsSprite.odd);
-   evenSuitsLookup.Set(2, &heartsSprite.even);
-   oddSuitsLookup.Set(2, &heartsSprite.odd);
-   evenSuitsLookup.Set(3, &spadesSprite);
-   oddSuitsLookup.Set(3, &spadesSprite);
+
+const CardTopSprite &Sprites::GetSuitSprite(Suit suit, bool oddColors)
+{
+   switch (suit.GetOrdinal())
+   {
+   case 0:
+      return clubsSprite;
+   case 1:
+      return diamondsSprite.GetSprite(oddColors);
+   case 2:
+      return heartsSprite.GetSprite(oddColors);
+   case 3:
+   default:
+      return spadesSprite;
+   }
 }

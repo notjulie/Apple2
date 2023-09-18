@@ -35,6 +35,10 @@ public:
    {
    }
 
+   const CardTopSprite &GetSprite(bool oddColors) const {
+      return oddColors ? odd : even;
+   }
+
 public:
    CardTopSprite even;
    CardTopSprite odd;
@@ -45,23 +49,17 @@ class Sprites {
  public:
   static void Initialize();
 
-  inline static const CardTopSprite &GetRankSprite(Rank rank) {
-    return *ranksLookup.Get((uint8_t)rank - 1);
-  }
-  inline static const CardTopSprite &GetSuitSprite(Suit suit, bool oddColors) {
-     if (oddColors)
-        return *oddSuitsLookup.Get(suit.GetOrdinal());
-     else
-        return *evenSuitsLookup.Get(suit.GetOrdinal());
-  }
+   inline static const CardTopSprite &GetRankSprite(Rank rank) {
+      return *ranksLookup.Get((uint8_t)rank - 1);
+   }
+
+   static const CardTopSprite &GetSuitSprite(Suit suit, bool oddColors);
 
  public:
   static const CardTopSprite ranks[13];
   static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
 
   static const CardTopDualSprite suits[4];
-  static c6502::Lookup16Bit<const CardTopSprite *, 4> evenSuitsLookup;
-  static c6502::Lookup16Bit<const CardTopSprite *, 4> oddSuitsLookup;
 
   static const CardTopSprite cursorLeft;
   static const CardTopSprite cursorRight;
