@@ -41,7 +41,7 @@ void Deck::SetTower(uint8_t index, Card card)
 }
 
 
-void Deck::Shuffle(c6502::Int16 instruction)
+__attribute__((noinline)) void Deck::Shuffle(c6502::Int16 instruction)
 {
    // create unshuffled deck
    for (uint8_t i=0; i < 52; ++i)
