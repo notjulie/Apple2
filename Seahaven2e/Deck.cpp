@@ -11,11 +11,24 @@ static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
 
 
 /// <summary>
-/// look up table for converting requested tower to card index
+/// A simple assembly lookup so that one op code can turn a tower
+/// index into an index into our cards array
 /// </summary>
-static constexpr uint8_t towerTransform[4] = { 52, 50, 51, 53 };
+static uint8_t GetTowerCardIndex(uint8_t towerIndex)
+{
+   static constexpr uint8_t towerCardIndices[5] = {52, 50, 51, 53};
 
+   uint8_t result;
 
+   asm volatile (
+      "LDY\t%[towerCardIndices],x\n"
+   : "=y"(result) //outputs
+   : "x"(towerIndex), [towerCardIndices] "i"(towerCardIndices) //inputs
+   : //clobbers
+   );
+
+   return result;
+}
 
 Card Deck::GetColumnCard(uint8_t column, uint8_t row) const
 {
@@ -25,7 +38,7 @@ Card Deck::GetColumnCard(uint8_t column, uint8_t row) const
 
 Card Deck::GetTower(uint8_t index) const
 {
-   return cards[towerTransform[index]];
+   return cards[GetTowerCardIndex(index)];
 }
 
 
@@ -37,7 +50,7 @@ void Deck::SetColumnCard(uint8_t column, uint8_t row, Card card)
 
 void Deck::SetTower(uint8_t index, Card card)
 {
-   cards[towerTransform[index]] = card;
+   cards[GetTowerCardIndex(index)] = card;
 }
 
 
