@@ -363,16 +363,13 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
       Card nextCard = deck.GetColumnCard(column, row);
 
       if (nextCard.GetSuit() != topCard.GetSuit())
-         goto return0;
+         return 0;
       if (topCard.GetRank() - nextCard.GetRank() != 1)
-         goto return0;
+         return 0;
       topCard = nextCard;
    }
 
    return result;
-
-return0:
-   return 0;
 }
 
 

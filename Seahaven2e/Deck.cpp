@@ -5,12 +5,6 @@
 
 
 /// <summary>
-/// look up table for avoiding multiplying by 10
-/// </summary>
-static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
-
-
-/// <summary>
 /// A simple assembly lookup so that one op code can turn a tower
 /// index into an index into our cards array
 /// </summary>
@@ -30,9 +24,28 @@ static uint8_t GetTowerCardIndex(uint8_t towerIndex)
    return result;
 }
 
+
+static uint8_t GetColumnCardIndex(uint8_t column, uint8_t row)
+{
+   static constexpr uint8_t rowOffset[5] = {0, 10, 20, 30, 40};
+
+   uint8_t result;
+
+   asm volatile (
+      "TYA\n"
+      "CLC\n"
+      "ADC\t%[rowOffset],x\n"
+   : "=a"(result) //outputs
+   : "x"(row), "y"(column), [rowOffset] "i"(rowOffset) //inputs
+   : //clobbers
+   );
+
+   return result;
+}
+
 Card Deck::GetColumnCard(uint8_t column, uint8_t row) const
 {
-   return cards[rowOffset[row] + column];
+   return cards[GetColumnCardIndex(column, row)];
 }
 
 
@@ -44,7 +57,7 @@ Card Deck::GetTower(uint8_t index) const
 
 void Deck::SetColumnCard(uint8_t column, uint8_t row, Card card)
 {
-   cards[rowOffset[row] + column] = card;
+   cards[GetColumnCardIndex(column, row)] = card;
 }
 
 
