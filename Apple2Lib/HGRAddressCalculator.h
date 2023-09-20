@@ -59,20 +59,17 @@ namespace a2 {
       /// Gets the low byte of the offset to the given row
       /// </summary>
       static uint8_t GetLowByte(uint8_t row) {
-         uint8_t result;
+         uint8_t result = row;
 
          // the compiler is not very smart about using the accumulator
          // to do shifting, so I give it a little help here
          // result = row>>3;
          asm volatile (
-            "PHA\n"
             "LSR\n"
             "LSR\n"
             "LSR\n"
-            "TAX\n"
-            "PLA\n"
-         : "=x"(result) // outputs : accumulator
-         : "a"(row) // input
+         : "+a"(result) // outputs
+         :  // input
          : // clobbers
          );
 
