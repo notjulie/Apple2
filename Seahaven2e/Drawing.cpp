@@ -237,7 +237,7 @@ void DrawingPrimatives::DrawCardTop(Card card)
 /// <summary>
 /// Draws all the columns
 /// </summary>
-void DrawingPrimatives::DrawColumns()
+__attribute__((noinline)) void DrawingPrimatives::DrawColumns()
 {
    auto &game = PersistentState::instance.Game;
 
@@ -279,7 +279,7 @@ void DrawingPrimatives::DrawSprite(
 /// <summary>
 /// Draws the towers
 /// </summary>
-void DrawingPrimatives::DrawTowers()
+__attribute__((noinline)) void DrawingPrimatives::DrawTowers()
 {
    auto &game = PersistentState::instance.Game;
 
