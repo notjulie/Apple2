@@ -11,7 +11,7 @@
 /// map the cards to those numbers is arbitrary as long as it's consistent
 /// with ToOrdinal()
 /// </summary>
-Card Card::FromOrdinal(uint8_t cardNumber)
+__attribute__((noinline)) Card Card::FromOrdinal(uint8_t cardNumber)
 {
    return Card(
       Suit::FromOrdinal(cardNumber & 3),

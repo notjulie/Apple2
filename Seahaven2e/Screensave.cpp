@@ -51,7 +51,7 @@ void Screensave::Service()
 /// </summary>
 void Screensave::ChooseRandomTarget()
 {
-   // we want a random number from 1 to 3 as an offset to the
+   /*// we want a random number from 1 to 3 as an offset to the
    // last edge
    uint8_t newEdge = (uint8_t)targetEdge + 1;
    uint8_t now = a2::VBLCounter::GetCounter().lo;
@@ -61,28 +61,40 @@ void Screensave::ChooseRandomTarget()
       ++newEdge;
 
    // set the target edge
-   targetEdge = (Edge)(newEdge & 3);
+   targetEdge = (Edge)(newEdge & 3);*/
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
+   asm volatile (
+      "INY\n"
+      "TYA\n"
+      "CPX\t#171\n"
+      "ADC\t#0\n"
+      "CPX\t#85\n"
+      "ADC\t#0\n"
+      "AND\t#3\n"
+
+   : "=a"(targetEdge) //outputs
+   : "x"(now),"y"(targetEdge) //inputs
+   : //clobbers
+   );
 
    // pick a random position on that edge
+   targetX = GetRandomX();
+   targetY = GetRandomY();
    switch (targetEdge)
    {
    case Edge::Left:
       targetX = 0;
-      targetY = GetRandomY();
       break;
 
    case Edge::Right:
       targetX = XMax;
-      targetY = GetRandomY();
       break;
 
    case Edge::Top:
-      targetX = GetRandomX();
       targetY = 0;
       break;
 
    case Edge::Bottom:
-      targetX = GetRandomX();
       targetY = YMax;
       break;
    }
@@ -116,10 +128,28 @@ uint8_t Screensave::GetRandomX()
    static_assert(XMax==36, "GetRandomX assumes a range of 0 to 36");
 
    uint8_t now = a2::VBLCounter::GetCounter().lo;
-   return
+   uint8_t result;
+   /*return
       (now >> 3) + // (0 to 31)
       ((now >> 1) & 3) + // 0 to 3
-      ((now & 1) << 1); // 0 to 2
+      ((now & 1) << 1); // 0 to 2*/
+   asm volatile (
+      "LSR\t%0\n"
+      "LDA\t#3\n"
+      "AND\t%0\n"
+      "BCC\t1f\n"
+      "ADC\t#1\n"
+   "1:\n"
+      "LSR\t%0\n"
+      "LSR\t%0\n"
+      "CLC\n"
+      "ADC\t%0\n"
+   : "+r"(now), "=a"(result)// outputs
+   : // inputs
+   : // clobbers
+   );
+
+   return result;
 }
 
 
@@ -129,10 +159,27 @@ uint8_t Screensave::GetRandomY()
    // that's the expectation
    static_assert(YMax==158, "GetRandomX assumes a range of 0 to 158");
 
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
+   /*uint8_t now = a2::VBLCounter::GetCounter().lo;
    return
       (now >> 1) + // (0 to 127)
-      (now >> 3); // 0 to 31
+      (now >> 3); // 0 to 31*/
+
+   uint8_t now = a2::VBLCounter::GetCounter().lo;
+   uint8_t result;
+
+   asm volatile (
+      "LSR\t%0\n"
+      "LDA\t%0\n"
+      "LSR\t%0\n"
+      "LSR\t%0\n"
+      "CLC\n"
+      "ADC\t%0\n"
+   : "+r"(now), "=a"(result)// outputs
+   : // inputs
+   : // clobbers
+   );
+
+   return result;
 }
 
 
