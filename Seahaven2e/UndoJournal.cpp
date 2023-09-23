@@ -22,8 +22,9 @@ UndoJournal UndoJournal::instance;
 
 void UndoJournal::Clear()
 {
+   assert(0);
    // clear the persist data
-   PersistentState::instance.UndoJournal = UndoJournalPersist();
+   PersistentState::instance.UndoJournal.Clear();
 }
 
 
@@ -154,6 +155,12 @@ UndoInstruction UndoJournal::GetNextUndo()
 //   class UndoJournalPersist
 // ======================================================
 // ======================================================
+
+void UndoJournalPersist::Clear()
+{
+   entryCount = 0;
+   currentPosition = 0;
+}
 
 /// <summary>
 /// Returns a look at the next move to undo without changing the journal's state;

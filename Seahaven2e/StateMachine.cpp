@@ -193,7 +193,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 
    // grab the cursor location
    CardLocation startLocation = Cursor::instance.GetLocation();
-   assert(!location.IsNull());
+   assert(!startLocation.IsNull());
 
    // locate the target location
    CardLocation targetLocation = game.GetMoveToColumnDestination(startLocation);

@@ -70,6 +70,7 @@ public:
    // on construction we only initialize what we require to be
    // initialized
    UndoJournalPersist() {}
+   void Clear();
 
 private:
    UndoInstruction PeekRedo() const;

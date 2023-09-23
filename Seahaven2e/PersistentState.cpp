@@ -110,6 +110,7 @@ void PersistentState::Reset()
    // deal the initial game
    this->gameSeed = 0;
    Game.Shuffle16(this->gameSeed);
+   UndoJournal.Clear();
 }
 
 
