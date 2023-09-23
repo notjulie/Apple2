@@ -62,11 +62,15 @@ void SavedBackground::CopyPixels(uint8_t page, bool save)
    from = GetPixels(page);
    to = from;
 
-   uint8_t y = backgroundY[page];
+   // set our context
+   a2::HGRContext::page = backgroundHGR[page];
+   a2::HGRContext::row = backgroundY[page];
+   a2::HGRContext::byteOffset = backgroundX[page];
 
+   // copy
    for (uint8_t i=0; i < SavedBackground::Height; ++i)
    {
-      uint8_t *row = backgroundHGR[page].GetByteAddress(y++, backgroundX[page]);
+      uint8_t *row = a2::HGRContext::GetByteAddress();
       if (save)
          from = row;
       else
@@ -74,5 +78,7 @@ void SavedBackground::CopyPixels(uint8_t page, bool save)
 
       for (int8_t j=3; j>=0; --j)
          *to++ = *from++;
+
+      a2::HGRContext::row++;
    }
 }

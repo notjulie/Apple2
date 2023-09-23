@@ -19,7 +19,6 @@ class DrawingPrimatives {
 public:
    // pseudo-parameters... they are global variables that are easier to
    // pass around than parameters
-   static a2::HGRPage page;
    static uint8_t cardX;
    static uint8_t cardY;
 
@@ -27,6 +26,7 @@ public:
    static void DrawCard(Card card);
    static void DrawCardTop(Card card);
    static void DrawCardBottom();
+   static void DrawCardTopWithShadow(Card card);
    static void DrawColumns();
    static void DrawTowers();
    static void EraseCardImage();

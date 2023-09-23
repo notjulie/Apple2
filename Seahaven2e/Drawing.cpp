@@ -38,18 +38,27 @@ void Drawing::XorSprite(
                 const CardTopSprite &sprite,
                 uint8_t rows,
                 uint8_t y,
-                uint8_t x) {
-  for (int i=0; i < rows; ++i) {
-    uint8_t *rowPointer = hgr.GetByteAddress(y++, x);
-    rowPointer[0] ^= sprite.rows[i].GetLeft();
-    rowPointer[1] ^= sprite.rows[i].GetRight();
-  }
+                uint8_t x)
+{
+   // set our context
+   a2::HGRContext::page = hgr;
+   a2::HGRContext::row = y;
+   a2::HGRContext::byteOffset = x;
+
+   // draw
+   for (int i=0; i < rows; ++i)
+   {
+      uint8_t *rowPointer = a2::HGRContext::GetByteAddress();
+      rowPointer[0] ^= sprite.rows[i].GetLeft();
+      rowPointer[1] ^= sprite.rows[i].GetRight();
+      a2::HGRContext::row++;
+   }
 }
 
 
 void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
 {
-   DrawingPrimatives::page = hgr;
+   a2::HGRContext::page = hgr;
    DrawingPrimatives::cardX = x;
    DrawingPrimatives::cardY = y;
    DrawingPrimatives::DrawCardTop(card);
@@ -72,41 +81,46 @@ void Drawing::ToggleCursor(CardLocation location)
 /// <summary>
 /// Draws a card with its shadow
 /// </summary>
-void Drawing::DrawCardWithShadow(Card card, uint8_t x, uint8_t y) {
-  // draw the shadow
-  for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
-    uint8_t *row = hgr.GetByteAddress(y++, x);
-    row[0] = 0;
-    row[1] = 0;
-    row[2] = 0;
-    row[3] = 0;
-  }
+void Drawing::DrawCardWithShadow(Card card, uint8_t x, uint8_t y)
+{
+   // set our context
+   a2::HGRContext::page = hgr;
+   a2::HGRContext::row = y;
+   a2::HGRContext::byteOffset = x;
 
-  // draw the card
-  DrawCard(card, x, y);
+   // draw the shadow
+   for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
+      uint8_t *row = a2::HGRContext::GetByteAddress();
+      row[0] = 0;
+      row[1] = 0;
+      row[2] = 0;
+      row[3] = 0;
+
+      a2::HGRContext::row++;
+   }
+
+   // draw the card
+   DrawCard(card, x, y);
 }
 
 
 /// <summary>
 /// Draws the top of a card with its shadow
 /// </summary>
-void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y) {
-  // draw the shadow
-  for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
-    uint8_t *row = hgr.GetByteAddress(y++, x);
-    row[0] = 0;
-    row[1] = 0;
-    row[2] = 0;
-    row[3] = 0;
-  }
+void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y)
+{
+   // set our context
+   a2::HGRContext::page = hgr;
+   DrawingPrimatives::cardX = x;
+   DrawingPrimatives::cardY = y + CardLocations::CardShadowHeight;
 
-  // draw the card top
-  DrawCardTop(card, x, y);
+   // draw
+   DrawingPrimatives::DrawCardTopWithShadow(card);
 }
 
 void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 {
-   DrawingPrimatives::page = hgr;
+   a2::HGRContext::page = hgr;
    DrawingPrimatives::cardX = x;
    DrawingPrimatives::cardY = y;
    DrawingPrimatives::DrawCard(card);
@@ -141,7 +155,7 @@ __attribute__((noinline)) void Drawing::DrawAcePiles()
 /// </summary>
 __attribute__((noinline)) void Drawing::DrawGame()
 {
-   DrawingPrimatives::page = hgr;
+   a2::HGRContext::page = hgr;
    DrawAcePiles();
    DrawingPrimatives::DrawColumns();
    DrawingPrimatives::DrawTowers();
@@ -155,9 +169,9 @@ __attribute__((noinline)) void Drawing::DrawGame()
 void Drawing::EraseCard(CardLocation location)
 {
    // get the coordinates
+   a2::HGRContext::page = hgr;
    DrawingPrimatives::cardX = location.GetX();
    DrawingPrimatives::cardY = location.GetY();
-   DrawingPrimatives::page = hgr;
 
    // turn the card to black
    DrawingPrimatives::EraseCardImage();
@@ -187,7 +201,6 @@ void Drawing::EraseCard(CardLocation location)
 // =====================================================================
 // =====================================================================
 
-a2::HGRPage DrawingPrimatives::page;
 uint8_t DrawingPrimatives::cardX;
 uint8_t DrawingPrimatives::cardY;
 
@@ -204,23 +217,29 @@ void DrawingPrimatives::DrawCard(Card card)
 
 void DrawingPrimatives::DrawCardBottom()
 {
-  uint8_t * row;
+   uint8_t * row;
 
-  uint8_t y = cardY + CardTopSpriteHeight;
+   // set our context... the page is already set
+   a2::HGRContext::row = cardY + CardTopSpriteHeight;
+   a2::HGRContext::byteOffset = cardX;
 
-  for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i) {
-    row = page.GetByteAddress(y++, cardX);
-    row[0] = 0xFF;
-    row[1] = 0xFF;
-    row[2] = 0xFF;
-    row[3] = 0xBF;
-  }
 
-  row = page.GetByteAddress(y++, cardX);
-  row[0] = 0xFE;
-  row[1] = 0xFF;
-  row[2] = 0xFF;
-  row[3] = 0x9F;
+   for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i)
+   {
+      row = a2::HGRContext::GetByteAddress();
+      row[0] = 0xFF;
+      row[1] = 0xFF;
+      row[2] = 0xFF;
+      row[3] = 0xBF;
+
+      a2::HGRContext::row++;
+   }
+
+   row = a2::HGRContext::GetByteAddress();
+   row[0] = 0xFE;
+   row[1] = 0xFF;
+   row[2] = 0xFF;
+   row[3] = 0x9F;
 }
 
 
@@ -233,6 +252,31 @@ void DrawingPrimatives::DrawCardTop(Card card)
       cardY, cardX + 2);
 }
 
+
+/// <summary>
+/// Draws the top of a card with its shadow
+/// </summary>
+void DrawingPrimatives::DrawCardTopWithShadow(Card card)
+{
+   // set our context... the page is already set
+   a2::HGRContext::row = cardY - CardLocations::CardShadowHeight;
+   a2::HGRContext::byteOffset = cardX;
+
+   // draw the shadow
+   for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i)
+   {
+      uint8_t *row = a2::HGRContext::GetByteAddress();
+      row[0] = 0;
+      row[1] = 0;
+      row[2] = 0;
+      row[3] = 0;
+
+      a2::HGRContext::row++;
+   }
+
+  // draw the card top
+  DrawCardTop(card);
+}
 
 /// <summary>
 /// Draws all the columns
@@ -266,12 +310,19 @@ void DrawingPrimatives::DrawSprite(
                 const CardTopSprite &sprite,
                 uint8_t rows,
                 uint8_t y,
-                uint8_t x) {
+                uint8_t x)
+{
+   // set our context... the page is already set
+   a2::HGRContext::row = y;
+   a2::HGRContext::byteOffset = x;
+
    for (int i=0; i < rows; ++i)
    {
-    uint8_t *rowPointer = page.GetByteAddress(y++, x);
-    rowPointer[0] = sprite.rows[i].GetLeft();
-    rowPointer[1] = sprite.rows[i].GetRight();
+      uint8_t *rowPointer = a2::HGRContext::GetByteAddress();
+      rowPointer[0] = sprite.rows[i].GetLeft();
+      rowPointer[1] = sprite.rows[i].GetRight();
+
+      a2::HGRContext::row++;
    }
 }
 
@@ -303,16 +354,20 @@ __attribute__((noinline)) void DrawingPrimatives::DrawTowers()
 /// </summary>
 __attribute__((noinline)) void DrawingPrimatives::EraseCardImage()
 {
-   uint8_t y = DrawingPrimatives::cardY;
+   // set our context... the page is already set
+   a2::HGRContext::row = DrawingPrimatives::cardY;
+   a2::HGRContext::byteOffset = DrawingPrimatives::cardX;
 
    // erase the card
    for (int i=0; i<CardHeight; ++i)
    {
-      uint8_t *row = DrawingPrimatives::page.GetByteAddress(y++, DrawingPrimatives::cardX);
+      uint8_t *row = a2::HGRContext::GetByteAddress();
       row[0] = 0;
       row[1] = 0;
       row[2] = 0;
       row[3] = 0;
+
+      a2::HGRContext::row++;
    }
 }
 

@@ -20,6 +20,18 @@ namespace a2 {
    public:
       HGRPage() {}
 
+      void Fill(uint8_t value) const;
+      void CopyTo(HGRPage target) const;
+      void Show() const;
+
+   public:
+      static constexpr HGRPage HGR() { return HGRPage(Page1MemoryPage); }
+      static constexpr HGRPage HGR2() { return HGRPage(Page2MemoryPage); }
+
+   private:
+      constexpr HGRPage(uint8_t memoryPage) : pageOffset(memoryPage) {}
+
+   private:
       /// <summary>
       /// Returns the address of the given row
       /// </summary>
@@ -37,27 +49,33 @@ namespace a2 {
          return (uint8_t *)result.i16;
       }
 
-      void Fill(uint8_t value) const;
-      void CopyTo(HGRPage target) const;
-      void Show() const;
-
-   public:
-      static constexpr HGRPage HGR() { return HGRPage(Page1MemoryPage); }
-      static constexpr HGRPage HGR2() { return HGRPage(Page2MemoryPage); }
-
-   private:
-      constexpr HGRPage(uint8_t memoryPage) : pageOffset(memoryPage) {}
-
    private:
       static constexpr uint8_t Page1MemoryPage = 0x20; // address 0x2000
       static constexpr uint8_t Page2MemoryPage = 0x40; // address 0x4000
 
       uint8_t pageOffset;
+
+      friend class HGRContext;
    };
 
    // the idea here is to be able to pass it around by reference, so
    // keep it small
    static_assert(sizeof(HGRPage) == 1, "HGRPage is supposed to be lean");
+
+
+   /// <summary>
+   /// A context for calculating HGR locations, using globals for
+   /// the inputs so that repeated calls don't have to repeatedly pass
+   /// parameters
+   /// </summary>
+   class HGRContext {
+   public:
+      static HGRPage page;
+      static uint8_t row;
+      static uint8_t byteOffset;
+
+      static uint8_t *GetByteAddress();
+   };
 }
 
 #endif // HGRROWTABLE_H
