@@ -85,22 +85,11 @@ void Drawing::DrawCardWithShadow(Card card, uint8_t x, uint8_t y)
 {
    // set our context
    a2::HGRContext::page = hgr;
-   a2::HGRContext::row = y;
-   a2::HGRContext::byteOffset = x;
+   DrawingPrimatives::cardX = x;
+   DrawingPrimatives::cardY = y + CardLocations::CardShadowHeight;
 
-   // draw the shadow
-   for (uint8_t i=0; i < CardLocations::CardShadowHeight; ++i) {
-      uint8_t *row = a2::HGRContext::GetByteAddress();
-      row[0] = 0;
-      row[1] = 0;
-      row[2] = 0;
-      row[3] = 0;
-
-      a2::HGRContext::row++;
-   }
-
-   // draw the card
-   DrawCard(card, x, y);
+   // draw
+   DrawingPrimatives::DrawCardWithShadow(card);
 }
 
 
@@ -276,6 +265,13 @@ void DrawingPrimatives::DrawCardTopWithShadow(Card card)
 
   // draw the card top
   DrawCardTop(card);
+}
+
+void DrawingPrimatives::DrawCardWithShadow(Card card)
+{
+   // draw
+   DrawCardTopWithShadow(card);
+   DrawCardBottom();
 }
 
 /// <summary>

@@ -27,6 +27,7 @@ public:
    static void DrawCardTop(Card card);
    static void DrawCardBottom();
    static void DrawCardTopWithShadow(Card card);
+   static void DrawCardWithShadow(Card card);
    static void DrawColumns();
    static void DrawTowers();
    static void EraseCardImage();
