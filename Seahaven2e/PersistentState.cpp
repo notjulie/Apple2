@@ -105,7 +105,7 @@ __attribute__((noinline)) uint16_t PersistentState::CalculateChecksum() const
 /// <summary>
 /// Clears the state to initial settings
 /// <summary>
-void PersistentState::Reset()
+__attribute__((noinline)) void PersistentState::Reset()
 {
    // deal the initial game
    this->gameSeed = 0;
