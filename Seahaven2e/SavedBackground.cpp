@@ -18,6 +18,7 @@ SavedBackground::Pixels SavedBackground::pixels[2];
 static const a2::HGRPage backgroundHGR[2] = { a2::HGRPage::HGR(), a2::HGRPage::HGR2() };
 
 
+static void SetDestByteAddressAndIncrementRow();
 static void SetSourceByteAddressAndIncrementRow();
 
 
@@ -83,27 +84,27 @@ void SavedBackground::SavePixels(uint8_t page)
 
 void SavedBackground::RestorePixels(uint8_t page)
 {
-   uint8_t *from, *to;
-   from = GetPixels(page);
-   to = from;
-
    // set our context
    a2::HGRContext::page = backgroundHGR[page];
    a2::HGRContext::row = backgroundY[page];
    a2::HGRContext::byteOffset = backgroundX[page];
 
-   // copy
-   for (uint8_t i=0; i < SavedBackground::Height; ++i)
-   {
-      to = a2::HGRContext::GetByteAddress();
+   // set the dest function and call it to load the first row
+   Memcpy2D::SetDestFunction(SetDestByteAddressAndIncrementRow);
+   SetDestByteAddressAndIncrementRow();
 
-      for (int8_t j=3; j>=0; --j)
-         *to++ = *from++;
+   Memcpy2D::SetSourcePointer(GetPixels(page));
+   Memcpy2D::SetSourceFunction(Memcpy2D::IncrementSource);
 
-      a2::HGRContext::row++;
-   }
+   Memcpy2D::Copy(SavedBackground::Height, 4);
 }
 
+
+static void SetDestByteAddressAndIncrementRow()
+{
+   Memcpy2D::SetDestPointer(a2::HGRContext::GetByteAddress());
+   a2::HGRContext::row++;
+}
 
 static void SetSourceByteAddressAndIncrementRow()
 {

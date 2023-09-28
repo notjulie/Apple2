@@ -119,6 +119,22 @@ namespace c6502 {
       );
    }
 
+   void Memcpy2D::IncrementSource()
+   {
+      asm volatile (
+         "LDA\tMCP2_cmpRowLength + 1\n"
+         "CLC\n"
+         "ADC\tMCP2_loadSource + 1\n"
+         "STA\tMCP2_loadSource + 1\n"
+         "BCC\t1f\n"
+         "INC\tMCP2_loadSource+2\n"
+      "1:\n"
+      : // outputs
+      : // inputs
+      : "a" // clobbers
+      );
+   }
+
 }
 
 

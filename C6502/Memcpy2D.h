@@ -19,6 +19,7 @@ namespace c6502 {
       static void SetSourcePointer(c6502::Int16 source);
 
       static void IncrementDest();
+      static void IncrementSource();
    };
 
 }
