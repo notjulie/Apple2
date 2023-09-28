@@ -22,7 +22,8 @@ public:
 
 private:
    static uint8_t *GetPixels(uint8_t page);
-   static void CopyPixels(uint8_t page, bool save);
+   static void SavePixels(uint8_t page);
+   static void RestorePixels(uint8_t page);
 
 private:
    static constexpr uint8_t Height = CardHeight + CardLocations::CardShadowHeight;

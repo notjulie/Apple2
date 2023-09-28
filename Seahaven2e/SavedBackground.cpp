@@ -4,7 +4,10 @@
 
 
 #include "SavedBackground.h"
-#include "Apple2Lib/VBLCounter.h"
+#include <C6502/Memcpy2D.h>
+#include <Apple2Lib/VBLCounter.h>
+
+using c6502::Memcpy2D;
 
 
 uint8_t SavedBackground::backgroundX[2];
@@ -13,6 +16,9 @@ bool SavedBackground::backgroundSaved[2];
 SavedBackground::Pixels SavedBackground::pixels[2];
 
 static const a2::HGRPage backgroundHGR[2] = { a2::HGRPage::HGR(), a2::HGRPage::HGR2() };
+
+
+static void SetSourceByteAddressAndIncrementRow();
 
 
 /// <summary>
@@ -25,7 +31,7 @@ __attribute__((noinline)) void SavedBackground::SaveCardBackground(uint8_t page,
    backgroundX[page] = x;
    backgroundY[page] = y;
    backgroundSaved[page] = true;
-   CopyPixels(page, true);
+   SavePixels(page);
 }
 
 
@@ -46,7 +52,7 @@ __attribute__((noinline)) void SavedBackground::RestoreBackground(uint8_t page)
    backgroundSaved[page] = true;
 
    a2::VBLCounter::Update();
-   CopyPixels(page, false);
+   RestorePixels(page);
 }
 
 
@@ -56,7 +62,26 @@ __attribute__((noinline)) uint8_t *SavedBackground::GetPixels(uint8_t page)
 }
 
 
-void SavedBackground::CopyPixels(uint8_t page, bool save)
+
+void SavedBackground::SavePixels(uint8_t page)
+{
+   // set our context
+   a2::HGRContext::page = backgroundHGR[page];
+   a2::HGRContext::row = backgroundY[page];
+   a2::HGRContext::byteOffset = backgroundX[page];
+
+   // set the source function and call it to load the first row
+   Memcpy2D::SetSourceFunction(SetSourceByteAddressAndIncrementRow);
+   SetSourceByteAddressAndIncrementRow();
+
+   Memcpy2D::SetDestPointer(GetPixels(page));
+   Memcpy2D::SetDestFunction(Memcpy2D::IncrementDest);
+
+   Memcpy2D::Copy(SavedBackground::Height, 4);
+}
+
+
+void SavedBackground::RestorePixels(uint8_t page)
 {
    uint8_t *from, *to;
    from = GetPixels(page);
@@ -70,15 +95,18 @@ void SavedBackground::CopyPixels(uint8_t page, bool save)
    // copy
    for (uint8_t i=0; i < SavedBackground::Height; ++i)
    {
-      uint8_t *row = a2::HGRContext::GetByteAddress();
-      if (save)
-         from = row;
-      else
-         to = row;
+      to = a2::HGRContext::GetByteAddress();
 
       for (int8_t j=3; j>=0; --j)
          *to++ = *from++;
 
       a2::HGRContext::row++;
    }
+}
+
+
+static void SetSourceByteAddressAndIncrementRow()
+{
+   Memcpy2D::SetSourcePointer(a2::HGRContext::GetByteAddress());
+   a2::HGRContext::row++;
 }
