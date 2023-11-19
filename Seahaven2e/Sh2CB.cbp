@@ -109,6 +109,7 @@
 		<Unit filename="../Apple2Lib/VBLCounter.h" />
 		<Unit filename="../C6502/Int6502.h" />
 		<Unit filename="../C6502/LookupTable.h" />
+		<Unit filename="../C6502/Memcpy2D.cpp" />
 		<Unit filename="../C6502/Memory.cpp" />
 		<Unit filename="../C6502/Memory.h" />
 		<Unit filename="AnimationPage.cpp" />
