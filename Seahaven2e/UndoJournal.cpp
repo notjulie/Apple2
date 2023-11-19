@@ -22,7 +22,6 @@ UndoJournal UndoJournal::instance;
 
 void UndoJournal::Clear()
 {
-   assert(0);
    // clear the persist data
    PersistentState::instance.UndoJournal.Clear();
 }
