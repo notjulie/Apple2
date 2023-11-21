@@ -122,6 +122,12 @@ __attribute__((noinline)) void StateMachine::ProcessInputKey(KeyCode key)
       CardAnimator::instance.SetGraphicsMode();
       break;
 
+#ifdef DEBUG
+   case (KeyCode)'3':
+      NewGameWithFullColumn();
+      break;
+#endif // DEBUG
+
    case KeyCode::Up:
       Cursor::instance.Up();
       break;
@@ -499,3 +505,20 @@ __attribute__((noinline)) void StateMachine::EnterScreensave()
    Screensave::instance.Start();
    state = State::Screensave;
 }
+
+#ifdef DEBUG
+void StateMachine::NewGameWithFullColumn()
+{
+   auto &game = PersistentState::instance.Game;
+
+   // clear the undo journal
+   UndoJournal::instance.Clear();
+
+   // shuffle
+   PersistentState::instance.NextGameSeed();
+   game.NewGameWithFullColumn();
+
+   // start the game
+   StartCurrentGame();
+}
+#endif // DEBUG

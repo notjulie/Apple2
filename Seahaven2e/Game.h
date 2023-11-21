@@ -82,6 +82,10 @@ public:
    CardLocation GetMoveToColumnDestination(CardLocation startLocation);
    bool IsBottomOfColumn(CardLocation location) const;
 
+#ifdef DEBUG
+   void NewGameWithFullColumn();
+#endif // DEBUG
+
 private:
    bool CanMoveToAce(CardLocation location) const;
    void RemoveColumnCard(uint8_t column, uint8_t row);

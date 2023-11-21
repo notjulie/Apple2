@@ -387,6 +387,23 @@ uint8_t Game::GetNumberOfAvailableTowers() const
    return towerCount;
 }
 
+#ifdef DEBUG
+
+void Game::NewGameWithFullColumn()
+{
+   acePiles.Clear();
+   deck.SetColumnCard(0, 0, Card(Suit::Clubs(), Rank::King));
+   deck.SetColumnCard(0, 1, Card(Suit::Clubs(), Rank::Queen));
+   deck.SetColumnCard(0, 2, Card(Suit::Clubs(), Rank::Jack));
+   deck.SetColumnCard(0, 3, Card(Suit::Clubs(), Rank::Ten));
+   deck.SetColumnCard(0, 4, Card(Suit::Diamonds(), Rank::King));
+   columnCounts[0] = 16;
+   for (int i=1; i<10; ++i)
+      columnCounts[i] = 0;
+}
+
+#endif // DEBUG
+
 
 // ========================================================================
 // ========================================================================

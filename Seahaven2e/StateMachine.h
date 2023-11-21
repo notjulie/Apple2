@@ -43,6 +43,11 @@ private:
    void MoveMultipleCards(CardLocation startLocation, CardLocation location, uint8_t count);
    void StartNextMoveToTower();
 
+   // debug
+#ifdef DEBUG
+   void NewGameWithFullColumn();
+#endif // DEBUG
+
 private:
    enum class State : uint8_t {
       Uninitialized,
