@@ -1,3 +1,6 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
 #include "Memcpy2D.h"
 
@@ -5,6 +8,10 @@
 namespace c6502 {
 
 
+   /// <summary>
+   /// Performs 2D mem-copy... prior to calling, the source and destination
+   /// rows must be set using the set-pointer or set-function methods
+   /// </summary>
    __attribute((noinline)) void Memcpy2D::Copy(uint8_t rows, uint8_t rowLength)
    {
       asm volatile (
@@ -52,6 +59,10 @@ namespace c6502 {
       );
    }
 
+
+   /// <summary>
+   /// sets the function that sets the destination row pointer for each row
+   /// </summary>
    void Memcpy2D::SetDestFunction(Function *function)
    {
       c6502::Int16 f;
@@ -67,6 +78,9 @@ namespace c6502 {
    }
 
 
+   /// <summary>
+   /// sets the function that sets the source row pointer for each row
+   /// </summary>
    void Memcpy2D::SetSourceFunction(Function *function)
    {
       c6502::Int16 f;
@@ -81,6 +95,10 @@ namespace c6502 {
       );
    }
 
+
+   /// <summary>
+   /// sets the source row pointer
+   /// </summary>
    void Memcpy2D::SetSourcePointer(Int16 p)
    {
       asm volatile (
@@ -92,6 +110,10 @@ namespace c6502 {
       );
    }
 
+
+   /// <summary>
+   /// sets the destination row pointer
+   /// </summary>
    void Memcpy2D::SetDestPointer(Int16 p)
    {
       asm volatile (
@@ -103,6 +125,11 @@ namespace c6502 {
       );
    }
 
+
+   /// <summary>
+   /// Increments the destination pointer by the width of one row; a useful
+   /// function to pass to SetDestFunction
+   /// </summary>
    void Memcpy2D::IncrementDest()
    {
       asm volatile (
@@ -119,6 +146,11 @@ namespace c6502 {
       );
    }
 
+
+   /// <summary>
+   /// Increments the source pointer by the width of one row; a useful
+   /// function to pass to SetSourceFunction
+   /// </summary>
    void Memcpy2D::IncrementSource()
    {
       asm volatile (

@@ -1,3 +1,6 @@
+// =============================================================
+//    Copyright 2023 Randy Rasmussen
+// =============================================================
 
 #ifndef MEMCPY2D_H
 #define MEMCPY2D_H
@@ -7,6 +10,9 @@
 
 namespace c6502 {
 
+   /// <summary>
+   /// Utilities for performing 2D memory-to-memory copy.
+   /// </summary>
    class Memcpy2D {
    public:
       typedef void Function();
