@@ -53,21 +53,4 @@ namespace a2 {
          a2::PAGE2OFF();
       }
    }
-
-
-   // =======================================================
-   // =======================================================
-   //      class HGRContext
-   // =======================================================
-   // =======================================================
-
-   HGRPage HGRContext::page;
-   uint8_t HGRContext::row;
-   uint8_t HGRContext::byteOffset;
-
-
-   __attribute__((noinline)) uint8_t *HGRContext::GetByteAddress()
-   {
-      return page.GetByteAddress(row, byteOffset);
-   }
 }

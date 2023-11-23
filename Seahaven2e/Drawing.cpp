@@ -5,7 +5,7 @@
 #include "Drawing.h"
 
 #include <stdint.h>
-#include <Apple2Lib/HGRPage.h>
+#include <Apple2Lib/HGRContext.h>
 #include <Apple2Lib/HGRWord.h>
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>

@@ -5,6 +5,7 @@
 
 #include "SavedBackground.h"
 #include <C6502/Memcpy2D.h>
+#include <Apple2Lib/HGRContext.h>
 #include <Apple2Lib/VBLCounter.h>
 
 using c6502::Memcpy2D;
