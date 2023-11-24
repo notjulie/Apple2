@@ -208,29 +208,27 @@ void DrawingPrimatives::DrawCard(Card card)
 
 void DrawingPrimatives::DrawCardBottom()
 {
-   uint8_t * row;
-
    // set our context... the page is already set
    a2::HGRContext::row = cardY + CardTopSpriteHeight;
    a2::HGRContext::byteOffset = cardX;
 
+   // clear Memcpy2D
+   Memcpy2D::Init();
 
-   for (uint8_t i=0; i < CardHeight - CardTopSpriteHeight - 1; ++i)
-   {
-      row = a2::HGRContext::GetByteAddress();
-      row[0] = 0xFF;
-      row[1] = 0xFF;
-      row[2] = 0xFF;
-      row[3] = 0xBF;
+   // set our source
+   static const uint8_t cardBody[4] = {0xFF, 0xFF, 0xFF, 0xBF};
+   Memcpy2D::SetSourcePointer(cardBody);
 
-      a2::HGRContext::row++;
-   }
+   // set our destination
+   a2::HGRContext::Set2DCopyDest();
 
-   row = a2::HGRContext::GetByteAddress();
-   row[0] = 0xFE;
-   row[1] = 0xFF;
-   row[2] = 0xFF;
-   row[3] = 0x9F;
+   // copy
+   Memcpy2D::Copy(CardHeight - CardTopSpriteHeight - 1, 4);
+
+   // do the last row
+   static const uint8_t cardTail[4] = {0xFE, 0xFF, 0xFF, 0x9F};
+   Memcpy2D::SetSourcePointer(cardTail);
+   Memcpy2D::Copy(1, 4);
 }
 
 

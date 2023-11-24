@@ -17,6 +17,7 @@ namespace c6502 {
    public:
       typedef void Function();
 
+      static void Init();
       static void Copy(uint8_t rows, uint8_t rowLength);
 
       static void SetDestFunction(Function *function);

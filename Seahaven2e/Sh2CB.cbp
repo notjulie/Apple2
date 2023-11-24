@@ -96,6 +96,8 @@
 		<Unit filename="../Apple2Lib/HGR.h" />
 		<Unit filename="../Apple2Lib/HGRAddressCalculator.cpp" />
 		<Unit filename="../Apple2Lib/HGRAddressCalculator.h" />
+		<Unit filename="../Apple2Lib/HGRContext.cpp" />
+		<Unit filename="../Apple2Lib/HGRContext.h" />
 		<Unit filename="../Apple2Lib/HGRPage.cpp" />
 		<Unit filename="../Apple2Lib/HGRPage.h" />
 		<Unit filename="../Apple2Lib/HGRWord.h" />
@@ -110,6 +112,7 @@
 		<Unit filename="../C6502/Int6502.h" />
 		<Unit filename="../C6502/LookupTable.h" />
 		<Unit filename="../C6502/Memcpy2D.cpp" />
+		<Unit filename="../C6502/Memcpy2D.h" />
 		<Unit filename="../C6502/Memory.cpp" />
 		<Unit filename="../C6502/Memory.h" />
 		<Unit filename="AnimationPage.cpp" />

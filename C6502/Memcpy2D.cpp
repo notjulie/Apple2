@@ -9,6 +9,30 @@ namespace c6502 {
 
 
    /// <summary>
+   /// Sets Memcpy2D to its initial state; call this before configuration functions
+   /// </summary>
+   __attribute((noinline)) void Memcpy2D::Init()
+   {
+      asm volatile (
+         "PHA\n"
+
+         // set our next row functions to nothing
+         "LDA\t#mos16lo(MCP2_RTS)\n"
+         "STA\tMCP2_getDestAddress+1\n"
+         "STA\tMCP2_getSourceAddress+1\n"
+
+         "LDA\t#mos16hi(MCP2_RTS)\n"
+         "STA\tMCP2_getDestAddress+2\n"
+         "STA\tMCP2_getSourceAddress+2\n"
+
+         "PLA\n"
+      : // outputs
+      : // inputs
+      : // clobbers
+      );
+   }
+
+   /// <summary>
    /// Performs 2D mem-copy... prior to calling, the source and destination
    /// rows must be set using the set-pointer or set-function methods
    /// </summary>
@@ -18,7 +42,7 @@ namespace c6502 {
          // store our params
          "STA\tMCP2_cmpRowLength + 1\n"
          "TXA\n"
-         "BEQ\t99f\n"
+         "BEQ\tMCP2_RTS\n"
          "STX\trows\n"
 
          // copy a row
@@ -36,7 +60,7 @@ namespace c6502 {
 
          // next row
          "DEC\trows\n"
-         "BEQ\t99f\n"
+         "BEQ\tMCP2_RTS\n"
 
          // we have a function we call to update the source address
       "MCP2_getSourceAddress:\n"
@@ -47,7 +71,7 @@ namespace c6502 {
          "JSR\t$1111\n"
          "JMP\tcopyRow\n"
 
-      "99:\n"
+      "MCP2_RTS:\n"
          "RTS\n"
 
       "rows:\n"
