@@ -27,6 +27,7 @@ static const uint8_t SIGNATURE2 = 0x24;
 static uint8_t HexDigit(uint8_t nybble);
 static void WriteHex4(uint8_t *dest, c6502::Int16 i16);
 
+static const uint8_t hexDigits[16] = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
 /// <summary>
 /// Loads the persistent state from a file
@@ -114,18 +115,19 @@ __attribute__((noinline)) void PersistentState::Reset()
 }
 
 
-__attribute__((noinline)) static uint8_t HexDigit(uint8_t nybble)
+static uint8_t HexDigit(uint8_t nybble)
 {
-   nybble &= 0x0F;
-   if (nybble >= 10)
-      return ('A' - 10) + nybble;
-   else
-      return '0' + nybble;
+   return hexDigits[nybble & 0x0F];
 }
 
-__attribute__((noinline)) void WriteHex4(uint8_t *dest, c6502::Int16 i16)
+static uint8_t HexHighDigit(uint8_t byte)
 {
-   dest[0] = HexDigit(i16.hi>>4);
+   return hexDigits[byte >> 4];
+}
+
+__attribute__((noinline)) static void WriteHex4(uint8_t *dest, c6502::Int16 i16)
+{
+   dest[0] = HexHighDigit(i16.hi>>4);
    dest[1] = HexDigit(i16.hi);
    dest[2] = HexDigit(i16.lo>>4);
    dest[3] = HexDigit(i16.lo);
