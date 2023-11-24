@@ -23,6 +23,10 @@ namespace a2 {
 
       static void Set2DCopyDest();
       static void Set2DCopySource();
+
+   private:
+      static void SetDestByteAddressAndIncrementRow();
+      static void SetSourceByteAddressAndIncrementRow();
    };
 }
 

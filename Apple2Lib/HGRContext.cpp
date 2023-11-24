@@ -4,11 +4,10 @@
 
 #include "HGRContext.h"
 #include <C6502/Memcpy2D.h>
+#include "HGR.h"
 
 using c6502::Memcpy2D;
 
-static void SetDestByteAddressAndIncrementRow();
-static void SetSourceByteAddressAndIncrementRow();
 
 
 namespace a2 {
@@ -32,27 +31,53 @@ namespace a2 {
       return page.GetByteAddress(row, byteOffset);
    }
 
+
+   /// <summary>
+   /// Set the destination of Memcpy2D to a rectangle origined at the current position
+   /// </summary>
    __attribute__((noinline)) void HGRContext::Set2DCopyDest()
    {
       Memcpy2D::SetDestFunction(SetDestByteAddressAndIncrementRow);
       SetDestByteAddressAndIncrementRow();
    }
 
+   /// <summary>
+   /// Set the source of Memcpy2D to a rectangle origined at the current position
+   /// </summary>
    __attribute__((noinline)) void HGRContext::Set2DCopySource()
    {
       Memcpy2D::SetSourceFunction(SetSourceByteAddressAndIncrementRow);
       SetSourceByteAddressAndIncrementRow();
    }
+
+   /// <summary>
+   /// Row-getter function for Memcpy2D
+   /// </summary>
+   void HGRContext::SetDestByteAddressAndIncrementRow()
+   {
+      if (a2::HGRContext::row >= a2::HGRHeight)
+      {
+         Memcpy2D::Terminate();
+         return;
+      }
+
+      Memcpy2D::SetDestPointer(a2::HGRContext::GetByteAddress());
+      a2::HGRContext::row++;
+   }
+
+   /// <summary>
+   /// Row-getter function for Memcpy2D
+   /// </summary>
+   void HGRContext::SetSourceByteAddressAndIncrementRow()
+   {
+      if (a2::HGRContext::row >= a2::HGRHeight)
+      {
+         Memcpy2D::Terminate();
+         return;
+      }
+
+      Memcpy2D::SetSourcePointer(a2::HGRContext::GetByteAddress());
+      a2::HGRContext::row++;
+   }
 }
 
-static void SetDestByteAddressAndIncrementRow()
-{
-   Memcpy2D::SetDestPointer(a2::HGRContext::GetByteAddress());
-   a2::HGRContext::row++;
-}
-
-static void SetSourceByteAddressAndIncrementRow()
-{
-   Memcpy2D::SetSourcePointer(a2::HGRContext::GetByteAddress());
-   a2::HGRContext::row++;
-}

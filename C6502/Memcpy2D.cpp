@@ -25,12 +25,38 @@ namespace c6502 {
          "STA\tMCP2_getDestAddress+2\n"
          "STA\tMCP2_getSourceAddress+2\n"
 
+         // clear the terminate flag
+         "LDA\t#0\n"
+         "STA\tMCP2_terminate\n"
+
          "PLA\n"
       : // outputs
       : // inputs
       : // clobbers
       );
    }
+
+
+   /// <summary>
+   /// Terminates a 2D memcpy; this can be called by a row function to terminate
+   /// a copy before the last row
+   /// </summary>
+   void Memcpy2D::Terminate()
+   {
+      asm volatile (
+         "PHA\n"
+
+         // set the terminate flag
+         "LDA\t#1\n"
+         "STA\tMCP2_terminate\n"
+
+         "PLA\n"
+      : // outputs
+      : // inputs
+      : // clobbers
+      );
+   }
+
 
    /// <summary>
    /// Performs 2D mem-copy... prior to calling, the source and destination
@@ -43,12 +69,24 @@ namespace c6502 {
          "STA\tMCP2_cmpRowLength + 1\n"
          "TXA\n"
          "BEQ\tMCP2_RTS\n"
-         "STX\trows\n"
+         "STX\tMCP2_rows\n"
+
+         // check our terminate flag
+         "LDA\tMCP2_terminate\n"
+         "BNE\t99f\n"
 
          // copy a row
       "copyRow:\n"
          "LDY\t#0\n"
          "JMP\tMCP2_cmpRowLength\n"
+
+      "MCP2_rows:\n"
+         "NOP\n"
+      "MCP2_terminate:\n"
+         "NOP\n"
+      "MCP2_RTS:\n"
+         "RTS\n"
+
       "MCP2_loadSource:\n"
          "LDA\t$1111,y\n"
       "MCP2_storeDest:\n"
@@ -59,8 +97,8 @@ namespace c6502 {
          "BNE\tMCP2_loadSource\n"
 
          // next row
-         "DEC\trows\n"
-         "BEQ\tMCP2_RTS\n"
+         "DEC\tMCP2_rows\n"
+         "BEQ\t99f\n"
 
          // we have a function we call to update the source address
       "MCP2_getSourceAddress:\n"
@@ -69,13 +107,12 @@ namespace c6502 {
          // we have a function we call to update the dest address
       "MCP2_getDestAddress:\n"
          "JSR\t$1111\n"
-         "JMP\tcopyRow\n"
 
-      "MCP2_RTS:\n"
-         "RTS\n"
+         // check our terminate flag
+         "LDA\tMCP2_terminate\n"
+         "BEQ\tcopyRow\n"
 
-      "rows:\n"
-         "NOP\n"
+      "99:\n"
 
       : // outputs
       : "x"(rows), "a"(rowLength) // inputs

@@ -311,6 +311,8 @@ void DrawingPrimatives::DrawSprite(
    // set our context... the page is already set
    a2::HGRContext::row = y;
    a2::HGRContext::byteOffset = x;
+
+   Memcpy2D::Init();
    a2::HGRContext::Set2DCopyDest();
 
    Memcpy2D::SetSourcePointer(&sprite);

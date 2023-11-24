@@ -19,6 +19,7 @@ namespace c6502 {
 
       static void Init();
       static void Copy(uint8_t rows, uint8_t rowLength);
+      static void Terminate();
 
       static void SetDestFunction(Function *function);
       static void SetDestPointer(c6502::Int16 dest);

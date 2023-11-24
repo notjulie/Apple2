@@ -70,6 +70,9 @@ void SavedBackground::SavePixels(uint8_t page)
    a2::HGRContext::row = backgroundY[page];
    a2::HGRContext::byteOffset = backgroundX[page];
 
+   // clear Memcpy2D
+   Memcpy2D::Init();
+
    // set the source function and call it to load the first row
    a2::HGRContext::Set2DCopySource();
 
@@ -86,6 +89,9 @@ void SavedBackground::RestorePixels(uint8_t page)
    a2::HGRContext::page = backgroundHGR[page];
    a2::HGRContext::row = backgroundY[page];
    a2::HGRContext::byteOffset = backgroundX[page];
+
+   // clear Memcpy2D
+   Memcpy2D::Init();
 
    // set the dest function and call it to load the first row
    a2::HGRContext::Set2DCopyDest();
