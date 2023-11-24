@@ -291,7 +291,7 @@ __attribute__((noinline)) void DrawingPrimatives::DrawColumns()
          for (uint8_t row=0; row < cardCount; ++row)
          {
             cardY = columnYLookup.Y(row);
-            DrawCardTop(game.GetColumnCard(column, row));
+            DrawCardTopWithShadow(game.GetColumnCard(column, row));
          }
 
          DrawCardBottom();

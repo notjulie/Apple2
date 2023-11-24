@@ -48,18 +48,25 @@ namespace CardLocations {
 /// that we don't have to multiply
 /// </summary>
 class ColumnYLookup {
- public:
-  constexpr ColumnYLookup() : y() {
-    for (int i=0; i < CardLocations::MaxColumnCards; ++i)
-      y[i] =
-        CardLocations::ColumnsTop +
-        i * CardLocations::DistanceBetweenColumnCards;
-  }
+public:
+   constexpr ColumnYLookup() : y() {
+      // start with them evenly spaced
+      for (int i=0; i < CardLocations::MaxColumnCards; ++i)
+         y[i] =
+            CardLocations::ColumnsTop +
+            i * CardLocations::DistanceBetweenColumnCards;
 
-  inline uint8_t Y(uint8_t index) const { return y[index]; }
+      // scrunch some of the bottom rows so that the last row is visible
+      const int rowsToScrunch = 6;
+      for (int i=0; i<rowsToScrunch; ++i) {
+         y[CardLocations::MaxColumnCards - 1 - i] -= (rowsToScrunch - i);
+      }
+   }
 
- private:
-  uint8_t y[CardLocations::MaxColumnCards];
+   inline uint8_t Y(uint8_t index) const { return y[index]; }
+
+private:
+   uint8_t y[CardLocations::MaxColumnCards];
 };
 
 constexpr ColumnYLookup columnYLookup;
