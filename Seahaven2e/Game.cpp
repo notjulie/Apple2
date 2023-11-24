@@ -310,7 +310,7 @@ void Game::RemoveColumnCard(uint8_t column, uint8_t row)
 /// <summary>
 /// Sets the card at the given location
 /// </summary>
-void Game::SetColumnCard(uint8_t column, uint8_t row, Card card)
+__attribute((noinline)) void Game::SetColumnCard(uint8_t column, uint8_t row, Card card)
 {
    // the card can't be null... that's what remove card is for
    assert(!card.IsNull());
