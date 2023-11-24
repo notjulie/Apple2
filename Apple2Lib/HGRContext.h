@@ -20,6 +20,9 @@ namespace a2 {
       static uint8_t byteOffset;
 
       static uint8_t *GetByteAddress();
+
+      static void Set2DCopyDest();
+      static void Set2DCopySource();
    };
 }
 
