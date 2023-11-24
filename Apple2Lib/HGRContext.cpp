@@ -24,6 +24,9 @@ namespace a2 {
    uint8_t HGRContext::byteOffset;
 
 
+   /// <summary>
+   /// Gets the address of the current location
+   /// </summary>
    __attribute__((noinline)) uint8_t *HGRContext::GetByteAddress()
    {
       return page.GetByteAddress(row, byteOffset);

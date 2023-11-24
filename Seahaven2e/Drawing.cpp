@@ -350,16 +350,17 @@ __attribute__((noinline)) void DrawingPrimatives::EraseCardImage()
    a2::HGRContext::row = DrawingPrimatives::cardY;
    a2::HGRContext::byteOffset = DrawingPrimatives::cardX;
 
-   // erase the card
-   for (int i=0; i<CardHeight; ++i)
-   {
-      uint8_t *row = a2::HGRContext::GetByteAddress();
-      row[0] = 0;
-      row[1] = 0;
-      row[2] = 0;
-      row[3] = 0;
+   // clear Memcpy2D
+   Memcpy2D::Init();
 
-      a2::HGRContext::row++;
-   }
+   // set our source
+   static const uint8_t black[4] = {0,0,0,0};
+   Memcpy2D::SetSourcePointer(black);
+
+   // set our destination
+   a2::HGRContext::Set2DCopyDest();
+
+   // copy
+   Memcpy2D::Copy(CardHeight, 4);
 }
 
