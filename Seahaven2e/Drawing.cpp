@@ -11,12 +11,14 @@
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include <C6502/Memory.h>
+#include <C6502/Memcpy2D.h>
 
 #include "PersistentState.h"
 #include "Rank.h"
 #include "Suit.h"
 #include "Sprites.h"
 
+using c6502::Memcpy2D;
 
 static const uint8_t TowersLeft = 12;
 
@@ -311,15 +313,11 @@ void DrawingPrimatives::DrawSprite(
    // set our context... the page is already set
    a2::HGRContext::row = y;
    a2::HGRContext::byteOffset = x;
+   a2::HGRContext::Set2DCopyDest();
 
-   for (int i=0; i < rows; ++i)
-   {
-      uint8_t *rowPointer = a2::HGRContext::GetByteAddress();
-      rowPointer[0] = sprite.rows[i].GetLeft();
-      rowPointer[1] = sprite.rows[i].GetRight();
-
-      a2::HGRContext::row++;
-   }
+   Memcpy2D::SetSourcePointer(&sprite);
+   Memcpy2D::SetSourceFunction(c6502::Memcpy2D::IncrementSource);
+   Memcpy2D::Copy(rows, 2);
 }
 
 

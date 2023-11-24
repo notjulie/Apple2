@@ -29,13 +29,13 @@ namespace a2 {
       return page.GetByteAddress(row, byteOffset);
    }
 
-   void HGRContext::Set2DCopyDest()
+   __attribute__((noinline)) void HGRContext::Set2DCopyDest()
    {
       Memcpy2D::SetDestFunction(SetDestByteAddressAndIncrementRow);
       SetDestByteAddressAndIncrementRow();
    }
 
-   void HGRContext::Set2DCopySource()
+   __attribute__((noinline)) void HGRContext::Set2DCopySource()
    {
       Memcpy2D::SetSourceFunction(SetSourceByteAddressAndIncrementRow);
       SetSourceByteAddressAndIncrementRow();

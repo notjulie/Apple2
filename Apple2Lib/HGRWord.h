@@ -85,6 +85,7 @@ namespace a2 {
    private:
       uint8_t left, right;
    };
+   static_assert(sizeof(HGRWord) == 2);
 }
 
 #endif // HGRWORD_H
