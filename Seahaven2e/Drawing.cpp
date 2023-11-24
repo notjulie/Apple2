@@ -58,15 +58,6 @@ void Drawing::XorSprite(
 }
 
 
-void Drawing::DrawCardTop(Card card, uint8_t x, uint8_t y)
-{
-   a2::HGRContext::page = hgr;
-   DrawingPrimatives::cardX = x;
-   DrawingPrimatives::cardY = y;
-   DrawingPrimatives::DrawCardTop(card);
-}
-
-
 /// <summary>
 /// Toggles the state of the cursor drawn at the current location
 /// </summary>
