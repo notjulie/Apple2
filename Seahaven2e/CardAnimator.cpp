@@ -133,26 +133,27 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
 ///   Starts an animation of a card from one position to another
 /// </summary>
 void CardAnimator::StartAnimation(
-      Card card,
-      CardLocation end)
+      Card _card,
+      CardLocation _end)
 {
    auto &game = PersistentState::instance.Game;
 
    // save parameters
-   endLocation = end;
+   endLocation = _end;
+   cardToMove = _card;
 
    // step 0: hide the cursor
    Cursor::instance.Hide();
 
    // step 1: remove the card from its current position
-   CardLocation start = game.GetCardLocation(card);
+   CardLocation start = game.GetCardLocation(cardToMove);
    game.RemoveCard(start);
 
    // set the bounds of the animation
    currentPosition[(uint8_t)Coordinate::X] = start.GetX();
    currentPosition[(uint8_t)Coordinate::Y] = start.GetY() - CardLocations::CardShadowHeight;
-   targetPosition[(uint8_t)Coordinate::X] = end.GetX();
-   targetPosition[(uint8_t)Coordinate::Y] = end.GetY() - CardLocations::CardShadowHeight;
+   targetPosition[(uint8_t)Coordinate::X] = endLocation.GetX();
+   targetPosition[(uint8_t)Coordinate::Y] = endLocation.GetY() - CardLocations::CardShadowHeight;
    StartPositionTracker((uint8_t)Coordinate::X);
    StartPositionTracker((uint8_t)Coordinate::Y);
 
@@ -162,7 +163,6 @@ void CardAnimator::StartAnimation(
 
    timeLeft = duration;
    lastVBLCount = a2::VBLCounter::GetCounter().lo;
-   cardToMove = card;
 
    // draw the game without the card
    offscreenPage.EraseCard(start);
