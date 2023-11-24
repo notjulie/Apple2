@@ -376,7 +376,7 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
 /// <summary>
 /// Get the number of available towers
 /// </summary>
-uint8_t Game::GetNumberOfAvailableTowers() const
+__attribute((noinline)) uint8_t Game::GetNumberOfAvailableTowers() const
 {
    uint8_t towerCount = 0;
    for (int i=0; i<4; ++i)
