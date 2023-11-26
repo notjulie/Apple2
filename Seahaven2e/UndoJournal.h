@@ -79,7 +79,7 @@ private:
    void RemoveFromHead();
 
 private:
-   static constexpr uint8_t JournalMaxLength = 5;
+   static constexpr uint8_t JournalMaxLength = 150;
 
 private:
    bool movesHaveBeenDeleted;
