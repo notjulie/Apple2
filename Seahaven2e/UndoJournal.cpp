@@ -43,10 +43,27 @@ __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation star
    // at the current position
    data.entryCount = data.currentPosition;
 
-   // TODO: if the journal fills up (because some doofus keeps moving
+   // if the journal fills up (because some doofus keeps moving
    // cards back and forth) we'll have to delete items off the front of
    // the journal
-   assert(data.entryCount < UndoJournalPersist::JournalMaxLength);
+   if (data.entryCount >= UndoJournalPersist::JournalMaxLength)
+   {
+      // I don't care about optimizing this case... anyone that hits this condition
+      // deserves to be punished.  So all we do is remove an element from the front
+      // until we're empty (likely impossible) or have deleted an entire group
+      UndoGroupID groupToDelete = data.cards[0].GetGroupID();
+      while (data.entryCount>0 && data.cards[0].GetGroupID()==groupToDelete)
+      {
+         for (int i=1; i<data.entryCount; ++i)
+         {
+            data.cards[i-1] = data.cards[i];
+            data.locations[i-1] = data.locations[i];
+         }
+         --data.entryCount;
+      }
+
+      data.currentPosition = data.entryCount;
+   }
 
    // append
    CardAndGroup cardAndGroup;
