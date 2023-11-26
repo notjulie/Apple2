@@ -75,11 +75,14 @@ public:
 private:
    UndoInstruction PeekRedo() const;
    UndoInstruction PeekUndo() const;
+   void Restart();
+   void RemoveFromHead();
 
 private:
-   static constexpr uint8_t JournalMaxLength = 150;
+   static constexpr uint8_t JournalMaxLength = 5;
 
 private:
+   bool movesHaveBeenDeleted;
    uint8_t entryCount = 0;
    uint8_t currentPosition = 0;
    CardAndGroup cards[JournalMaxLength];

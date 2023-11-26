@@ -48,21 +48,7 @@ __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation star
    // the journal
    if (data.entryCount >= UndoJournalPersist::JournalMaxLength)
    {
-      // I don't care about optimizing this case... anyone that hits this condition
-      // deserves to be punished.  So all we do is remove an element from the front
-      // until we're empty (likely impossible) or have deleted an entire group
-      UndoGroupID groupToDelete = data.cards[0].GetGroupID();
-      while (data.entryCount>0 && data.cards[0].GetGroupID()==groupToDelete)
-      {
-         for (int i=1; i<data.entryCount; ++i)
-         {
-            data.cards[i-1] = data.cards[i];
-            data.locations[i-1] = data.locations[i];
-         }
-         --data.entryCount;
-      }
-
-      data.currentPosition = data.entryCount;
+      data.RemoveFromHead();
    }
 
    // append
@@ -81,9 +67,12 @@ __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation star
 }
 
 
+/// <summary>
+/// Puts our redo pointer to the beginning of the journal
+/// </summary>
 void UndoJournal::Restart()
 {
-   PersistentState::instance.UndoJournal.currentPosition = 0;
+   PersistentState::instance.UndoJournal.Restart();
 }
 
 
@@ -172,10 +161,14 @@ UndoInstruction UndoJournal::GetNextUndo()
 // ======================================================
 // ======================================================
 
+/// <summary>
+/// Sets the journal to a clean, empty state
+/// </summary>
 void UndoJournalPersist::Clear()
 {
    entryCount = 0;
    currentPosition = 0;
+   movesHaveBeenDeleted = false;
 }
 
 /// <summary>
@@ -232,6 +225,46 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
    result.location = CardLocation::FromUint8(locations[currentPosition] ^ currentLocation.AsUint8());
    return result;
 }
+
+
+/// <summary>
+/// Removes a group from the beginning of the journal; this is called when we
+/// need to prevent an overflow because some player is way too indecisive
+/// </summary>
+void UndoJournalPersist::RemoveFromHead()
+{
+   // I don't care about optimizing this case... anyone that hits this condition
+   // deserves to be punished.  So all we do is remove an element from the front
+   // until we're empty (likely impossible) or have deleted an entire group
+   UndoGroupID groupToDelete = cards[0].GetGroupID();
+   while (entryCount>0 && cards[0].GetGroupID()==groupToDelete)
+   {
+      for (int i=1; i<entryCount; ++i)
+      {
+         cards[i-1] = cards[i];
+         locations[i-1] = locations[i];
+      }
+      --entryCount;
+   }
+
+   currentPosition = entryCount;
+   movesHaveBeenDeleted = true;
+}
+
+/// <summary>
+/// Resets our position to the beginning of the game
+/// </summary>
+void UndoJournalPersist::Restart()
+{
+   currentPosition = 0;
+
+   // if we had to delete moves from the beginning of the journal to
+   // prevent overflow, we have to throw away the journal since we no
+   // longer have the moves to redo from the beginning of the game
+   if (movesHaveBeenDeleted)
+      Clear();
+}
+
 
 
 // ======================================================
