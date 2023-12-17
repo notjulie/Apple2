@@ -25,12 +25,15 @@ public:
    bool IsNull() const { return (cardNumber & 0x0F) == 0; }
    uint8_t ToOrdinal() const;
 
+   uint8_t GetCardNumber() const { return cardNumber; }
+
    bool operator==(Card c) const { return cardNumber == c.cardNumber; }
 
    void Print() const;
 
 public:
    static Card FromOrdinal(uint8_t ordinal);
+   static Card FromCardNumber(uint8_t _cardNumber);
    static constexpr Card Null() { return Card(Suit::Clubs(), Rank::Null); }
 
 private:

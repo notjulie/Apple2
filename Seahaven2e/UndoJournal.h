@@ -25,20 +25,20 @@ enum class UndoGroupID : int8_t {
 
 
 /// <summary>
-/// Bitfield packing of card ordinal and group ID into a single byte
+/// Bitfield packing of card number and group ID into a single byte
 /// </summary>
 class CardAndGroup {
 public:
    CardAndGroup() {}
 
-   Card GetCard() const { return Card::FromOrdinal(cardOrdinal); }
+   Card GetCard() const { return Card::FromCardNumber(cardNumber); }
    UndoGroupID GetGroupID() const { return (UndoGroupID)group; }
 
-   void SetCard(Card card) { cardOrdinal = card.ToOrdinal(); }
+   void SetCard(Card card) { cardNumber = card.GetCardNumber(); }
    void SetGroup(UndoGroupID groupID) { group = (uint8_t)groupID; }
 
 private:
-   uint8_t cardOrdinal : 6;
+   uint8_t cardNumber : 6;
    uint8_t group : 2;
 };
 static_assert(sizeof(CardAndGroup) == 1, "CardAndGroup is too large");
