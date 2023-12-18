@@ -15,7 +15,7 @@ void TextScreenManager::Initialize()
    textPage = a2::TextPage::TEXT2();
 }
 
-void TextScreenManager::ShowSplash()
+void TextScreenManager::ShowScreen(TextScreenID screen)
 {
    textPage.Clear();
    textPage.Show();

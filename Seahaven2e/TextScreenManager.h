@@ -7,10 +7,14 @@
 
 #include <Apple2Lib/TextPage.h>
 
+enum class TextScreenID {
+   Splash
+};
+
 class TextScreenManager {
 public:
    void Initialize();
-   void ShowSplash();
+   void ShowScreen(TextScreenID screen);
 
 public:
    static TextScreenManager instance;

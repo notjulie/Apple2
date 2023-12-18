@@ -24,7 +24,7 @@ extern "C" int main()
 {
    // show the splash screen while we load the PersistentState
    TextScreenManager::instance.Initialize();
-   TextScreenManager::instance.ShowSplash();
+   TextScreenManager::instance.ShowScreen(TextScreenID::Splash);
 
    // load the persistent state; note that this does a DOS call and
    // needs to be done here rather than higher in the call stack in case
