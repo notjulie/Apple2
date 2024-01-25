@@ -40,7 +40,9 @@ void Screensave::Start()
 
    // I'm assuming that 0-127 is a valid range for the Y coordinate
    static_assert(YMax >= 127);
-   StartNextAnimation(0, a2::VBLCounter::GetCounter().lo >> 1);
+   startX = 0;
+   startY = a2::VBLCounter::GetCounter().lo >> 1;
+   StartNextAnimation();
 }
 
 /// <summary>
@@ -54,14 +56,16 @@ void Screensave::Service()
    // if the last animation completed start a new one
    if (!CardAnimator::instance.IsAnimating())
    {
-      StartNextAnimation(targetX, targetY);
+      startX = targetX;
+      startY = targetY;
+      StartNextAnimation();
    }
 }
 
 /// <summary>
 /// Sets our target position to a random spot based on our various rules
 /// </summary>
-void Screensave::ChooseRandomTarget(uint8_t startX, uint8_t startY)
+void Screensave::ChooseRandomTarget()
 {
    // grab the VBLCounter as a seed for our silliness
    uint8_t seed = a2::VBLCounter::GetCounter().lo;
@@ -182,10 +186,10 @@ __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
 /// Starts an animation from the given location to a randomly chosen
 /// destination.
 /// </summary>
-void Screensave::StartNextAnimation(uint8_t startX, uint8_t startY)
+void Screensave::StartNextAnimation()
 {
    // set the end position
-   ChooseRandomTarget(startX, startY);
+   ChooseRandomTarget();
 
    // calculate a duration based on the distance
    uint8_t dx, dy;

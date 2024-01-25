@@ -8,6 +8,10 @@
 #include <stdint.h>
 #include "Card.h"
 
+
+/// <summary>
+/// State machine that handles our screensave mode
+/// </summary>
 class Screensave {
 public:
    void Start();
@@ -17,11 +21,12 @@ public:
    static Screensave instance;
 
 private:
-   void ChooseRandomTarget(uint8_t startX, uint8_t startY);
-   void StartNextAnimation(uint8_t startX, uint8_t startY);
+   void ChooseRandomTarget();
+   void StartNextAnimation();
 
 private:
    Card cardInMotion;
+   uint8_t startX, startY;
    uint8_t targetX;
    uint8_t targetY;
 };
