@@ -4,19 +4,25 @@
 
 #include "Screensave.h"
 
-#include <Apple2Lib/DOS.h>
 #include <Apple2Lib/HGR.h>
-#include <Apple2Lib/MMIO.h>
-#include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
 #include "CardAnimator.h"
 #include "SHAssert.h"
 
 
-Screensave Screensave::instance;
-
+/// <summary>
+/// constants
+/// </summary>
 static constexpr uint8_t XMax = a2::HGRByteWidth - CardLocations::CardByteWidth;
 static constexpr uint8_t YMax = a2::HGRHeight - (CardHeight + CardLocations::CardShadowHeight);
+
+/// <summary>
+/// Our global instance
+/// </summary>
+Screensave Screensave::instance;
+
+__attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b);
+
 
 /// <summary>
 /// Starts screensaver
@@ -26,160 +32,118 @@ void Screensave::Start()
    // erase the screen
    CardAnimator::instance.Erase();
 
-   // choose a random-ish edge and pretend that that's where out last
-   // animation ended
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
-   targetEdge = (Edge)(now & 3);
+   // So, I don't think I care where the screensaver starts on the screen,
+   // but rather than trying for a perfectly random location I'm just going
+   // to pick a random spot on the left edge of the screen.  The left edge
+   // just has a "I've been reading from left-to-right my whole life" feel
+   // to it.
 
-   // choose a random target on that edge
-   ChooseRandomTarget();
-
-   // now we at like we just finished animating to that target and
-   // animate to the next
-   StartNextAnimation();
-}
-
-void Screensave::Service()
-{
-   CardAnimator::instance.Service();
-   if (!CardAnimator::instance.IsAnimating())
-      StartNextAnimation();
+   // I'm assuming that 0-127 is a valid range for the Y coordinate
+   static_assert(YMax >= 127);
+   StartNextAnimation(0, a2::VBLCounter::GetCounter().lo >> 1);
 }
 
 /// <summary>
-/// Sets our target position to a random spot on the given edge
+/// Performs periodic actions during screensave mode
 /// </summary>
-void Screensave::ChooseRandomTarget()
+void Screensave::Service()
 {
-   /*// we want a random number from 1 to 3 as an offset to the
-   // last edge
-   uint8_t newEdge = (uint8_t)targetEdge + 1;
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
-   if (now > 171)
-      ++newEdge;
-   if (now > 85)
-      ++newEdge;
+   // let CardAnimator do its work
+   CardAnimator::instance.Service();
 
-   // set the target edge
-   targetEdge = (Edge)(newEdge & 3);*/
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
-   asm volatile (
-      "INY\n"
-      "TYA\n"
-      "CPX\t#171\n"
-      "ADC\t#0\n"
-      "CPX\t#85\n"
-      "ADC\t#0\n"
-      "AND\t#3\n"
-
-   : "=a"(targetEdge) //outputs
-   : "x"(now),"y"(targetEdge) //inputs
-   : //clobbers
-   );
-
-   // pick a random position on that edge
-   targetX = GetRandomX();
-   targetY = GetRandomY();
-   switch (targetEdge)
+   // if the last animation completed start a new one
+   if (!CardAnimator::instance.IsAnimating())
    {
-   case Edge::Left:
-      targetX = 0;
-      break;
+      StartNextAnimation(targetX, targetY);
+   }
+}
 
-   case Edge::Right:
-      targetX = XMax;
-      break;
+/// <summary>
+/// Sets our target position to a random spot based on our various rules
+/// </summary>
+void Screensave::ChooseRandomTarget(uint8_t startX, uint8_t startY)
+{
+   // grab the VBLCounter as a seed for our silliness
+   uint8_t seed = a2::VBLCounter::GetCounter().lo;
 
-   case Edge::Top:
-      targetY = 0;
-      break;
+   // Go into a loop that tries a series of random target points
+   // until we find one we like.  We have rules, particularly that
+   // we avoid animation paths that are too vertical because our
+   // vertical animations are chunky st low speed.  If we don't
+   // like the point that we chose, we increment our random number
+   // by a prime number and try again.
+   uint8_t x, y, suit, rank;
+   for (; ; seed += 37)
+   {
+      x = XMax;
+      y = YMax;
 
-   case Edge::Bottom:
-      targetY = YMax;
+      asm volatile (
+         "LDX\t#0\n"
+
+         // an even seed means we set X, odd means we set Y
+         "LDA\t%4\n"
+         "LSR\n"
+         "BCS\t1f\n"
+
+         // even seed, set X; this ends up using the 0x04 bit
+         // to decide whether to clear Y (target == top edge)
+         "LSR\n"
+         "LSR\n"
+         "STA\t%0\n"
+         "BCS\t2f\n"
+         "STX\t%1\n"
+         "BCC\t2f\n"
+
+      "1:\n"
+         // odd seed, set Y; use the 0x04 bit to decide if
+         // we set left edge or right edge
+         "LDA\t%4\n"
+         "STA\t%1\n"
+         "AND\t#4\n"
+         "BEQ\t2f\n"
+         "STX\t%0\n"
+
+      "2:\n"
+         // set the suit and rank
+         "LDA\t%4\n"
+         "AND\t#3\n"
+         "STA\t%2\n"
+
+         "LDA\t%4\n"
+         "LSR\n"
+         "LSR\n"
+         "AND\t#15\n"
+         "STA\t%3\n"
+
+
+      : "+r"(x), "+r"(y), "+r"(suit), "+r"(rank) //outputs
+      : "r"(seed) //inputs
+      : "a","x" //clobbers
+      );
+
+      // check our results
+      if (rank==0 || rank>13)
+         continue;
+      if (x > XMax)
+         continue;
+      if (y > YMax || y == startY)
+         continue;
+
+      // For an angle off the vertical of 30 degrees, our x change
+      // needs to be at least half of our y change.  However, the
+      // x change is measured in groups of 7 pixels.  In any case,
+      // testing proves that this ratio pleases me.
+      if (Difference(x, startX) < (Difference(y, startY)>>3))
+         continue;
+
+      // all our tests passed, we can accept the results
       break;
    }
 
-   // pick a randomish card; this just takes our quasi-random byte
-   // and subtracts 52 until we have something modulus 52
-   uint8_t cardIndex;
-   asm volatile (
-      "LDA\t%1\n"
-      "JMP\tcomp\n"
-   "subt:\n"
-      // carry is always clear here
-      "SBC\t#51\n"
-   "comp:\n"
-      "CMP\t#51\n"
-      "BCS\tsubt"
-   : "=a"(cardIndex) // output
-   : "r"(now) // input
-   : //clobbers
-   );
-
-   // convert the ordinal to a card
-   cardInMotion = Card::FromOrdinal(cardIndex);
-}
-
-
-uint8_t Screensave::GetRandomX()
-{
-   // we are designed to return a value in the range 0..36, so make sure
-   // that's the expectation
-   static_assert(XMax==36, "GetRandomX assumes a range of 0 to 36");
-
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
-   uint8_t result;
-   /*return
-      (now >> 3) + // (0 to 31)
-      ((now >> 1) & 3) + // 0 to 3
-      ((now & 1) << 1); // 0 to 2*/
-   asm volatile (
-      "LSR\t%0\n"
-      "LDA\t#3\n"
-      "AND\t%0\n"
-      "BCC\t1f\n"
-      "ADC\t#1\n"
-   "1:\n"
-      "LSR\t%0\n"
-      "LSR\t%0\n"
-      "CLC\n"
-      "ADC\t%0\n"
-   : "+r"(now), "=a"(result)// outputs
-   : // inputs
-   : // clobbers
-   );
-
-   return result;
-}
-
-
-uint8_t Screensave::GetRandomY()
-{
-   // we are designed to return a value in the range 0..159, so make sure
-   // that's the expectation
-   static_assert(YMax==158, "GetRandomX assumes a range of 0 to 158");
-
-   /*uint8_t now = a2::VBLCounter::GetCounter().lo;
-   return
-      (now >> 1) + // (0 to 127)
-      (now >> 3); // 0 to 31*/
-
-   uint8_t now = a2::VBLCounter::GetCounter().lo;
-   uint8_t result;
-
-   asm volatile (
-      "LSR\t%0\n"
-      "LDA\t%0\n"
-      "LSR\t%0\n"
-      "LSR\t%0\n"
-      "CLC\n"
-      "ADC\t%0\n"
-   : "+r"(now), "=a"(result)// outputs
-   : // inputs
-   : // clobbers
-   );
-
-   return result;
+   targetX = x;
+   targetY = y;
+   cardInMotion = Card(Suit::FromOrdinal(suit), (Rank)rank);
 }
 
 
@@ -214,14 +178,14 @@ __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
 }
 
 
-void Screensave::StartNextAnimation()
+/// <summary>
+/// Starts an animation from the given location to a randomly chosen
+/// destination.
+/// </summary>
+void Screensave::StartNextAnimation(uint8_t startX, uint8_t startY)
 {
-   // grab the start position
-   uint8_t startX = targetX;
-   uint8_t startY = targetY;
-
    // set the end position
-   ChooseRandomTarget();
+   ChooseRandomTarget(startX, startY);
 
    // calculate a duration based on the distance
    uint8_t dx, dy;

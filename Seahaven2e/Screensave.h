@@ -17,23 +17,11 @@ public:
    static Screensave instance;
 
 private:
-   enum class Edge : uint8_t {
-      Top,
-      Left,
-      Bottom,
-      Right
-   };
-
-private:
-   void ChooseRandomTarget();
-   void StartNextAnimation();
-
-   static uint8_t GetRandomX();
-   static uint8_t GetRandomY();
+   void ChooseRandomTarget(uint8_t startX, uint8_t startY);
+   void StartNextAnimation(uint8_t startX, uint8_t startY);
 
 private:
    Card cardInMotion;
-   Edge targetEdge;
    uint8_t targetX;
    uint8_t targetY;
 };
