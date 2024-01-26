@@ -97,6 +97,7 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
          "CLC\n"
          "ADC\t#37\n"
          "STA\t%[seed]\n"
+         "TAY\n"
 
          // an even seed means we set X, odd means we set Y
          "LSR\n"
@@ -117,7 +118,7 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
       "1:\n"
          // odd seed, set Y; use the 0x04 bit to decide if
          // we set left edge or right edge
-         "LDA\t%[seed]\n"
+         "TYA\n"
          "CMP\t#%[YMax]+1\n"
          "BCS\t0b\n"  // y > YMax, retry
          "STA\t%[y]\n"
@@ -127,11 +128,11 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
 
       "2:\n"
          // set the suit and rank
-         "LDA\t%[seed]\n"
+         "TYA\n"
          "AND\t#3\n"
          "STA\t%[suit]\n"
 
-         "LDA\t%[seed]\n"
+         "TYA\n"
          "LSR\n"
          "LSR\n"
          "AND\t#15\n"
@@ -143,7 +144,7 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
 
       :  //outputs
       : [x]"i"(x), [y]"i"(y), [suit]"i"(suit), [rank]"i"(rank), [seed]"i"(seed), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
-      : "a","x" //clobbers
+      : "a","x","y" //clobbers
       );
 
       // check our results
