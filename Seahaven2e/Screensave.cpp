@@ -67,8 +67,12 @@ void Screensave::Service()
 /// </summary>
 void Screensave::ChooseRandomTarget()
 {
+   // declare our locals as static arrays... this way we
+   // can pass them to our asm routine as addresses
+   static uint8_t x[1], y[1], suit[1], rank[1], seed[1];
+
    // grab the VBLCounter as a seed for our silliness
-   uint8_t seed = a2::VBLCounter::GetCounter().lo;
+   seed[0] = a2::VBLCounter::GetCounter().lo;
 
    // Go into a loop that tries a series of random target points
    // until we find one we like.  We have rules, particularly that
@@ -76,17 +80,16 @@ void Screensave::ChooseRandomTarget()
    // vertical animations are chunky st low speed.  If we don't
    // like the point that we chose, we increment our random number
    // by a prime number and try again.
-   uint8_t x, y, suit, rank;
-   for (; ; seed += 37)
+   for (; ; seed[0] += 37)
    {
-      x = XMax;
-      y = YMax;
+      x[0] = XMax;
+      y[0] = YMax;
 
       asm volatile (
          "LDX\t#0\n"
 
          // an even seed means we set X, odd means we set Y
-         "LDA\t%4\n"
+         "LDA\t%[seed]\n"
          "LSR\n"
          "BCS\t1f\n"
 
@@ -94,60 +97,60 @@ void Screensave::ChooseRandomTarget()
          // to decide whether to clear Y (target == top edge)
          "LSR\n"
          "LSR\n"
-         "STA\t%0\n"
+         "STA\t%[x]\n"
          "BCS\t2f\n"
-         "STX\t%1\n"
+         "STX\t%[y]\n"
          "BCC\t2f\n"
 
       "1:\n"
          // odd seed, set Y; use the 0x04 bit to decide if
          // we set left edge or right edge
-         "LDA\t%4\n"
-         "STA\t%1\n"
+         "LDA\t%[seed]\n"
+         "STA\t%[y]\n"
          "AND\t#4\n"
          "BEQ\t2f\n"
-         "STX\t%0\n"
+         "STX\t%[x]\n"
 
       "2:\n"
          // set the suit and rank
-         "LDA\t%4\n"
+         "LDA\t%[seed]\n"
          "AND\t#3\n"
-         "STA\t%2\n"
+         "STA\t%[suit]\n"
 
-         "LDA\t%4\n"
+         "LDA\t%[seed]\n"
          "LSR\n"
          "LSR\n"
          "AND\t#15\n"
-         "STA\t%3\n"
+         "STA\t%[rank]\n"
 
 
-      : "+r"(x), "+r"(y), "+r"(suit), "+r"(rank) //outputs
-      : "r"(seed) //inputs
+      :  //outputs
+      : [x]"i"(x), [y]"i"(y), [suit]"i"(suit), [rank]"i"(rank), [seed]"i"(seed) //inputs
       : "a","x" //clobbers
       );
 
       // check our results
-      if (rank==0 || rank>13)
+      if (rank[0]==0 || rank[0]>13)
          continue;
-      if (x > XMax)
+      if (x[0] > XMax)
          continue;
-      if (y > YMax || y == startY)
+      if (y[0] > YMax || y[0] == startY)
          continue;
 
       // For an angle off the vertical of 30 degrees, our x change
       // needs to be at least half of our y change.  However, the
       // x change is measured in groups of 7 pixels.  In any case,
       // testing proves that this ratio pleases me.
-      if (Difference(x, startX) < (Difference(y, startY)>>3))
+      if (Difference(x[0], startX) < (Difference(y[0], startY)>>3))
          continue;
 
       // all our tests passed, we can accept the results
       break;
    }
 
-   targetX = x;
-   targetY = y;
-   cardInMotion = Card(Suit::FromOrdinal(suit), (Rank)rank);
+   targetX = x[0];
+   targetY = y[0];
+   cardInMotion = Card(Suit::FromOrdinal(suit[0]), (Rank)rank[0]);
 }
 
 
