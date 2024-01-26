@@ -65,7 +65,7 @@ void Screensave::Service()
 /// <summary>
 /// Sets our target position to a random spot based on our various rules
 /// </summary>
-void Screensave::ChooseRandomTarget()
+__attribute__((noinline)) void Screensave::ChooseRandomTarget()
 {
    // declare our locals as static arrays... this way we
    // can pass them to our asm routine as addresses
@@ -80,16 +80,25 @@ void Screensave::ChooseRandomTarget()
    // vertical animations are chunky st low speed.  If we don't
    // like the point that we chose, we increment our random number
    // by a prime number and try again.
-   for (; ; seed[0] += 37)
+   for (; ;)
    {
-      x[0] = XMax;
-      y[0] = YMax;
-
       asm volatile (
+      "0:\n"
          "LDX\t#0\n"
 
-         // an even seed means we set X, odd means we set Y
+         // set initial values
+         "LDA\t#%[XMax]\n"
+         "STA\t%[x]\n"
+         "LDA\t#%[YMax]\n"
+         "STA\t%[y]\n"
+
+         // increase our seed by a prime number each time
          "LDA\t%[seed]\n"
+         "CLC\n"
+         "ADC\t#37\n"
+         "STA\t%[seed]\n"
+
+         // an even seed means we set X, odd means we set Y
          "LSR\n"
          "BCS\t1f\n"
 
@@ -97,15 +106,20 @@ void Screensave::ChooseRandomTarget()
          // to decide whether to clear Y (target == top edge)
          "LSR\n"
          "LSR\n"
-         "STA\t%[x]\n"
-         "BCS\t2f\n"
+         "BCS\t3f\n"
          "STX\t%[y]\n"
+      "3:\n"
+         "CMP\t#%[XMax]+1\n"
+         "BCS\t0b\n"    // x > XMax, retry
+         "STA\t%[x]\n"
          "BCC\t2f\n"
 
       "1:\n"
          // odd seed, set Y; use the 0x04 bit to decide if
          // we set left edge or right edge
          "LDA\t%[seed]\n"
+         "CMP\t#%[YMax]+1\n"
+         "BCS\t0b\n"  // y > YMax, retry
          "STA\t%[y]\n"
          "AND\t#4\n"
          "BEQ\t2f\n"
@@ -121,20 +135,19 @@ void Screensave::ChooseRandomTarget()
          "LSR\n"
          "LSR\n"
          "AND\t#15\n"
+         "BEQ\t0b\n"    // rank==0 invalid, retry
+         "CMP\t#14\n"
+         "BCS\t0b\n"    // rank > 13, invalid, retry
          "STA\t%[rank]\n"
 
 
       :  //outputs
-      : [x]"i"(x), [y]"i"(y), [suit]"i"(suit), [rank]"i"(rank), [seed]"i"(seed) //inputs
+      : [x]"i"(x), [y]"i"(y), [suit]"i"(suit), [rank]"i"(rank), [seed]"i"(seed), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
       : "a","x" //clobbers
       );
 
       // check our results
-      if (rank[0]==0 || rank[0]>13)
-         continue;
-      if (x[0] > XMax)
-         continue;
-      if (y[0] > YMax || y[0] == startY)
+      if (y[0] == startY)
          continue;
 
       // For an angle off the vertical of 30 degrees, our x change
