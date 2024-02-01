@@ -21,6 +21,18 @@ namespace A2DiskUtil
       public DiskFile(string filename)
       {
          fileData = File.ReadAllBytes(filename);
+         VolumeTableOfContents = new VolumeTableOfContents(GetTrack(0x11).GetSector(0x0));
+      }
+
+      public VolumeTableOfContents VolumeTableOfContents
+      {
+         get;
+         private set;
+      }
+
+      public Track GetTrack(int track)
+      {
+         return new Track(fileData, track * 16 * 256);
       }
    }
 }
