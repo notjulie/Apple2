@@ -10,7 +10,7 @@ namespace A2DiskUtil
    /// <summary>
    /// Representation of a disk image
    /// </summary>
-   class DiskFile
+   class DiskImage
    {
       private byte[] fileData;
 
@@ -18,7 +18,7 @@ namespace A2DiskUtil
       /// Initializes a new disk image from a file
       /// </summary>
       /// <param name="filename"></param>
-      public DiskFile(string filename)
+      public DiskImage(string filename)
       {
          fileData = File.ReadAllBytes(filename);
          VolumeTableOfContents = new VolumeTableOfContents(GetTrack(0x11).GetSector(0x0));

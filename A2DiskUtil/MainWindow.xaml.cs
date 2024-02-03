@@ -25,8 +25,19 @@ namespace A2DiskUtil
          // normal component initialization
          InitializeComponent();
 
-         // add event handlers
-         menuitemOpenDisk.Click += MenuitemOpenDisk_Click;
+         // set our view model
+         DataContext = new MainViewModel();
+      }
+
+      /// <summary>
+      /// Gets the main view model
+      /// </summary>
+      private MainViewModel? MainViewModel
+      {
+         get
+         {
+            return DataContext as MainViewModel;
+         }
       }
 
       /// <summary>
@@ -36,19 +47,7 @@ namespace A2DiskUtil
       /// <param name="e"></param>
       private void MenuitemOpenDisk_Click(object sender, RoutedEventArgs e)
       {
-         OpenFileDialog dialog = new OpenFileDialog();
-         if (dialog.ShowDialog() == true)
-         {
-            try
-            {
-               DiskFile newFile = new DiskFile(dialog.FileName);
-               DataContext = newFile;
-            }
-            catch (Exception ex) 
-            {
-               MessageBox.Show(ex.Message);
-            }
-         }
+         MainViewModel?.OpenFile();
       }
    }
 }
