@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using A2DiskUtil.ViewModel;
+using Microsoft.Win32;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,10 +13,10 @@ using System.Windows.Shapes;
 
 namespace A2DiskUtil
 {
-   /// <summary>
-   /// Interaction logic for MainWindow.xaml
-   /// </summary>
-   public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
    {
       /// <summary>
       /// Initializes a new instance of class MainWindow

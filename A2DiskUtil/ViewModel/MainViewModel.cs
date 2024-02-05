@@ -2,6 +2,7 @@
 using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -10,18 +11,33 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace A2DiskUtil
+namespace A2DiskUtil.ViewModel
 {
+   /// <summary>
+   /// ViewModel for the main window
+   /// </summary>
    internal class MainViewModel : ViewModelBase
    {
+      #region Public Properties
+
       /// <summary>
       /// Gets the DiskImage
       /// </summary>
-      public DiskImage DiskImage
+      public DiskImage? DiskImage
       {
          get;
          private set;
       }
+
+      /// <summary>
+      /// Gets the Files collection
+      /// </summary>
+      public ObservableCollection<FileDescriptiveEntry> Files
+      {
+         get;
+      } = new ObservableCollection<FileDescriptiveEntry>();
+
+      #endregion
 
       #region Public Methods
 
@@ -36,6 +52,10 @@ namespace A2DiskUtil
             try
             {
                DiskImage = new DiskImage(dialog.FileName);
+
+               Files.Clear();
+               foreach (var file in DiskImage.GetCatalog())
+                  Files.Add(file);
             }
             catch (Exception ex)
             {
