@@ -10,7 +10,7 @@ namespace A2DiskUtil
    /// <summary>
    /// Representation of a disk image
    /// </summary>
-   class DiskImage
+   public class DiskImage
    {
       private byte[] fileData;
 

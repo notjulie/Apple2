@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -16,7 +17,7 @@ namespace A2DiskUtil.ViewModel
    /// <summary>
    /// ViewModel for the main window
    /// </summary>
-   internal class MainViewModel : ViewModelBase
+   public class MainViewModel : ViewModelBase
    {
       #region Public Properties
 
@@ -40,6 +41,16 @@ namespace A2DiskUtil.ViewModel
       #endregion
 
       #region Public Methods
+
+      /// <summary>
+      /// Returns a value indicating whether we allow dropping the given file
+      /// </summary>
+      /// <param name="fileName"></param>
+      /// <returns></returns>
+      public bool CanDropFile(string fileName)
+      {
+         return Path.GetExtension(fileName).ToLower() == ".a2";
+      }
 
       /// <summary>
       /// Prompts the user to open a disk image file

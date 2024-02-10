@@ -13,11 +13,13 @@ using System.Windows.Shapes;
 
 namespace A2DiskUtil
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+   /// <summary>
+   /// Interaction logic for MainWindow.xaml
+   /// </summary>
+   public partial class MainWindow : Window
    {
+      #region Constructor
+
       /// <summary>
       /// Initializes a new instance of class MainWindow
       /// </summary>
@@ -30,16 +32,24 @@ namespace A2DiskUtil
          DataContext = new MainViewModel();
       }
 
+      #endregion
+
+      #region Public Properties
+
       /// <summary>
       /// Gets the main view model
       /// </summary>
-      private MainViewModel? MainViewModel
+      public MainViewModel? MainViewModel
       {
          get
          {
             return DataContext as MainViewModel;
          }
       }
+
+      #endregion
+
+      #region Event Handlers
 
       /// <summary>
       /// Handles the File>Open Disk... item
@@ -50,5 +60,26 @@ namespace A2DiskUtil
       {
          MainViewModel?.OpenFile();
       }
+
+      protected override void OnPreviewDragOver(DragEventArgs e)
+      {
+         base.OnPreviewDragOver(e);
+
+         e.Effects = DragDropEffects.None;
+         e.Handled = true;
+
+         bool isFile = e.Data.GetFormats().Contains("FileName");
+         if (isFile)
+         {
+            string[]? data = e.Data.GetData("FileName") as string[];
+            if (data != null && data.Length > 0)
+            {
+               if (MainViewModel?.CanDropFile(data[0]) == true)
+                  e.Effects = DragDropEffects.Copy;
+            }
+         }
+      }
+
+      #endregion
    }
 }
