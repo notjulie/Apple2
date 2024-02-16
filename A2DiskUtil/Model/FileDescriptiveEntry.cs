@@ -31,6 +31,19 @@ namespace A2DiskUtil.Model
 
       #region Public Properties
 
+      /// <summary>
+      /// Gets a value indicating whether this entry is actually associated with a file
+      /// </summary>
+      public bool IsFile
+      {
+         get
+         {
+            // a value of 0 is an unallocated file, a value of 255 is a
+            // deleted file
+            return data[0] > 0 && data[0] < 255;
+         }
+      }
+
       public A2FileName FileName
       {
          get;

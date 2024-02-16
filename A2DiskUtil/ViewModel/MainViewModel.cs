@@ -67,7 +67,8 @@ namespace A2DiskUtil.ViewModel
 
                Files.Clear();
                foreach (var file in DiskImage.GetCatalog())
-                  Files.Add(file);
+                  if (file.IsFile)
+                     Files.Add(file);
             }
             catch (Exception ex)
             {
