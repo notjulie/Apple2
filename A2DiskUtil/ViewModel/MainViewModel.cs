@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using A2DiskUtil.Model;
+using Microsoft.Win32;
 using Microsoft.Windows.Themes;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ using System.Windows.Input;
 
 namespace A2DiskUtil.ViewModel
 {
-   /// <summary>
-   /// ViewModel for the main window
-   /// </summary>
-   public class MainViewModel : ViewModelBase
+    /// <summary>
+    /// ViewModel for the main window
+    /// </summary>
+    public class MainViewModel : ViewModelBase
    {
       #region Public Properties
 
