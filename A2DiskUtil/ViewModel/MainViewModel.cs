@@ -15,11 +15,28 @@ using System.Windows.Input;
 
 namespace A2DiskUtil.ViewModel
 {
-    /// <summary>
-    /// ViewModel for the main window
-    /// </summary>
-    public class MainViewModel : ViewModelBase
+   /// <summary>
+   /// ViewModel for the main window
+   /// </summary>
+   public class MainViewModel : ViewModelBase
    {
+      #region Private Fields
+
+      private DiskImage? diskImage;
+      private ObservableCollection<FileDescriptiveEntry> files = new ObservableCollection<FileDescriptiveEntry>();
+
+      #endregion
+
+      #region Constructor
+
+      public MainViewModel()
+      {
+         // expose our read-only version of the files collection
+         Files = new ReadOnlyObservableCollection<FileDescriptiveEntry>(files);
+      }
+
+      #endregion
+
       #region Public Properties
 
       /// <summary>
@@ -27,21 +44,61 @@ namespace A2DiskUtil.ViewModel
       /// </summary>
       public DiskImage? DiskImage
       {
-         get;
-         private set;
+         get
+         {
+            return diskImage;
+         }
+         private set
+         {
+            // accept the value
+            diskImage = value;
+
+            // update our files list
+            files.Clear();
+            if (diskImage != null) 
+            {
+               foreach (var file in diskImage.GetCatalog())
+                  if (file.IsFile)
+                     files.Add(file);
+            }
+         }
       }
 
       /// <summary>
       /// Gets the Files collection
       /// </summary>
-      public ObservableCollection<FileDescriptiveEntry> Files
+      public ReadOnlyObservableCollection<FileDescriptiveEntry> Files
       {
          get;
-      } = new ObservableCollection<FileDescriptiveEntry>();
+         private set;
+      }
 
       #endregion
 
       #region Public Methods
+
+      /// <summary>
+      /// Prompts the user to open a disk image file
+      /// </summary>
+      public void OpenDiskImageFile()
+      {
+         OpenFileDialog dialog = new OpenFileDialog();
+         if (dialog.ShowDialog() == true)
+         {
+            try
+            {
+               DiskImage = new DiskImage(dialog.FileName);
+            }
+            catch (Exception ex)
+            {
+               MessageBox.Show(ex.Message);
+            }
+         }
+      }
+
+      #endregion
+
+      #region Protected Methods
 
       /// <summary>
       /// Returns a value indicating whether we allow dropping the given file
@@ -65,6 +122,7 @@ namespace A2DiskUtil.ViewModel
          // if it's an a2 file (my own type of Apple2 binary) handle that
          if (Path.GetExtension(filename).ToLower() == ".a2")
          {
+            LoadA2File(filename);
             return;
          }
 
@@ -72,27 +130,34 @@ namespace A2DiskUtil.ViewModel
          base.DropFile(filename);
       }
 
-      /// <summary>
-      /// Prompts the user to open a disk image file
-      /// </summary>
-      public void OpenDiskImageFile()
-      {
-         OpenFileDialog dialog = new OpenFileDialog();
-         if (dialog.ShowDialog() == true)
-         {
-            try
-            {
-               DiskImage = new DiskImage(dialog.FileName);
+      #endregion
 
-               Files.Clear();
-               foreach (var file in DiskImage.GetCatalog())
-                  if (file.IsFile)
-                     Files.Add(file);
-            }
-            catch (Exception ex)
-            {
-               MessageBox.Show(ex.Message);
-            }
+      #region Private Methods
+
+      /// <summary>
+      /// Loads an A2 file and writes it to our disk image
+      /// </summary>
+      /// <param name="filename"></param>
+      private void LoadA2File(string filename)
+      {
+         try
+         {
+            // load the file
+            A2File a2File = new A2File(filename);
+
+            // make a working copy of our image
+            if (DiskImage == null)
+               throw new Exception("A valid Disk Image has not been loaded");
+            DiskImage diskImageCopy = DiskImage.Clone();
+
+            // write the file
+            diskImageCopy.WriteFile(a2File);
+
+            // all's well, accept the new image
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show(e.Message);
          }
       }
 
