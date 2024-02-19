@@ -21,15 +21,26 @@ namespace A2DiskUtil.Model
       #region Constructor
 
       /// <summary>
+      /// Initializes a new disk image from a byte array
+      /// </summary>
+      /// <param name="fileData"></param>
+      public DiskImage(byte[] fileData)
+      {
+         // make a copy of the contents
+         this.fileData = new byte[fileData.Length];
+         Array.Copy(fileData, this.fileData, fileData.Length);
+
+         // read it
+         VolumeTableOfContents = new VolumeTableOfContents(GetTrack(0x11).GetSector(0x0));
+      }
+
+      /// <summary>
       /// Initializes a new disk image from a file
       /// </summary>
       /// <param name="filename"></param>
       public DiskImage(string filename)
+         :this(File.ReadAllBytes(filename))
       {
-         fileData = File.ReadAllBytes(filename);
-         VolumeTableOfContents = new VolumeTableOfContents(GetTrack(0x11).GetSector(0x0));
-
-         //GetCatalog();
       }
 
       #endregion
@@ -46,11 +57,20 @@ namespace A2DiskUtil.Model
 
       #region Public Methods
 
+      /// <summary>
+      /// Creates a copy of this instance
+      /// </summary>
+      /// <returns></returns>
       public DiskImage Clone()
       {
-         throw new NotImplementedException("DiskImage.Clone");
+         return new DiskImage(this.fileData);
       }
 
+      /// <summary>
+      /// Reads the list of all FileDescriptiveEntry blocks from the disk, active or
+      /// inactive
+      /// </summary>
+      /// <returns></returns>
       public FileDescriptiveEntry[] GetCatalog()
       {
          List<FileDescriptiveEntry> result = new List<FileDescriptiveEntry>();
@@ -73,19 +93,43 @@ namespace A2DiskUtil.Model
          return result.ToArray();
       }
 
+      /// <summary>
+      /// Gets the contents of the given sector
+      /// </summary>
+      /// <param name="trackSector"></param>
+      /// <returns></returns>
       public Sector GetSector(TrackSector trackSector)
       {
          return GetTrack(trackSector.Track).GetSector(trackSector.Sector);
       }
 
+      /// <summary>
+      /// Gets the contents of the given tract
+      /// </summary>
+      /// <param name="track"></param>
+      /// <returns></returns>
       public Track GetTrack(int track)
       {
          return new Track(fileData, track * 16 * 256);
       }
 
+      /// <summary>
+      /// Writes a A2File to the disk
+      /// </summary>
+      /// <param name="file"></param>
+      /// <exception cref="NotImplementedException"></exception>
       public void WriteFile(A2File file)
       {
-         throw new NotImplementedException("DiskImage.WriteFile");
+         BSAVE(file.A2FileName, file.StartAddress, file.BinaryImage);
+      }
+
+      #endregion
+
+      #region DOS-like commands
+
+      public void BSAVE(A2FileName name, UInt16 startAddress, byte[] contents)
+      {
+         throw new NotImplementedException("DiskImage.BSAVE");
       }
 
       #endregion
