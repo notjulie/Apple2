@@ -48,15 +48,34 @@ namespace A2DiskUtil.ViewModel
       /// </summary>
       /// <param name="fileName"></param>
       /// <returns></returns>
-      public bool CanDropFile(string fileName)
+      protected override bool CanDropFile(string filename)
       {
-         return Path.GetExtension(fileName).ToLower() == ".a2";
+         if (Path.GetExtension(filename).ToLower() == ".a2")
+            return true;
+         else
+            return base.CanDropFile(filename);
+      }
+
+      /// <summary>
+      /// Processes a dropped file
+      /// </summary>
+      /// <param name="filename"></param>
+      protected override void DropFile(string filename)
+      {
+         // if it's an a2 file (my own type of Apple2 binary) handle that
+         if (Path.GetExtension(filename).ToLower() == ".a2")
+         {
+            return;
+         }
+
+         // anything else must be accepted by the base class
+         base.DropFile(filename);
       }
 
       /// <summary>
       /// Prompts the user to open a disk image file
       /// </summary>
-      public void OpenFile()
+      public void OpenDiskImageFile()
       {
          OpenFileDialog dialog = new OpenFileDialog();
          if (dialog.ShowDialog() == true)

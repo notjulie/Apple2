@@ -58,26 +58,35 @@ namespace A2DiskUtil
       /// <param name="e"></param>
       private void MenuitemOpenDisk_Click(object sender, RoutedEventArgs e)
       {
-         MainViewModel?.OpenFile();
+         MainViewModel?.OpenDiskImageFile();
       }
 
+      /// <summary>
+      /// Previews the data that is being dragged in order to tell the
+      /// system whether or not we would accept it
+      /// </summary>
+      /// <param name="e"></param>
       protected override void OnPreviewDragOver(DragEventArgs e)
       {
          base.OnPreviewDragOver(e);
 
          e.Effects = DragDropEffects.None;
+         if (true == MainViewModel?.CanDropData(e.Data))
+            e.Effects = DragDropEffects.Copy;
          e.Handled = true;
+      }
 
-         bool isFile = e.Data.GetFormats().Contains("FileName");
-         if (isFile)
-         {
-            string[]? data = e.Data.GetData("FileName") as string[];
-            if (data != null && data.Length > 0)
-            {
-               if (MainViewModel?.CanDropFile(data[0]) == true)
-                  e.Effects = DragDropEffects.Copy;
-            }
-         }
+      /// <summary>
+      /// Accepts dropped data
+      /// </summary>
+      /// <param name="e"></param>
+      protected override void OnDrop(DragEventArgs e)
+      {
+         // call the viewmodel
+         MainViewModel?.DropData(e.Data);
+
+         // call the base
+         base.OnDrop(e);
       }
 
       #endregion
