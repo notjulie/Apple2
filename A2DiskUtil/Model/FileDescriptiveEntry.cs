@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Xml.Linq;
 
 namespace A2DiskUtil.Model
 {
@@ -15,21 +16,36 @@ namespace A2DiskUtil.Model
       /// <summary>
       /// Initializes a new instance of class FileDescriptiveEntry
       /// </summary>
+      public FileDescriptiveEntry(A2FileName name)
+      {
+         // initialize blank
+         data = new byte[Size];
+
+         // copy the name
+         FileName = name;
+      }
+
+      /// <summary>
+      /// Initializes a new instance of class FileDescriptiveEntry
+      /// </summary>
       /// <param name="data"></param>
       public FileDescriptiveEntry(byte[] data)
       {
          // save the raw data
          this.data = data;
-
-         // the filename is 30 bytes starting at offset 3
-         byte[] filename = new byte[30];
-         Array.Copy(data, 3, filename, 0, filename.Length);
-         FileName = new A2FileName(filename);
       }
 
       #endregion
 
       #region Public Properties
+
+      /// <summary>
+      /// Gets the raw size of the entry
+      /// </summary>
+      public static int Size
+      {
+         get;
+      } = 34;
 
       /// <summary>
       /// Gets a value indicating whether this entry is actually associated with a file
@@ -44,10 +60,38 @@ namespace A2DiskUtil.Model
          }
       }
 
+      /// <summary>
+      /// Gets or sets the filename
+      /// </summary>
       public A2FileName FileName
       {
-         get;
-         private set;
+         get
+         {
+            // the filename is 30 bytes starting at offset 3
+            byte[] filename = new byte[A2FileName.MaxLength];
+            Array.Copy(data, 3, filename, 0, filename.Length);
+            return new A2FileName(filename);
+         }
+         set
+         {
+            byte[] rawName = value.PadToFullLength().ToArray();
+            Array.Copy(data, 3, rawName, 0, rawName.Length);
+         }
+      }
+
+      /// <summary>
+      /// Gets or sets the FileType
+      /// </summary>
+      public A2FileType FileType
+      {
+         get
+         {
+            return (A2FileType)(data[2] & 0x7F);
+         }
+         set
+         {
+            data[2] = (byte)((data[2] & 0x80) | (byte)value);
+         }
       }
 
       #endregion

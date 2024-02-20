@@ -153,13 +153,39 @@ namespace A2DiskUtil.Model
          // delete any such existing file
          DeleteIfExists(name);
 
-         // and the rest
-         throw new NotImplementedException("DiskImage.BSAVE");
+         // create a catalog entry
+         FileDescriptiveEntry entry = new FileDescriptiveEntry(name);
+         entry.FileType = A2FileType.Binary;
+
+         // write the file contents
+         AppendToFile(entry, (byte)(startAddress >> 8));
+         AppendToFile(entry, (byte)(startAddress & 0xFF));
+         AppendToFile(entry, (byte)(contents.Length >> 8));
+         AppendToFile(entry, (byte)(contents.Length & 0xFF));
+         AppendToFile(entry, contents);
+
+         // and write the entry
+         AddFileEntry(entry);
       }
 
       #endregion
 
       #region Private Methods
+
+      private void AddFileEntry(FileDescriptiveEntry entry)
+      {
+         throw new NotImplementedException("DiskImage.AddFileEntry");
+      }
+
+      private void AppendToFile(FileDescriptiveEntry entry, byte b)
+      {
+         throw new NotImplementedException("DiskImage.AppendToFile");
+      }
+
+      private void AppendToFile(FileDescriptiveEntry entry, byte[] data)
+      {
+         throw new NotImplementedException("DiskImage.AppendToFile");
+      }
 
       private void Delete(FileDescriptiveEntry file)
       {

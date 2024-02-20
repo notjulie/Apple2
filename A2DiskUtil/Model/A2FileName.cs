@@ -4,6 +4,7 @@ using System.Linq;
 using System.Printing.IndexedProperties;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace A2DiskUtil.Model
 {
@@ -47,6 +48,54 @@ namespace A2DiskUtil.Model
          }
 
          this.rawName = bytes.ToArray();
+      }
+
+      #endregion
+
+      #region Public Properties
+
+      /// <summary>
+      /// Gets the maximum filename length
+      /// </summary>
+      static public int MaxLength
+      {
+         get;
+      } = 30;
+
+      /// <summary>
+      /// Gets the byte used for a space in disk filenames
+      /// </summary>
+      static public byte Space
+      {
+         get;
+      } = 0xA0;
+
+      #endregion
+
+      #region Public Methods
+
+      /// <summary>
+      /// returns an instance that's padded with spaces to its full length
+      /// </summary>
+      /// <returns></returns>
+      public A2FileName PadToFullLength()
+      {
+         byte[] bytes = new byte[MaxLength];
+         Array.Copy(rawName, bytes, rawName.Length);
+         for (int i = rawName.Length; i < bytes.Length; ++i)
+            bytes[i] = Space;
+         return new A2FileName(bytes);
+      }
+
+      /// <summary>
+      /// Returns the name as a raw byte array
+      /// </summary>
+      /// <returns></returns>
+      public byte[] ToArray()
+      {
+         byte[] result = new byte[rawName.Length];
+         Array.Copy(rawName, result, rawName.Length);
+         return result;
       }
 
       #endregion
