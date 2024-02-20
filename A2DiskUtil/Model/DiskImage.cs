@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.IO;
@@ -146,9 +147,9 @@ namespace A2DiskUtil.Model
       /// </summary>
       /// <param name="name"></param>
       /// <param name="startAddress"></param>
-      /// <param name="contents"></param>
+      /// <param name="binaryImage"></param>
       /// <exception cref="NotImplementedException"></exception>
-      public void BSAVE(A2FileName name, UInt16 startAddress, byte[] contents)
+      public void BSAVE(A2FileName name, UInt16 startAddress, byte[] binaryImage)
       {
          // delete any such existing file
          DeleteIfExists(name);
@@ -157,12 +158,22 @@ namespace A2DiskUtil.Model
          FileDescriptiveEntry entry = new FileDescriptiveEntry(name);
          entry.FileType = A2FileType.Binary;
 
-         // write the file contents
-         AppendToFile(entry, (byte)(startAddress >> 8));
-         AppendToFile(entry, (byte)(startAddress & 0xFF));
-         AppendToFile(entry, (byte)(contents.Length >> 8));
-         AppendToFile(entry, (byte)(contents.Length & 0xFF));
-         AppendToFile(entry, contents);
+         // build the file contents... binary format goes:
+         //   address
+         //   length
+         //   data
+         List<byte> fileContents = new List<byte>();
+         fileContents.Add((byte)(startAddress >> 8));
+         fileContents.Add((byte)(startAddress & 0xFF));
+         fileContents.Add((byte)(binaryImage.Length >> 8));
+         fileContents.Add((byte)(binaryImage.Length & 0xFF));
+         fileContents.AddRange(binaryImage);
+
+         // write the file contents to a list of sectors
+         TrackSector[] trackSectorList = WriteDataToAvailableSectors(fileContents.ToArray());
+
+         // write the track/sector list
+         entry.TrackSectorListStart = WriteTrackSectorList(trackSectorList);
 
          // and write the entry
          AddFileEntry(entry);
@@ -177,19 +188,19 @@ namespace A2DiskUtil.Model
          throw new NotImplementedException("DiskImage.AddFileEntry");
       }
 
-      private void AppendToFile(FileDescriptiveEntry entry, byte b)
-      {
-         throw new NotImplementedException("DiskImage.AppendToFile");
-      }
-
-      private void AppendToFile(FileDescriptiveEntry entry, byte[] data)
-      {
-         throw new NotImplementedException("DiskImage.AppendToFile");
-      }
-
       private void Delete(FileDescriptiveEntry file)
       {
          throw new NotImplementedException("DiskImage.Delete");
+      }
+
+      private TrackSector[] WriteDataToAvailableSectors(byte[] data)
+      {
+         throw new NotImplementedException("DiskImage.WriteDataToAvailableSectors");
+      }
+
+      private TrackSector WriteTrackSectorList(TrackSector[] trackSectorList)
+      {
+         throw new NotImplementedException("DiskImage.WriteTrackSectorList");
       }
 
       #endregion

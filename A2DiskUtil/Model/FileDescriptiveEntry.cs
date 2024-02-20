@@ -94,6 +94,18 @@ namespace A2DiskUtil.Model
          }
       }
 
+      public TrackSector TrackSectorListStart
+      {
+         get
+         {
+            throw new NotImplementedException("FileDescriptiveEntry.TrackSectorListStart get");
+         }
+         set
+         {
+            throw new NotImplementedException("FileDescriptiveEntry.TrackSectorListStart set");
+         }
+      }
+
       #endregion
 
       #region Public Methods
