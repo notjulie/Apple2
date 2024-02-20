@@ -61,6 +61,39 @@ namespace A2DiskUtil.Model
          return sb.ToString();
       }
 
+      static public bool operator==(A2FileName a, A2FileName b)
+      {
+         // trailing spaces don't count
+         byte space = 0xA0;
+         for (int i=0; i<a.rawName.Length || i<b.rawName.Length; i++)
+         {
+            byte b1 = i < a.rawName.Length ? a.rawName[i] : space;
+            byte b2 = i < b.rawName.Length ? b.rawName[i] : space;
+            if (b1 != b2)
+               return false;
+         }
+
+         return true;
+      }
+
+      static public bool operator !=(A2FileName a, A2FileName b)
+      {
+         return !(a == b);
+      }
+
+      public override bool Equals(object? obj)
+      {
+         if (obj is A2FileName)
+            return this == (A2FileName)obj;
+         else
+            return false;
+      }
+
+      public override int GetHashCode()
+      {
+         return rawName.GetHashCode();
+      }
+
       #endregion
    }
 }

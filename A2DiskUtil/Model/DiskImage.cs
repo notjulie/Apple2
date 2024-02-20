@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -113,6 +114,19 @@ namespace A2DiskUtil.Model
          return new Track(fileData, track * 16 * 256);
       }
 
+      public void DeleteIfExists(A2FileName fileName)
+      {
+         // look for the file's catalog entry
+         foreach (var entry in GetCatalog())
+         {
+            if (entry.FileName == fileName)
+            {
+               Delete(entry);
+               break;
+            }
+         }
+      }
+
       /// <summary>
       /// Writes a A2File to the disk
       /// </summary>
@@ -127,9 +141,29 @@ namespace A2DiskUtil.Model
 
       #region DOS-like commands
 
+      /// <summary>
+      /// Saves a file similarly to BSAVE; it's a binary file with a start address
+      /// </summary>
+      /// <param name="name"></param>
+      /// <param name="startAddress"></param>
+      /// <param name="contents"></param>
+      /// <exception cref="NotImplementedException"></exception>
       public void BSAVE(A2FileName name, UInt16 startAddress, byte[] contents)
       {
+         // delete any such existing file
+         DeleteIfExists(name);
+
+         // and the rest
          throw new NotImplementedException("DiskImage.BSAVE");
+      }
+
+      #endregion
+
+      #region Private Methods
+
+      private void Delete(FileDescriptiveEntry file)
+      {
+         throw new NotImplementedException("DiskImage.Delete");
       }
 
       #endregion

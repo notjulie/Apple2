@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,19 +46,27 @@ namespace A2DiskUtil.Model
          private set;
       }
 
+      /// <summary>
+      /// Gets the executable binary image
+      /// </summary>
       public byte[] BinaryImage
       {
          get
          {
-            throw new NotImplementedException("A2File.BinaryImage");
+            byte[] result = new byte[rawContents.Length - 2];
+            Array.Copy(rawContents, 2, result, 0, result.Length);
+            return result;
          }
       }
 
+      /// <summary>
+      /// Gets the start address of the binary image
+      /// </summary>
       public UInt16 StartAddress
       {
          get
          {
-            throw new NotImplementedException("A2File.StartAddress");
+            return (UInt16)(rawContents[0] + 256 * rawContents[1]);
          }
       }
 
