@@ -14,6 +14,13 @@ namespace A2DiskUtil.Model
    /// </summary>
    public class DiskImage
    {
+      #region Types / Constants
+
+      private const int TableOfContentsTrack = 0x11;
+      private const int TableOfContentsSector = 0;
+
+      #endregion
+
       #region Private Fields
 
       private byte[] fileData;
@@ -31,9 +38,6 @@ namespace A2DiskUtil.Model
          // make a copy of the contents
          this.fileData = new byte[fileData.Length];
          Array.Copy(fileData, this.fileData, fileData.Length);
-
-         // read it
-         VolumeTableOfContents = new VolumeTableOfContents(GetTrack(0x11).GetSector(0x0));
       }
 
       /// <summary>
@@ -43,16 +47,6 @@ namespace A2DiskUtil.Model
       public DiskImage(string filename)
          :this(File.ReadAllBytes(filename))
       {
-      }
-
-      #endregion
-
-      #region Public Properties
-
-      public VolumeTableOfContents VolumeTableOfContents
-      {
-         get;
-         private set;
       }
 
       #endregion
@@ -77,7 +71,7 @@ namespace A2DiskUtil.Model
       {
          List<FileDescriptiveEntry> result = new List<FileDescriptiveEntry>();
 
-         TrackSector trackSector = VolumeTableOfContents.FirstCatalogSector;
+         TrackSector trackSector = ReadTableOfContents().FirstCatalogSector;
          while (trackSector.Track != 0 && trackSector.Sector != 0)
          {
             Sector sector = GetSector(trackSector);
@@ -188,14 +182,19 @@ namespace A2DiskUtil.Model
          throw new NotImplementedException("DiskImage.AddFileEntry");
       }
 
-      private TrackSector AllocateSector()
-      {
-         throw new NotImplementedException("DiskImage.AllocateSector");
-      }
-
       private void Delete(FileDescriptiveEntry file)
       {
          throw new NotImplementedException("DiskImage.Delete");
+      }
+
+      private VolumeTableOfContents ReadTableOfContents()
+      {
+         return new VolumeTableOfContents(GetTrack(TableOfContentsTrack).GetSector(TableOfContentsSector));
+      }
+
+      private void WriteTableOfContents(VolumeTableOfContents tableOfContents)
+      {
+         throw new NotImplementedException("DiskImage.WriteTableOfContents");
       }
 
       /// <summary>
@@ -206,8 +205,11 @@ namespace A2DiskUtil.Model
       /// <returns></returns>
       private TrackSector[] WriteDataToAvailableSectors(byte[] data)
       {
-         List<TrackSector> sectors = new List<TrackSector>();
+         // read the table of contents
+         VolumeTableOfContents tableOfContents = ReadTableOfContents();
 
+         // allocate sectors and write to them
+         List<TrackSector> sectors = new List<TrackSector>();
          for (int offset = 0; offset < data.Length; offset += Sector.Size)
          {
             int length = data.Length - offset;
@@ -217,11 +219,15 @@ namespace A2DiskUtil.Model
             byte[] sectorData = new byte[length];
             Array.Copy(data, offset, sectorData, 0, sectorData.Length);
 
-            TrackSector sector = AllocateSector();
+            TrackSector sector = tableOfContents.AllocateSector();
             WriteSector(sector, sectorData);
             sectors.Add(sector);
          }
 
+         // write the table of contents
+         WriteTableOfContents(tableOfContents);
+
+         // return the sectors that we wrote to
          return sectors.ToArray();
       }
 
