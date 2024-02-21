@@ -40,6 +40,11 @@
          return Read(offset, 1)[0];
       }
 
+      public void WriteByte(int offset, byte value)
+      {
+         sectorData[offset] = value;
+      }
+
       #endregion
    }
 }
