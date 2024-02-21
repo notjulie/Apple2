@@ -1,4 +1,10 @@
-﻿using Microsoft.VisualBasic;
+﻿// 
+// Author: Randy Rasmussen
+// Copyright: None, use as you will
+// Warranties: None, use at your own risk
+//
+
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices;
@@ -104,9 +110,9 @@ namespace A2DiskUtil.Model
       /// </summary>
       /// <param name="track"></param>
       /// <returns></returns>
-      public Track GetTrack(int track)
+      public Track GetTrack(byte track)
       {
-         return new Track(fileData, track * 16 * 256);
+         return new Track(fileData, GetTrackOffset(track));
       }
 
       public void DeleteIfExists(A2FileName fileName)
@@ -187,6 +193,16 @@ namespace A2DiskUtil.Model
          throw new NotImplementedException("DiskImage.Delete");
       }
 
+      private int GetSectorOffset(TrackSector sector)
+      {
+         return GetTrackOffset(sector.Track) + sector.Sector * Sector.Size;
+      }
+
+      private int GetTrackOffset(byte track)
+      {
+         return track * Track.TrackSize;
+      }
+
       private VolumeTableOfContents ReadTableOfContents()
       {
          return new VolumeTableOfContents(GetTrack(TableOfContentsTrack).GetSector(TableOfContentsSector));
@@ -231,9 +247,15 @@ namespace A2DiskUtil.Model
          return sectors.ToArray();
       }
 
+      /// <summary>
+      /// Writes data to the given sector
+      /// </summary>
+      /// <param name="sector"></param>
+      /// <param name="sectorData"></param>
       private void WriteSector(TrackSector sector, byte[] sectorData)
       {
-         throw new NotImplementedException("DiskImage.WriteSector");
+         int offset = GetSectorOffset(sector);
+         Array.Copy(sectorData, 0, this.fileData, offset, sectorData.Length);
       }
 
       private TrackSector WriteTrackSectorList(TrackSector[] trackSectorList)
