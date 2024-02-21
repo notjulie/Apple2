@@ -188,14 +188,46 @@ namespace A2DiskUtil.Model
          throw new NotImplementedException("DiskImage.AddFileEntry");
       }
 
+      private TrackSector AllocateSector()
+      {
+         throw new NotImplementedException("DiskImage.AllocateSector");
+      }
+
       private void Delete(FileDescriptiveEntry file)
       {
          throw new NotImplementedException("DiskImage.Delete");
       }
 
+      /// <summary>
+      /// Allocates sectors and writes the given data to them, returning
+      /// the list of sectors to which the data was written
+      /// </summary>
+      /// <param name="data"></param>
+      /// <returns></returns>
       private TrackSector[] WriteDataToAvailableSectors(byte[] data)
       {
-         throw new NotImplementedException("DiskImage.WriteDataToAvailableSectors");
+         List<TrackSector> sectors = new List<TrackSector>();
+
+         for (int offset = 0; offset < data.Length; offset += Sector.Size)
+         {
+            int length = data.Length - offset;
+            if (length > Sector.Size)
+               length = Sector.Size;
+
+            byte[] sectorData = new byte[length];
+            Array.Copy(data, offset, sectorData, 0, sectorData.Length);
+
+            TrackSector sector = AllocateSector();
+            WriteSector(sector, sectorData);
+            sectors.Add(sector);
+         }
+
+         return sectors.ToArray();
+      }
+
+      private void WriteSector(TrackSector sector, byte[] sectorData)
+      {
+         throw new NotImplementedException("DiskImage.WriteSector");
       }
 
       private TrackSector WriteTrackSectorList(TrackSector[] trackSectorList)
