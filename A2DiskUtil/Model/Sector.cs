@@ -45,6 +45,17 @@
          sectorData[offset] = value;
       }
 
+      /// <summary>
+      /// Returns the sector's data as a byte array
+      /// </summary>
+      /// <returns>the sector's data as a byte array</returns>
+      public byte[] ToArray()
+      {
+         byte[] result = new byte[sectorData.Length];
+         Array.Copy(sectorData, result, sectorData.Length);
+         return result;
+      }
+
       #endregion
    }
 }

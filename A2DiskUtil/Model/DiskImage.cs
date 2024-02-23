@@ -208,9 +208,13 @@ namespace A2DiskUtil.Model
          return new VolumeTableOfContents(GetTrack(TableOfContentsTrack).GetSector(TableOfContentsSector));
       }
 
+      /// <summary>
+      /// Writes the contents of the volume table of contents sector
+      /// </summary>
+      /// <param name="tableOfContents"></param>
       private void WriteTableOfContents(VolumeTableOfContents tableOfContents)
       {
-         throw new NotImplementedException("DiskImage.WriteTableOfContents");
+         WriteSector(new TrackSector(TableOfContentsTrack, TableOfContentsSector), tableOfContents.ToArray());
       }
 
       /// <summary>
@@ -258,9 +262,47 @@ namespace A2DiskUtil.Model
          Array.Copy(sectorData, 0, this.fileData, offset, sectorData.Length);
       }
 
+      /// <summary>
+      /// Writes the track-sector list and returns the address of the first
+      /// sector
+      /// </summary>
+      /// <param name="trackSectorList"></param>
+      /// <returns></returns>
       private TrackSector WriteTrackSectorList(TrackSector[] trackSectorList)
       {
-         throw new NotImplementedException("DiskImage.WriteTrackSectorList");
+         // read the table of contents
+         VolumeTableOfContents tableOfContents = ReadTableOfContents();
+
+         // create the track-sector list
+         List<TrackSectorListSector> sectors = new List<TrackSectorListSector>();
+         TrackSectorListSector currentSector = new TrackSectorListSector();
+         sectors.Add(currentSector);
+         foreach (var sector in trackSectorList)
+         {
+            // append to the current sector if we can, else start another
+            if (!currentSector.TryAppendSector(sector))
+            {
+               currentSector = new TrackSectorListSector();
+               sectors.Add(currentSector);
+               currentSector.AppendSector(sector);
+            }
+         }
+
+         // write them all... back to front so that we can make a nice little
+         // linked list of them
+         TrackSector result = TrackSector.Null;
+         for (int i=sectors.Count-1; i>=0; i--)
+         {
+            sectors[i].NextSector = result;
+            result = tableOfContents.AllocateSector();
+            WriteSector(result, sectors[i].ToArray());
+         }
+
+         // update the table of contents
+         WriteTableOfContents(tableOfContents);
+
+         // return the address of the first sector
+         return result;
       }
 
       #endregion

@@ -89,6 +89,15 @@
          throw new Exception("TrackSector.AllocateSector: disk full");
       }
 
+      /// <summary>
+      /// Returns the table of contents as a byte array
+      /// </summary>
+      /// <returns>the table of contents as a byte array</returns>
+      public byte[] ToArray()
+      {
+         return sector.ToArray();
+      }
+
       #endregion
 
       #region Private Methods
