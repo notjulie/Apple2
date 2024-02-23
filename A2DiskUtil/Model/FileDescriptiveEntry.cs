@@ -3,8 +3,17 @@ using System.Xml.Linq;
 
 namespace A2DiskUtil.Model
 {
+   /// <summary>
+   /// Represents a file descriptive entry
+   /// </summary>
    public class FileDescriptiveEntry
    {
+      #region Types / Constants
+
+      private const int TrackSectorOffset = 0x00;
+
+      #endregion
+
       #region Private Fields
 
       private byte[] data;
@@ -94,15 +103,19 @@ namespace A2DiskUtil.Model
          }
       }
 
+      /// <summary>
+      /// Gets or sets the first sector of the track-sector list
+      /// </summary>
       public TrackSector TrackSectorListStart
       {
          get
          {
-            throw new NotImplementedException("FileDescriptiveEntry.TrackSectorListStart get");
+            return new TrackSector(data[TrackSectorOffset], data[TrackSectorOffset + 1]);
          }
          set
          {
-            throw new NotImplementedException("FileDescriptiveEntry.TrackSectorListStart set");
+            data[TrackSectorOffset] = value.Track;
+            data[TrackSectorOffset + 1] = value.Sector;
          }
       }
 
