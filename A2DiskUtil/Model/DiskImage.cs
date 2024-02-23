@@ -25,6 +25,12 @@ namespace A2DiskUtil.Model
       private const int TableOfContentsTrack = 0x11;
       private const int TableOfContentsSector = 0;
 
+      private struct CatalogSectorAndLocation
+      {
+         public TrackSector Location;
+         public CatalogSector Sector;
+      }
+
       #endregion
 
       #region Private Fields
@@ -76,22 +82,10 @@ namespace A2DiskUtil.Model
       public FileDescriptiveEntry[] GetCatalog()
       {
          List<FileDescriptiveEntry> result = new List<FileDescriptiveEntry>();
-
-         TrackSector trackSector = ReadTableOfContents().FirstCatalogSector;
-         while (trackSector.Track != 0 && trackSector.Sector != 0)
+         foreach (var entry in ReadCatalogSectors())
          {
-            Sector sector = GetSector(trackSector);
-            for (int i = 11; i < 255; i += 35)
-            {
-               result.Add(new FileDescriptiveEntry(sector.Read(i, 35)));
-            }
-
-            trackSector = new TrackSector(
-               sector.ReadByte(1),
-               sector.ReadByte(2)
-               );
+            result.AddRange(entry.Sector.GetFileDescriptiveEntries());
          }
-
          return result.ToArray();
       }
 
@@ -201,6 +195,30 @@ namespace A2DiskUtil.Model
       private int GetTrackOffset(byte track)
       {
          return track * Track.TrackSize;
+      }
+
+      /// <summary>
+      /// Reads the list of all CatalogEntry sectors from the disk
+      /// </summary>
+      /// <returns></returns>
+      private CatalogSectorAndLocation[] ReadCatalogSectors()
+      {
+         List<CatalogSectorAndLocation> result = new List<CatalogSectorAndLocation>();
+         TrackSector trackSector = ReadTableOfContents().FirstCatalogSector;
+         while (trackSector.Track != 0 && trackSector.Sector != 0)
+         {
+            // add this sector to the result
+            Sector sector = GetSector(trackSector);
+            CatalogSectorAndLocation entry = new CatalogSectorAndLocation();
+            entry.Location = trackSector;
+            entry.Sector = new CatalogSector(sector);
+            result.Add(entry);
+
+            // next sector
+            trackSector = entry.Sector.NextSector;
+         }
+
+         return result.ToArray();
       }
 
       private VolumeTableOfContents ReadTableOfContents()
