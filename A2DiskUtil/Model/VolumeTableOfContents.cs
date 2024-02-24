@@ -109,9 +109,10 @@
       /// <returns></returns>
       private bool IsAllocated(TrackSector trackSector)
       {
+         // a bit that is set indicates that the sector is available
          byte byteOffset, bitMask;
-         GetBitLocation(trackSector, out byteOffset, out bitMask);
-         return (sector.ReadByte(byteOffset) & bitMask) != 0;
+         GetAllocationBitLocation(trackSector, out byteOffset, out bitMask);
+         return (sector.ReadByte(byteOffset) & bitMask) == 0;
       }
 
       /// <summary>
@@ -121,13 +122,21 @@
       /// <returns></returns>
       private void Allocate(TrackSector trackSector)
       {
+         // clear its available bit
          byte byteOffset, bitMask;
-         GetBitLocation(trackSector, out byteOffset, out bitMask);
-         byte b = (byte)(sector.ReadByte(byteOffset) | bitMask);
+         GetAllocationBitLocation(trackSector, out byteOffset, out bitMask);
+         byte b = (byte)(sector.ReadByte(byteOffset) & ~bitMask);
          sector.WriteByte(byteOffset, b);
       }
 
-      private void GetBitLocation(TrackSector trackSector, out byte byteOffset, out byte bitMask)
+      /// <summary>
+      /// Gets the byte offset and bit mask of the sector free bit for the
+      /// given sector
+      /// </summary>
+      /// <param name="trackSector">the sector</param>
+      /// <param name="byteOffset">the returned byteOffset</param>
+      /// <param name="bitMask">the returned bitmask</param>
+      private void GetAllocationBitLocation(TrackSector trackSector, out byte byteOffset, out byte bitMask)
       {
          // https://gswv.apple2.org.za/a2zine/faqs/Csa2DOSMM.html#019
          byteOffset = (byte)(0x38 + 4 * trackSector.Track);
