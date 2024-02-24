@@ -177,9 +177,24 @@ namespace A2DiskUtil.Model
 
       #region Private Methods
 
+      /// <summary>
+      /// Adds the given file entry to the current catalog
+      /// </summary>
+      /// <param name="entry"></param>
       private void AddFileEntry(FileDescriptiveEntry entry)
       {
-         throw new NotImplementedException("DiskImage.AddFileEntry");
+         // go through the catalog sectors until we find one that
+         // we can add the entry to
+         foreach (var catalogSector in ReadCatalogSectors())
+         {
+            if (catalogSector.Sector.TryAddFile(entry))
+            {
+               WriteSector(catalogSector.Location, catalogSector.Sector.ToArray());
+               return;
+            }
+         }
+
+         throw new Exception("DiskImage.AddFileEntry: catalog is full");
       }
 
       private void Delete(FileDescriptiveEntry file)

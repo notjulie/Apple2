@@ -6,14 +6,27 @@ using System.Threading.Tasks;
 
 namespace A2DiskUtil.Model
 {
+   /// <summary>
+   /// Represents a sector in the catalog
+   /// </summary>
    public class CatalogSector
    {
+      #region Private Fields
+
       private Sector sector;
+
+      #endregion
+
+      #region Constructor
 
       public CatalogSector(Sector sector)
       {
          this.sector = sector;
       }
+
+      #endregion
+
+      #region Public Properties
 
       public TrackSector NextSector
       {
@@ -22,6 +35,10 @@ namespace A2DiskUtil.Model
             return new TrackSector(sector.ReadByte(0x01), sector.ReadByte(0x02));
          }
       }
+
+      #endregion
+
+      #region Public Methods
 
       public FileDescriptiveEntry[] GetFileDescriptiveEntries()
       {
@@ -32,5 +49,17 @@ namespace A2DiskUtil.Model
          }
          return result.ToArray();
       }
+
+      public bool TryAddFile(FileDescriptiveEntry entry)
+      {
+         throw new NotImplementedException("CatalogSector.TryAddFile");
+      }
+
+      public byte[] ToArray()
+      {
+         return sector.ToArray();
+      }
+
+      #endregion
    }
 }
