@@ -62,6 +62,16 @@ namespace A2DiskUtil
       }
 
       /// <summary>
+      /// Handles the File>Save Disk As... item
+      /// </summary>
+      /// <param name="sender"></param>
+      /// <param name="e"></param>
+      private void MenuitemSaveDiskAs_Click(object sender, RoutedEventArgs e)
+      {
+         MainViewModel?.SaveDiskAs();
+      }
+
+      /// <summary>
       /// Previews the data that is being dragged in order to tell the
       /// system whether or not we would accept it
       /// </summary>

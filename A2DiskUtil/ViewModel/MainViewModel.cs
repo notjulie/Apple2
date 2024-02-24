@@ -29,6 +29,9 @@ namespace A2DiskUtil.ViewModel
 
       #region Constructor
 
+      /// <summary>
+      /// Initializes a new instance of class MainViewModel
+      /// </summary>
       public MainViewModel()
       {
          // expose our read-only version of the files collection
@@ -88,6 +91,25 @@ namespace A2DiskUtil.ViewModel
             try
             {
                DiskImage = new DiskImage(dialog.FileName);
+            }
+            catch (Exception ex)
+            {
+               MessageBox.Show(ex.Message);
+            }
+         }
+      }
+
+      /// <summary>
+      /// Prompts the user to save the current disk to a file
+      /// </summary>
+      public void SaveDiskAs()
+      {
+         SaveFileDialog dialog = new SaveFileDialog();
+         if (dialog.ShowDialog() == true)
+         {
+            try
+            {
+               DiskImage.SaveAs(dialog.FileName);
             }
             catch (Exception ex)
             {

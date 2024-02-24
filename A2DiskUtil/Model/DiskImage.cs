@@ -122,6 +122,11 @@ namespace A2DiskUtil.Model
          }
       }
 
+      public void SaveAs(string fileName)
+      {
+         File.WriteAllBytes(fileName, this.fileData);
+      }
+
       /// <summary>
       /// Writes a A2File to the disk
       /// </summary>
