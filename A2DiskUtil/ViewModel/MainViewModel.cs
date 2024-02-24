@@ -23,7 +23,7 @@ namespace A2DiskUtil.ViewModel
       #region Private Fields
 
       private DiskImage? diskImage;
-      private ObservableCollection<FileDescriptiveEntry> files = new ObservableCollection<FileDescriptiveEntry>();
+      private ObservableCollection<FileItemViewModel> files = new ObservableCollection<FileItemViewModel>();
 
       #endregion
 
@@ -35,7 +35,7 @@ namespace A2DiskUtil.ViewModel
       public MainViewModel()
       {
          // expose our read-only version of the files collection
-         Files = new ReadOnlyObservableCollection<FileDescriptiveEntry>(files);
+         Files = new ReadOnlyObservableCollection<FileItemViewModel>(files);
       }
 
       #endregion
@@ -62,7 +62,7 @@ namespace A2DiskUtil.ViewModel
             {
                foreach (var file in diskImage.GetCatalog())
                   if (file.IsFile)
-                     files.Add(file);
+                     files.Add(new FileItemViewModel(file));
             }
          }
       }
@@ -70,7 +70,7 @@ namespace A2DiskUtil.ViewModel
       /// <summary>
       /// Gets the Files collection
       /// </summary>
-      public ReadOnlyObservableCollection<FileDescriptiveEntry> Files
+      public ReadOnlyObservableCollection<FileItemViewModel> Files
       {
          get;
          private set;

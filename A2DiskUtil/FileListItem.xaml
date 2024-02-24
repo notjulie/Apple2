@@ -7,6 +7,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
    <Grid>
-      <Label Content="{Binding}"/>
+      <Label Content="{Binding}">
+         <Label.ContextMenu>
+            <ContextMenu>
+               <ContextMenu.Items>
+                  <MenuItem Header="Delete"/>
+               </ContextMenu.Items>
+            </ContextMenu>
+         </Label.ContextMenu>
+      </Label>
    </Grid>
 </UserControl>
