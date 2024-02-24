@@ -39,7 +39,7 @@ namespace A2DiskUtil.Model
             // translate to the weird Apple2 character set
             if (b >= 0x20 && b <= 0x5F)
             {
-               bytes.Add((byte)((b & 0x3F) | 0x80));
+               bytes.Add((byte)(b | 0x80));
             }
             else
             {

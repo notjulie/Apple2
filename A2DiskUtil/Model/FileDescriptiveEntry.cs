@@ -11,12 +11,13 @@ namespace A2DiskUtil.Model
       #region Types / Constants
 
       private const int TrackSectorOffset = 0x00;
+      private const int Size = 34;
 
       #endregion
 
       #region Private Fields
 
-      private byte[] data;
+      private byte[] data = new byte[Size];
 
       #endregion
 
@@ -27,9 +28,6 @@ namespace A2DiskUtil.Model
       /// </summary>
       public FileDescriptiveEntry(A2FileName name)
       {
-         // initialize blank
-         data = new byte[Size];
-
          // copy the name
          FileName = name;
       }
@@ -41,20 +39,12 @@ namespace A2DiskUtil.Model
       public FileDescriptiveEntry(byte[] data)
       {
          // save the raw data
-         this.data = data;
+         Array.Copy(data, this.data, this.data.Length);
       }
 
       #endregion
 
       #region Public Properties
-
-      /// <summary>
-      /// Gets the raw size of the entry
-      /// </summary>
-      public static int Size
-      {
-         get;
-      } = 34;
 
       /// <summary>
       /// Gets a value indicating whether this entry is actually associated with a file
@@ -84,7 +74,7 @@ namespace A2DiskUtil.Model
          set
          {
             byte[] rawName = value.PadToFullLength().ToArray();
-            Array.Copy(data, 3, rawName, 0, rawName.Length);
+            Array.Copy(rawName, 0, data, 3, rawName.Length);
          }
       }
 
