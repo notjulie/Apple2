@@ -132,6 +132,17 @@ namespace A2DiskUtil.Model
          return FileName.ToString();
       }
 
+      /// <summary>
+      /// Returns our data as an array
+      /// </summary>
+      /// <returns></returns>
+      public byte[] ToArray()
+      {
+         byte[] result = new byte[data.Length];
+         Array.Copy(data, result, result.Length);
+         return result;
+      }
+
       #endregion
    }
 }

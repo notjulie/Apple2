@@ -154,6 +154,7 @@ namespace A2DiskUtil.ViewModel
             diskImageCopy.WriteFile(a2File);
 
             // all's well, accept the new image
+            DiskImage = diskImageCopy;
          }
          catch (Exception e)
          {
