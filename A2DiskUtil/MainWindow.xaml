@@ -16,6 +16,12 @@
             <MenuItem Name="menuitemSaveDiskAs" Header="Save Disk As..." Click="MenuitemSaveDiskAs_Click"/>
          </MenuItem>
       </Menu>
-      <ListView ItemsSource="{Binding Files}"/>
+      <ListView ItemsSource="{Binding Files}">
+         <ListView.ItemTemplate>
+            <DataTemplate>
+               <local:FileListItem/>
+            </DataTemplate>
+         </ListView.ItemTemplate>
+      </ListView>
    </DockPanel>
 </Window>
