@@ -109,17 +109,23 @@ namespace A2DiskUtil.Model
          return new Track(fileData, GetTrackOffset(track));
       }
 
-      public void DeleteIfExists(A2FileName fileName)
+      /// <summary>
+      /// Returns a value indicating whether the file exists
+      /// </summary>
+      /// <param name="fileName"></param>
+      /// <returns></returns>
+      public bool FileExists(A2FileName fileName)
       {
-         // look for the file's catalog entry
-         foreach (var entry in GetCatalog())
-         {
-            if (entry.FileName == fileName)
-            {
-               Delete(entry);
-               break;
-            }
-         }
+         return GetFileEntry(fileName) != null;
+      }
+
+      /// <summary>
+      /// Deletes the given file
+      /// </summary>
+      /// <param name="fileName"></param>
+      public void DeleteFile(A2FileName fileName)
+      {
+         Delete(GetFileEntry(fileName));
       }
 
       public void SaveAs(string fileName)
@@ -151,7 +157,8 @@ namespace A2DiskUtil.Model
       public void BSAVE(A2FileName name, UInt16 startAddress, byte[] binaryImage)
       {
          // delete any such existing file
-         DeleteIfExists(name);
+         if (FileExists(name))
+            DeleteFile(name);
 
          // create a catalog entry
          FileDescriptiveEntry entry = new FileDescriptiveEntry(name);
@@ -205,6 +212,26 @@ namespace A2DiskUtil.Model
       private void Delete(FileDescriptiveEntry file)
       {
          throw new NotImplementedException("DiskImage.Delete");
+      }
+
+      /// <summary>
+      /// Gets the FileDescriptiveEntry associated with the given filename;
+      /// returns null if the file doesn't exist
+      /// </summary>
+      /// <param name="fileName"></param>
+      /// <returns></returns>
+      private FileDescriptiveEntry GetFileEntry(A2FileName fileName)
+      {
+         // look for the file's catalog entry
+         foreach (var entry in GetCatalog())
+         {
+            if (entry.FileName == fileName)
+            {
+               return entry;
+            }
+         }
+
+         return null;
       }
 
       private int GetSectorOffset(TrackSector sector)

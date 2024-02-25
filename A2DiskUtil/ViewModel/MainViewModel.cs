@@ -62,7 +62,7 @@ namespace A2DiskUtil.ViewModel
             {
                foreach (var file in diskImage.GetCatalog())
                   if (file.IsFile)
-                     files.Add(new FileItemViewModel(file));
+                     files.Add(new FileItemViewModel(this, file));
             }
          }
       }
@@ -79,6 +79,15 @@ namespace A2DiskUtil.ViewModel
       #endregion
 
       #region Public Methods
+
+      /// <summary>
+      /// Deletes the given file
+      /// </summary>
+      /// <param name="file"></param>
+      public void DeleteFile(A2FileName file)
+      {
+         diskImage.DeleteFile(file);
+      }
 
       /// <summary>
       /// Prompts the user to open a disk image file

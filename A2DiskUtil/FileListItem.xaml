@@ -11,7 +11,7 @@
          <Label.ContextMenu>
             <ContextMenu>
                <ContextMenu.Items>
-                  <MenuItem Header="Delete"/>
+                  <MenuItem Header="Delete" Command="{Binding DeleteFile}"/>
                </ContextMenu.Items>
             </ContextMenu>
          </Label.ContextMenu>
