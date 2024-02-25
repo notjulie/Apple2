@@ -71,6 +71,11 @@ namespace A2DiskUtil.Model
          }
       }
 
+      public TrackSector[] GetSectors()
+      {
+         throw new NotImplementedException("TrackSectorListSector.GetSectors");
+      }
+
       /// <summary>
       /// Appends the sector to the sector list; returns false
       /// if the list is full

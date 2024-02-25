@@ -209,9 +209,44 @@ namespace A2DiskUtil.Model
          throw new Exception("DiskImage.AddFileEntry: catalog is full");
       }
 
+      /// <summary>
+      /// Deletes the given file
+      /// </summary>
+      /// <param name="file"></param>
       private void Delete(FileDescriptiveEntry file)
       {
-         throw new NotImplementedException("DiskImage.Delete");
+         // read the table of contents
+         VolumeTableOfContents tableOfContents = ReadTableOfContents();
+
+         // get the file's track-sector list
+         TrackSector[] trackSectorList = GetTrackSectorList(file);
+
+         // deallocate all of the file's sectors
+         foreach (TrackSector trackSectorListSector in trackSectorList)
+         {
+            // deallocate everything referenced by this sector
+            TrackSectorListSector sector = ReadTrackSectorListSector(trackSectorListSector);
+            foreach (TrackSector trackSector in sector.GetSectors())
+               tableOfContents.DeallocateSector(trackSector);
+
+            // deallocate this sector
+            tableOfContents.DeallocateSector(trackSectorListSector);
+         }
+
+         // rewrite the table of contents
+         WriteTableOfContents(tableOfContents);
+
+         // remove the file from the catalog
+         foreach (var catalogSector in ReadCatalogSectors())
+         {
+            if (catalogSector.Sector.TryRemoveFile(file))
+            {
+               WriteSector(catalogSector.Location, catalogSector.Sector.ToArray());
+               return;
+            }
+         }
+
+         throw new Exception("DiskImage.Delete: unable to delete from catalog");
       }
 
       /// <summary>
@@ -244,6 +279,11 @@ namespace A2DiskUtil.Model
          return track * Track.TrackSize;
       }
 
+      private TrackSector[] GetTrackSectorList(FileDescriptiveEntry file)
+      {
+         throw new NotImplementedException("DiskImage.GetTrackSectorList");
+      }
+
       /// <summary>
       /// Reads the list of all CatalogEntry sectors from the disk
       /// </summary>
@@ -271,6 +311,11 @@ namespace A2DiskUtil.Model
       private VolumeTableOfContents ReadTableOfContents()
       {
          return new VolumeTableOfContents(GetTrack(TableOfContentsTrack).GetSector(TableOfContentsSector));
+      }
+
+      private TrackSectorListSector ReadTrackSectorListSector(TrackSector trackSector)
+      {
+         throw new NotImplementedException("DiskImage.ReadTrackSectorListSector");
       }
 
       /// <summary>

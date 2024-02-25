@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace A2DiskUtil.ViewModel
@@ -29,7 +30,16 @@ namespace A2DiskUtil.ViewModel
          this.fileDescriptiveEntry = fileDescriptiveEntry;
 
          // initialize other stuff
-         this.DeleteFile = new Command((object o) => { parent.DeleteFile(fileDescriptiveEntry.FileName); });
+         this.DeleteFile = new Command((object o) => {
+            try
+            {
+               parent.DeleteFile(fileDescriptiveEntry.FileName);
+            }
+            catch (Exception e)
+            {
+               MessageBox.Show(e.Message);
+            }
+         });
       }
 
       #endregion

@@ -73,6 +73,11 @@ namespace A2DiskUtil.Model
          return false;
       }
 
+      public bool TryRemoveFile(FileDescriptiveEntry file)
+      {
+         throw new NotImplementedException("CatalogSector.TryRemoveFile");
+      }
+
       public byte[] ToArray()
       {
          return sector.ToArray();

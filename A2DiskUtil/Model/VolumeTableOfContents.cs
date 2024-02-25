@@ -89,6 +89,11 @@
          throw new Exception("TrackSector.AllocateSector: disk full");
       }
 
+      public void DeallocateSector(TrackSector sector)
+      {
+         throw new NotImplementedException("VolumeTableOfContents.DeallocateSector");
+      }
+
       /// <summary>
       /// Returns the table of contents as a byte array
       /// </summary>
