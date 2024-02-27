@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace A2DiskUtil.Model
       #region Types / Constants
 
       private const int NextTrackSectorOffset = 0x01;
-      private const int TrackListOffset = 0x0C;
+      private const int SectorListOffset = 0x0C;
 
       #endregion
 
@@ -32,6 +33,16 @@ namespace A2DiskUtil.Model
       public TrackSectorListSector()
       {
          // all good, nothing but zeroes is perfect
+      }
+
+      /// <summary>
+      /// Initializes a new instance of class TrackSectorListSector from the
+      /// given sector
+      /// </summary>
+      /// <param name="sector"></param>
+      public TrackSectorListSector(Sector sector)
+      {
+         sectorData = sector.ToArray();
       }
 
       #endregion
@@ -71,9 +82,23 @@ namespace A2DiskUtil.Model
          }
       }
 
+      /// <summary>
+      /// Returns the list of sectors
+      /// </summary>
+      /// <returns></returns>
       public TrackSector[] GetSectors()
       {
-         throw new NotImplementedException("TrackSectorListSector.GetSectors");
+         List<TrackSector> result = new List<TrackSector>();
+
+         for (int i = SectorListOffset; i < sectorData.Length - 1; ++i)
+         {
+            TrackSector sector = new TrackSector(sectorData[i], sectorData[i + 1]);
+            if (sector.IsNull)
+               break;
+            result.Add(sector);
+         }
+
+         return result.ToArray();
       }
 
       /// <summary>
@@ -84,7 +109,7 @@ namespace A2DiskUtil.Model
       /// <returns></returns>
       public bool TryAppendSector(TrackSector trackSector)
       {
-         for (int i = TrackListOffset; i < sectorData.Length - 2; i+= 2)
+         for (int i = SectorListOffset; i < sectorData.Length - 2; i+= 2)
          {
             if (sectorData[i] == 0 && sectorData[i+1] == 0)
             {

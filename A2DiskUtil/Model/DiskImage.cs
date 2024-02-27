@@ -94,7 +94,7 @@ namespace A2DiskUtil.Model
       /// </summary>
       /// <param name="trackSector"></param>
       /// <returns></returns>
-      public Sector GetSector(TrackSector trackSector)
+      public Sector ReadSector(TrackSector trackSector)
       {
          return GetTrack(trackSector.Track).GetSector(trackSector.Sector);
       }
@@ -219,18 +219,18 @@ namespace A2DiskUtil.Model
          VolumeTableOfContents tableOfContents = ReadTableOfContents();
 
          // get the file's track-sector list
-         TrackSector[] trackSectorList = GetTrackSectorList(file);
+         var trackSectorList = GetTrackSectorList(file);
 
          // deallocate all of the file's sectors
-         foreach (TrackSector trackSectorListSector in trackSectorList)
+         foreach (TrackSector sectorAddress in trackSectorList.Keys)
          {
             // deallocate everything referenced by this sector
-            TrackSectorListSector sector = ReadTrackSectorListSector(trackSectorListSector);
+            TrackSectorListSector sector = ReadTrackSectorListSector(sectorAddress);
             foreach (TrackSector trackSector in sector.GetSectors())
                tableOfContents.DeallocateSector(trackSector);
 
             // deallocate this sector
-            tableOfContents.DeallocateSector(trackSectorListSector);
+            tableOfContents.DeallocateSector(sectorAddress);
          }
 
          // rewrite the table of contents
@@ -279,9 +279,26 @@ namespace A2DiskUtil.Model
          return track * Track.TrackSize;
       }
 
-      private TrackSector[] GetTrackSectorList(FileDescriptiveEntry file)
+      /// <summary>
+      /// Returns the track-sector list of the given file
+      /// </summary>
+      /// <param name="file"></param>
+      /// <returns></returns>
+      private Dictionary<TrackSector, TrackSectorListSector> GetTrackSectorList(FileDescriptiveEntry file)
       {
-         throw new NotImplementedException("DiskImage.GetTrackSectorList");
+         Dictionary<TrackSector, TrackSectorListSector> result = new Dictionary<TrackSector, TrackSectorListSector>();
+
+         // step through the linked list of sectors
+         TrackSector sectorAddress = file.TrackSectorListStart;
+         while (sectorAddress.Track != 0)
+         {
+            var sectorData = ReadTrackSectorListSector(sectorAddress);
+            result.Add(sectorAddress, sectorData);
+
+            sectorAddress = sectorData.NextSector;
+         }
+
+         return result;
       }
 
       /// <summary>
@@ -295,7 +312,7 @@ namespace A2DiskUtil.Model
          while (trackSector.Track != 0 && trackSector.Sector != 0)
          {
             // add this sector to the result
-            Sector sector = GetSector(trackSector);
+            Sector sector = ReadSector(trackSector);
             CatalogSectorAndLocation entry = new CatalogSectorAndLocation();
             entry.Location = trackSector;
             entry.Sector = new CatalogSector(sector);
@@ -313,9 +330,14 @@ namespace A2DiskUtil.Model
          return new VolumeTableOfContents(GetTrack(TableOfContentsTrack).GetSector(TableOfContentsSector));
       }
 
+      /// <summary>
+      /// Reads a track sector list sector
+      /// </summary>
+      /// <param name="trackSector"></param>
+      /// <returns></returns>
       private TrackSectorListSector ReadTrackSectorListSector(TrackSector trackSector)
       {
-         throw new NotImplementedException("DiskImage.ReadTrackSectorListSector");
+         return new TrackSectorListSector(ReadSector(trackSector));
       }
 
       /// <summary>
