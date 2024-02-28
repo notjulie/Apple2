@@ -3,24 +3,15 @@
    /// <summary>
    /// Representation of the VolumeTableOfContents sector
    /// </summary>
-   public class VolumeTableOfContents
+   /// <remarks>
+   /// Initializes a new instance of class VolumeTableOfContents
+   /// </remarks>
+   /// <param name="sector"></param>
+   public class VolumeTableOfContents(Sector _sector)
    {
       #region Private Fields
 
-      private Sector sector;
-
-      #endregion
-
-      #region Constructor
-
-      /// <summary>
-      /// Initializes a new instance of class VolumeTableOfContents
-      /// </summary>
-      /// <param name="sector"></param>
-      public VolumeTableOfContents(Sector sector)
-      {
-         this.sector = sector;
-      }
+      private readonly Sector sector = _sector;
 
       #endregion
 
@@ -70,17 +61,17 @@
       /// Allocates a sector
       /// </summary>
       /// <returns></returns>
-      public TrackSector AllocateSector()
+      public TrackSector AllocateNewSector()
       {
          // track 0 is not used according to what I read
          for (byte track = 1; track < TrackCount;  track++) 
          {
             for (byte sector = 0; sector < SectorsPerTrack; ++sector)
             {
-               TrackSector trackSector = new TrackSector(track, sector);
+               TrackSector trackSector = new(track, sector);
                if (!IsAllocated(trackSector))
                {
-                  Allocate(trackSector);
+                  AllocateSector(trackSector);
                   return trackSector;
                }
             }
@@ -89,9 +80,16 @@
          throw new Exception("TrackSector.AllocateSector: disk full");
       }
 
-      public void DeallocateSector(TrackSector sector)
+      /// <summary>
+      /// Marks the sector as free
+      /// </summary>
+      /// <param name="sector"></param>
+      public void DeallocateSector(TrackSector trackSector)
       {
-         throw new NotImplementedException("VolumeTableOfContents.DeallocateSector");
+         // set its available bit
+         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
+         byte b = (byte)(sector.ReadByte(byteOffset) | bitMask);
+         sector.WriteByte(byteOffset, b);
       }
 
       /// <summary>
@@ -115,8 +113,7 @@
       private bool IsAllocated(TrackSector trackSector)
       {
          // a bit that is set indicates that the sector is available
-         byte byteOffset, bitMask;
-         GetAllocationBitLocation(trackSector, out byteOffset, out bitMask);
+         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
          return (sector.ReadByte(byteOffset) & bitMask) == 0;
       }
 
@@ -125,11 +122,10 @@
       /// </summary>
       /// <param name="trackSector"></param>
       /// <returns></returns>
-      private void Allocate(TrackSector trackSector)
+      private void AllocateSector(TrackSector trackSector)
       {
          // clear its available bit
-         byte byteOffset, bitMask;
-         GetAllocationBitLocation(trackSector, out byteOffset, out bitMask);
+         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
          byte b = (byte)(sector.ReadByte(byteOffset) & ~bitMask);
          sector.WriteByte(byteOffset, b);
       }
@@ -141,7 +137,7 @@
       /// <param name="trackSector">the sector</param>
       /// <param name="byteOffset">the returned byteOffset</param>
       /// <param name="bitMask">the returned bitmask</param>
-      private void GetAllocationBitLocation(TrackSector trackSector, out byte byteOffset, out byte bitMask)
+      private static void GetAllocationBitLocation(TrackSector trackSector, out byte byteOffset, out byte bitMask)
       {
          // https://gswv.apple2.org.za/a2zine/faqs/Csa2DOSMM.html#019
          byteOffset = (byte)(0x38 + 4 * trackSector.Track);

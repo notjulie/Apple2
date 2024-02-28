@@ -371,7 +371,7 @@ namespace A2DiskUtil.Model
             byte[] sectorData = new byte[length];
             Array.Copy(data, offset, sectorData, 0, sectorData.Length);
 
-            TrackSector sector = tableOfContents.AllocateSector();
+            TrackSector sector = tableOfContents.AllocateNewSector();
             WriteSector(sector, sectorData);
             sectors.Add(sector);
          }
@@ -426,7 +426,7 @@ namespace A2DiskUtil.Model
          for (int i=sectors.Count-1; i>=0; i--)
          {
             sectors[i].NextSector = result;
-            result = tableOfContents.AllocateSector();
+            result = tableOfContents.AllocateNewSector();
             WriteSector(result, sectors[i].ToArray());
          }
 
