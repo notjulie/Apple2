@@ -9,6 +9,19 @@
    /// <param name="sector"></param>
    public class VolumeTableOfContents(Sector _sector)
    {
+      #region Types/Constants
+
+      /// <summary>
+      /// offset and mask of a bit in our allocation map
+      /// </summary>
+      private struct BitLocation
+      {
+         public byte offset;
+         public byte mask;
+      }
+
+      #endregion
+
       #region Private Fields
 
       private readonly Sector sector = _sector;
@@ -87,9 +100,9 @@
       public void DeallocateSector(TrackSector trackSector)
       {
          // set its available bit
-         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
-         byte b = (byte)(sector.ReadByte(byteOffset) | bitMask);
-         sector.WriteByte(byteOffset, b);
+         var bitLocation = GetAllocationBitLocation(trackSector);
+         byte b = (byte)(sector.ReadByte(bitLocation.offset) | bitLocation.mask);
+         sector.WriteByte(bitLocation.offset, b);
       }
 
       /// <summary>
@@ -113,8 +126,8 @@
       private bool IsAllocated(TrackSector trackSector)
       {
          // a bit that is set indicates that the sector is available
-         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
-         return (sector.ReadByte(byteOffset) & bitMask) == 0;
+         var bitLocation = GetAllocationBitLocation(trackSector);
+         return (sector.ReadByte(bitLocation.offset) & bitLocation.mask) == 0;
       }
 
       /// <summary>
@@ -125,9 +138,9 @@
       private void AllocateSector(TrackSector trackSector)
       {
          // clear its available bit
-         GetAllocationBitLocation(trackSector, out byte byteOffset, out byte bitMask);
-         byte b = (byte)(sector.ReadByte(byteOffset) & ~bitMask);
-         sector.WriteByte(byteOffset, b);
+         var bitLocation = GetAllocationBitLocation(trackSector);
+         byte b = (byte)(sector.ReadByte(bitLocation.offset) & ~bitLocation.mask);
+         sector.WriteByte(bitLocation.offset, b);
       }
 
       /// <summary>
@@ -135,21 +148,29 @@
       /// given sector
       /// </summary>
       /// <param name="trackSector">the sector</param>
-      /// <param name="byteOffset">the returned byteOffset</param>
-      /// <param name="bitMask">the returned bitmask</param>
-      private static void GetAllocationBitLocation(TrackSector trackSector, out byte byteOffset, out byte bitMask)
+      private static BitLocation GetAllocationBitLocation(TrackSector trackSector)
       {
          // https://gswv.apple2.org.za/a2zine/faqs/Csa2DOSMM.html#019
-         byteOffset = (byte)(0x38 + 4 * trackSector.Track);
+
+         // start with the offset of the 4 byte region for the track
+         BitLocation result = new()
+         {
+            offset = (byte)(0x38 + 4 * trackSector.Track)
+         };
+
+         // adjust for the odd positioning of the bits within the 4 bytes
          if (trackSector.Sector < 8)
          {
-            byteOffset += 1;
-            bitMask = (byte)(1 << trackSector.Sector);
+            result.offset += 1;
+            result.mask = (byte)(1 << trackSector.Sector);
          }
          else
          {
-            bitMask = (byte)(1 << trackSector.Sector - 8);
+            result.mask = (byte)(1 << trackSector.Sector - 8);
          }
+
+         // done
+         return result;
       }
 
       #endregion
