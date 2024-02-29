@@ -11,13 +11,17 @@ namespace A2DiskUtil.Model
       #region Types / Constants
 
       private const int TrackSectorOffset = 0x00;
-      private const int Size = 34;
+
+      /// <summary>
+      /// only 34 bytes are used; the last serves no purpose
+      /// </summary>
+      public const int Size = 35;
 
       #endregion
 
       #region Private Fields
 
-      private byte[] data = new byte[Size];
+      private readonly byte[] data = new byte[Size];
 
       #endregion
 
@@ -114,15 +118,6 @@ namespace A2DiskUtil.Model
       #region Public Methods
 
       /// <summary>
-      /// Returns a string representation of the object
-      /// </summary>
-      /// <returns></returns>
-      public override string ToString()
-      {
-         return FileName.ToString();
-      }
-
-      /// <summary>
       /// Returns our data as an array
       /// </summary>
       /// <returns></returns>
@@ -131,6 +126,56 @@ namespace A2DiskUtil.Model
          byte[] result = new byte[data.Length];
          Array.Copy(data, result, result.Length);
          return result;
+      }
+
+      #endregion
+
+      #region Base Class Overrides
+
+      public override bool Equals(object? obj)
+      {
+         if (obj is FileDescriptiveEntry entry)
+         {
+            return entry == this;
+         }
+         else
+         {
+            return false;
+         }
+      }
+
+      public override int GetHashCode()
+      {
+         return data.GetHashCode();
+      }
+
+      /// <summary>
+      /// Returns a string representation of the object
+      /// </summary>
+      /// <returns></returns>
+      public override string ToString()
+      {
+         return FileName.ToString();
+      }
+
+      static public bool operator ==(FileDescriptiveEntry? a, FileDescriptiveEntry? b)
+      {
+         if (a is null && b is null)
+            return true;
+         if (a is null || b is null)
+            return false;
+         for (int i = 0; i < a.data.Length; i++)
+         {
+            if (a.data[i] != b.data[i])
+               return false;
+         }
+
+         return true;
+      }
+
+      static public bool operator !=(FileDescriptiveEntry? a, FileDescriptiveEntry? b)
+      {
+         return !(a == b);
       }
 
       #endregion

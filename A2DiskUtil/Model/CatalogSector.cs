@@ -10,20 +10,20 @@ namespace A2DiskUtil.Model
    /// <summary>
    /// Represents a sector in the catalog
    /// </summary>
-   public class CatalogSector
+   public class CatalogSector(Sector sector)
    {
-      #region Private Fields
+      #region Types / Constants
 
-      private Sector sector;
+      private const int FirstFileEntryOffset = 11;
 
       #endregion
 
-      #region Constructor
+      #region Private Fields
 
-      public CatalogSector(Sector sector)
-      {
-         this.sector = sector;
-      }
+      private readonly Sector sector = sector;
+
+      #endregion
+      #region Constructor
 
       #endregion
 
@@ -43,12 +43,12 @@ namespace A2DiskUtil.Model
 
       public FileDescriptiveEntry[] GetFileDescriptiveEntries()
       {
-         List<FileDescriptiveEntry> result = new List<FileDescriptiveEntry>();
-         for (int i = 11; i < 255; i += 35)
+         List<FileDescriptiveEntry> result = [];
+         for (int i = FirstFileEntryOffset; i < 255; i += FileDescriptiveEntry.Size)
          {
-            result.Add(new FileDescriptiveEntry(sector.Read(i, 35)));
+            result.Add(new FileDescriptiveEntry(sector.Read(i, FileDescriptiveEntry.Size)));
          }
-         return result.ToArray();
+         return [.. result];
       }
 
       /// <summary>
@@ -60,9 +60,9 @@ namespace A2DiskUtil.Model
       public bool TryAddFile(FileDescriptiveEntry newEntry)
       {
          // look for an empty entry
-         for (int i = 11; i < 255; i += 35)
+         for (int i = FirstFileEntryOffset; i < 255; i += FileDescriptiveEntry.Size)
          {
-            var oldEntry = new FileDescriptiveEntry(sector.Read(i, 35));
+            var oldEntry = new FileDescriptiveEntry(sector.Read(i, FileDescriptiveEntry.Size));
             if (!oldEntry.IsFile)
             {
                sector.Write(i, newEntry.ToArray());
@@ -73,9 +73,26 @@ namespace A2DiskUtil.Model
          return false;
       }
 
+      /// <summary>
+      /// Removes the given file from our list; returns false if not found
+      /// </summary>
+      /// <param name="file"></param>
+      /// <returns></returns>
       public bool TryRemoveFile(FileDescriptiveEntry file)
       {
-         throw new NotImplementedException("CatalogSector.TryRemoveFile");
+         var entries = GetFileDescriptiveEntries();
+         for (int i=0; i<entries.Length; i++) 
+         {
+            if (entries[i] == file)
+            {
+               int offset = FirstFileEntryOffset + FileDescriptiveEntry.Size * i;
+               for (int j = 0; j < FileDescriptiveEntry.Size; ++j)
+                  sector.WriteByte(offset + j, 0);
+               return true;
+            }
+         }
+
+         return false;
       }
 
       public byte[] ToArray()

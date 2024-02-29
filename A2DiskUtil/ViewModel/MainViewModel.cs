@@ -86,7 +86,14 @@ namespace A2DiskUtil.ViewModel
       /// <param name="file"></param>
       public void DeleteFile(A2FileName file)
       {
-         diskImage.DeleteFile(file);
+         // make a copy
+         DiskImage newImage = diskImage.Clone();
+
+         // delete
+         newImage.DeleteFile(file);
+
+         // accept the new image
+         DiskImage = newImage;
       }
 
       /// <summary>
