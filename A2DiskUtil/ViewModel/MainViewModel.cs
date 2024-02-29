@@ -86,6 +86,9 @@ namespace A2DiskUtil.ViewModel
       /// <param name="file"></param>
       public void DeleteFile(A2FileName file)
       {
+         if (diskImage == null)
+            throw new InvalidOperationException("MainViewModel.DeleteFile: no disk image");
+
          // make a copy
          DiskImage newImage = diskImage.Clone();
 
@@ -125,7 +128,9 @@ namespace A2DiskUtil.ViewModel
          {
             try
             {
-               DiskImage.SaveAs(dialog.FileName);
+               if (diskImage == null)
+                  throw new InvalidOperationException("MainViewModel.SaveDiskAs: no disk image");
+               diskImage.SaveAs(dialog.FileName);
             }
             catch (Exception ex)
             {

@@ -35,7 +35,7 @@ namespace A2DiskUtil.Model
 
       #region Private Fields
 
-      private byte[] fileData;
+      private readonly byte[] fileData;
 
       #endregion
 
@@ -81,12 +81,12 @@ namespace A2DiskUtil.Model
       /// <returns></returns>
       public FileDescriptiveEntry[] GetCatalog()
       {
-         List<FileDescriptiveEntry> result = new List<FileDescriptiveEntry>();
+         List<FileDescriptiveEntry> result = [];
          foreach (var entry in ReadCatalogSectors())
          {
             result.AddRange(entry.Sector.GetFileDescriptiveEntries());
          }
-         return result.ToArray();
+         return [.. result];
       }
 
       /// <summary>
@@ -125,7 +125,8 @@ namespace A2DiskUtil.Model
       /// <param name="fileName"></param>
       public void DeleteFile(A2FileName fileName)
       {
-         Delete(GetFileEntry(fileName));
+         FileDescriptiveEntry? entry = GetFileEntry(fileName) ?? throw new Exception("DiskImage.DeleteFile: file does not exist");
+         Delete(entry);
       }
 
       public void SaveAs(string fileName)
@@ -161,22 +162,26 @@ namespace A2DiskUtil.Model
             DeleteFile(name);
 
          // create a catalog entry
-         FileDescriptiveEntry entry = new FileDescriptiveEntry(name);
-         entry.FileType = A2FileType.Binary;
+         FileDescriptiveEntry entry = new(name)
+         {
+            FileType = A2FileType.Binary
+         };
 
          // build the file contents... binary format goes:
          //   address
          //   length
          //   data
-         List<byte> fileContents = new List<byte>();
-         fileContents.Add((byte)(startAddress >> 8));
-         fileContents.Add((byte)(startAddress & 0xFF));
-         fileContents.Add((byte)(binaryImage.Length >> 8));
-         fileContents.Add((byte)(binaryImage.Length & 0xFF));
-         fileContents.AddRange(binaryImage);
+         List<byte> fileContents =
+         [
+            (byte)(startAddress >> 8),
+            (byte)(startAddress & 0xFF),
+            (byte)(binaryImage.Length >> 8),
+            (byte)(binaryImage.Length & 0xFF),
+            .. binaryImage,
+         ];
 
          // write the file contents to a list of sectors
-         TrackSector[] trackSectorList = WriteDataToAvailableSectors(fileContents.ToArray());
+         TrackSector[] trackSectorList = WriteDataToAvailableSectors([.. fileContents]);
 
          // write the track/sector list
          entry.TrackSectorListStart = WriteTrackSectorList(trackSectorList);
@@ -255,7 +260,7 @@ namespace A2DiskUtil.Model
       /// </summary>
       /// <param name="fileName"></param>
       /// <returns></returns>
-      private FileDescriptiveEntry GetFileEntry(A2FileName fileName)
+      private FileDescriptiveEntry? GetFileEntry(A2FileName fileName)
       {
          // look for the file's catalog entry
          foreach (var entry in GetCatalog())
@@ -269,12 +274,12 @@ namespace A2DiskUtil.Model
          return null;
       }
 
-      private int GetSectorOffset(TrackSector sector)
+      private static int GetSectorOffset(TrackSector sector)
       {
          return GetTrackOffset(sector.Track) + sector.Sector * Sector.Size;
       }
 
-      private int GetTrackOffset(byte track)
+      private static int GetTrackOffset(byte track)
       {
          return track * Track.TrackSize;
       }
@@ -286,7 +291,7 @@ namespace A2DiskUtil.Model
       /// <returns></returns>
       private Dictionary<TrackSector, TrackSectorListSector> GetTrackSectorList(FileDescriptiveEntry file)
       {
-         Dictionary<TrackSector, TrackSectorListSector> result = new Dictionary<TrackSector, TrackSectorListSector>();
+         Dictionary<TrackSector, TrackSectorListSector> result = [];
 
          // step through the linked list of sectors
          TrackSector sectorAddress = file.TrackSectorListStart;
@@ -307,22 +312,24 @@ namespace A2DiskUtil.Model
       /// <returns></returns>
       private CatalogSectorAndLocation[] ReadCatalogSectors()
       {
-         List<CatalogSectorAndLocation> result = new List<CatalogSectorAndLocation>();
+         List<CatalogSectorAndLocation> result = [];
          TrackSector trackSector = ReadTableOfContents().FirstCatalogSector;
          while (trackSector.Track != 0 && trackSector.Sector != 0)
          {
             // add this sector to the result
             Sector sector = ReadSector(trackSector);
-            CatalogSectorAndLocation entry = new CatalogSectorAndLocation();
-            entry.Location = trackSector;
-            entry.Sector = new CatalogSector(sector);
+            CatalogSectorAndLocation entry = new()
+            {
+               Location = trackSector,
+               Sector = new CatalogSector(sector)
+            };
             result.Add(entry);
 
             // next sector
             trackSector = entry.Sector.NextSector;
          }
 
-         return result.ToArray();
+         return [.. result];
       }
 
       private VolumeTableOfContents ReadTableOfContents()
@@ -361,7 +368,7 @@ namespace A2DiskUtil.Model
          VolumeTableOfContents tableOfContents = ReadTableOfContents();
 
          // allocate sectors and write to them
-         List<TrackSector> sectors = new List<TrackSector>();
+         List<TrackSector> sectors = [];
          for (int offset = 0; offset < data.Length; offset += Sector.Size)
          {
             int length = data.Length - offset;
@@ -380,7 +387,7 @@ namespace A2DiskUtil.Model
          WriteTableOfContents(tableOfContents);
 
          // return the sectors that we wrote to
-         return sectors.ToArray();
+         return [.. sectors];
       }
 
       /// <summary>
@@ -406,8 +413,8 @@ namespace A2DiskUtil.Model
          VolumeTableOfContents tableOfContents = ReadTableOfContents();
 
          // create the track-sector list
-         List<TrackSectorListSector> sectors = new List<TrackSectorListSector>();
-         TrackSectorListSector currentSector = new TrackSectorListSector();
+         List<TrackSectorListSector> sectors = [];
+         TrackSectorListSector currentSector = new();
          sectors.Add(currentSector);
          foreach (var sector in trackSectorList)
          {

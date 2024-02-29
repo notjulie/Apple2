@@ -30,7 +30,7 @@ namespace A2DiskUtil.ViewModel
          this.fileDescriptiveEntry = fileDescriptiveEntry;
 
          // initialize other stuff
-         this.DeleteFile = new Command((object o) => {
+         this.DeleteFile = new Command((object? o) => {
             try
             {
                parent.DeleteFile(fileDescriptiveEntry.FileName);
