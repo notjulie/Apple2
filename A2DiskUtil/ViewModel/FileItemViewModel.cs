@@ -12,25 +12,15 @@ namespace A2DiskUtil.ViewModel
    /// <summary>
    /// View model for a file item
    /// </summary>
-   public class FileItemViewModel : ViewModelBase
+   public class FileItemViewModel(MainViewModel parent, FileDescriptiveEntry fileDescriptiveEntry) : ViewModelBase
    {
-      #region Private Fields
+      #region Public Properties
 
-      private MainViewModel parent;
-      private FileDescriptiveEntry fileDescriptiveEntry;
-
-      #endregion
-
-      #region Constructor
-
-      public FileItemViewModel(MainViewModel parent, FileDescriptiveEntry fileDescriptiveEntry)
+      public ICommand DeleteFile
       {
-         // copy parameters
-         this.parent = parent;
-         this.fileDescriptiveEntry = fileDescriptiveEntry;
-
-         // initialize other stuff
-         this.DeleteFile = new Command((object? o) => {
+         get;
+         private set;
+      } = new Command((object? o) => {
             try
             {
                parent.DeleteFile(fileDescriptiveEntry.FileName);
@@ -40,17 +30,6 @@ namespace A2DiskUtil.ViewModel
                MessageBox.Show(e.Message);
             }
          });
-      }
-
-      #endregion
-
-      #region Public Properties
-
-      public ICommand DeleteFile
-      {
-         get;
-         private set;
-      }
 
       #endregion
 
