@@ -23,7 +23,7 @@ namespace A2DiskUtil.ViewModel
       #region Private Fields
 
       private DiskImage? diskImage;
-      private ObservableCollection<FileItemViewModel> files = new ObservableCollection<FileItemViewModel>();
+      private readonly ObservableCollection<FileItemViewModel> files = [];
 
       #endregion
 
@@ -104,7 +104,7 @@ namespace A2DiskUtil.ViewModel
       /// </summary>
       public void OpenDiskImageFile()
       {
-         OpenFileDialog dialog = new OpenFileDialog();
+         OpenFileDialog dialog = new();
          if (dialog.ShowDialog() == true)
          {
             try
@@ -123,7 +123,7 @@ namespace A2DiskUtil.ViewModel
       /// </summary>
       public void SaveDiskAs()
       {
-         SaveFileDialog dialog = new SaveFileDialog();
+         SaveFileDialog dialog = new();
          if (dialog.ShowDialog() == true)
          {
             try
@@ -186,7 +186,7 @@ namespace A2DiskUtil.ViewModel
          try
          {
             // load the file
-            A2File a2File = new A2File(filename);
+            A2File a2File = new(filename);
 
             // make a working copy of our image
             if (DiskImage == null)
