@@ -214,12 +214,14 @@ void Screensave::StartNextAnimation()
    dy = Difference(startY, targetY);
    uint8_t distance = CardAnimator::CalculatePixelDistance(dx, dy);
 
-   // start animating
+   // start animating... note that if the duration is too large
+   // (i.e. speed is too low) the animation gets really choppy
+   // because horizontally we only stop on every 7th pixel
    CardAnimator::instance.StartFreeAnimation(
          cardInMotion,
          startX, startY,
          targetX, targetY,
-         distance >> 1
+         distance >> 2
          );
 }
 

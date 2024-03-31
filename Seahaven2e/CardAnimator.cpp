@@ -281,6 +281,9 @@ __attribute__((noinline)) void CardAnimator::Service()
 }
 
 
+/// <summary>
+/// Updates the animation in progress
+/// </summary>
 void CardAnimator::UpdateAnimation()
 {
    // update the position, move the card
@@ -344,13 +347,28 @@ __attribute__((noinline)) void CardAnimator::UpdateCardTop()
 }
 
 
-
+/// <summary>
+/// Swaps HGR pages
+/// </summary>
 void CardAnimator::SwapPages()
 {
+   // change which page we want to be visible
    AnimationPage temp = onscreenPage;
    onscreenPage = offscreenPage;
    offscreenPage = temp;
 
+   // wait for the VBL to tick so that we swap during
+   // blanking
+   a2::VBLCounter::Update();
+   uint8_t start = a2::VBLCounter::GetCounter().lo;
+   for (;;)
+   {
+      a2::VBLCounter::Update();
+      if (a2::VBLCounter::GetCounter().lo != start)
+         break;
+   }
+
+   // make it visible
    onscreenPage.Show();
 }
 
