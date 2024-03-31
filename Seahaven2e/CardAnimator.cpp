@@ -368,6 +368,15 @@ void CardAnimator::SwapPages()
          break;
    }
 
+   // wait for an even count... if we swap on consecutive counts
+   // we will see the interleaving, so avoid that
+   for (;;)
+   {
+      if ((a2::VBLCounter::GetCounter().lo & 1) == 0)
+         break;
+      a2::VBLCounter::Update();
+   }
+
    // make it visible
    onscreenPage.Show();
 }
