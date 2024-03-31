@@ -76,8 +76,10 @@
       /// <returns></returns>
       public TrackSector AllocateNewSector()
       {
-         // track 0 is not used according to what I read
-         for (byte track = 1; track < TrackCount;  track++) 
+         // According to section 4 of this:
+         //   https://mirrors.apple2.org.za/Apple%20II%20Documentation%20Project/Books/Beneath%20Apple%20DOS.pdf
+         // the first three tracks are reserved for the DOS image
+         for (byte track = 3; track < TrackCount;  track++) 
          {
             for (byte sector = 0; sector < SectorsPerTrack; ++sector)
             {
@@ -166,7 +168,7 @@
          }
          else
          {
-            result.mask = (byte)(1 << trackSector.Sector - 8);
+            result.mask = (byte)(1 << (trackSector.Sector - 8));
          }
 
          // done

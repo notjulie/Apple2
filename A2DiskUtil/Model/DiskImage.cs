@@ -173,10 +173,10 @@ namespace A2DiskUtil.Model
          //   data
          List<byte> fileContents =
          [
-            (byte)(startAddress >> 8),
             (byte)(startAddress & 0xFF),
-            (byte)(binaryImage.Length >> 8),
+            (byte)(startAddress >> 8),
             (byte)(binaryImage.Length & 0xFF),
+            (byte)(binaryImage.Length >> 8),
             .. binaryImage,
          ];
 
