@@ -53,27 +53,24 @@ uint8_t CardLocation::GetColumn() const
 /// \brief
 ///   Gets the byte offset of the location within the raster
 ///
-__attribute__((noinline)) uint8_t CardLocation::GetX() const {
-   if (IsAce()) {
-      switch (GetAceSuitOrdinal()) {
-      case Suit::Clubs().GetOrdinal():
-         return GetColumnX(0);
-      case Suit::Diamonds().GetOrdinal():
-         return GetColumnX(1);
-      case Suit::Hearts().GetOrdinal():
-         return GetColumnX(8);
-      case Suit::Spades().GetOrdinal():
-         return GetColumnX(9);
-      default:
-         assert(0);
-         return 0;
-      }
-   } else if (IsTower()) {
+__attribute__((noinline)) uint8_t CardLocation::GetX() const
+{
+   static uint8_t aceColumns[4] = {0, 1, 8, 9};
+   if (IsAce())
+   {
+      return GetColumnX(aceColumns[GetAceSuitOrdinal()]);
+   }
+   else if (IsTower())
+   {
       return GetColumnX(3 + GetTowerIndex());
-   } else if (IsNull()) {
+   }
+   else if (IsNull())
+   {
       assert(0);
       return 0;
-   } else {
+   }
+   else
+   {
       return GetColumnX(GetColumn());
    }
 }
