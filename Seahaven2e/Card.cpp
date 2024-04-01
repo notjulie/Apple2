@@ -14,7 +14,7 @@
 __attribute__((noinline)) Card Card::FromOrdinal(uint8_t cardNumber)
 {
    return Card(
-      Suit::FromOrdinal(cardNumber & 3),
+      (SuitOrdinal)(cardNumber & 3),
       (Rank)(1 + (cardNumber >> 2))
       );
 }

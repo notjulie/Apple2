@@ -11,7 +11,7 @@
 /// Enum specifically intended to represent ordinal 0..3 values
 /// for the suits, for indexing into arrays and such
 /// </summary>
-enum class SuitOrdinal {
+enum class SuitOrdinal : uint8_t {
    Clubs,
    Diamonds,
    Hearts,
