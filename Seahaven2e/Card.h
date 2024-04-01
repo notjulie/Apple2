@@ -17,8 +17,6 @@
 class Card {
 public:
    Card() {}
-   constexpr Card(Suit suit, Rank rank)
-      : cardNumber((uint8_t)rank + (uint8_t)suit.numericValue) {}
    Card(SuitOrdinal suitOrdinal, Rank rank)
       : cardNumber((uint8_t)rank + (((uint8_t)suitOrdinal) << 4)) {}
 
