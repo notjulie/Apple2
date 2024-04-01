@@ -31,8 +31,6 @@ public:
 
    bool operator==(Card c) const { return cardNumber == c.cardNumber; }
 
-   void Print() const;
-
 public:
    static Card FromOrdinal(uint8_t ordinal);
    static Card FromCardNumber(uint8_t _cardNumber);

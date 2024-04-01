@@ -44,9 +44,3 @@ uint8_t Card::ToOrdinal() const
       GetSuit().GetOrdinal();
 }
 
-void Card::Print() const
-{
-   static const char ranks[] = "0A23456789TJQK";
-   a2::COUT(ranks[(uint8_t)GetRank()]);
-   a2::COUT(GetSuit().ToChar());
-}
