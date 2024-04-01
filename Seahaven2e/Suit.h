@@ -8,6 +8,17 @@
 #define SEAHAVEN2E_SUIT_H_
 
 /// <summary>
+/// Enum specifically intended to represent ordinal 0..3 values
+/// for the suits, for indexing into arrays and such
+/// </summary>
+enum class SuitOrdinal {
+   Clubs,
+   Diamonds,
+   Hearts,
+   Spades
+};
+
+/// <summary>
 /// Suit representation, very rigorously defined for the sake
 /// of being able to optimize.  The point here is that we have:
 ///  - class Suit: the abstract representation

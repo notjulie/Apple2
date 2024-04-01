@@ -164,7 +164,7 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
 
    targetX = x[0];
    targetY = y[0];
-   cardInMotion = Card(Suit::FromOrdinal(suit[0]), (Rank)rank[0]);
+   cardInMotion = Card((SuitOrdinal)suit[0], (Rank)rank[0]);
 }
 
 

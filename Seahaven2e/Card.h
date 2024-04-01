@@ -19,6 +19,8 @@ public:
    Card() {}
    constexpr Card(Suit suit, Rank rank)
       : cardNumber((uint8_t)rank + (uint8_t)suit.numericValue) {}
+   Card(SuitOrdinal suitOrdinal, Rank rank)
+      : cardNumber((uint8_t)rank + (((uint8_t)suitOrdinal) << 4)) {}
 
    Rank GetRank() const { return (Rank)(cardNumber & 0x0F); }
    Suit GetSuit() const { return Suit::FromNumericValue((Suit::NumericValue)(cardNumber & 0xF0)); }
