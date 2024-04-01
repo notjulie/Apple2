@@ -41,6 +41,6 @@ uint8_t Card::ToOrdinal() const
 {
    return
       (((uint8_t)GetRank() - 1) << 2) +
-      (uint8_t)GetSuit().GetOrdinal();
+      (uint8_t)GetSuit();
 }
 

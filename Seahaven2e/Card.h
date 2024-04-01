@@ -23,7 +23,7 @@ public:
       : cardNumber((uint8_t)rank + (((uint8_t)suitOrdinal) << 4)) {}
 
    Rank GetRank() const { return (Rank)(cardNumber & 0x0F); }
-   Suit GetSuit() const { return Suit::FromNumericValue((Suit::NumericValue)(cardNumber & 0xF0)); }
+   SuitOrdinal GetSuit() const { return (SuitOrdinal)(cardNumber>>4); }
    bool IsNull() const { return (cardNumber & 0x0F) == 0; }
    uint8_t ToOrdinal() const;
 

@@ -41,8 +41,7 @@ class AcePiles {
 public:
    void Clear() { ranks[0] = ranks[1] = ranks[2] = ranks[3] = Rank::Null; }
    Card GetCard(CardLocation location) const;
-   Rank GetRank(uint8_t suitOrdinal) const { return ranks[suitOrdinal]; }
-   Rank GetRank(Suit suit) const { return ranks[(uint8_t)suit.GetOrdinal()]; }
+   Rank GetRank(SuitOrdinal suitOrdinal) const { return ranks[(uint8_t)suitOrdinal]; }
    CardLocation GetCardLocation(Card card) const;
    void RemoveCard(CardLocation location) { --ranks[location.GetAceSuitOrdinal()]; }
    void Set(CardLocation location, Card card) { ranks[location.GetAceSuitOrdinal()] = card.GetRank(); }
@@ -62,7 +61,7 @@ public:
    void SetCard(CardLocation location, Card card);
    void RemoveCard(CardLocation location);
 
-   Rank GetAcePileRank(uint8_t suitOrdinal) const { return acePiles.GetRank(suitOrdinal); }
+   Rank GetAcePileRank(SuitOrdinal suitOrdinal) const { return acePiles.GetRank(suitOrdinal); }
    Card GetTower(uint8_t index) const { return deck.GetTower(index); }
 
    CardLocation GetCardToMoveToAce() const;

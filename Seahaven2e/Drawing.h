@@ -67,7 +67,7 @@ public:
 
 private:
    constexpr Drawing(a2::HGRPage hgr) : hgr(hgr) {}
-   void DrawAcePile(uint8_t suitOrdinal);
+   void DrawAcePile(SuitOrdinal suitOrdinal);
    void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:

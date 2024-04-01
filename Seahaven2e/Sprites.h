@@ -53,7 +53,7 @@ class Sprites {
       return *ranksLookup.Get((uint8_t)rank - 1);
    }
 
-   static const CardTopSprite &GetSuitSprite(Suit suit, bool oddColors);
+   static const CardTopSprite &GetSuitSprite(SuitOrdinal suit, bool oddColors);
 
  public:
   static const CardTopSprite ranks[13];

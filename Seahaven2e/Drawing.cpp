@@ -109,15 +109,15 @@ void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 }
 
 
-__attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal)
+__attribute__((noinline)) void Drawing::DrawAcePile(SuitOrdinal suitOrdinal)
 {
    auto &game = PersistentState::instance.Game;
 
    Rank rank = game.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
-      CardLocation location = CardLocation::AcePile((SuitOrdinal)suitOrdinal);
-      DrawCard(Card((SuitOrdinal)suitOrdinal, rank), location.GetX(), location.GetY());
+      CardLocation location = CardLocation::AcePile(suitOrdinal);
+      DrawCard(Card(suitOrdinal, rank), location.GetX(), location.GetY());
    }
 }
 
@@ -128,7 +128,7 @@ __attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal)
 __attribute__((noinline)) void Drawing::DrawAcePiles()
 {
    for (int i=0; i<4; ++i)
-      DrawAcePile(i);
+      DrawAcePile((SuitOrdinal)i);
 }
 
 
@@ -170,7 +170,7 @@ void Drawing::EraseCard(CardLocation location)
    {
       // erasing a card from the ace pile just exposes the card
       // below
-      DrawAcePile(location.GetAceSuitOrdinal());
+      DrawAcePile((SuitOrdinal)location.GetAceSuitOrdinal());
    }
 }
 

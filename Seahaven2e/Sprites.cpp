@@ -254,9 +254,9 @@ __attribute__((noinline)) void Sprites::Initialize()
 }
 
 
-const CardTopSprite &Sprites::GetSuitSprite(Suit suit, bool oddColors)
+const CardTopSprite &Sprites::GetSuitSprite(SuitOrdinal suit, bool oddColors)
 {
-   switch ((uint8_t)suit.GetOrdinal())
+   switch ((uint8_t)suit)
    {
    case 0:
       return clubsSprite;

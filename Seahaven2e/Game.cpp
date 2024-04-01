@@ -427,7 +427,7 @@ Card AcePiles::GetCard(CardLocation location) const
 __attribute__((noinline)) CardLocation AcePiles::GetCardLocation(Card card) const
 {
    Rank rank = card.GetRank();
-   SuitOrdinal suitOrdinal = card.GetSuit().GetOrdinal();
+   SuitOrdinal suitOrdinal = card.GetSuit();
    if (rank <= ranks[(uint8_t)suitOrdinal])
       return CardLocation::AcePile(suitOrdinal);
 
