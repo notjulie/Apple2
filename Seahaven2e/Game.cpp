@@ -417,7 +417,7 @@ Card AcePiles::GetCard(CardLocation location) const
    if (location.IsAce())
    {
       uint8_t suitOrdinal = location.GetAceSuitOrdinal();
-      return Card(Suit::FromOrdinal(suitOrdinal), ranks[suitOrdinal]);
+      return Card((SuitOrdinal)suitOrdinal, ranks[suitOrdinal]);
    }
 
    return Card::Null();

@@ -38,17 +38,6 @@ public:
    bool operator==(Suit suit) const { return numericValue == suit.numericValue; }
    bool operator!=(Suit suit) const { return numericValue != suit.numericValue; }
 
-public:
-   static Suit FromOrdinal(uint8_t ordinal) {
-      static const Suit suits[] = {
-         Suit(NumericValue::Clubs),
-         Suit(NumericValue::Diamonds),
-         Suit(NumericValue::Hearts),
-         Suit(NumericValue::Spades),
-      };
-      return suits[ordinal];
-   }
-
 private:
    /// <summary>
    /// our internal numeric values; these are all stored in the high
