@@ -33,7 +33,7 @@ public:
    // construct as uninitialized
    Suit() {}
 
-   constexpr uint8_t GetOrdinal() const { return ((uint8_t)numericValue)>>4; }
+   constexpr SuitOrdinal GetOrdinal() const { return (SuitOrdinal)(((uint8_t)numericValue)>>4); }
 
    bool operator==(Suit suit) const { return numericValue == suit.numericValue; }
    bool operator!=(Suit suit) const { return numericValue != suit.numericValue; }

@@ -42,7 +42,7 @@ public:
    void Clear() { ranks[0] = ranks[1] = ranks[2] = ranks[3] = Rank::Null; }
    Card GetCard(CardLocation location) const;
    Rank GetRank(uint8_t suitOrdinal) const { return ranks[suitOrdinal]; }
-   Rank GetRank(Suit suit) const { return ranks[suit.GetOrdinal()]; }
+   Rank GetRank(Suit suit) const { return ranks[(uint8_t)suit.GetOrdinal()]; }
    CardLocation GetCardLocation(Card card) const;
    void RemoveCard(CardLocation location) { --ranks[location.GetAceSuitOrdinal()]; }
    void Set(CardLocation location, Card card) { ranks[location.GetAceSuitOrdinal()] = card.GetRank(); }
