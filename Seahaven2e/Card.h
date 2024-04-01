@@ -36,10 +36,12 @@ public:
 public:
    static Card FromOrdinal(uint8_t ordinal);
    static Card FromCardNumber(uint8_t _cardNumber);
-   static constexpr Card Null() { return Card(Suit::Clubs(), Rank::Null); }
+   static constexpr Card Null() { return Card(0); }
 
 private:
    uint8_t cardNumber;
+
+   constexpr Card(uint8_t _cardNumber) : cardNumber(_cardNumber) {}
 
    // the compiler goes loony for some reason if this is inlined... it just
    // completely adds useless size to the image
