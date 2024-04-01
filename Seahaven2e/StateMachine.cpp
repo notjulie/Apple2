@@ -429,7 +429,7 @@ bool StateMachine::CheckAcesToMove() {
    Card card = game.GetCard(startLocation);
 
    // start the animation
-   MoveMultipleCards(startLocation, CardLocation::AcePile(card.GetSuit()), 1);
+   MoveMultipleCards(startLocation, CardLocation::AcePile(card.GetSuit().GetOrdinal()), 1);
    return true;
 }
 

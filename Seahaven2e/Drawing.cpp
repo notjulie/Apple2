@@ -116,7 +116,7 @@ __attribute__((noinline)) void Drawing::DrawAcePile(uint8_t suitOrdinal)
    Rank rank = game.GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
-      CardLocation location = CardLocation::AcePile(Suit::FromOrdinal(suitOrdinal));
+      CardLocation location = CardLocation::AcePile((SuitOrdinal)suitOrdinal);
       DrawCard(Card(Suit::FromOrdinal(suitOrdinal), rank), location.GetX(), location.GetY());
    }
 }
