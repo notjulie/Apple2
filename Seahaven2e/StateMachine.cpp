@@ -62,7 +62,7 @@ __attribute__((noinline)) void StateMachine::Service() {
       if (a2::Keyboard::GetKey() != a2::KeyCode::None)
          ExitScreensave();
       else
-         Screensave::instance.Service();
+         ScreensaveService();
       break;
    }
 }
@@ -502,7 +502,7 @@ __attribute__((noinline)) void StateMachine::BeginRedo(bool firstInGroup)
 
 __attribute__((noinline)) void StateMachine::EnterScreensave()
 {
-   Screensave::instance.Start();
+   ScreensaveStart();
    state = State::Screensave;
 }
 

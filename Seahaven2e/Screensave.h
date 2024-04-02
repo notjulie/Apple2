@@ -5,30 +5,14 @@
 #ifndef SCREENSAVE_H
 #define SCREENSAVE_H
 
-#include <stdint.h>
-#include "Card.h"
-
+/// <summary>
+/// Enters screensave mode
+/// </summary>
+void ScreensaveStart();
 
 /// <summary>
-/// State machine that handles our screensave mode
+/// Performs periodic tasks during screensave mode
 /// </summary>
-class Screensave {
-public:
-   void Start();
-   void Service();
-
-public:
-   static Screensave instance;
-
-private:
-   void ChooseRandomTarget();
-   void StartNextAnimation();
-
-private:
-   Card cardInMotion;
-   uint8_t startX, startY;
-   uint8_t targetX;
-   uint8_t targetY;
-};
+void ScreensaveService();
 
 #endif // SCREENSAVE_H

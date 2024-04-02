@@ -17,17 +17,32 @@ static constexpr uint8_t XMax = a2::HGRByteWidth - CardLocations::CardByteWidth;
 static constexpr uint8_t YMax = a2::HGRHeight - (CardHeight + CardLocations::CardShadowHeight);
 
 /// <summary>
-/// Our global instance
+/// Handy little hack that makes passing addresses to inline ASM easier
 /// </summary>
-Screensave Screensave::instance;
+union AsmByte {
+   uint8_t value;
+   uint8_t location[1];
+};
 
+/// <summary>
+/// Our static data
+/// </summary>
+static uint8_t startX, startY;
+static AsmByte targetX;
+static AsmByte targetY;
+static AsmByte suit;
+static AsmByte rank;
+
+
+__attribute__((noinline)) static void ChooseRandomTarget();
 __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b);
+static void StartNextAnimation();
 
 
 /// <summary>
 /// Starts screensaver
 /// </summary>
-void Screensave::Start()
+void ScreensaveStart()
 {
    // erase the screen
    CardAnimator::instance.Erase();
@@ -48,7 +63,7 @@ void Screensave::Start()
 /// <summary>
 /// Performs periodic actions during screensave mode
 /// </summary>
-void Screensave::Service()
+void ScreensaveService()
 {
    // let CardAnimator do its work
    CardAnimator::instance.Service();
@@ -56,8 +71,8 @@ void Screensave::Service()
    // if the last animation completed start a new one
    if (!CardAnimator::instance.IsAnimating())
    {
-      startX = targetX;
-      startY = targetY;
+      startX = targetX.value;
+      startY = targetY.value;
       StartNextAnimation();
    }
 }
@@ -65,11 +80,11 @@ void Screensave::Service()
 /// <summary>
 /// Sets our target position to a random spot based on our various rules
 /// </summary>
-__attribute__((noinline)) void Screensave::ChooseRandomTarget()
+__attribute__((noinline)) static void ChooseRandomTarget()
 {
    // declare our locals as static arrays... this way we
    // can pass them to our asm routine as addresses
-   static uint8_t x[1], y[1], suit[1], rank[1], seed[1];
+   static uint8_t seed[1];
 
    // grab the VBLCounter as a seed for our silliness
    seed[0] = a2::VBLCounter::GetCounter().lo;
@@ -143,28 +158,24 @@ __attribute__((noinline)) void Screensave::ChooseRandomTarget()
 
 
       :  //outputs
-      : [x]"i"(x), [y]"i"(y), [suit]"i"(suit), [rank]"i"(rank), [seed]"i"(seed), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
+      : [x]"i"(targetX.location), [y]"i"(targetY.location), [suit]"i"(suit.location), [rank]"i"(rank.location), [seed]"i"(seed), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
       : "a","x","y" //clobbers
       );
 
       // check our results
-      if (y[0] == startY)
+      if (targetX.value == startY)
          continue;
 
       // For an angle off the vertical of 30 degrees, our x change
       // needs to be at least half of our y change.  However, the
       // x change is measured in groups of 7 pixels.  In any case,
       // testing proves that this ratio pleases me.
-      if (Difference(x[0], startX) < (Difference(y[0], startY)>>3))
+      if (Difference(targetX.value, startX) < (Difference(targetY.value, startY)>>3))
          continue;
 
       // all our tests passed, we can accept the results
       break;
    }
-
-   targetX = x[0];
-   targetY = y[0];
-   cardInMotion = Card((SuitOrdinal)suit[0], (Rank)rank[0]);
 }
 
 
@@ -203,24 +214,24 @@ __attribute__((noinline)) static uint8_t Difference(uint8_t a, uint8_t b)
 /// Starts an animation from the given location to a randomly chosen
 /// destination.
 /// </summary>
-void Screensave::StartNextAnimation()
+static void StartNextAnimation()
 {
    // set the end position
    ChooseRandomTarget();
 
    // calculate a duration based on the distance
    uint8_t dx, dy;
-   dx = Difference(startX, targetX);
-   dy = Difference(startY, targetY);
+   dx = Difference(startX, targetX.value);
+   dy = Difference(startY, targetY.value);
    uint8_t distance = CardAnimator::CalculatePixelDistance(dx, dy);
 
    // start animating... note that if the duration is too large
    // (i.e. speed is too low) the animation gets really choppy
    // because horizontally we only stop on every 7th pixel
    CardAnimator::instance.StartFreeAnimation(
-         cardInMotion,
+         Card((SuitOrdinal)suit.value, (Rank)rank.value),
          startX, startY,
-         targetX, targetY,
+         targetX.value, targetY.value,
          distance >> 2
          );
 }
