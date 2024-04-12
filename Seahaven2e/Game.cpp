@@ -392,14 +392,25 @@ __attribute((noinline)) uint8_t Game::GetNumberOfAvailableTowers() const
 void Game::NewGameWithFullColumn()
 {
    acePiles.Clear();
-   deck.SetColumnCard(0, 0, Card(Suit::Clubs(), Rank::King));
-   deck.SetColumnCard(0, 1, Card(Suit::Clubs(), Rank::Queen));
-   deck.SetColumnCard(0, 2, Card(Suit::Clubs(), Rank::Jack));
-   deck.SetColumnCard(0, 3, Card(Suit::Clubs(), Rank::Ten));
-   deck.SetColumnCard(0, 4, Card(Suit::Diamonds(), Rank::King));
-   columnCounts[0] = 16;
-   for (int i=1; i<10; ++i)
+   for (int i=0; i<10; ++i)
       columnCounts[i] = 0;
+   for (int i=0; i<4; ++i)
+      deck.SetTower(i, Card::Null());
+
+   deck.SetColumnCard(0, 0, Card(SuitOrdinal::Clubs, Rank::King));
+   deck.SetColumnCard(0, 1, Card(SuitOrdinal::Clubs, Rank::Queen));
+   deck.SetColumnCard(0, 2, Card(SuitOrdinal::Clubs, Rank::Jack));
+   deck.SetColumnCard(0, 3, Card(SuitOrdinal::Diamonds, Rank::Ace));
+   deck.SetColumnCard(0, 4, Card(SuitOrdinal::Diamonds, Rank::King));
+   columnCounts[0] = 12;
+
+   deck.SetColumnCard(1, 0, Card(SuitOrdinal::Diamonds, Rank::Five));
+   deck.SetColumnCard(1, 1, Card(SuitOrdinal::Diamonds, Rank::Four));
+   deck.SetColumnCard(1, 2, Card(SuitOrdinal::Diamonds, Rank::Three));
+   deck.SetColumnCard(1, 3, Card(SuitOrdinal::Diamonds, Rank::Two));
+   columnCounts[1] = 4;
+
+   acePiles.Set(CardLocation::AcePile(SuitOrdinal::Clubs), Card(SuitOrdinal::Clubs, Rank::Ten));
 }
 
 #endif // DEBUG
