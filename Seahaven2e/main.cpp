@@ -40,7 +40,6 @@ extern "C" int main()
       PersistentState::instance.Reset();
 
    // call initializers
-   Sprites::Initialize();
    stateMachine = StateMachine();
    Cursor::instance = Cursor();
 

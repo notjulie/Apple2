@@ -4,8 +4,6 @@
 
 #include "Sprites.h"
 
-c6502::Lookup16Bit<const CardTopSprite *, 19> Sprites::spritesLookup;
-
 // ==================================================
 //    raw definitions of the suit sprites
 // ==================================================
@@ -254,19 +252,13 @@ const CardTopSprite Sprites::cursorRight = {
 };
 
 
-
-
-__attribute__((noinline)) void Sprites::Initialize()
-{
-   const CardTopSprite *sprite = &cardTopSprites[0];
-   for (uint8_t i=0; i < 19; ++i)
-      spritesLookup.Set(i, sprite++);
-}
-
+const SpriteOffsetLookup Sprites::spritesOffsetLookup;
 
 const CardTopSprite *Sprites::GetSprite(SpriteID spriteID)
 {
-   return spritesLookup.Get(spriteID.GetIndex());
+   const uint8_t *pointer = reinterpret_cast<const uint8_t *>(cardTopSprites);
+   pointer += spritesOffsetLookup.Get(spriteID.GetIndex());
+   return reinterpret_cast<const CardTopSprite *>(pointer);
 }
 
 // =========================================================

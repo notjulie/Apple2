@@ -63,12 +63,28 @@ private:
    uint8_t index;
 };
 
+class SpriteOffsetLookup {
+public:
+   constexpr SpriteOffsetLookup() : lookup() {
+      uint16_t offset = 0;
+      for (uint8_t i=0; i < 19; ++i)
+      {
+         lookup.Set(i, offset);
+         offset += sizeof(CardTopSprite);
+      }
+   }
+
+   uint16_t Get(uint8_t index) const { return lookup.Get(index); }
+
+private:
+   c6502::Lookup16Bit<uint16_t, 19> lookup;
+};
+
 /// <summary>
 /// Our registry of sprites
 /// </summary>
 class Sprites {
 public:
-   static void Initialize();
    static const CardTopSprite *GetSprite(SpriteID spriteID);
 
 public:
@@ -77,7 +93,7 @@ public:
 
 private:
    static const CardTopSprite cardTopSprites[19];
-   static c6502::Lookup16Bit<const CardTopSprite *, 19> spritesLookup;
+   static const SpriteOffsetLookup spritesOffsetLookup;
 };
 
 #endif  // SEAHAVEN2E_SPRITES_H_
