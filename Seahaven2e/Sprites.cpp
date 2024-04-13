@@ -5,9 +5,12 @@
 #include "Sprites.h"
 
 c6502::Lookup16Bit<const CardTopSprite *, 13> Sprites::ranksLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 6> Sprites::suitsLookup;
 
-// club
-const CardTopSprite clubsSprite = {
+// ==================================================
+//    raw definitions of the suit sprites
+// ==================================================
+constexpr std::initializer_list<const char *> clubsBits = {
     "WWWWWWWWWWWW  ",
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
@@ -17,10 +20,8 @@ const CardTopSprite clubsSprite = {
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
     "WWWWWWWWWWWWW "
-  };
-
-// diamond
-const CardTopDualSprite diamondsSprite = {
+};
+constexpr std::initializer_list<const char *> diamondsBits = {
     "WWWWWWWWWWWW  ",
     "WWWWWRRRWWWWW ",
     "WWWWRRRRRWWWW ",
@@ -30,10 +31,8 @@ const CardTopDualSprite diamondsSprite = {
     "WWWWRRRRRWWWW ",
     "WWWWWRRRWWWWW ",
     "WWWWWWWWWWWWW "
-  };
-
-// heart
-const CardTopDualSprite heartsSprite = {
+};
+constexpr std::initializer_list<const char *> heartsBits = {
     "WWWWWWWWWWWW  ",
     "WWWRRRWWRRWWW ",
     "WRRRRRRRRRRRW ",
@@ -42,11 +41,8 @@ const CardTopDualSprite heartsSprite = {
     "WWWWRRRRRWWWW ",
     "WWWWWRRRWWWWW ",
     "WWWWWWWWWWWWW ",
-    "WWWWWWWWWWWWW "
-  };
-
-// spade
-const CardTopSprite spadesSprite = {
+    "WWWWWWWWWWWWW "};
+constexpr std::initializer_list<const char *> spadesBits = {
     "WWWWWWWWWWWW  ",
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
@@ -56,9 +52,23 @@ const CardTopSprite spadesSprite = {
     "WWWWW  WWWWWW ",
     "WWWW    WWWWW ",
     "WWWWWWWWWWWWW ",
-  };
+};
 
+// ==================================================
+//    suit sprites array
+// ==================================================
+const CardTopSprite Sprites::suits[6] {
+   CardTopSprite(clubsBits),
+   CardTopDualSprite(diamondsBits).even,
+   CardTopDualSprite(heartsBits).even,
+   CardTopSprite(spadesBits),
+   CardTopDualSprite(diamondsBits).odd,
+   CardTopDualSprite(heartsBits).odd
+};
 
+// ==================================================
+//    rank sprites array
+// ==================================================
 const CardTopSprite Sprites::ranks[13] {
   // ace
   {
@@ -251,21 +261,27 @@ __attribute__((noinline)) void Sprites::Initialize()
    const CardTopSprite *rankSprite = &ranks[0];
    for (uint8_t i=0; i < 13; ++i)
       ranksLookup.Set(i, rankSprite++);
+
+   const CardTopSprite *suitSprite = &suits[0];
+   for (uint8_t i=0; i < 6; ++i)
+      suitsLookup.Set(i, suitSprite++);
 }
 
 
 const CardTopSprite &Sprites::GetSuitSprite(SuitOrdinal suit, bool oddColors)
 {
-   switch ((uint8_t)suit)
+   uint8_t index;
+
+   if (oddColors)
    {
-   case 0:
-      return clubsSprite;
-   case 1:
-      return diamondsSprite.GetSprite(oddColors);
-   case 2:
-      return heartsSprite.GetSprite(oddColors);
-   case 3:
-   default:
-      return spadesSprite;
+      static const uint8_t oddLookup[4] = { 0, 4, 5, 3 };
+      index = oddLookup[(uint8_t)suit];
    }
+   else
+   {
+      static const uint8_t evenLookup[4] = { 0, 1, 2, 3 };
+      index = evenLookup[(uint8_t)suit];
+   }
+
+   return *suitsLookup.Get(index);
 }

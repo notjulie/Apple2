@@ -59,7 +59,8 @@ class Sprites {
   static const CardTopSprite ranks[13];
   static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
 
-  static const CardTopDualSprite suits[4];
+  static const CardTopSprite suits[6];
+  static c6502::Lookup16Bit<const CardTopSprite *, 6> suitsLookup;
 
   static const CardTopSprite cursorLeft;
   static const CardTopSprite cursorRight;
