@@ -239,7 +239,7 @@ void DrawingPrimatives::DrawCardTop(Card card)
 void DrawingPrimatives::DrawCardTopWithShadow(Card card)
 {
    // set our context... the page is already set
-   a2::HGRContext::row = cardY - CardLocations::CardShadowHeight;
+   a2::HGRContext::row = cardY;
    a2::HGRContext::byteOffset = cardX;
 
    // draw the shadow
@@ -253,9 +253,10 @@ void DrawingPrimatives::DrawCardTopWithShadow(Card card)
 
       a2::HGRContext::row++;
    }
+   cardY += CardLocations::CardShadowHeight;
 
-  // draw the card top
-  DrawCardTop(card);
+   // draw the card top
+   DrawCardTop(card);
 }
 
 void DrawingPrimatives::DrawCardWithShadow(Card card)
