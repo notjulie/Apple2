@@ -49,7 +49,7 @@ namespace CardLocations {
 /// </summary>
 class ColumnYLookup {
 public:
-   constexpr ColumnYLookup() : y() {
+   constexpr ColumnYLookup() : y(), height() {
       // start with them evenly spaced
       for (int i=0; i < CardLocations::MaxColumnCards; ++i)
          y[i] =
@@ -61,12 +61,20 @@ public:
       for (int i=0; i<rowsToScrunch; ++i) {
          y[CardLocations::MaxColumnCards - 1 - i] -= (rowsToScrunch - i);
       }
+
+      // use the result to create a lookup for height of exposed
+      // card top
+      for (int i=0; i<CardLocations::MaxColumnCards - 1; ++i)
+         height[i] = y[i + 1] - y[i];
+      height[CardLocations::MaxColumnCards - 1] = height[CardLocations::MaxColumnCards - 2];
    }
 
    inline uint8_t Y(uint8_t index) const { return y[index]; }
+   inline uint8_t Height(uint8_t index) const { return height[index]; }
 
 private:
    uint8_t y[CardLocations::MaxColumnCards];
+   uint8_t height[CardLocations::MaxColumnCards];
 };
 
 constexpr ColumnYLookup columnYLookup;
@@ -103,6 +111,7 @@ public:
 
    uint8_t GetX() const;
    uint8_t GetY() const;
+   uint8_t GetCardTopHeight() const;
 
    uint8_t GetGridColumn() const;
    uint8_t GetGridRow() const;

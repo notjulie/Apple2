@@ -92,6 +92,18 @@ __attribute__((noinline)) uint8_t CardLocation::GetY() const {
    }
 }
 
+/// <summary>
+/// Returns the height of the card top to be drawn at this location;
+/// must be a column location.  For columns with lots of cards on them
+/// we scrunch the cards at the bottom a little so that they can all
+/// appear onscreen, thus the card tops are not constant height.
+/// </summary>
+uint8_t CardLocation::GetCardTopHeight() const
+{
+   assert(IsColumn());
+   return columnYLookup.Height(GetRow());
+}
+
 
 /// <summary>
 /// Returns the location up from this location (as if the user had hit the up arrow)

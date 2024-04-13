@@ -89,7 +89,7 @@ void Drawing::DrawCardWithShadow(Card card, uint8_t x, uint8_t y)
 /// <summary>
 /// Draws the top of a card with its shadow
 /// </summary>
-void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y)
+void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y, uint8_t height)
 {
    // set our context
    a2::HGRContext::page = hgr;
@@ -97,7 +97,7 @@ void Drawing::DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y)
    DrawingPrimatives::cardY = y + CardLocations::CardShadowHeight;
 
    // draw
-   DrawingPrimatives::DrawCardTopWithShadow(card);
+   DrawingPrimatives::DrawCardTopWithShadow(card, height);
 }
 
 void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
@@ -223,12 +223,12 @@ void DrawingPrimatives::DrawCardBottom()
 }
 
 
-void DrawingPrimatives::DrawCardTop(Card card)
+void DrawingPrimatives::DrawCardTop(Card card, uint8_t height)
 {
    DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, cardY, cardX);
    DrawSprite(
       Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
-      CardTopSpriteHeight,
+      height,
       cardY, cardX + 2);
 }
 
@@ -236,7 +236,7 @@ void DrawingPrimatives::DrawCardTop(Card card)
 /// <summary>
 /// Draws the top of a card with its shadow
 /// </summary>
-void DrawingPrimatives::DrawCardTopWithShadow(Card card)
+void DrawingPrimatives::DrawCardTopWithShadow(Card card, uint8_t height)
 {
    // set our context... the page is already set
    a2::HGRContext::row = cardY;
@@ -256,7 +256,7 @@ void DrawingPrimatives::DrawCardTopWithShadow(Card card)
    cardY += CardLocations::CardShadowHeight;
 
    // draw the card top
-   DrawCardTop(card);
+   DrawCardTop(card, height);
 }
 
 void DrawingPrimatives::DrawCardWithShadow(Card card)

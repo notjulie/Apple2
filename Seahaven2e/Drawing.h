@@ -24,9 +24,9 @@ public:
 
 public:
    static void DrawCard(Card card);
-   static void DrawCardTop(Card card);
+   static void DrawCardTop(Card card, uint8_t height = CardTopSpriteHeight);
    static void DrawCardBottom();
-   static void DrawCardTopWithShadow(Card card);
+   static void DrawCardTopWithShadow(Card card, uint8_t height = CardTopSpriteHeight);
    static void DrawCardWithShadow(Card card);
    static void DrawColumns();
    static void DrawTowers();
@@ -49,7 +49,7 @@ public:
    void DrawBackground();
    void DrawCard(Card card, uint8_t x, uint8_t y);
    void DrawCardWithShadow(Card card, uint8_t x, uint8_t y);
-   void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y);
+   void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y, uint8_t height = CardTopSpriteHeight);
    void DrawGame();
    void DrawAcePiles();
 

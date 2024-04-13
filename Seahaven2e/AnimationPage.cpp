@@ -20,19 +20,25 @@ __attribute__((noinline)) void AnimationPage::MoveCard(Card card, uint8_t x, uin
    drawing.DrawCardWithShadow(card, x, y);
 }
 
+/// <summary>
+/// This is a special case move that happens at the end of a
+/// column-to-column animation in a case where the card is going
+/// to end up behind another card such that only the top will be
+/// showing.
+/// </summary>
 void AnimationPage::MoveCardTop(Card card, CardLocation location)
 {
    Drawing drawing = GetDrawing();
 
    uint8_t x = location.GetX();
-   uint8_t y = location.GetY();
+   uint8_t y = location.GetY() - CardLocations::CardShadowHeight;
 
    // restore the background at the old position and save the
    // background at the new position
    SavedBackground::RestoreAndSave(page, x, y);
 
    // draw the card at the new position
-   drawing.DrawCardTopWithShadow(card, x, y);
+   drawing.DrawCardTopWithShadow(card, x, y, location.GetCardTopHeight() - CardLocations::CardShadowHeight);
 }
 
 __attribute__((noinline)) void AnimationPage::DrawGame()
