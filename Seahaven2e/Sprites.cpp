@@ -4,8 +4,7 @@
 
 #include "Sprites.h"
 
-c6502::Lookup16Bit<const CardTopSprite *, 13> Sprites::ranksLookup;
-c6502::Lookup16Bit<const CardTopSprite *, 6> Sprites::suitsLookup;
+c6502::Lookup16Bit<const CardTopSprite *, 19> Sprites::spritesLookup;
 
 // ==================================================
 //    raw definitions of the suit sprites
@@ -260,28 +259,42 @@ __attribute__((noinline)) void Sprites::Initialize()
 {
    const CardTopSprite *rankSprite = &ranks[0];
    for (uint8_t i=0; i < 13; ++i)
-      ranksLookup.Set(i, rankSprite++);
+      spritesLookup.Set(i, rankSprite++);
 
    const CardTopSprite *suitSprite = &suits[0];
    for (uint8_t i=0; i < 6; ++i)
-      suitsLookup.Set(i, suitSprite++);
+      spritesLookup.Set(13 + i, suitSprite++);
 }
 
 
-const CardTopSprite &Sprites::GetSuitSprite(SuitOrdinal suit, bool oddColors)
+const CardTopSprite *Sprites::GetSprite(SpriteID spriteID)
 {
-   uint8_t index;
-
-   if (oddColors)
-   {
-      static const uint8_t oddLookup[4] = { 0, 4, 5, 3 };
-      index = oddLookup[(uint8_t)suit];
-   }
-   else
-   {
-      static const uint8_t evenLookup[4] = { 0, 1, 2, 3 };
-      index = evenLookup[(uint8_t)suit];
-   }
-
-   return *suitsLookup.Get(index);
+   return spritesLookup.Get(spriteID.GetIndex());
 }
+
+// =========================================================
+//    class SpriteID
+// =========================================================
+
+SpriteID SpriteID::FromRank(Rank rank)
+{
+   // ace is sprite zero
+   return SpriteID((uint8_t)rank - (uint8_t)Rank::Ace);
+}
+
+
+SpriteID SpriteID::FromSuit(SuitOrdinal suitOrdinal, bool oddColors)
+{
+   uint8_t index = (uint8_t)suitOrdinal;
+   if (oddColors)
+      index += 4;
+
+   // The basics of this lookup table... we have an array of sprites,
+   // and these are the indices of the suits.  And:
+   //   - the first suit in the list is 13
+   //   - the normal (even byte address) colored suits are first
+   //   - diamonds and hearts have different sprites for the odd colors
+   static const uint8_t lookup[8] = {13, 14, 15, 16, 13, 17, 18, 16};
+   return SpriteID(lookup[index]);
+}
+

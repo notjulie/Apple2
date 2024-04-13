@@ -34,7 +34,7 @@ public:
 
 private:
    static void DrawSprite(
-          const CardTopSprite &sprite,
+          SpriteID spriteID,
           uint8_t rows,
           uint8_t y,
           uint8_t x);

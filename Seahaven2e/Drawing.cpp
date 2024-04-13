@@ -229,9 +229,9 @@ void DrawingPrimatives::DrawCardBottom()
 /// </summary>
 void DrawingPrimatives::DrawCardTop(Card card, uint8_t height)
 {
-   DrawSprite(Sprites::GetRankSprite(card.GetRank()), height, cardY, cardX);
+   DrawSprite(SpriteID::FromRank(card.GetRank()), height, cardY, cardX);
    DrawSprite(
-      Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
+      SpriteID::FromSuit(card.GetSuit(), (bool)(cardX&1)),
       height,
       cardY, cardX + 2);
 }
@@ -299,7 +299,7 @@ __attribute__((noinline)) void DrawingPrimatives::DrawColumns()
 
 
 void DrawingPrimatives::DrawSprite(
-                const CardTopSprite &sprite,
+                SpriteID spriteID,
                 uint8_t rows,
                 uint8_t y,
                 uint8_t x)
@@ -311,7 +311,7 @@ void DrawingPrimatives::DrawSprite(
    Memcpy2D::Init();
    a2::HGRContext::Set2DCopyDest();
 
-   Memcpy2D::SetSourcePointer(&sprite);
+   Memcpy2D::SetSourcePointer(Sprites::GetSprite(spriteID));
    Memcpy2D::SetSourceFunction(c6502::Memcpy2D::IncrementSource);
    Memcpy2D::Copy(rows, 2);
 }

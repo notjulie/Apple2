@@ -44,26 +44,41 @@ public:
    CardTopSprite odd;
 };
 
+/// <summary>
+/// Sprite ID... easier to pass around than a pointer
+/// </summary>
+class SpriteID {
+public:
+   SpriteID() {}
 
+   static SpriteID FromRank(Rank rank);
+   static SpriteID FromSuit(SuitOrdinal suitOrdinal, bool oddColors);
+
+   uint8_t GetIndex() const { return index; }
+
+private:
+   SpriteID(uint8_t index) : index(index) {}
+
+private:
+   uint8_t index;
+};
+
+/// <summary>
+/// Our registry of sprites
+/// </summary>
 class Sprites {
- public:
-  static void Initialize();
+public:
+   static void Initialize();
+   static const CardTopSprite *GetSprite(SpriteID spriteID);
 
-   inline static const CardTopSprite &GetRankSprite(Rank rank) {
-      return *ranksLookup.Get((uint8_t)rank - 1);
-   }
+public:
+   static const CardTopSprite cursorLeft;
+   static const CardTopSprite cursorRight;
 
-   static const CardTopSprite &GetSuitSprite(SuitOrdinal suit, bool oddColors);
-
- public:
-  static const CardTopSprite ranks[13];
-  static c6502::Lookup16Bit<const CardTopSprite *, 13> ranksLookup;
-
-  static const CardTopSprite suits[6];
-  static c6502::Lookup16Bit<const CardTopSprite *, 6> suitsLookup;
-
-  static const CardTopSprite cursorLeft;
-  static const CardTopSprite cursorRight;
+private:
+   static const CardTopSprite ranks[13];
+   static const CardTopSprite suits[6];
+   static c6502::Lookup16Bit<const CardTopSprite *, 19> spritesLookup;
 };
 
 #endif  // SEAHAVEN2E_SPRITES_H_
