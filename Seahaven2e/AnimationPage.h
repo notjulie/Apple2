@@ -21,7 +21,7 @@ public:
    void EndAnimation();
    void EraseCard(CardLocation location);
    void MoveCard(Card card, uint8_t x, uint8_t y);
-   void MoveCardTop(Card card, uint8_t x, uint8_t y);
+   void MoveCardTop(Card card, CardLocation location);
    void ForgetBackground();
 
    void Show() { GetDrawing().Show(); }

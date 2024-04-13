@@ -20,9 +20,12 @@ __attribute__((noinline)) void AnimationPage::MoveCard(Card card, uint8_t x, uin
    drawing.DrawCardWithShadow(card, x, y);
 }
 
-void AnimationPage::MoveCardTop(Card card, uint8_t x, uint8_t y)
+void AnimationPage::MoveCardTop(Card card, CardLocation location)
 {
    Drawing drawing = GetDrawing();
+
+   uint8_t x = location.GetX();
+   uint8_t y = location.GetY();
 
    // restore the background at the old position and save the
    // background at the new position

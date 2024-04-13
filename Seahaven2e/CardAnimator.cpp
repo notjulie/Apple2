@@ -292,6 +292,9 @@ void CardAnimator::UpdateAnimation()
    SwapPages();
 }
 
+/// <summary>
+/// Performs periodic actions while moving column to column
+/// </summary>
 __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
 {
    // update
@@ -313,11 +316,13 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
       }
       else
       {
-         UpdateCardTop();
+         // update the offscreen page and switch to it
+         UpdateCardTop(endLocations[cardBeingMoved]);
          offscreenPage.EndAnimation();
          SwapPages();
 
-         UpdateCardTop();
+         // update the page we switched away from
+         UpdateCardTop(endLocations[cardBeingMoved]);
          offscreenPage.EndAnimation();
       }
 
@@ -337,12 +342,16 @@ __attribute__((noinline)) void CardAnimator::UpdateCard()
 }
 
 
-__attribute__((noinline)) void CardAnimator::UpdateCardTop()
+/// <summary>
+/// Called during a column to column move in cases where an animation completes
+/// but only the top of the card needs to be drawn because it it behind another
+/// card
+/// </summary>
+__attribute__((noinline)) void CardAnimator::UpdateCardTop(CardLocation cardLocation)
 {
    offscreenPage.MoveCardTop(
          cardToMove,
-         currentPosition[(uint8_t)Coordinate::X],
-         currentPosition[(uint8_t)Coordinate::Y]
+         cardLocation
          );
 }
 
