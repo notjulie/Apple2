@@ -435,7 +435,7 @@ void CardAnimator::NextColumnToColumnMove()
    if (cardBeingMoved == 0)
    {
       // actually move them... remember that columns like to have cards
-      // added and removed lick a stack
+      // added and removed like a stack
       for (int i=0; i<numberOfCardsToMove; ++i)
          game.SetCard(endLocations[i], cardsToMove[i]);
 

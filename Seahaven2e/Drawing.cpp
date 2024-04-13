@@ -162,9 +162,10 @@ void Drawing::EraseCard(CardLocation location)
    if (location.IsColumn() && location.GetRow()>0)
    {
       // if this was a column card and there was one above it we'll need to
-      // redraw the card above it, or at least its lower part
-      DrawingPrimatives::cardY -= CardLocations::DistanceBetweenColumnCards;
-      DrawingPrimatives::DrawCardBottom();
+      // redraw the card above it
+      CardLocation backCardLocation = CardLocation::Column(location.GetColumn(), location.GetRow() - 1);
+      Card backCard = PersistentState::instance.Game.GetCard(backCardLocation);
+      DrawCard(backCard, backCardLocation.GetX(), backCardLocation.GetY() + CardLocations::CardShadowHeight);
    }
    else if (location.IsAce())
    {
