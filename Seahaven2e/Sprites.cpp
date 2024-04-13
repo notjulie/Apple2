@@ -54,23 +54,9 @@ constexpr std::initializer_list<const char *> spadesBits = {
 };
 
 // ==================================================
-//    suit sprites array
+//    raw definitions of the rank sprites
 // ==================================================
-const CardTopSprite Sprites::suits[6] {
-   CardTopSprite(clubsBits),
-   CardTopDualSprite(diamondsBits).even,
-   CardTopDualSprite(heartsBits).even,
-   CardTopSprite(spadesBits),
-   CardTopDualSprite(diamondsBits).odd,
-   CardTopDualSprite(heartsBits).odd
-};
-
-// ==================================================
-//    rank sprites array
-// ==================================================
-const CardTopSprite Sprites::ranks[13] {
-  // ace
-  {
+constexpr std::initializer_list<const char *> aceBits = {
     " WWWWWWWWWWWWW",
     "WWWWW WWWWWWWW",
     "WWWW W WWWWWWW",
@@ -80,9 +66,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWWWW WWWWW",
     "WW WWWWW WWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // two
-  {
+};
+constexpr std::initializer_list<const char *> twoBits = {
     " WWWWWWWWWWWWW",
     "WWW    WWWWWWW",
     "WW WWWW WWWWWW",
@@ -92,9 +77,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWWWWWWWWWW",
     "WW       WWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // three
-  {
+};
+constexpr std::initializer_list<const char *> threeBits = {
     " WWWWWWWWWWWWW",
     "WWW    WWWWWWW",
     "WW WWWW WWWWWW",
@@ -104,9 +88,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWWW WWWWWW",
     "WWW    WWWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // four
-  {
+};
+constexpr std::initializer_list<const char *> fourBits = {
     " WWWWWWWWWWWWW",
     "WWWWWW  WWWWWW",
     "WWWWW W WWWWWW",
@@ -116,9 +99,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWWWWWW WWWWWW",
     "WWWWWWW WWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // five
-  {
+};
+constexpr std::initializer_list<const char *> fiveBits = {
     " WWWWWWWWWWWWW",
     "WW      WWWWWW",
     "WW WWWWWWWWWWW",
@@ -128,9 +110,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWW WWW WWWWWW",
     "WWWW   WWWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // six
-  {
+};
+constexpr std::initializer_list<const char *> sixBits = {
     " WWWWWWWWWWWWW",
     "WWW     WWWWWW",
     "WW WWWWWWWWWWW",
@@ -140,9 +121,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWW WWWW WWWWW",
     "WWWW    WWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // seven
-  {
+};
+constexpr std::initializer_list<const char *> sevenBits = {
     " WWWWWWWWWWWWW",
     "WW       WWWWW",
     "WWWWWWWW WWWWW",
@@ -152,9 +132,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWWW WWWWWWWWW",
     "WWWW WWWWWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // eight
-  {
+};
+constexpr std::initializer_list<const char *> eightBits = {
     " WWWWWWWWWWWWW",
     "WWW     WWWWWW",
     "WW WWWWW WWWWW",
@@ -164,9 +143,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWWWW WWWWW",
     "WWW     WWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // nine
-  {
+};
+constexpr std::initializer_list<const char *> nineBits = {
     " WWWWWWWWWWWWW",
     "WWW     WWWWWW",
     "WW WWWWW WWWWW",
@@ -176,9 +154,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWWWWWWW WWWWW",
     "WWW     WWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // ten
-  {
+};
+constexpr std::initializer_list<const char *> tenBits = {
     " WWWWWWWWWWWWW",
     "WWW WWW  WWWWW",
     "WW  WW WW WWWW",
@@ -188,9 +165,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WWW WW WW WWWW",
     "WWW WWW  WWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // jack
-  {
+};
+constexpr std::initializer_list<const char *> jackBits = {
     " WWWWWWWWWWWWW",
     "WWWWW   WWWWWW",
     "WWWWWW WWWWWWW",
@@ -200,9 +176,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWW WWWWWWW",
     "WWW   WWWWWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // queen
-  {
+};
+constexpr std::initializer_list<const char *> queenBits = {
     " WWWWWWWWWWWWW",
     "WWWW   WWWWWWW",
     "WW WWWW WWWWWW",
@@ -212,9 +187,8 @@ const CardTopSprite Sprites::ranks[13] {
     "WW WWW  WWWWWW",
     "WWW   WW WWWWW",
     "WWWWWWWWWWWWWW",
-  },
-  // king
-  {
+};
+constexpr std::initializer_list<const char *> kingBits = {
     " WWWWWWWWWWWWW",
     "WWW WWW WWWWWW",
     "WWW WW WWWWWWW",
@@ -224,10 +198,37 @@ const CardTopSprite Sprites::ranks[13] {
     "WWW WWW WWWWWW",
     "WWW WWWW WWWWW",
     "WWWWWWWWWWWWWW",
-  },
+};
+
+// ==================================================
+//    cardTopSprites array
+// ==================================================
+const CardTopSprite Sprites::cardTopSprites[19] {
+   CardTopSprite(aceBits),
+   CardTopSprite(twoBits),
+   CardTopSprite(threeBits),
+   CardTopSprite(fourBits),
+   CardTopSprite(fiveBits),
+   CardTopSprite(sixBits),
+   CardTopSprite(sevenBits),
+   CardTopSprite(eightBits),
+   CardTopSprite(nineBits),
+   CardTopSprite(tenBits),
+   CardTopSprite(jackBits),
+   CardTopSprite(queenBits),
+   CardTopSprite(kingBits),
+   CardTopSprite(clubsBits),
+   CardTopDualSprite(diamondsBits).even,
+   CardTopDualSprite(heartsBits).even,
+   CardTopSprite(spadesBits),
+   CardTopDualSprite(diamondsBits).odd,
+   CardTopDualSprite(heartsBits).odd
 };
 
 
+// ==================================================
+//    cursor sprites
+// ==================================================
 const CardTopSprite Sprites::cursorLeft = {
   "              ",
   "              ",
@@ -257,13 +258,9 @@ const CardTopSprite Sprites::cursorRight = {
 
 __attribute__((noinline)) void Sprites::Initialize()
 {
-   const CardTopSprite *rankSprite = &ranks[0];
-   for (uint8_t i=0; i < 13; ++i)
-      spritesLookup.Set(i, rankSprite++);
-
-   const CardTopSprite *suitSprite = &suits[0];
-   for (uint8_t i=0; i < 6; ++i)
-      spritesLookup.Set(13 + i, suitSprite++);
+   const CardTopSprite *sprite = &cardTopSprites[0];
+   for (uint8_t i=0; i < 19; ++i)
+      spritesLookup.Set(i, sprite++);
 }
 
 

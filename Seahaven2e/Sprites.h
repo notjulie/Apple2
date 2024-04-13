@@ -76,8 +76,7 @@ public:
    static const CardTopSprite cursorRight;
 
 private:
-   static const CardTopSprite ranks[13];
-   static const CardTopSprite suits[6];
+   static const CardTopSprite cardTopSprites[19];
    static c6502::Lookup16Bit<const CardTopSprite *, 19> spritesLookup;
 };
 
