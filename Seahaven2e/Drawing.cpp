@@ -222,10 +222,13 @@ void DrawingPrimatives::DrawCardBottom()
    Memcpy2D::Copy(1, 4);
 }
 
-
+/// <summary>
+/// Draws the given card at the current location, obeying the given
+/// clipping height
+/// </summary>
 void DrawingPrimatives::DrawCardTop(Card card, uint8_t height)
 {
-   DrawSprite(Sprites::GetRankSprite(card.GetRank()), CardTopSpriteHeight, cardY, cardX);
+   DrawSprite(Sprites::GetRankSprite(card.GetRank()), height, cardY, cardX);
    DrawSprite(
       Sprites::GetSuitSprite(card.GetSuit(), (bool)(cardX&1)),
       height,
