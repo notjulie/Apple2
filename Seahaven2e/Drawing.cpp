@@ -165,7 +165,10 @@ void Drawing::EraseCard(CardLocation location)
       // redraw the card above it
       CardLocation backCardLocation = CardLocation::Column(location.GetColumn(), location.GetRow() - 1);
       Card backCard = PersistentState::instance.Game.GetCard(backCardLocation);
-      DrawCard(backCard, backCardLocation.GetX(), backCardLocation.GetY() + CardLocations::CardShadowHeight);
+
+      // cardX and page are already set
+      DrawingPrimatives::cardY = backCardLocation.GetY() + CardLocations::CardShadowHeight;
+      DrawingPrimatives::DrawCard(backCard);
    }
    else if (location.IsAce())
    {
