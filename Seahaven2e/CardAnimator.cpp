@@ -239,7 +239,7 @@ __attribute__((noinline)) uint8_t CardAnimator::CalculatePixelDistance(uint8_t d
 /// \brief
 ///   Updates the state of the animation
 ///
-__attribute__((noinline)) void CardAnimator::Service()
+__attribute__((noinline)) bool CardAnimator::Service()
 {
    auto &game = PersistentState::instance.Game;
 
@@ -278,6 +278,8 @@ __attribute__((noinline)) void CardAnimator::Service()
          state = State::Idle;
       break;
    }
+
+   return state != State::Idle;
 }
 
 

@@ -22,10 +22,9 @@ public:
 
    void DrawGame();
    void Erase();
-   bool IsAnimating() { return state != State::Idle; }
    void StartAnimation(Card card, CardLocation end);
    void StartMoveColumnToColumn(CardLocation from, CardLocation to);
-   void Service();
+   bool Service();
 
    void StartFreeAnimation(
          Card card,

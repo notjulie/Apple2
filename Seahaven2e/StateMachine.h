@@ -35,6 +35,7 @@ private:
    void EnterScreensave();
    void ExitScreensave();
    void Restart();
+   void ServiceAnimations();
    void ServiceIdle();
    void StartCurrentGame();
    void ProcessInputKey(a2::KeyCode keyCode);

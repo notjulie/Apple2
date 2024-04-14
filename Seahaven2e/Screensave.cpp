@@ -65,11 +65,8 @@ void ScreensaveStart()
 /// </summary>
 void ScreensaveService()
 {
-   // let CardAnimator do its work
-   CardAnimator::instance.Service();
-
    // if the last animation completed start a new one
-   if (!CardAnimator::instance.IsAnimating())
+   if (!CardAnimator::instance.Service())
    {
       startX = targetX.value;
       startY = targetY.value;

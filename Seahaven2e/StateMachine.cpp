@@ -23,6 +23,10 @@ using ::a2::KeyCode;
 /// Performs periodic action
 /// </summary>
 __attribute__((noinline)) void StateMachine::Service() {
+   // service animations if we have any
+   ServiceAnimations();
+
+   // take other actions according to state
    switch (state) {
    case State::Uninitialized:
       // new game
@@ -33,36 +37,49 @@ __attribute__((noinline)) void StateMachine::Service() {
       ServiceIdle();
       break;
 
-   case State::Animating:
-      CardAnimator::instance.Service();
-      if (!CardAnimator::instance.IsAnimating())
-         if (!CheckAcesToMove())
-            EnterIdle();
-      break;
-
-   case State::Undoing:
-      CardAnimator::instance.Service();
-      if (!CardAnimator::instance.IsAnimating())
-         BeginUndo(false);
-      break;
-
-   case State::Redoing:
-      CardAnimator::instance.Service();
-      if (!CardAnimator::instance.IsAnimating())
-         BeginRedo(false);
-      break;
-
-   case State::MovingToTower:
-      CardAnimator::instance.Service();
-      if (!CardAnimator::instance.IsAnimating())
-         StartNextMoveToTower();
-      break;
-
    case State::Screensave:
       if (a2::Keyboard::GetKey() != a2::KeyCode::None)
          ExitScreensave();
       else
          ScreensaveService();
+      break;
+
+   default:
+      break;
+   }
+}
+
+
+/// <summary>
+/// Performs periodic actions during animating
+/// </summary>
+__attribute__((noinline)) void StateMachine::ServiceAnimations()
+{
+   // give the card animator its timeslice... if it says that it's
+   // still animating we just exit and let it keep doing its thing
+   if (CardAnimator::instance.Service())
+      return;
+
+   // not animating... see what we need to do next
+   switch (state) {
+   case State::Animating:
+      if (!CheckAcesToMove())
+         EnterIdle();
+      break;
+
+   case State::Undoing:
+      BeginUndo(false);
+      break;
+
+   case State::Redoing:
+      BeginRedo(false);
+      break;
+
+   case State::MovingToTower:
+      StartNextMoveToTower();
+      break;
+
+   default:
       break;
    }
 }
