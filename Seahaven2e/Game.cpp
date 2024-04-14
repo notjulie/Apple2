@@ -64,31 +64,17 @@ Card Game::GetCard(CardLocation location) const
 /// <summary>
 /// Gets the location of the given card
 /// </summary>
-CardLocation Game::GetCardLocation(Card card)
+__attribute__((noinline)) CardLocation Game::GetCardLocation(Card card)
 {
-   // null cards are nowhere
-   if (card.IsNull())
-      return CardLocation::Null();
-
-   // see if it's on a tower
-   for (uint8_t i=0; i<4; ++i)
-      if (card == deck.GetTower(i))
-         return CardLocation::Tower(i);
-
-   // see if it's on column... for the sake of frugal use of RAM I'm
-   // making this simple but slow... there are some easy speed improvements
-   // to make if necessary... I think they are not
-   for (uint8_t column=0; column<10; ++column)
+   // brute force implementation... small but inefficient
+   for (uint8_t i=0; i<=255; ++i)
    {
-      for (uint8_t row=0; row<CardLocations::MaxColumnCards; ++row)
-      {
-         if (GetColumnCard(column, row) == card)
-            return CardLocation::Column(column, row);
-      }
+      CardLocation l = CardLocation::FromUint8(i);
+      if (GetCard(l) == card)
+         return l;
    }
 
-   // else if it's not on an ace pile then it's nowhere
-   return acePiles.GetCardLocation(card);
+   return CardLocation::Null();
 }
 
 
@@ -432,16 +418,5 @@ Card AcePiles::GetCard(CardLocation location) const
    }
 
    return Card::Null();
-}
-
-
-__attribute__((noinline)) CardLocation AcePiles::GetCardLocation(Card card) const
-{
-   Rank rank = card.GetRank();
-   SuitOrdinal suitOrdinal = card.GetSuit();
-   if (rank <= ranks[(uint8_t)suitOrdinal])
-      return CardLocation::AcePile(suitOrdinal);
-
-   return CardLocation::Null();
 }
 
