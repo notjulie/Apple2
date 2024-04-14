@@ -393,31 +393,28 @@ void CardAnimator::SwapPages()
 
 /// <summary>
 /// Attempts to move a group of one to five cards from one column to
-/// another.  The locations have been verified, but the rest of the details
-/// of the move have not.
+/// another.  All has been verified... the caller is in charge of passing
+/// us valid locations.
 /// </summary>
 __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocation from, CardLocation to)
 {
-   auto &game = PersistentState::instance.Game;
-
-   // figure out if we have a valid group to move and how big it is
-   numberOfCardsToMove = game.GetSizeOfMoveToColumnGroup(from);
-   if (numberOfCardsToMove == 0)
-      return;
-
    // make a list of the cards to move; we can afford the 15 bytes
-   for (int i=0; i<numberOfCardsToMove; ++i)
+   uint8_t n = 0;
+   for (;;)
    {
-      cardsToMove[i] = game.GetCard(from);
-      startLocations[i] = from;
-      endLocations[i] = to;
+      cardsToMove[n] = PersistentState::instance.Game.GetCard(from);
+      if (cardsToMove[n].IsNull())
+         break;
+      startLocations[n] = from;
+      endLocations[n] = to;
+      ++n;
 
       from = from.Down();
       to = to.Down();
    }
 
    // we move the cards from bottom up
-   cardBeingMoved = numberOfCardsToMove;
+   cardBeingMoved = numberOfCardsToMove = n;
    NextColumnToColumnMove();
 }
 
