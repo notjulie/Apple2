@@ -109,8 +109,7 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
    currentPosition[(uint8_t)Coordinate::Y] = startY;
    targetPosition[(uint8_t)Coordinate::X] = endX;
    targetPosition[(uint8_t)Coordinate::Y] = endY;
-   StartPositionTracker((uint8_t)Coordinate::X);
-   StartPositionTracker((uint8_t)Coordinate::Y);
+   StartPositionTrackers();
 
    // set the duration
    this->duration = duration;
@@ -154,8 +153,7 @@ void CardAnimator::StartAnimation(
    currentPosition[(uint8_t)Coordinate::Y] = start.GetY() - CardLocations::CardShadowHeight;
    targetPosition[(uint8_t)Coordinate::X] = endLocation.GetX();
    targetPosition[(uint8_t)Coordinate::Y] = endLocation.GetY() - CardLocations::CardShadowHeight;
-   StartPositionTracker((uint8_t)Coordinate::X);
-   StartPositionTracker((uint8_t)Coordinate::Y);
+   StartPositionTrackers();
 
    // calculate the duration
    uint8_t pixelDistance = CalculatePixelDistance(distance[(uint8_t)Coordinate::X], distance[(uint8_t)Coordinate::Y]);
@@ -178,7 +176,9 @@ void CardAnimator::StartAnimation(
 }
 
 
-
+/// <summary>
+/// Starts the position tracker for either X or Y
+/// </summary>
 __attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
 {
    if (targetPosition[i] > currentPosition[i])
@@ -193,6 +193,16 @@ __attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
    }
    numerator[i] = 0;
 }
+
+/// <summary>
+/// Starts both X and Y position trackers
+/// </summary>
+__attribute__((noinline)) void CardAnimator::StartPositionTrackers()
+{
+   StartPositionTracker((uint8_t)Coordinate::X);
+   StartPositionTracker((uint8_t)Coordinate::Y);
+}
+
 
 
 /// <summary>

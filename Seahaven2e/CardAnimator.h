@@ -74,6 +74,7 @@ private:
    void NextColumnToColumnMove();
    void ServiceColumnToColumnMove();
    void StartPositionTracker(uint8_t i);
+   void StartPositionTrackers();
    void UpdatePositionTracker(uint8_t i);
    void UpdateCard();
    void UpdateCardTop(CardLocation cardLocation);
