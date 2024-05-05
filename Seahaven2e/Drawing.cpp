@@ -280,10 +280,9 @@ __attribute__((noinline)) void DrawingPrimatives::DrawColumns()
 {
    auto &game = PersistentState::instance.Game;
 
-   cardX = 0;
-
    for (uint8_t column=0; column < 10; ++column)
    {
+      cardX = column<<2;
       uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
       if (cardCount != 0)
       {
@@ -295,9 +294,7 @@ __attribute__((noinline)) void DrawingPrimatives::DrawColumns()
 
          DrawCardBottom();
       }
-
-      cardX += 4;
-  }
+   }
 }
 
 
