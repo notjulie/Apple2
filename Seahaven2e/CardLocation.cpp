@@ -219,6 +219,37 @@ __attribute__((noinline)) CardLocation CardLocation::Right() const
 }
 
 
+/// <summary>
+/// Returns a CardLocation instance given its numeric value.  This
+/// is useful for enumerating all locations by iterating from 0 to 255.
+/// As a result, part of our contract is to return Null if the uint8_t
+/// value is not valid.
+/// </summary>
+__attribute__((noinline)) CardLocation CardLocation::FromUint8(uint8_t i)
+{
+   // create the result
+   CardLocation result(i);
+
+   // validate
+   static const uint8_t IndexCount[16] = {
+      // max indices for the 10 columns
+      16,16,16,16,16,
+      16,16,16,16,16,
+
+      // regions 10, 11, 12, and 13 are all null areas
+      0,0,0,0,
+
+      // regions 14 & 15 (towers and aces)
+      4,4
+   };
+
+   if (result.value.parts.index >= IndexCount[result.value.parts.region])
+      return CardLocation::Null();
+   return result;
+}
+
+
+
 void CardLocation::Print() const
 {
    if (IsNull())

@@ -95,8 +95,8 @@ private:
 
 public:
    CardLocation() = default;
+   static CardLocation FromUint8(uint8_t i);
 
-   static CardLocation FromUint8(uint8_t i) { return CardLocation(i); }
    uint8_t AsUint8() const { return value.location_number; }
 
    bool IsNull() const { return value.location_number == Null().value.location_number; }
