@@ -85,15 +85,22 @@ __attribute__((noinline)) void Cursor::Down()
 /// </summary>
 __attribute__((noinline)) void Cursor::Left()
 {
-   while (gridColumn > 0)
+   // remember where we started in case we don't find anything
+   int8_t startColumn = gridColumn;
+
+   // move left
+   while (--gridColumn >= 0)
    {
-      --gridColumn;
+      // if we have a valid location accept it as the new location
       if (!GetLocation().IsNull())
-         break;
+      {
+         UpdateDisplayLocation();
+         return;
+      }
    }
 
-   // update the display
-   UpdateDisplayLocation();
+   // didn't find anything... restore the original column
+   gridColumn = startColumn;
 }
 
 
@@ -103,15 +110,22 @@ __attribute__((noinline)) void Cursor::Left()
 /// </summary>
 __attribute__((noinline)) void Cursor::Right()
 {
-   while (gridColumn < 9)
+   // remember where we started in case we don't find anything
+   int8_t startColumn = gridColumn;
+
+   // move right
+   while (++gridColumn <= 9)
    {
-      ++gridColumn;
+      // if we have a valid location accept it as the new location
       if (!GetLocation().IsNull())
-         break;
+      {
+         UpdateDisplayLocation();
+         return;
+      }
    }
 
-   // update the display
-   UpdateDisplayLocation();
+   // didn't find anything... restore the original column
+   gridColumn = startColumn;
 }
 
 
@@ -366,6 +380,9 @@ CardLocation Cursor::GetLocation() const
 }
 
 
+/// <summary>
+/// moves the cursor to the current location
+/// </summary>
 void Cursor::UpdateDisplayLocation()
 {
    CardLocation location = GetLocation();

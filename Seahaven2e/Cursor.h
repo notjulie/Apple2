@@ -54,7 +54,7 @@ private:
    uint8_t lastToggleTime;
    CardLocation currentDisplayLocation;
    uint8_t gridRow;
-   uint8_t gridColumn;
+   int8_t gridColumn;
 };
 
 #endif  // SEAHAVEN2E_CURSOR_H_
