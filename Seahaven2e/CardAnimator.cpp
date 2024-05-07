@@ -101,30 +101,38 @@ __attribute__((noinline)) void CardAnimator::StartFreeAnimation(
          uint8_t duration
          )
 {
-   // step 0: hide the cursor
-   Cursor::instance.Hide();
-
    // set the bounds of the animation
    currentPosition[(uint8_t)Coordinate::X] = startX;
    currentPosition[(uint8_t)Coordinate::Y] = startY;
    targetPosition[(uint8_t)Coordinate::X] = endX;
    targetPosition[(uint8_t)Coordinate::Y] = endY;
-   StartPositionTrackers();
 
    // set the duration
    this->duration = duration;
-   timeLeft = duration;
 
-   lastVBLCount = a2::VBLCounter::GetCounter().lo;
    cardToMove = card;
 
-   // initial update
-   UpdateAnimation();
+   // launch
+   LaunchCurrentAnimation();
 
    // set the state
    state = State::FreeAnimating;
 }
 
+
+void CardAnimator::LaunchCurrentAnimation()
+{
+   // step 0: make sure the cursor is hidden
+   Cursor::instance.Hide();
+
+   // initialize animation state
+   timeLeft = duration;
+   lastVBLCount = a2::VBLCounter::GetCounter().lo;
+   StartPositionTracker((uint8_t)Coordinate::X);
+   StartPositionTracker((uint8_t)Coordinate::Y);
+
+   UpdateAnimation();
+}
 
 
 
@@ -153,20 +161,15 @@ void CardAnimator::StartAnimation(
    currentPosition[(uint8_t)Coordinate::Y] = start.GetY() - CardLocations::CardShadowHeight;
    targetPosition[(uint8_t)Coordinate::X] = endLocation.GetX();
    targetPosition[(uint8_t)Coordinate::Y] = endLocation.GetY() - CardLocations::CardShadowHeight;
-   StartPositionTrackers();
 
    // calculate the duration
    uint8_t pixelDistance = CalculatePixelDistance(distance[(uint8_t)Coordinate::X], distance[(uint8_t)Coordinate::Y]);
    duration = pixelDistance >> 3;
 
-   timeLeft = duration;
-   lastVBLCount = a2::VBLCounter::GetCounter().lo;
-
    // draw the game without the card
    offscreenPage.EraseCard(start);
 
-   // initial update
-   UpdateAnimation();
+   LaunchCurrentAnimation();
 
    // draw the game without the card
    offscreenPage.EraseCard(start);
@@ -193,16 +196,6 @@ __attribute__((noinline)) void CardAnimator::StartPositionTracker(uint8_t i)
    }
    numerator[i] = 0;
 }
-
-/// <summary>
-/// Starts both X and Y position trackers
-/// </summary>
-__attribute__((noinline)) void CardAnimator::StartPositionTrackers()
-{
-   StartPositionTracker((uint8_t)Coordinate::X);
-   StartPositionTracker((uint8_t)Coordinate::Y);
-}
-
 
 
 /// <summary>
