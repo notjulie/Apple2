@@ -325,14 +325,14 @@ __attribute__((noinline)) void DrawingPrimatives::DrawTowers()
    auto &game = PersistentState::instance.Game;
 
    cardX = TowersLeft;
-   cardY = CardLocations::TowersTop;
 
    for (uint8_t tower=0; tower < 4; ++tower)
    {
       Card card = game.GetTower(tower);
       if (!card.IsNull())
       {
-         DrawCard(card);
+         cardY = CardLocations::TowersTop;
+         DrawCardWithShadow(card);
       }
       cardX += 4;
    }
