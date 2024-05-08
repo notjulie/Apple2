@@ -130,14 +130,18 @@ __attribute__((noinline)) void StateMachine::ProcessInputKey(KeyCode key)
       NewGame();
       break;
 
+#ifdef DEBUG
    case (KeyCode)'1':
       a2::PAGE2OFF();
       a2::TEXTON();
       break;
+#endif // DEBUG
 
+#ifdef DEBUG
    case (KeyCode)'2':
       CardAnimator::instance.SetGraphicsMode();
       break;
+#endif // DEBUG
 
 #ifdef DEBUG
    case (KeyCode)'3':
