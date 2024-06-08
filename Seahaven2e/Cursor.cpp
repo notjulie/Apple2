@@ -262,11 +262,9 @@ CardLocation Cursor::GetClosestColumnCardTo(CardLocation start) {
 /// </summary>
 CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex)
 {
-   auto &game = PersistentState::instance.Game;
-
    if (column < 10)
    {
-      CardLocation bottomCard = game.GetBottomColumnCardLocation(column);
+      CardLocation bottomCard = Game::GetBottomColumnCardLocation(column);
 
      if (!bottomCard.IsNull())
      {
@@ -289,8 +287,6 @@ CardLocation Cursor::GetClosestCardOnColumn(uint8_t column, uint8_t startIndex)
 /// Gets the location of the tower card closest to the given location
 /// </summary>
 CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
-   auto &game = PersistentState::instance.Game;
-
    uint8_t startTower;
 
    if (start.IsColumn()) {
@@ -308,12 +304,12 @@ CardLocation Cursor::GetClosestTowerCardTo(CardLocation start) {
    for (uint8_t i=0; i<4; ++i)
    {
       uint8_t tower = startTower + i;
-      Card card = game.GetTowerCard(tower);
+      Card card = Game::GetTowerCard(tower);
       if (!card.IsNull())
          return CardLocation::Tower(tower);
 
       tower = startTower - i;
-      card = game.GetTowerCard(tower);
+      card = Game::GetTowerCard(tower);
       if (!card.IsNull())
          return CardLocation::Tower(tower);
    }
@@ -357,10 +353,8 @@ void Cursor::AdjustColumn()
 /// </summary>
 CardLocation Cursor::GetLocation() const
 {
-   auto &game = PersistentState::instance.Game;
-
    // see how many cards are on the column... that tells us the max row
-   uint8_t maxRow = game.GetNumberOfCardsOnColumn(gridColumn);
+   uint8_t maxRow = Game::GetNumberOfCardsOnColumn(gridColumn);
    uint8_t row = gridRow;
    if (row > maxRow)
       row = maxRow;
@@ -369,7 +363,7 @@ CardLocation Cursor::GetLocation() const
    if (row == 0)
    {
       int8_t tower = (int8_t)gridColumn - 3;
-      if (tower>=0 && tower<4 && !game.GetTower(tower).IsNull())
+      if (tower>=0 && tower<4 && !Game::GetTower(tower).IsNull())
          return CardLocation::Tower(tower);
       if (maxRow == 0)
           return CardLocation::Null();

@@ -143,8 +143,6 @@ void CardAnimator::StartAnimation(
       Card _card,
       CardLocation _end)
 {
-   auto &game = PersistentState::instance.Game;
-
    // save parameters
    endLocation = _end;
    cardToMove = _card;
@@ -153,8 +151,8 @@ void CardAnimator::StartAnimation(
    Cursor::instance.Hide();
 
    // step 1: remove the card from its current position
-   CardLocation start = game.GetCardLocation(cardToMove);
-   game.RemoveCard(start);
+   CardLocation start = Game::GetCardLocation(cardToMove);
+   Game::RemoveCard(start);
 
    // set the bounds of the animation
    currentPosition[(uint8_t)Coordinate::X] = start.GetX();
@@ -244,8 +242,6 @@ __attribute__((noinline)) uint8_t CardAnimator::CalculatePixelDistance(uint8_t d
 ///
 __attribute__((noinline)) bool CardAnimator::Service()
 {
-   auto &game = PersistentState::instance.Game;
-
    switch (state) {
    case State::Idle:
       break;
@@ -265,7 +261,7 @@ __attribute__((noinline)) bool CardAnimator::Service()
          offscreenPage.EndAnimation();
 
          // update our state
-         game.SetCard(endLocation, cardToMove);
+         Game::SetCard(endLocation, cardToMove);
          state = State::Idle;
       }
       break;
@@ -407,7 +403,7 @@ __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocatio
    uint8_t n = 0;
    for (;;)
    {
-      cardsToMove[n] = PersistentState::instance.Game.GetCard(from);
+      cardsToMove[n] = Game::GetCard(from);
       if (cardsToMove[n].IsNull())
          break;
       startLocations[n] = from;
@@ -430,8 +426,6 @@ __attribute__((noinline)) void CardAnimator::StartMoveColumnToColumn(CardLocatio
 /// </summary>
 void CardAnimator::NextColumnToColumnMove()
 {
-   auto &game = PersistentState::instance.Game;
-
    // if we are out of cards to move we need to finally update
    // the game
    if (cardBeingMoved == 0)
@@ -439,7 +433,7 @@ void CardAnimator::NextColumnToColumnMove()
       // actually move them... remember that columns like to have cards
       // added and removed like a stack
       for (int i=0; i<numberOfCardsToMove; ++i)
-         game.SetCard(endLocations[i], cardsToMove[i]);
+         Game::SetCard(endLocations[i], cardsToMove[i]);
 
       // done
       state = State::Idle;

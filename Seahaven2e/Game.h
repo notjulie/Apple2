@@ -50,35 +50,36 @@ private:
 };
 
 /** \brief
- * Represents the game as a whole
+ * Represents the game as a whole; for optimization it is implemented
+ * with all public methods as static, using the instance in the PersistentState
+ * class.
  */
 class Game {
 public:
-   void Shuffle16(c6502::Int16 instruction);
+   static void Shuffle16(c6502::Int16 instruction);
 
-   Card GetCard(CardLocation location) const;
-   void SetCard(CardLocation location, Card card);
-   void RemoveCard(CardLocation location);
+   static Card GetCard(CardLocation location);
+   static void SetCard(CardLocation location, Card card);
+   static void RemoveCard(CardLocation location);
 
-   Rank GetAcePileRank(SuitOrdinal suitOrdinal) const { return acePiles.GetRank(suitOrdinal); }
-   Card GetTower(uint8_t index) const { return deck.GetTower(index); }
+   static Rank GetAcePileRank(SuitOrdinal suitOrdinal);
+   static Card GetTower(uint8_t index);
 
-   CardLocation GetCardToMoveToAce() const;
-   CardLocation GetBottomColumnCardLocation(uint8_t column) const;
-   CardLocation GetCardLocation(Card card);
-   CardLocation GetClosestOpenTowerToColumn(uint8_t column) const;
-   CardLocation GetClosestOpenColumnToColumn(uint8_t column) const;
-   CardLocation GetClosestOpenColumnToTower(uint8_t tower) const;
-   Card GetTowerCard(uint8_t tower);
+   static CardLocation GetCardToMoveToAce();
+   static CardLocation GetBottomColumnCardLocation(uint8_t column);
+   static CardLocation GetCardLocation(Card card);
+   static CardLocation GetClosestOpenTowerToColumn(uint8_t column);
+   static CardLocation GetClosestOpenColumnToColumn(uint8_t column);
+   static CardLocation GetClosestOpenColumnToTower(uint8_t tower);
+   static Card GetTowerCard(uint8_t tower);
 
    // column card access
-   uint8_t GetNumberOfCardsOnColumn(uint8_t column) const;
-   Card GetColumnCard(uint8_t column, uint8_t row) const;
-   uint8_t GetSizeOfMoveToColumnGroup(CardLocation location) const;
-   uint8_t GetNumberOfAvailableTowers() const;
+   static uint8_t GetNumberOfCardsOnColumn(uint8_t column);
+   static Card GetColumnCard(uint8_t column, uint8_t row);
+   static uint8_t GetSizeOfMoveToColumnGroup(CardLocation location);
+   static uint8_t GetNumberOfAvailableTowers();
 
-   CardLocation GetMoveToColumnDestination(CardLocation startLocation);
-   bool IsBottomOfColumn(CardLocation location) const;
+   static CardLocation GetMoveToColumnDestination(CardLocation startLocation);
 
 #ifdef DEBUG
    void NewGameWithFullColumn();
@@ -89,6 +90,7 @@ private:
    void RemoveColumnCard(uint8_t column, uint8_t row);
    void SetColumnCard(uint8_t column, uint8_t row, Card card);
    void Shuffle8(uint8_t instruction);
+   bool IsBottomOfColumn(CardLocation location) const;
 
 private:
    AcePiles acePiles;

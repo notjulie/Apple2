@@ -111,9 +111,7 @@ void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 
 __attribute__((noinline)) void Drawing::DrawAcePile(SuitOrdinal suitOrdinal)
 {
-   auto &game = PersistentState::instance.Game;
-
-   Rank rank = game.GetAcePileRank(suitOrdinal);
+   Rank rank = Game::GetAcePileRank(suitOrdinal);
    if (rank != Rank::Null)
    {
       CardLocation location = CardLocation::AcePile(suitOrdinal);
@@ -164,7 +162,7 @@ void Drawing::EraseCard(CardLocation location)
       // if this was a column card and there was one above it we'll need to
       // redraw the card above it
       CardLocation backCardLocation = CardLocation::Column(location.GetColumn(), location.GetRow() - 1);
-      Card backCard = PersistentState::instance.Game.GetCard(backCardLocation);
+      Card backCard = Game::GetCard(backCardLocation);
 
       // cardX and page are already set
       DrawingPrimatives::cardY = backCardLocation.GetY() + CardLocations::CardShadowHeight;
@@ -278,18 +276,16 @@ void DrawingPrimatives::DrawCardWithShadow(Card card)
 /// </summary>
 __attribute__((noinline)) void DrawingPrimatives::DrawColumns()
 {
-   auto &game = PersistentState::instance.Game;
-
    for (uint8_t column=0; column < 10; ++column)
    {
       cardX = column<<2;
-      uint8_t cardCount = game.GetNumberOfCardsOnColumn(column);
+      uint8_t cardCount = Game::GetNumberOfCardsOnColumn(column);
       if (cardCount != 0)
       {
          for (uint8_t row=0; row < cardCount; ++row)
          {
             cardY = columnYLookup.Y(row);
-            DrawCardTopWithShadow(game.GetColumnCard(column, row));
+            DrawCardTopWithShadow(Game::GetColumnCard(column, row));
          }
 
          DrawCardBottom();
@@ -322,13 +318,11 @@ void DrawingPrimatives::DrawSprite(
 /// </summary>
 __attribute__((noinline)) void DrawingPrimatives::DrawTowers()
 {
-   auto &game = PersistentState::instance.Game;
-
    cardX = TowersLeft;
 
    for (uint8_t tower=0; tower < 4; ++tower)
    {
-      Card card = game.GetTower(tower);
+      Card card = Game::GetTower(tower);
       if (!card.IsNull())
       {
          cardY = CardLocations::TowersTop;

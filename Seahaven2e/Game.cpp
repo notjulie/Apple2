@@ -2,33 +2,39 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
-#include "Game.h"
-
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <C6502/Memory.h>
+
 #include "CardLocation.h"
+#include "PersistentState.h"
 #include "SHAssert.h"
+
+#include "Game.h"
 
 
 __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
 {
-   deck.Shuffle(instruction);
-   c6502::memset8(&columnCounts[0], 5, 10);
-   acePiles.Clear();
+   auto &game = PersistentState::instance.Game;
+
+   game.deck.Shuffle(instruction);
+   c6502::memset8(&game.columnCounts[0], 5, 10);
+   game.acePiles.Clear();
 }
 
 
 /// <summary>
 /// Gets the location of the first card that needs to move to the aces.
 /// </summary>
-CardLocation Game::GetCardToMoveToAce() const
+CardLocation Game::GetCardToMoveToAce()
 {
+   auto &game = PersistentState::instance.Game;
+
    // look at the towers
    for (int i=0; i < 4; ++i)
    {
       CardLocation location = CardLocation::Tower(i);
-      if (CanMoveToAce(location))
+      if (game.CanMoveToAce(location))
          return location;
    }
 
@@ -36,7 +42,7 @@ CardLocation Game::GetCardToMoveToAce() const
    for (int i=0; i<10; ++i)
    {
       CardLocation location = GetBottomColumnCardLocation(i);
-      if (CanMoveToAce(location))
+      if (game.CanMoveToAce(location))
          return location;
    }
 
@@ -47,14 +53,16 @@ CardLocation Game::GetCardToMoveToAce() const
 /// <summary>
 /// Gets the card at the given location
 /// </summary>
-Card Game::GetCard(CardLocation location) const
+Card Game::GetCard(CardLocation location)
 {
+   auto &game = PersistentState::instance.Game;
+
    if (location.IsAce()) {
-      return acePiles.GetCard(location);
+      return game.acePiles.GetCard(location);
    } else if (location.IsTower()) {
-      return deck.GetTower(location.GetTowerIndex());
+      return game.deck.GetTower(location.GetTowerIndex());
    } else if (location.IsColumn()) {
-      return GetColumnCard(location.GetColumn(), location.GetRow());
+      return game.GetColumnCard(location.GetColumn(), location.GetRow());
    } else {
       return Card::Null();
    }
@@ -99,22 +107,39 @@ bool Game::IsBottomOfColumn(CardLocation location) const
 /// </summary>
 __attribute__((noinline)) void Game::SetCard(CardLocation location, Card card)
 {
+   auto &game = PersistentState::instance.Game;
+
    // the card can't be null, that's what remove card is for
    assert(!card.IsNull());
 
    if (location.IsAce())
    {
-      acePiles.Set(location, card);
+      game.acePiles.Set(location, card);
    }
    else if (location.IsTower())
    {
-      deck.SetTower(location.GetTowerIndex(), card);
+      game.deck.SetTower(location.GetTowerIndex(), card);
    }
    else if (location.IsColumn())
    {
-      SetColumnCard(location.GetColumn(), location.GetRow(), card);
+      game.SetColumnCard(location.GetColumn(), location.GetRow(), card);
    }
 }
+
+
+Rank Game::GetAcePileRank(SuitOrdinal suitOrdinal)
+{
+   auto &game = PersistentState::instance.Game;
+   return game.acePiles.GetRank(suitOrdinal);
+}
+
+
+Card Game::GetTower(uint8_t index)
+{
+   auto &game = PersistentState::instance.Game;
+   return game.deck.GetTower(index);
+}
+
 
 
 /// <summary>
@@ -122,17 +147,19 @@ __attribute__((noinline)) void Game::SetCard(CardLocation location, Card card)
 /// </summary>
 __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 {
+   auto &game = PersistentState::instance.Game;
+
    if (location.IsAce())
    {
-      acePiles.RemoveCard(location);
+      game.acePiles.RemoveCard(location);
    }
    else if (location.IsTower())
    {
-      deck.SetTower(location.GetTowerIndex(), Card::Null());
+      game.deck.SetTower(location.GetTowerIndex(), Card::Null());
    }
    else if (location.IsColumn())
    {
-      RemoveColumnCard(location.GetColumn(), location.GetRow());
+      game.RemoveColumnCard(location.GetColumn(), location.GetRow());
    }
 }
 
@@ -141,17 +168,19 @@ __attribute__((noinline)) void Game::RemoveCard(CardLocation location)
 /// Gets the card location of the open column closest to the given
 /// column
 /// </summary>
-__attribute__((noinline)) CardLocation Game::GetClosestOpenColumnToColumn(uint8_t column) const
+__attribute__((noinline)) CardLocation Game::GetClosestOpenColumnToColumn(uint8_t column)
 {
+   auto &game = PersistentState::instance.Game;
+
    // expand our search radius until we find something
    for (int i=0; i<10; ++i)
    {
       int8_t c = (int8_t)column - i;
-      if (c>=0 && c<10 && columnCounts[c]==0)
+      if (c>=0 && c<10 && game.columnCounts[c]==0)
          return CardLocation::Column(c, 0);
 
       c = column + i;
-      if (c>=0 && c<10 && columnCounts[c]==0)
+      if (c>=0 && c<10 && game.columnCounts[c]==0)
          return CardLocation::Column(c, 0);
    }
 
@@ -163,7 +192,7 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenColumnToColumn(uint8_
 /// Gets the card location of the open column closest to the given
 /// tower
 /// </summary>
-CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower) const
+CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower)
 {
    return GetClosestOpenColumnToColumn(tower + 3);
 }
@@ -174,6 +203,8 @@ CardLocation Game::GetClosestOpenColumnToTower(uint8_t tower) const
 /// </summary>
 __attribute((noinline)) CardLocation Game::GetMoveToColumnDestination(CardLocation startLocation)
 {
+   auto &game = PersistentState::instance.Game;
+
    Card card = GetCard(startLocation);
 
    if (card.GetRank() == Rank::King)
@@ -188,7 +219,7 @@ __attribute((noinline)) CardLocation Game::GetMoveToColumnDestination(CardLocati
       // get the location of the card one rank higher and verify that it's the bottom
       // of a column
       CardLocation locationAboveTarget = GetCardLocation(card + 1);
-      if (IsBottomOfColumn(locationAboveTarget))
+      if (game.IsBottomOfColumn(locationAboveTarget))
       {
          // the target location is one below that
          return CardLocation::Column(locationAboveTarget.GetColumn(), locationAboveTarget.GetRow() + 1);
@@ -203,8 +234,10 @@ __attribute((noinline)) CardLocation Game::GetMoveToColumnDestination(CardLocati
 /// Gets the card location of the open tower closest to the given
 /// column
 /// </summary>
-__attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column) const
+__attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t column)
 {
+   auto &game = PersistentState::instance.Game;
+
    // start from the tower nearest the column
    int8_t tower = (int8_t)column - 3;
    if (tower<0)
@@ -216,11 +249,11 @@ __attribute__((noinline)) CardLocation Game::GetClosestOpenTowerToColumn(uint8_t
    for (int i=0; i<4; ++i)
    {
       int8_t t = tower - i;
-      if (t>=0 && t<4 && deck.GetTower(t).IsNull())
+      if (t>=0 && t<4 && game.deck.GetTower(t).IsNull())
          return CardLocation::Tower(t);
 
       t = tower + i;
-      if (t>=0 && t<4 && deck.GetTower(t).IsNull())
+      if (t>=0 && t<4 && game.deck.GetTower(t).IsNull())
          return CardLocation::Tower(t);
    }
 
@@ -244,9 +277,11 @@ __attribute__((noinline)) bool Game::CanMoveToAce(CardLocation location) const
 /// <summary>
 /// Gets the location of the bottom card on the given column
 /// </summary>
-__attribute__((noinline)) CardLocation Game::GetBottomColumnCardLocation(uint8_t column) const
+__attribute__((noinline)) CardLocation Game::GetBottomColumnCardLocation(uint8_t column)
 {
-   int8_t row = columnCounts[column];
+   auto &game = PersistentState::instance.Game;
+
+   int8_t row = game.columnCounts[column];
    if (row > 0)
       return CardLocation::Column(column, row - 1);
    else
@@ -254,32 +289,38 @@ __attribute__((noinline)) CardLocation Game::GetBottomColumnCardLocation(uint8_t
 }
 
 
-Card Game::GetTowerCard(uint8_t tower) {
+Card Game::GetTowerCard(uint8_t tower)
+{
+  auto &game = PersistentState::instance.Game;
+
   if (tower < 4)
-    return deck.GetTower(tower);
+    return game.deck.GetTower(tower);
   else
     return Card::Null();
 }
 
 
-uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column) const
+uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column)
 {
-   return columnCounts[column];
+   auto &game = PersistentState::instance.Game;
+   return game.columnCounts[column];
 }
 
 
-Card Game::GetColumnCard(uint8_t column, uint8_t row) const
+Card Game::GetColumnCard(uint8_t column, uint8_t row)
 {
+   auto &game = PersistentState::instance.Game;
+
    // never mind if we don't have that many cards on the column
-   if (row >= columnCounts[column])
+   if (row >= game.columnCounts[column])
       return Card::Null();
 
    // if it's in our array of cards return what's in the array
    if (row < 5)
-      return deck.GetColumnCard(column, row);
+      return game.deck.GetColumnCard(column, row);
 
    // anything beyond the array is a card stacked on the last card of the array
-   return deck.GetColumnCard(column, 4) - (row - 4);
+   return game.deck.GetColumnCard(column, 4) - (row - 4);
 }
 
 /// <summary>
@@ -327,14 +368,16 @@ __attribute((noinline)) void Game::SetColumnCard(uint8_t column, uint8_t row, Ca
 /// of a group of cards that can be moved together and if so how
 /// many are in the group.
 /// </summary>
-__attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation location) const
+__attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation location)
 {
+   auto &game = PersistentState::instance.Game;
+
    assert(location.IsColumn());
 
    // calculate our result
    uint8_t row = location.GetRow();
    uint8_t column = location.GetColumn();
-   uint8_t count = columnCounts[column];
+   uint8_t count = game.columnCounts[column];
    uint8_t result = count - row;
 
    // that result is correct, as long as all the cards between
@@ -343,10 +386,10 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
    // another column as a group
    if (count > 5)
       count = 5;
-   Card topCard = deck.GetColumnCard(column, row);
+   Card topCard = game.deck.GetColumnCard(column, row);
    while (++row < count)
    {
-      Card nextCard = deck.GetColumnCard(column, row);
+      Card nextCard = game.deck.GetColumnCard(column, row);
 
       if (nextCard.GetSuit() != topCard.GetSuit())
          return 0;
@@ -362,13 +405,14 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
 /// <summary>
 /// Get the number of available towers
 /// </summary>
-__attribute((noinline)) uint8_t Game::GetNumberOfAvailableTowers() const
+__attribute((noinline)) uint8_t Game::GetNumberOfAvailableTowers()
 {
+   auto &game = PersistentState::instance.Game;
+
    uint8_t towerCount = 0;
    for (int i=0; i<4; ++i)
-      if (deck.GetTower(i).IsNull())
+      if (game.deck.GetTower(i).IsNull())
          ++towerCount;
-
 
    return towerCount;
 }
