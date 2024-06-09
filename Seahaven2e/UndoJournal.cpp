@@ -96,7 +96,7 @@ __attribute__((noinline)) void UndoJournal::StartNewUndo()
 }
 
 
-UndoInstruction UndoJournal::GetFirstRedo()
+__attribute__((noinline)) UndoInstruction UndoJournal::GetFirstRedo()
 {
    auto &data = PersistentState::instance.UndoJournal;
 
@@ -109,7 +109,7 @@ UndoInstruction UndoJournal::GetFirstRedo()
    return GetNextRedo();
 }
 
-UndoInstruction UndoJournal::GetFirstUndo()
+__attribute__((noinline)) UndoInstruction UndoJournal::GetFirstUndo()
 {
    auto &data = PersistentState::instance.UndoJournal;
 
@@ -227,7 +227,7 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
 /// Removes a group from the beginning of the journal; this is called when we
 /// need to prevent an overflow because some player is way too indecisive
 /// </summary>
-void UndoJournalPersist::RemoveFromHead()
+__attribute__((noinline)) void UndoJournalPersist::RemoveFromHead()
 {
    // I don't care about optimizing this case... anyone that hits this condition
    // deserves to be punished.  So all we do is remove an element from the front
