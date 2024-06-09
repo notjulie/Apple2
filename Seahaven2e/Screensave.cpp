@@ -32,6 +32,7 @@ static AsmByte targetX;
 static AsmByte targetY;
 static AsmByte suit;
 static AsmByte rank;
+static AsmByte seed;
 
 
 __attribute__((noinline)) static void ChooseRandomTarget();
@@ -74,17 +75,87 @@ void ScreensaveService()
    }
 }
 
+
+/// <summary>
+/// Uses the current seed value to generate a randomish target location;
+/// increments the seed by a prime number so repeated calls will not
+/// return the same value
+/// </summary>
+__attribute__((noinline)) static void NextRandomTarget()
+{
+   asm volatile (
+   "0:\n"
+      "LDX\t#0\n"
+
+      // set initial values
+      "LDA\t#%[XMax]\n"
+      "STA\t%[x]\n"
+      "LDA\t#%[YMax]\n"
+      "STA\t%[y]\n"
+
+      // increase our seed by a prime number each time
+      "LDA\t%[seed]\n"
+      "CLC\n"
+      "ADC\t#37\n"
+      "STA\t%[seed]\n"
+      "TAY\n"
+
+      // an even seed means we set X, odd means we set Y
+      "LSR\n"
+      "BCS\t1f\n"
+
+      // even seed, set X; this ends up using the 0x04 bit
+      // to decide whether to clear Y (target == top edge)
+      "LSR\n"
+      "LSR\n"
+      "BCS\t3f\n"
+      "STX\t%[y]\n"
+   "3:\n"
+      "CMP\t#%[XMax]+1\n"
+      "BCS\t0b\n"    // x > XMax, retry
+      "STA\t%[x]\n"
+      "BCC\t2f\n"
+
+   "1:\n"
+      // odd seed, set Y; use the 0x04 bit to decide if
+      // we set left edge or right edge
+      "TYA\n"
+      "CMP\t#%[YMax]+1\n"
+      "BCS\t0b\n"  // y > YMax, retry
+      "STA\t%[y]\n"
+      "AND\t#4\n"
+      "BEQ\t2f\n"
+      "STX\t%[x]\n"
+
+   "2:\n"
+      // set the suit and rank
+      "TYA\n"
+      "AND\t#3\n"
+      "STA\t%[suit]\n"
+
+      "TYA\n"
+      "LSR\n"
+      "LSR\n"
+      "AND\t#15\n"
+      "BEQ\t0b\n"    // rank==0 invalid, retry
+      "CMP\t#14\n"
+      "BCS\t0b\n"    // rank > 13, invalid, retry
+      "STA\t%[rank]\n"
+
+   :  //outputs
+   : [x]"i"(targetX.location), [y]"i"(targetY.location), [suit]"i"(suit.location), [rank]"i"(rank.location), [seed]"i"(seed.location), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
+   : "a","x","y" //clobbers
+   );
+}
+
+
 /// <summary>
 /// Sets our target position to a random spot based on our various rules
 /// </summary>
 __attribute__((noinline)) static void ChooseRandomTarget()
 {
-   // declare our locals as static arrays... this way we
-   // can pass them to our asm routine as addresses
-   static uint8_t seed[1];
-
    // grab the VBLCounter as a seed for our silliness
-   seed[0] = a2::VBLCounter::GetCounter().lo;
+   seed.value = a2::VBLCounter::GetCounter().lo;
 
    // Go into a loop that tries a series of random target points
    // until we find one we like.  We have rules, particularly that
@@ -94,73 +165,14 @@ __attribute__((noinline)) static void ChooseRandomTarget()
    // by a prime number and try again.
    for (; ;)
    {
-      asm volatile (
-      "0:\n"
-         "LDX\t#0\n"
+      // calculate a random target based on the seed; increments
+      // the seed by a prime number in case we need to retry
+      NextRandomTarget();
 
-         // set initial values
-         "LDA\t#%[XMax]\n"
-         "STA\t%[x]\n"
-         "LDA\t#%[YMax]\n"
-         "STA\t%[y]\n"
-
-         // increase our seed by a prime number each time
-         "LDA\t%[seed]\n"
-         "CLC\n"
-         "ADC\t#37\n"
-         "STA\t%[seed]\n"
-         "TAY\n"
-
-         // an even seed means we set X, odd means we set Y
-         "LSR\n"
-         "BCS\t1f\n"
-
-         // even seed, set X; this ends up using the 0x04 bit
-         // to decide whether to clear Y (target == top edge)
-         "LSR\n"
-         "LSR\n"
-         "BCS\t3f\n"
-         "STX\t%[y]\n"
-      "3:\n"
-         "CMP\t#%[XMax]+1\n"
-         "BCS\t0b\n"    // x > XMax, retry
-         "STA\t%[x]\n"
-         "BCC\t2f\n"
-
-      "1:\n"
-         // odd seed, set Y; use the 0x04 bit to decide if
-         // we set left edge or right edge
-         "TYA\n"
-         "CMP\t#%[YMax]+1\n"
-         "BCS\t0b\n"  // y > YMax, retry
-         "STA\t%[y]\n"
-         "AND\t#4\n"
-         "BEQ\t2f\n"
-         "STX\t%[x]\n"
-
-      "2:\n"
-         // set the suit and rank
-         "TYA\n"
-         "AND\t#3\n"
-         "STA\t%[suit]\n"
-
-         "TYA\n"
-         "LSR\n"
-         "LSR\n"
-         "AND\t#15\n"
-         "BEQ\t0b\n"    // rank==0 invalid, retry
-         "CMP\t#14\n"
-         "BCS\t0b\n"    // rank > 13, invalid, retry
-         "STA\t%[rank]\n"
-
-
-      :  //outputs
-      : [x]"i"(targetX.location), [y]"i"(targetY.location), [suit]"i"(suit.location), [rank]"i"(rank.location), [seed]"i"(seed), [XMax]"i"(XMax), [YMax]"i"(YMax) //inputs
-      : "a","x","y" //clobbers
-      );
-
-      // check our results
-      if (targetX.value == startY)
+      // check our results; first we need to make sure that the
+      // move is not horizontal... this makes sure that we aren't
+      // moving from one edge to the same edge
+      if (targetY.value == startY)
          continue;
 
       // For an angle off the vertical of 30 degrees, our x change
