@@ -41,7 +41,7 @@ extern "C" int main()
 
    // call initializers
    stateMachine = StateMachine();
-   Cursor::instance = Cursor();
+   Cursor::instance.Initialize();
 
    // enter main loop
    for (;;)

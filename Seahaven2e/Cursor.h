@@ -13,6 +13,9 @@
 class Cursor {
 public:
    Cursor() {}
+   Cursor(const Cursor &) = delete;
+   Cursor &operator=(const Cursor &) = delete;
+   void Initialize();
 
    void CursorHasBeenObliterated();
    void Hide();
@@ -47,8 +50,7 @@ private:
    void UpdateDisplayLocation();
 
 private:
-   // state must be initialized by constructor
-   State state = State::Idle;
+   State state;
 
    // state variables that only matter in non-idle states
    uint8_t lastToggleTime;

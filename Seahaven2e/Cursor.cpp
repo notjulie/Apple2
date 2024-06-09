@@ -17,6 +17,11 @@
 Cursor Cursor::instance;
 
 
+void Cursor::Initialize()
+{
+   state = State::Idle;
+}
+
 /// <summary>
 /// Adjusts our state when the animator has overwritten the cursor
 /// </summary>
