@@ -313,7 +313,7 @@ __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 /// Moves a group of cards that starts from the given card and extends down
 /// the column the given number of cards, adding them to the current undo group
 /// </summary>
-void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation targetLocation, uint8_t count)
+__attribute__((noinline)) void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation targetLocation, uint8_t count)
 {
    // check for no-op
    if (count == 0)
@@ -341,7 +341,7 @@ void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation ta
 /// <summary>
 /// Moves a single card, adding it to the current undo group
 /// </summary>
-void StateMachine::MoveSingleCard(CardLocation startLocation, CardLocation targetLocation)
+__attribute__((noinline)) void StateMachine::MoveSingleCard(CardLocation startLocation, CardLocation targetLocation)
 {
    // log it
    UndoJournal::instance.LogMove(
