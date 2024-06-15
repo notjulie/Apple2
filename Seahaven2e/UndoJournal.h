@@ -102,7 +102,7 @@ public:
    void Clear();
    void Restart();
    void StartNewUndo();
-   void LogMove(Card card, CardLocation startLocation, CardLocation endLocation);
+   void LogMove(CardLocation startLocation, CardLocation endLocation);
    UndoInstruction GetFirstRedo();
    UndoInstruction GetFirstUndo();
    UndoInstruction GetNextRedo();

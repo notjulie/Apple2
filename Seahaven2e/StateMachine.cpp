@@ -294,17 +294,16 @@ __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 
    // grab the vitals of the start position
    CardLocation start = CardLocation::Column(moveToTowerColumn, moveToTowerCurrentRow);
-   Card card = Game::GetCard(start);
 
    // get the end location
    CardLocation end = Game::GetClosestOpenTowerToColumn(moveToTowerColumn);
    assert(!end.IsNull());
 
    // log
-   UndoJournal::instance.LogMove(card, start, end);
+   UndoJournal::instance.LogMove(start, end);
 
    // start animating
-   CardAnimator::instance.StartAnimation(card, end);
+   CardAnimator::instance.StartAnimation(Game::GetCard(start), end);
    --moveToTowerCurrentRow;
    state = State::MovingToTower;
 }
@@ -327,21 +326,31 @@ void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation ta
    if (requiredTowers > Game::GetNumberOfAvailableTowers())
       return;
 
-   // get the start location
-   Card card = Game::GetCard(startLocation);
-
    // log it
    UndoJournal::instance.LogMove(
-            card,
             startLocation,
             targetLocation
             );
 
    // start the animation
-   if (count == 1)
-      CardAnimator::instance.StartAnimation(card, targetLocation);
-   else
-      CardAnimator::instance.StartMoveColumnToColumn(startLocation, targetLocation);
+   CardAnimator::instance.StartMoveColumnToColumn(startLocation, targetLocation);
+   state = State::Animating;
+}
+
+
+/// <summary>
+/// Moves a single card, adding it to the current undo group
+/// </summary>
+void StateMachine::MoveSingleCard(CardLocation startLocation, CardLocation targetLocation)
+{
+   // log it
+   UndoJournal::instance.LogMove(
+            startLocation,
+            targetLocation
+            );
+
+   // start the animation
+   CardAnimator::instance.StartAnimation(Game::GetCard(startLocation), targetLocation);
    state = State::Animating;
 }
 
@@ -437,7 +446,7 @@ bool StateMachine::CheckAcesToMove()
    Card card = Game::GetCard(startLocation);
 
    // start the animation
-   MoveMultipleCards(startLocation, CardLocation::AcePile(card.GetSuit()), 1);
+   MoveSingleCard(startLocation, CardLocation::AcePile(card.GetSuit()));
    return true;
 }
 

@@ -30,7 +30,7 @@ void UndoJournal::Clear()
 /// <summary>
 /// Logs the movement to the journal
 /// </summary>
-__attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation startLocation, CardLocation endLocation)
+__attribute__((noinline)) void UndoJournal::LogMove(CardLocation startLocation, CardLocation endLocation)
 {
    auto &data = PersistentState::instance.UndoJournal;
 
@@ -53,7 +53,7 @@ __attribute__((noinline)) void UndoJournal::LogMove(Card card, CardLocation star
 
    // append
    CardAndGroup cardAndGroup;
-   cardAndGroup.SetCard(card);
+   cardAndGroup.SetCard(Game::GetCard(startLocation));
    cardAndGroup.SetGroup(currentUndoGroup);
    data.cards[data.entryCount] = cardAndGroup;
 

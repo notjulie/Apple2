@@ -41,6 +41,7 @@ private:
    void ProcessInputKey(a2::KeyCode keyCode);
 
    // card movement
+   void MoveSingleCard(CardLocation startLocation, CardLocation location);
    void MoveMultipleCards(CardLocation startLocation, CardLocation location, uint8_t count);
    void StartNextMoveToTower();
 
