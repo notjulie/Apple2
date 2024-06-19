@@ -55,11 +55,11 @@ __attribute__((noinline)) void UndoJournal::LogMove(CardLocation startLocation, 
    CardAndGroup cardAndGroup;
    cardAndGroup.SetCard(Game::GetCard(startLocation));
    cardAndGroup.SetGroup(currentUndoGroup);
-   data.cards[data.entryCount] = cardAndGroup;
+   UndoJournalPersist::SetCardAndGroup(data.entryCount, cardAndGroup);
 
    // XOR the start location and the end location... then we can always
    // get one if we know the other
-   data.locations[data.entryCount] = startLocation.AsUint8() ^ endLocation.AsUint8();
+   UndoJournalPersist::SetLocation(data.entryCount, startLocation.AsUint8() ^ endLocation.AsUint8());
 
    // increment
    ++data.entryCount;
@@ -261,6 +261,38 @@ void UndoJournalPersist::Restart()
       Clear();
 }
 
+
+/// <summary>
+/// forced no-inline accessor to the cards array
+/// </summary>
+__attribute__((noinline)) CardAndGroup UndoJournalPersist::GetCardAndGroup(uint8_t i)
+{
+   return PersistentState::instance.UndoJournal.cards[i];
+}
+
+/// <summary>
+/// forced no-inline accessor to the cards array
+/// </summary>
+__attribute__((noinline)) void UndoJournalPersist::SetCardAndGroup(uint8_t i, CardAndGroup cardAndGroup)
+{
+   PersistentState::instance.UndoJournal.cards[i] = cardAndGroup;
+}
+
+/// <summary>
+/// forced no-inline accessor to the locations array
+/// </summary>
+__attribute__((noinline)) uint8_t UndoJournalPersist::GetLocation(uint8_t i)
+{
+   return PersistentState::instance.UndoJournal.locations[i];
+}
+
+/// <summary>
+/// forced no-inline accessor to the locations array
+/// </summary>
+__attribute__((noinline)) void UndoJournalPersist::SetLocation(uint8_t i, uint8_t location)
+{
+   PersistentState::instance.UndoJournal.locations[i] = location;
+}
 
 
 // ======================================================

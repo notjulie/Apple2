@@ -79,6 +79,15 @@ private:
    void RemoveFromHead();
 
 private:
+   // these are provided as alternatives for accessing the arrays,
+   // because the compiler sometimes loses its mind and does indirect
+   // accesses instead of absolute
+   static CardAndGroup GetCardAndGroup(uint8_t i);
+   static void SetCardAndGroup(uint8_t i, CardAndGroup cardAndGroup);
+   static uint8_t GetLocation(uint8_t i);
+   static void SetLocation(uint8_t i, uint8_t location);
+
+private:
    static constexpr uint8_t JournalMaxLength = 150;
 
 private:
