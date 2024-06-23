@@ -232,11 +232,10 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 
    // if the start location is a column location then we need to carry
    // all the cards below the selected card along with it
-   uint8_t numberOfCardsToMove = 1;
    if (startLocation.IsColumn())
-      numberOfCardsToMove = Game::GetSizeOfMoveToColumnGroup(startLocation);
-   if (numberOfCardsToMove > 0)
-      MoveMultipleCards(startLocation, targetLocation, numberOfCardsToMove);
+      MoveMultipleCards(startLocation, targetLocation, Game::GetSizeOfMoveToColumnGroup(startLocation));
+   else
+      MoveSingleCard(startLocation, targetLocation);
 }
 
 
