@@ -79,6 +79,8 @@ private:
    void UpdateCardTop(CardLocation cardLocation);
    void LaunchCurrentAnimation();
 
+   static CardLocation GetEndLocation(uint8_t i);
+
 private:
    // operating state
    State state;

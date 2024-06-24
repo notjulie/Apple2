@@ -318,12 +318,12 @@ __attribute__((noinline)) void CardAnimator::ServiceColumnToColumnMove()
       else
       {
          // update the offscreen page and switch to it
-         UpdateCardTop(endLocations[cardBeingMoved]);
+         UpdateCardTop(GetEndLocation(cardBeingMoved));
          offscreenPage.EndAnimation();
          SwapPages();
 
          // update the page we switched away from
-         UpdateCardTop(endLocations[cardBeingMoved]);
+         UpdateCardTop(GetEndLocation(cardBeingMoved));
          offscreenPage.EndAnimation();
       }
 
@@ -433,7 +433,7 @@ void CardAnimator::NextColumnToColumnMove()
       // actually move them... remember that columns like to have cards
       // added and removed like a stack
       for (int i=0; i<numberOfCardsToMove; ++i)
-         Game::SetCard(endLocations[i], cardsToMove[i]);
+         Game::SetCard(GetEndLocation(i), cardsToMove[i]);
 
       // done
       state = State::Idle;
@@ -442,7 +442,7 @@ void CardAnimator::NextColumnToColumnMove()
 
    // next
    --cardBeingMoved;
-   StartAnimation(cardsToMove[cardBeingMoved], endLocations[cardBeingMoved]);
+   StartAnimation(cardsToMove[cardBeingMoved], GetEndLocation(cardBeingMoved));
    state = State::MovingColumnToColumn;
 }
 
@@ -487,3 +487,8 @@ void CardAnimator::SetGraphicsMode()
    onscreenPage.Show();
 }
 
+
+__attribute__((noinline)) CardLocation CardAnimator::GetEndLocation(uint8_t i)
+{
+   return CardAnimator::instance.endLocations[i];
+}
