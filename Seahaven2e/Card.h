@@ -28,6 +28,9 @@ public:
    uint8_t GetCardNumber() const { return cardNumber; }
 
    bool operator==(Card c) const { return cardNumber == c.cardNumber; }
+   bool operator!=(Card c) const { return cardNumber != c.cardNumber; }
+
+   void DecrementRank() { --cardNumber; }
 
 public:
    static Card FromOrdinal(uint8_t ordinal);

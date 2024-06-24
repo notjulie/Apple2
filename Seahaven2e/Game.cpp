@@ -389,13 +389,9 @@ __attribute__((noinline)) uint8_t Game::GetSizeOfMoveToColumnGroup(CardLocation 
    Card topCard = game.deck.GetColumnCard(column, row);
    while (++row < count)
    {
-      Card nextCard = game.deck.GetColumnCard(column, row);
-
-      if (nextCard.GetSuit() != topCard.GetSuit())
+      topCard.DecrementRank();
+      if (game.deck.GetColumnCard(column, row) != topCard)
          return 0;
-      if (topCard.GetRank() - nextCard.GetRank() != 1)
-         return 0;
-      topCard = nextCard;
    }
 
    return result;
