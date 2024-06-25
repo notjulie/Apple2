@@ -87,7 +87,7 @@ __attribute__((noinline)) void UndoJournal::StartNewUndo()
    // of the last entry
    if (data.entryCount > 0)
    {
-      currentUndoGroup = (UndoGroupID)((((uint8_t)data.cards[data.entryCount - 1].GetGroupID()) + 1) & 3);
+      currentUndoGroup = (UndoGroupID)((((uint8_t)data.GetCardAndGroup(data.entryCount - 1).GetGroupID()) + 1) & 3);
    }
    else
    {
@@ -103,7 +103,7 @@ __attribute__((noinline)) UndoInstruction UndoJournal::GetFirstRedo()
    // get the group of the next item
    if (data.currentPosition >= data.entryCount)
       return UndoInstruction::Null();
-   currentUndoGroup = data.cards[data.currentPosition].GetGroupID();
+   currentUndoGroup = data.GetCardAndGroup(data.currentPosition).GetGroupID();
 
    // return
    return GetNextRedo();
@@ -116,7 +116,7 @@ __attribute__((noinline)) UndoInstruction UndoJournal::GetFirstUndo()
    // get the group of the next item
    if (data.currentPosition == 0)
       return UndoInstruction::Null();
-   currentUndoGroup = data.cards[data.currentPosition - 1].GetGroupID();
+   currentUndoGroup = data.GetCardAndGroup(data.currentPosition - 1).GetGroupID();
 
    // return
    return GetNextUndo();
@@ -130,7 +130,7 @@ UndoInstruction UndoJournal::GetNextRedo()
    // check the group of the next item
    if (data.currentPosition >= data.entryCount)
       return UndoInstruction::Null();
-   if (currentUndoGroup != data.cards[data.currentPosition].GetGroupID())
+   if (currentUndoGroup != data.GetCardAndGroup(data.currentPosition).GetGroupID())
       return UndoInstruction::Null();
 
    UndoInstruction result = data.PeekRedo();
@@ -146,7 +146,7 @@ UndoInstruction UndoJournal::GetNextUndo()
    // check the group of the next item
    if (data.currentPosition == 0)
       return UndoInstruction::Null();
-   if (currentUndoGroup != data.cards[data.currentPosition - 1].GetGroupID())
+   if (currentUndoGroup != data.GetCardAndGroup(data.currentPosition - 1).GetGroupID())
       return UndoInstruction::Null();
 
    UndoInstruction result = data.PeekUndo();
@@ -185,7 +185,7 @@ UndoInstruction UndoJournalPersist::PeekUndo() const
 
    // get the card to move
    uint8_t position = currentPosition - 1;
-   result.card = cards[position].GetCard();
+   result.card = GetCardAndGroup(position).GetCard();
 
    // get its current location
    CardLocation currentLocation = Game::GetCardLocation(result.card);
@@ -210,7 +210,7 @@ UndoInstruction UndoJournalPersist::PeekRedo() const
       return result;
 
    // get the card to move
-   result.card = cards[currentPosition].GetCard();
+   result.card = GetCardAndGroup(currentPosition).GetCard();
 
    // get its current location
    CardLocation currentLocation = Game::GetCardLocation(result.card);
