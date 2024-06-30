@@ -28,8 +28,6 @@ public:
    static void DrawCardBottom();
    static void DrawCardTopWithShadow(Card card, uint8_t height = CardTopSpriteHeight);
    static void DrawCardWithShadow(Card card);
-   static void DrawColumns();
-   static void DrawTowers();
    static void EraseCardImage();
 
 private:
@@ -51,7 +49,6 @@ public:
    void DrawCardWithShadow(Card card, uint8_t x, uint8_t y);
    void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y, uint8_t height = CardTopSpriteHeight);
    void DrawGame();
-   void DrawAcePiles();
 
    void EraseCard(CardLocation location);
    void ToggleCursor(CardLocation location);
@@ -67,7 +64,6 @@ public:
 
 private:
    constexpr Drawing(a2::HGRPage hgr) : hgr(hgr) {}
-   void DrawAcePile(SuitOrdinal suitOrdinal);
    void XorSprite(const CardTopSprite &sprite, uint8_t rows, uint8_t y, uint8_t x);
 
 private:

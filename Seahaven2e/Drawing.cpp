@@ -20,9 +20,6 @@
 
 using c6502::Memcpy2D;
 
-static const uint8_t TowersLeft = 12;
-
-
 
 // =====================================================================
 // =====================================================================
@@ -109,36 +106,27 @@ void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 }
 
 
-__attribute__((noinline)) void Drawing::DrawAcePile(SuitOrdinal suitOrdinal)
-{
-   Rank rank = Game::GetAcePileRank(suitOrdinal);
-   if (rank != Rank::Null)
-   {
-      CardLocation location = CardLocation::AcePile(suitOrdinal);
-      DrawCard(Card(suitOrdinal, rank), location.GetX(), location.GetY());
-   }
-}
-
-
-/// <summary>
-/// Draws the ace piles
-/// </summary>
-__attribute__((noinline)) void Drawing::DrawAcePiles()
-{
-   for (int i=0; i<4; ++i)
-      DrawAcePile((SuitOrdinal)i);
-}
-
-
 /// <summary>
 /// Draws all cards
 /// </summary>
 __attribute__((noinline)) void Drawing::DrawGame()
 {
-   a2::HGRContext::page = hgr;
-   DrawAcePiles();
-   DrawingPrimatives::DrawColumns();
-   DrawingPrimatives::DrawTowers();
+   // brute force implementation... small but inefficient
+   uint8_t i = 0;
+   for (;;)
+   {
+      CardLocation location = CardLocation::FromUint8(i);
+      Card card = Game::GetCard(location);
+      if (!card.IsNull())
+      {
+         DrawCardWithShadow(card, location.GetX(), location.GetY() - CardLocations::CardShadowHeight);
+      }
+
+      // increment and check for wraparound... that's when we're done
+      ++i;
+      if (i == 0)
+         break;
+   }
 }
 
 
@@ -161,19 +149,23 @@ void Drawing::EraseCard(CardLocation location)
    {
       // if this was a column card and there was one above it we'll need to
       // redraw the card above it
-      CardLocation backCardLocation = CardLocation::Column(location.GetColumn(), location.GetRow() - 1);
-      Card backCard = Game::GetCard(backCardLocation);
-
-      // cardX and page are already set
-      DrawingPrimatives::cardY = backCardLocation.GetY() + CardLocations::CardShadowHeight;
-      DrawingPrimatives::DrawCard(backCard);
+      location = CardLocation::Column(location.GetColumn(), location.GetRow() - 1);
    }
    else if (location.IsAce())
    {
-      // erasing a card from the ace pile just exposes the card
-      // below
-      DrawAcePile((SuitOrdinal)location.GetAceSuitOrdinal());
+      // just redraw the location with the card that's there now
+      // location = location;
    }
+   else
+   {
+      // no background to draw
+      return;
+   }
+
+   // cardX and page are already set
+   Card backCard = Game::GetCard(location);
+   DrawingPrimatives::cardY = location.GetY() + CardLocations::CardShadowHeight;
+   DrawingPrimatives::DrawCard(backCard);
 }
 
 
@@ -271,29 +263,6 @@ void DrawingPrimatives::DrawCardWithShadow(Card card)
    DrawCardBottom();
 }
 
-/// <summary>
-/// Draws all the columns
-/// </summary>
-__attribute__((noinline)) void DrawingPrimatives::DrawColumns()
-{
-   for (uint8_t column=0; column < 10; ++column)
-   {
-      cardX = column<<2;
-      uint8_t cardCount = Game::GetNumberOfCardsOnColumn(column);
-      if (cardCount != 0)
-      {
-         for (uint8_t row=0; row < cardCount; ++row)
-         {
-            cardY = columnYLookup.Y(row);
-            DrawCardTopWithShadow(Game::GetColumnCard(column, row));
-         }
-
-         DrawCardBottom();
-      }
-   }
-}
-
-
 void DrawingPrimatives::DrawSprite(
                 SpriteID spriteID,
                 uint8_t rows,
@@ -310,26 +279,6 @@ void DrawingPrimatives::DrawSprite(
    Memcpy2D::SetSourcePointer(Sprites::GetSprite(spriteID));
    Memcpy2D::SetSourceFunction(c6502::Memcpy2D::IncrementSource);
    Memcpy2D::Copy(rows, 2);
-}
-
-
-/// <summary>
-/// Draws the towers
-/// </summary>
-__attribute__((noinline)) void DrawingPrimatives::DrawTowers()
-{
-   cardX = TowersLeft;
-
-   for (uint8_t tower=0; tower < 4; ++tower)
-   {
-      Card card = Game::GetTower(tower);
-      if (!card.IsNull())
-      {
-         cardY = CardLocations::TowersTop;
-         DrawCardWithShadow(card);
-      }
-      cardX += 4;
-   }
 }
 
 

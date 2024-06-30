@@ -75,11 +75,17 @@ Card Game::GetCard(CardLocation location)
 __attribute__((noinline)) CardLocation Game::GetCardLocation(Card card)
 {
    // brute force implementation... small but inefficient
-   for (uint8_t i=0; i<=255; ++i)
+   uint8_t i = 0;
+   for (;;)
    {
       CardLocation l = CardLocation::FromUint8(i);
       if (GetCard(l) == card)
          return l;
+
+      // increment; we are done when we wrap around
+      ++i;
+      if (i == 0)
+         break;
    }
 
    return CardLocation::Null();
