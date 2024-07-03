@@ -181,7 +181,7 @@ uint8_t DrawingPrimatives::cardX;
 uint8_t DrawingPrimatives::cardY;
 
 
-void DrawingPrimatives::DrawCard(Card card)
+__attribute__((noinline)) void DrawingPrimatives::DrawCard(Card card)
 {
    a2::VBLCounter::Update();
    DrawCardTop(card);
