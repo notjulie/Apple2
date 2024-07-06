@@ -48,7 +48,7 @@ public:
    void DrawCard(Card card, uint8_t x, uint8_t y);
    void DrawCardWithShadow(Card card, uint8_t x, uint8_t y);
    void DrawCardTopWithShadow(Card card, uint8_t x, uint8_t y, uint8_t height = CardTopSpriteHeight);
-   void DrawGame();
+   void DrawGame() const { DrawGame(*this); }
 
    void EraseCard(CardLocation location);
    void ToggleCursor(CardLocation location);
@@ -57,6 +57,10 @@ public:
    a2::HGRPage GetHGRPage() const { return hgr; }
    void CopyTo(Drawing target) { hgr.CopyTo(target.hgr); }
    void Show() { hgr.Show(); }
+
+   // methods declared as static so that we can give the compiler
+   // a hint that Drawing should always be passed by value, not reference
+   static void DrawGame(Drawing drawing);
 
 public:
    static constexpr Drawing Page1() { return Drawing(a2::HGRPage::HGR()); }

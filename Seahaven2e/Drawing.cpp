@@ -109,7 +109,7 @@ void Drawing::DrawCard(Card card, uint8_t x, uint8_t y)
 /// <summary>
 /// Draws all cards
 /// </summary>
-__attribute__((noinline)) void Drawing::DrawGame()
+__attribute__((noinline)) void Drawing::DrawGame(Drawing drawing)
 {
    // brute force implementation... small but inefficient
    uint8_t i = 0;
@@ -119,7 +119,7 @@ __attribute__((noinline)) void Drawing::DrawGame()
       Card card = Game::GetCard(location);
       if (!card.IsNull())
       {
-         DrawCardWithShadow(card, location.GetX(), location.GetY() - CardLocations::CardShadowHeight);
+         drawing.DrawCardWithShadow(card, location.GetX(), location.GetY() - CardLocations::CardShadowHeight);
       }
 
       // increment and check for wraparound... that's when we're done
