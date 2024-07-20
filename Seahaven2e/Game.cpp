@@ -313,7 +313,7 @@ uint8_t Game::GetNumberOfCardsOnColumn(uint8_t column)
 }
 
 
-Card Game::GetColumnCard(uint8_t column, uint8_t row)
+__attribute__((noinline)) Card Game::GetColumnCard(uint8_t column, uint8_t row)
 {
    auto &game = PersistentState::instance.Game;
 
