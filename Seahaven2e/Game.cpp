@@ -26,7 +26,7 @@ __attribute__((noinline)) void Game::Shuffle16(c6502::Int16 instruction)
 /// <summary>
 /// Gets the location of the first card that needs to move to the aces.
 /// </summary>
-CardLocation Game::GetCardToMoveToAce()
+__attribute__((noinline)) CardLocation Game::GetCardToMoveToAce()
 {
    auto &game = PersistentState::instance.Game;
 
