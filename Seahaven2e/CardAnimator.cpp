@@ -146,17 +146,17 @@ void CardAnimator::StartAnimation(
    // save parameters
    endLocation = _end;
    cardToMove = _card;
+   startLocation = Game::GetCardLocation(cardToMove);
 
    // step 0: hide the cursor
    Cursor::instance.Hide();
 
    // step 1: remove the card from its current position
-   CardLocation start = Game::GetCardLocation(cardToMove);
-   Game::RemoveCard(start);
+   Game::RemoveCard(startLocation);
 
    // set the bounds of the animation
-   currentPosition[(uint8_t)Coordinate::X] = start.GetX();
-   currentPosition[(uint8_t)Coordinate::Y] = start.GetY() - CardLocations::CardShadowHeight;
+   currentPosition[(uint8_t)Coordinate::X] = startLocation.GetX();
+   currentPosition[(uint8_t)Coordinate::Y] = startLocation.GetY() - CardLocations::CardShadowHeight;
    targetPosition[(uint8_t)Coordinate::X] = endLocation.GetX();
    targetPosition[(uint8_t)Coordinate::Y] = endLocation.GetY() - CardLocations::CardShadowHeight;
 
@@ -165,12 +165,12 @@ void CardAnimator::StartAnimation(
    duration = pixelDistance >> 3;
 
    // draw the game without the card
-   offscreenPage.EraseCard(start);
+   offscreenPage.EraseCard(startLocation);
 
    LaunchCurrentAnimation();
 
    // draw the game without the card
-   offscreenPage.EraseCard(start);
+   offscreenPage.EraseCard(startLocation);
 
    // set the state
    state = State::Animating;

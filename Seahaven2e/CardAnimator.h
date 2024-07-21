@@ -92,6 +92,7 @@ private:
    // the animation in progress; relevant only in animating states
    // don't need to be cleared by constructor
    Card cardToMove;
+   CardLocation startLocation;
    CardLocation endLocation;
    uint8_t lastVBLCount;
    uint8_t duration;
