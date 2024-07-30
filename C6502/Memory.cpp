@@ -23,7 +23,7 @@ namespace c6502 {
 
       : // outputs : none
       : "r"(dest), "a"(value),"r"(count) // input
-      : "a", "y" // clobbers
+      : "y" // clobbers
       );
    }
 

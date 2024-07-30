@@ -24,7 +24,7 @@
 					<Add directory="$(llvmRoot)/mos-platform/common/lib" />
 				</Linker>
 				<ExtraCommands>
-					<Add after='.\postBuild.bat &quot;$(llvmRoot)&quot; &quot;$(TARGET_OUTPUT_DIR)&quot;' />
+					<Add after="cd $(TARGET_OUTPUT_DIR) &amp;&amp; $(llvmroot)/bin/llvm-objdump -d \-\-print-imm-hex -\-source sh2cb.a2.elf &gt; sh2cb.a2.disasm" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -172,6 +172,9 @@
 				<general />
 			</DoxyBlocks>
 			<lib_finder disable_auto="1" />
+			<envvars />
+			<code_completion />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
