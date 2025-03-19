@@ -10,11 +10,11 @@
 #include "PersistentState.h"
 #include "SHAssert.h"
 #include "Sprites.h"
-#include "StateMachine.h"
+#include "GameStateMachine.h"
 #include "TextScreenManager.h"
 
 
-static StateMachine stateMachine;
+static GameStateMachine stateMachine;
 
 
 /// <summary>
@@ -40,7 +40,7 @@ extern "C" int main()
       PersistentState::instance.Reset();
 
    // call initializers
-   stateMachine = StateMachine();
+   stateMachine = GameStateMachine();
    Cursor::instance.Initialize();
 
    // enter main loop

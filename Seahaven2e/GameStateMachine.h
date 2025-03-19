@@ -2,8 +2,8 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
-#ifndef SEAHAVEN2E_STATEMACHINE_H_
-#define SEAHAVEN2E_STATEMACHINE_H_
+#ifndef SEAHAVEN2E_GAMESTATEMACHINE_H_
+#define SEAHAVEN2E_GAMESTATEMACHINE_H_
 
 #include <Apple2Lib/Keyboard.h>
 #include "Card.h"
@@ -13,9 +13,9 @@
 /// <summary>
 /// The top level state machine for the game
 /// </summary>
-class StateMachine {
+class GameStateMachine {
 public:
-   StateMachine() {}
+   GameStateMachine() {}
 
    void Service();
    bool IsWriteRequested() const { return writeRequested; }

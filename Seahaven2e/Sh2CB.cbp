@@ -134,6 +134,14 @@
 		<Unit filename="Drawing.h" />
 		<Unit filename="Game.cpp" />
 		<Unit filename="Game.h" />
+		<Unit filename="GameStateMachine.cpp">
+			<Option target="Release" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="GameStateMachine.h">
+			<Option target="Release" />
+			<Option target="Debug" />
+		</Unit>
 		<Unit filename="PersistentState.cpp" />
 		<Unit filename="PersistentState.h" />
 		<Unit filename="Rank.h" />
@@ -145,7 +153,6 @@
 		<Unit filename="Screensave.h" />
 		<Unit filename="Sprites.cpp" />
 		<Unit filename="Sprites.h" />
-		<Unit filename="StateMachine.cpp" />
 		<Unit filename="StateMachine.h" />
 		<Unit filename="Suit.h" />
 		<Unit filename="Test/UnitTestMain.cpp">

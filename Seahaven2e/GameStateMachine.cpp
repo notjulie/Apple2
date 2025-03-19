@@ -2,8 +2,6 @@
 //    Copyright 2023 Randy Rasmussen
 // =============================================================
 
-#include "StateMachine.h"
-
 #include <Apple2Lib/MMIO.h>
 #include <Apple2Lib/ROM.h>
 #include <Apple2Lib/VBLCounter.h>
@@ -16,13 +14,15 @@
 #include "Screensave.h"
 #include "SHAssert.h"
 
+#include "GameStateMachine.h"
+
 using ::a2::KeyCode;
 
 
 /// <summary>
 /// Performs periodic action
 /// </summary>
-__attribute__((noinline)) void StateMachine::Service() {
+__attribute__((noinline)) void GameStateMachine::Service() {
    // service animations if we have any
    ServiceAnimations();
 
@@ -53,7 +53,7 @@ __attribute__((noinline)) void StateMachine::Service() {
 /// <summary>
 /// Performs periodic actions during animating
 /// </summary>
-__attribute__((noinline)) void StateMachine::ServiceAnimations()
+__attribute__((noinline)) void GameStateMachine::ServiceAnimations()
 {
    // give the card animator its timeslice... if it says that it's
    // still animating we just exit and let it keep doing its thing
@@ -88,7 +88,7 @@ __attribute__((noinline)) void StateMachine::ServiceAnimations()
 /// <summary>
 /// Performs periodic actions during Idle state
 /// </summary>
-__attribute__((noinline)) void StateMachine::ServiceIdle()
+__attribute__((noinline)) void GameStateMachine::ServiceIdle()
 {
    // give the cursor its timeslice
    Cursor::instance.Service();
@@ -120,7 +120,7 @@ __attribute__((noinline)) void StateMachine::ServiceIdle()
 }
 
 
-__attribute__((noinline)) void StateMachine::ProcessInputKey(KeyCode key)
+__attribute__((noinline)) void GameStateMachine::ProcessInputKey(KeyCode key)
 {
    #pragma GCC diagnostic push
    #pragma GCC diagnostic ignored "-Wswitch"
@@ -210,7 +210,7 @@ __attribute__((noinline)) void StateMachine::ProcessInputKey(KeyCode key)
 /// <summary>
 /// Moves the currently selected card to a column
 /// </summary>
-__attribute__((noinline)) void StateMachine::MoveToColumn()
+__attribute__((noinline)) void GameStateMachine::MoveToColumn()
 {
    // start a new undo group... we can do this whether we move or not
    // so just get it out of the way
@@ -242,7 +242,7 @@ __attribute__((noinline)) void StateMachine::MoveToColumn()
 /// <summary>
 /// Moves the currently selected card to a tower
 /// </summary>
-__attribute__((noinline)) void StateMachine::MoveToTower()
+__attribute__((noinline)) void GameStateMachine::MoveToTower()
 {
    CardLocation moveToTowerEnd = Cursor::instance.GetLocation();
    assert(!moveToTowerEnd.IsNull());
@@ -281,7 +281,7 @@ __attribute__((noinline)) void StateMachine::MoveToTower()
 /// <summary>
 /// Moves the next column to tower move
 /// </summary>
-__attribute__((noinline)) void StateMachine::StartNextMoveToTower()
+__attribute__((noinline)) void GameStateMachine::StartNextMoveToTower()
 {
    // never mind if we're done
    if (moveToTowerCurrentRow < moveToTowerEndRow)
@@ -312,7 +312,7 @@ __attribute__((noinline)) void StateMachine::StartNextMoveToTower()
 /// Moves a group of cards that starts from the given card and extends down
 /// the column the given number of cards, adding them to the current undo group
 /// </summary>
-__attribute__((noinline)) void StateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation targetLocation, uint8_t count)
+__attribute__((noinline)) void GameStateMachine::MoveMultipleCards(CardLocation startLocation, CardLocation targetLocation, uint8_t count)
 {
    // check for no-op
    if (count == 0)
@@ -340,7 +340,7 @@ __attribute__((noinline)) void StateMachine::MoveMultipleCards(CardLocation star
 /// <summary>
 /// Moves a single card, adding it to the current undo group
 /// </summary>
-__attribute__((noinline)) void StateMachine::MoveSingleCard(CardLocation startLocation, CardLocation targetLocation)
+__attribute__((noinline)) void GameStateMachine::MoveSingleCard(CardLocation startLocation, CardLocation targetLocation)
 {
    // log it
    UndoJournal::instance.LogMove(
@@ -357,7 +357,7 @@ __attribute__((noinline)) void StateMachine::MoveSingleCard(CardLocation startLo
 /// <summary>
 ///   Starts a new game
 /// </summary>
-__attribute__((noinline)) void StateMachine::NewGame()
+__attribute__((noinline)) void GameStateMachine::NewGame()
 {
    // clear the undo journal
    UndoJournal::instance.Clear();
@@ -371,7 +371,7 @@ __attribute__((noinline)) void StateMachine::NewGame()
 }
 
 
-void StateMachine::StartCurrentGame()
+void GameStateMachine::StartCurrentGame()
 {
    // have the animator draw
    CardAnimator::instance.DrawGame();
@@ -388,7 +388,7 @@ void StateMachine::StartCurrentGame()
 /// <summary>
 /// Restarts the game, resetting the undo journal to the beginning
 /// </summary>
-__attribute__((noinline)) void StateMachine::Restart()
+__attribute__((noinline)) void GameStateMachine::Restart()
 {
    // redeal
    Game::Shuffle16(PersistentState::instance.GetCurrentGameSeed());
@@ -408,7 +408,7 @@ __attribute__((noinline)) void StateMachine::Restart()
 }
 
 
-void StateMachine::ExitScreensave()
+void GameStateMachine::ExitScreensave()
 {
   // have the animator draw
   CardAnimator::instance.DrawGame();
@@ -421,7 +421,7 @@ void StateMachine::ExitScreensave()
 /// <summary>
 /// Enters idle state
 /// </summary>
-void StateMachine::EnterIdle() {
+void GameStateMachine::EnterIdle() {
   state = State::Idle;
   idleEntryTime = a2::VBLCounter::GetCounter().hi;
   Cursor::instance.Show();
@@ -434,7 +434,7 @@ void StateMachine::EnterIdle() {
 /// <return>
 ///   true if a card is being moved to the aces
 /// </return>
-bool StateMachine::CheckAcesToMove()
+bool GameStateMachine::CheckAcesToMove()
 {
    // find the location of the card to move
    CardLocation startLocation = Game::GetCardToMoveToAce();
@@ -453,7 +453,7 @@ bool StateMachine::CheckAcesToMove()
 /// <summary>
 /// Undoes a move if possible
 /// </summary>
-__attribute__((noinline)) void StateMachine::BeginUndo(bool firstInGroup)
+__attribute__((noinline)) void GameStateMachine::BeginUndo(bool firstInGroup)
 {
    // see if there's something to undo
    UndoInstruction undo =
@@ -485,7 +485,7 @@ __attribute__((noinline)) void StateMachine::BeginUndo(bool firstInGroup)
 /// <summary>
 /// Redoes a move if possible
 /// </summary>
-__attribute__((noinline)) void StateMachine::BeginRedo(bool firstInGroup)
+__attribute__((noinline)) void GameStateMachine::BeginRedo(bool firstInGroup)
 {
    UndoInstruction redo =
       firstInGroup ? UndoJournal::instance.GetFirstRedo() : UndoJournal::instance.GetNextRedo();
@@ -512,7 +512,7 @@ __attribute__((noinline)) void StateMachine::BeginRedo(bool firstInGroup)
 }
 
 
-__attribute__((noinline)) void StateMachine::EnterScreensave()
+__attribute__((noinline)) void GameStateMachine::EnterScreensave()
 {
    ScreensaveStart();
    state = State::Screensave;
